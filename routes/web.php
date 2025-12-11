@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/agency', [App\Http\Controllers\Admin\AgencyController::class, 'index'])->name('admin.agency.index');
+Route::get('/agency/add', [App\Http\Controllers\Admin\AgencyController::class, 'create'])->name('admin.agency.create');

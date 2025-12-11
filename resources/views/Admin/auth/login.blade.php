@@ -117,9 +117,6 @@
 
     if (!valid) return;
 
-    // Continue form submission...
-
-
     // AJAX call
     Swal.fire({
         title: "Processing...",
@@ -128,72 +125,34 @@
     });
 
     var data = $('#myform').serialize();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: '<?php echo route('login'); ?>',
+        method: 'POST',
+        data:data,
+        dataType: 'json', // Set the expected data type to JSON
+        beforeSend: function(){
+            $('.error-container').html('');
+        },
+        success: function(data) {
+            window.location.href = '<?php echo route('home') ?>'
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            Swal.close();
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "error",
+                title: xhr.responseJSON.message,
+                showConfirmButton: false,
+                timer: 2500
             });
-            $.ajax({
-                url: '<?php echo route('login'); ?>',
-                method: 'POST',
-                data:data,
-                dataType: 'json', // Set the expected data type to JSON
-                beforeSend: function(){
-                    $('.error-container').html('');
-                },
-                success: function(data) {
-                        window.location.href = '<?php echo route('home') ?>'
-
-                    // if(data && data.status == 0){
-                    //     Swal.fire({
-                    //         toast: true,
-                    //         position: "top-end",
-                    //         icon: "error",
-                    //         title: 'hello',
-                    //         showConfirmButton: false,
-                    //         timer: 2500
-                    //     });
-                    // }
-                    // if (data && data.status == 1) {
-                    // } else {
-                    //     var errors = (data.errors) ? data.errors : {};
-                    //     if (Object.keys(errors).length > 0) {
-
-                    //         var error_key = Object.keys(errors);
-                    //         for (var i = 0; i < error_key.length; i++) {
-                    //             var fieldName = error_key[i];
-                    //             var errorMessage = errors[fieldName];
-                    //             if ($('#' + fieldName).length) {
-                    //                 var element = $('#' + fieldName);
-                    //                 var element_error = `${errorMessage}`;
-                    //                 element.next('.error-container').html(element_error);
-                    //                 element.focus();
-                    //             }
-                    //         }
-                    //     }
-
-                    // }
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    Swal.close();
-                    // console.log()
-                    // if (data.errors) {
-                    //     // Extract first message
-                    //     let firstError = Object.values(data.errors)[0][0];
-
-                        Swal.fire({
-                            toast: true,
-                            position: "top-end",
-                            icon: "error",
-                            title: xhr.responseJSON.message,
-                            showConfirmButton: false,
-                            timer: 2500
-                        });
-
-                    //     return;
-                    // }
-                }
-            });
+        }
+    });
 });
 
 </script>
