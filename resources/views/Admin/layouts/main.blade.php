@@ -3,7 +3,7 @@
     @include('Admin.partial.head')
     @yield('styles')
     <body class="bg-gray-100" x-data="{ sidebar: true, profileMenu: false }">
-        <div class="flex h-screen">
+        <div class="flex">
             <!-- Sidebar -->
             @include('Admin.partial.sidebar')
             <!-- end sidebar -->
@@ -18,5 +18,6 @@
             </main>
             <!-- Main Content -->
         </div>
+        @include('Admin.partial.footer')
     </body>
 </html>

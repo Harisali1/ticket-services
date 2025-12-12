@@ -12,7 +12,7 @@
       <a href="{{ route('admin.agency.index') }}" class="text-gray-600 hover:text-black">
         ←
       </a>
-      <h1 class="text-2xl font-semibold">Create Agency</h1>
+      <h1 class="text-2xl font-semibold">Create User</h1>
     </div>
 
     <!-- <button class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md">
@@ -30,33 +30,6 @@
   <div class="bg-white border rounded-lg p-6 space-y-10">
 
     <form>
-    <!-- Agency Details -->
-      <div>
-        <h2 class="font-semibold text-lg mb-4">Agency Details</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Agency Name -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Agency Name*</label>
-            <input type="text" placeholder="Enter Agency Name" class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-
-          <!-- P.IVA -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">P.IVA *</label>
-            <input type="text" value="4YUK3R" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-        </div>
-
-        <!-- Address -->
-        <div class="mt-6">
-          <label class="block text-sm text-gray-600 mb-1">Agency Address*</label>
-          <input type="text" value="Office #302, Park Tower, Clifton Block 2, Karachi" readonly
-            class="w-full border rounded-md p-3 bg-gray-50" />
-        </div>
-      </div>
-
     <!-- User Details -->
       <div>
         <h2 class="font-semibold text-lg mb-4">User Details</h2>
@@ -83,8 +56,16 @@
               class="w-full border rounded-md p-3 bg-gray-50" />
           </div>
 
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Status</label>
+            <input type="text" value="+92-1234567890" readonly
+              class="w-full border rounded-md p-3 bg-gray-50" />
+          </div>
+
+
+          
           <!-- Password -->
-          <div class="relative">
+          <!-- <div class="relative">
             <label class="block text-sm text-gray-600 mb-1">Password*</label>
             <input type="password" value="******" readonly
               class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
@@ -110,15 +91,14 @@
                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.708.042C20.88 7.943 16.884 5 12 5 7.115 5 3.12 7.943 2.292 12.042c-.06.29-.06.627 0 .916C3.12 16.057 7.115 19 12 19c4.884 0 8.88-2.943 9.708-6.042.06-.289.06-.626 0-.916z" />
               </svg>
             </button>
-          </div>
+          </div> -->
 
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Status</label>
-            <input type="text" value="+92-1234567890" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-
+         
         </div>
+        <div class="mt-6">
+            <label class="block text-sm text-gray-600 mb-1">Agency Address*</label>
+            <input type="text" value="Office #302, Park Tower, Clifton Block 2, Karachi" readonly class="w-full border rounded-md p-3 bg-gray-50" />
+          </div>
         <div class="flex justify-end gap-3 mt-10">
             <button class="border border-gray-400 px-5 py-2 rounded-md">Cancel</button>
             <button class="bg-black text-white px-5 py-2 rounded-md">Save</button>
