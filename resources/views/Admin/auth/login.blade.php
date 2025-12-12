@@ -139,7 +139,7 @@
             $('.error-container').html('');
         },
         success: function(data) {
-            window.location.href = '<?php echo route('home') ?>'
+            window.location.href = '<?php echo route('admin.dashboard') ?>'
         },
         error: function(xhr, textStatus, errorThrown) {
             Swal.close();

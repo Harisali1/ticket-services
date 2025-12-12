@@ -19,7 +19,16 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/agency', [App\Http\Controllers\Admin\AgencyController::class, 'index'])->name('admin.agency.index');
-Route::get('/agency/add', [App\Http\Controllers\Admin\AgencyController::class, 'create'])->name('admin.agency.create');
+Route::group(['middleware' => 'auth'], function () {
+    Route::prefix('admin')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
+        
+        Route::prefix('agency')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\AgencyController::class, 'index'])->name('admin.agency.index');
+            Route::get('/add', [App\Http\Controllers\Admin\AgencyController::class, 'create'])->name('admin.agency.create');
+        });
+
+    });
+});
+

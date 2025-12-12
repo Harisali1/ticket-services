@@ -23,28 +23,21 @@
 
       <!-- Active Menu -->
       <div class="flex items-center gap-3 px-3 py-3 bg-gray-600 rounded cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" fill="#fff" viewBox="0 0 24 24">
-          <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/>
-        </svg>
-
+        <i class="fa fa-tachometer fa-2x" aria-hidden="true"></i>
         <span x-show="sidebar" class="whitespace-nowrap">Dashboard</span>
       </div>
 
       <!-- Other Menu -->
-      <div class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" fill="#fff" viewBox="0 0 24 24">
-          <path d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
 
-        <span x-show="sidebar" class="whitespace-nowrap">Manage Bookings</span>
+      <div class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
+        <a href="{{ route('admin.agency.index') }}">
+        <span x-show="sidebar" class="whitespace-nowrap">Manage Agencies</span>
+</a>
       </div>
 
       <div class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" fill="#fff" viewBox="0 0 24 24">
-          <path d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-
-        <span x-show="sidebar" class="whitespace-nowrap">Manage Agencies</span>
+        
+        <span x-show="sidebar" class="whitespace-nowrap">Manage Bookings</span>
       </div>
 
         <div class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
