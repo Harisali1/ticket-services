@@ -78,82 +78,82 @@
 
 <script>
     document.getElementById("myform").addEventListener("submit", function(e) {
-    e.preventDefault();
-    let valid = true;
-    // Show error in toast
-    function showError(message) {
-        Swal.fire({
-            toast: true,
-            position: "top-end",
-            icon: "error",
-            title: message,
-            showConfirmButton: false,
-            timer: 2500
-        });
-    }
-
-    // Grab Values
-    const formData = {
-        email: document.getElementById("email").value.trim(),
-        password: document.getElementById("password").value.trim(),
-    };
-
-
-    // Define validation rules
-    const validations = [
-        { field: "email", message: "Email is required", test: value => value !== "" },
-        { field: "email", message: "Invalid email format", test: value => /^\S+@\S+\.\S+$/.test(value) },
-        { field: "password", message: "Password is required", test: value => value !== "" },
-    ];
-
-    // Run validations
-    for (const rule of validations) {
-        if (!rule.test(formData[rule.field])) {
-            showError(rule.message);
-            valid = false;
-            break; // Stop on first error
-        }
-    }
-
-    if (!valid) return;
-
-    // AJAX call
-    Swal.fire({
-        title: "Processing...",
-        text: "Please wait",
-        didOpen: () => Swal.showLoading()
-    });
-
-    var data = $('#myform').serialize();
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    $.ajax({
-        url: '<?php echo route('login'); ?>',
-        method: 'POST',
-        data:data,
-        dataType: 'json', // Set the expected data type to JSON
-        beforeSend: function(){
-            $('.error-container').html('');
-        },
-        success: function(data) {
-            window.location.href = '<?php echo route('admin.dashboard') ?>'
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            Swal.close();
+        e.preventDefault();
+        let valid = true;
+        // Show error in toast
+        function showError(message) {
             Swal.fire({
                 toast: true,
                 position: "top-end",
                 icon: "error",
-                title: xhr.responseJSON.message,
+                title: message,
                 showConfirmButton: false,
                 timer: 2500
             });
         }
+
+        // Grab Values
+        const formData = {
+            email: document.getElementById("email").value.trim(),
+            password: document.getElementById("password").value.trim(),
+        };
+
+
+        // Define validation rules
+        const validations = [
+            { field: "email", message: "Email is required", test: value => value !== "" },
+            { field: "email", message: "Invalid email format", test: value => /^\S+@\S+\.\S+$/.test(value) },
+            { field: "password", message: "Password is required", test: value => value !== "" },
+        ];
+
+        // Run validations
+        for (const rule of validations) {
+            if (!rule.test(formData[rule.field])) {
+                showError(rule.message);
+                valid = false;
+                break; // Stop on first error
+            }
+        }
+
+        if (!valid) return;
+
+        // AJAX call
+        Swal.fire({
+            title: "Processing...",
+            text: "Please wait",
+            didOpen: () => Swal.showLoading()
+        });
+
+        var data = $('#myform').serialize();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '<?php echo route('login'); ?>',
+            method: 'POST',
+            data:data,
+            dataType: 'json', // Set the expected data type to JSON
+            beforeSend: function(){
+                $('.error-container').html('');
+            },
+            success: function(data) {
+                window.location.href = '<?php echo route('admin.dashboard') ?>'
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                Swal.close();
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "error",
+                    title: xhr.responseJSON.message,
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            }
+        });
     });
-});
 
 </script>
 </body>

@@ -29,7 +29,7 @@
   <!-- Form Container -->
   <div class="bg-white border rounded-lg p-6 space-y-10">
 
-    <form>
+    <form id="agency-form">
     <!-- Agency Details -->
       <div>
         <h2 class="font-semibold text-lg mb-4">Agency Details</h2>
@@ -38,56 +38,50 @@
           <!-- Agency Name -->
           <div>
             <label class="block text-sm text-gray-600 mb-1">Agency Name*</label>
-            <input type="text" placeholder="Enter Agency Name" class="w-full border rounded-md p-3 bg-gray-50" />
+            <input type="text" placeholder="Enter Agency Name" name="agency_name" id="agency_name" class="w-full border rounded-md p-3 bg-gray-50" />
           </div>
 
           <!-- P.IVA -->
           <div>
             <label class="block text-sm text-gray-600 mb-1">P.IVA *</label>
-            <input type="text" value="4YUK3R" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
+            <input type="text" name="piv" id="piv" placeholder="Enter Code" class="w-full border rounded-md p-3 bg-gray-50" />
           </div>
         </div>
 
         <!-- Address -->
         <div class="mt-6">
           <label class="block text-sm text-gray-600 mb-1">Agency Address*</label>
-          <input type="text" value="Office #302, Park Tower, Clifton Block 2, Karachi" readonly
-            class="w-full border rounded-md p-3 bg-gray-50" />
+          <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" class="w-full border rounded-md p-3 bg-gray-50" />
         </div>
       </div>
 
     <!-- User Details -->
       <div>
-        <h2 class="font-semibold text-lg mb-4">User Details</h2>
+        <h2 class="font-semibold text-lg mb-4 mt-4">User Details</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Name -->
           <div>
             <label class="block text-sm text-gray-600 mb-1">Name*</label>
-            <input type="text" value="John Doe" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
+            <input type="text" name="name" id="name" placeholder="Enter Name" class="w-full border rounded-md p-3 bg-gray-50" />
           </div>
 
           <!-- Email -->
           <div>
             <label class="block text-sm text-gray-600 mb-1">Email*</label>
-            <input type="text" value="john.doe@gmail.com" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
+            <input type="text" name="email" id="email" placeholder="Enter Email Address" class="w-full border rounded-md p-3 bg-gray-50" />
           </div>
 
           <!-- Phone -->
           <div>
             <label class="block text-sm text-gray-600 mb-1">Phone No*</label>
-            <input type="text" value="+92-1234567890" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
+            <input type="text" name="phone_no" id="phone_no" placeholder="Enter Phone No #" class="w-full border rounded-md p-3 bg-gray-50" />
           </div>
 
           <!-- Password -->
           <div class="relative">
             <label class="block text-sm text-gray-600 mb-1">Password*</label>
-            <input type="password" value="******" readonly
-              class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
+            <input type="password"name="password" id="password" placeholder="*******" class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
 
             <button class="absolute right-3 top-10 text-gray-500 hover:text-black">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
@@ -100,8 +94,7 @@
 
           <div class="relative">
             <label class="block text-sm text-gray-600 mb-1">Confirm Password*</label>
-            <input type="password" value="******" readonly
-              class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="*******" class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
 
             <button class="absolute right-3 top-10 text-gray-500 hover:text-black">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
@@ -113,10 +106,15 @@
           </div>
 
           <div>
-            <label class="block text-sm text-gray-600 mb-1">Status</label>
-            <input type="text" value="+92-1234567890" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
+              <label class="block text-sm text-gray-600 mb-1">Status</label>
+              <select name="status" id="status"
+                  class="w-full border rounded-md p-3 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                  <option value="1">Approved</option>
+                  <option value="0">Pending Approval</option>
+                  <option value="2">Suspended</option>
+              </select>
           </div>
+
 
         </div>
         <div class="flex justify-end gap-3 mt-10">
@@ -131,6 +129,91 @@
 @endsection
 
 @section('scripts')
+  <script>
+    document.getElementById("agency-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        function showError(message) {
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "error",
+                title: message,
+                showConfirmButton: false,
+                timer: 2500
+            });
+        }
+
+        const formData = {
+            agency_name: document.getElementById("agency_name").value.trim(),
+            piv: document.getElementById("piv").value.trim(),
+            agency_address: document.getElementById("agency_address").value.trim(),
+            name: document.getElementById("name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone: document.getElementById("phone_no").value.trim(),
+            password: document.getElementById("password").value.trim(),
+            confirm_password: document.getElementById("confirm_password").value.trim(),
+            status: document.getElementById("status").value.trim(),
+        };
+
+        const validations = [
+            { field: "agency_name", message: "Agency name is required", test: v => v !== "" },
+            { field: "piv", message: "P.IVA is required", test: v => v !== "" },
+            { field: "agency_address", message: "Agency address is required", test: v => v !== "" },
+            { field: "name", message: "Name is required", test: v => v !== "" },
+            { field: "email", message: "Email is required", test: v => v !== "" },
+            { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
+            { field: "phone", message: "Phone must be at least 11 digits", test: v => v.length >= 11 },
+            { field: "password", message: "Password must be 6+ characters", test: v => v.length >= 6 },
+            { field: "confirm_password", message: "Passwords do not match", test: v => v === formData.password },
+            { field: "status", message: "Status is required", test: v => v !== "" },
+        ];
+
+        for (const rule of validations) {
+            if (!rule.test(formData[rule.field])) {
+                showError(rule.message);
+                return;
+            }
+        }
+
+        Swal.fire({
+            title: "Processing...",
+            text: "Please wait",
+            didOpen: () => Swal.showLoading()
+        });
+
+        var data = $('#agency-form').serialize();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: "{{ route('admin.agency.store') }}",
+            method: "POST",
+            data: data,
+            dataType: 'json', // Set the expected data type to JSON
+            beforeSend: function(){
+                $('.error-container').html('');
+            },
+            success: function () {
+                window.location.href = "{{ route('admin.agency.index') }}";
+            },
+            error: function (xhr) {
+                Swal.close();
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "error",
+                    title: xhr.responseJSON.message,
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            }
+        });
+    });
+  </script>
 @endsection
 
 

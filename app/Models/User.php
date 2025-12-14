@@ -18,8 +18,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_type_id',
+        'agency_id',
         'name',
         'email',
+        'phone_no',
         'password',
     ];
 
@@ -42,4 +45,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function agency(){
+        return $this->hasOne(User::Class);
+    }
 }
