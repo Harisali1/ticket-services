@@ -44,9 +44,9 @@ class AgencyList extends Component
 
         $stats = [
             'all'       => Agency::count(),
-            'pending'   => Agency::where('status', 'pending')->count(),
-            'approved'  => Agency::where('status', 'approved')->count(),
-            'suspended' => Agency::where('status', 'suspended')->count(),
+            'pending'   => Agency::where('status', 0)->count(),
+            'approved'  => Agency::where('status', 1)->count(),
+            'suspended' => Agency::where('status', 2)->count(),
         ];
 
         return view('livewire.admin.agency.agency-list', compact('agencies', 'stats'));

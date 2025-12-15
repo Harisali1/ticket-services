@@ -118,7 +118,7 @@
 
         </div>
         <div class="flex justify-end gap-3 mt-10">
-            <button class="border border-gray-400 px-5 py-2 rounded-md">Cancel</button>
+            <a href="{{ route('admin.agency.index') }}" class="border border-gray-400 px-5 py-2 rounded-md">Cancel</a>
             <button class="bg-black text-white px-5 py-2 rounded-md">Save</button>
         </div>
       </div>

@@ -1,8 +1,4 @@
-<div
-    x-data="{ showFilter: false }"
-    class="p-6 space-y-6 bg-gray-50 min-h-screen"
->
-
+<div x-data="{ showFilter: false }" class="p-6 space-y-6 bg-gray-50 min-h-screen">
     <!-- Header -->
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold">Agencies List</h1>
@@ -65,9 +61,9 @@
                 wire:model.defer="filters.status"
                 class="w-full border rounded-md p-3 bg-gray-50">
                 <option value="">Select</option>
-                <option value="approved">Approved</option>
-                <option value="pending">Pending</option>
-                <option value="suspended">Suspended</option>
+                <option value="1">Approved</option>
+                <option value="0">Pending</option>
+                <option value="2">Suspended</option>
             </select>
         </div>
 
@@ -129,13 +125,41 @@
                         <td class="p-3">{{ $agency->address }}</td>
                         <td class="p-3">{{ $agency->created_at->format('m/d/Y h:i a') }}</td>
                         <td class="p-3">
-                            <span class="
-                                {{ $agency->status == 'approved' ? 'text-green-600' :
-                                   ($agency->status == 'pending' ? 'text-yellow-600' : 'text-red-600') }}">
-                                {{ ucfirst($agency->status) }}
+                            <span class="{{ $agency->status->color() }}">
+                               {{ $agency->status->label() }}
                             </span>
                         </td>
-                        <td class="p-3">⋮</td>
+                        <td class="p-3 relative" x-data="{ open: false }">
+                            <button
+                                @click="open = !open"
+                                @click.outside="open = false"
+                                class="text-xl px-2 rounded hover:bg-gray-100"
+                            >
+                                ⋮
+                            </button>
+
+                            <!-- Dropdown -->
+                            <div
+                                x-show="open"
+                                x-transition
+                                class="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg z-50"
+                            >
+                                <a
+                                    href="{{ route('admin.agency.edit', $agency->id) }}"
+                                    class="block px-4 py-2 text-sm hover:bg-gray-100"
+                                >
+                                    ✏️ Edit
+                                </a>
+
+                                <button
+                                    wire:click="deleteAgency({{ $agency->id }})"
+                                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                                >
+                                    🗑 Delete
+                                </button>
+                            </div>
+                        </td>
+
                     </tr>
                 @empty
                     <tr>
