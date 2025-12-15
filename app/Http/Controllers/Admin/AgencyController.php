@@ -62,4 +62,18 @@ class AgencyController extends Controller
             ], 500);
         }
     }
+
+    public function show(Agency $agency){
+        $agency = Agency::with('user')->find($agency->id);
+        return view('Admin.agency.show', compact('agency'));
+    }
+
+    public function edit(Agency $agency){
+        $agency = Agency::with('user')->find($agency->id);
+        return view('Admin.agency.edit', compact('agency'));
+    }
+
+    public function update(Request $request, Agency $agency){
+        dd($request->all(), $agency);
+    }
 }

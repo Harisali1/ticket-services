@@ -1,12 +1,12 @@
 <div x-data="{ showFilter: false }" class="p-6 space-y-6 bg-gray-50 min-h-screen">
     <!-- Header -->
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold">Agencies List</h1>
+        <h1 class="text-2xl font-semibold">User List</h1>
 
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.agency.create') }}"
+            <a href="{{ route('admin.user.create') }}"
                class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md">
-                <span>+</span> Create Agency
+                <span>+</span> Create User
             </a>
 
             <button
@@ -47,7 +47,7 @@
         </div>
 
         <div class="mb-4">
-            <label class="text-sm text-gray-600">Agency Name</label>
+            <label class="text-sm text-gray-600">Name</label>
             <input
                 type="text"
                 wire:model.defer="filters.agency_name"
@@ -108,21 +108,19 @@
             <thead class="bg-gray-100 border-b">
                 <tr>
                     <th class="p-3"><input type="checkbox"></th>
-                    <th class="p-3">Agency Name</th>
-                    <th class="p-3">P.IVA</th>
-                    <th class="p-3">Address</th>
+                    <th class="p-3">Name</th>
+                    <th class="p-3">Email</th>
                     <th class="p-3">Created On</th>
                     <th class="p-3">Status</th>
                     <th class="p-3">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($agencies as $agency)
+                @forelse($users as $agency)
                     <tr class="border-b">
                         <td class="p-3"><input type="checkbox"></td>
                         <td class="p-3">{{ $agency->name }}</td>
-                        <td class="p-3">{{ $agency->piv }}</td>
-                        <td class="p-3">{{ $agency->address }}</td>
+                        <td class="p-3">{{ $agency->email }}</td>
                         <td class="p-3">{{ $agency->created_at->format('m/d/Y h:i a') }}</td>
                         <td class="p-3">
                             <span class="{{ $agency->status->color() }}">

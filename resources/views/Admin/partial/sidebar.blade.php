@@ -14,11 +14,14 @@
     <nav class="flex flex-col gap-2 px-2">
  <!-- fa-2x -->
       <!-- Active Menu -->
-      <div class="flex items-center gap-3 px-3 py-3 bg-gray-600 rounded cursor-pointer">
+      <!-- <div class="flex items-center gap-3 px-3 py-3 bg-gray-600 rounded cursor-pointer">
         <i class="fa fa-tachometer" aria-hidden="true"></i>
         <span x-show="sidebar" class="whitespace-nowrap">Dashboard</span>
-      </div>
-
+      </div> -->
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-3 bg-gray-600 rounded cursor-pointer">
+          <i class="fa fa-tachometer" aria-hidden="true"></i>
+        <span x-show="sidebar" class="whitespace-nowrap">Dashboard</span>
+        </a>
       <!-- Other Menu -->
         <a href="{{ route('admin.agency.index') }}" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
           <i class="fa fa-building" aria-hidden="true"></i>

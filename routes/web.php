@@ -28,7 +28,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', [App\Http\Controllers\Admin\AgencyController::class, 'index'])->name('admin.agency.index');
             Route::get('/add', [App\Http\Controllers\Admin\AgencyController::class, 'create'])->name('admin.agency.create');
             Route::post('/store', [App\Http\Controllers\Admin\AgencyController::class, 'store'])->name('admin.agency.store');
-            Route::get('/edit', [App\Http\Controllers\Admin\AgencyController::class, 'edit'])->name('admin.agency.edit');
+            Route::get('/edit/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'edit'])->name('admin.agency.edit');
+            Route::get('/show/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'show'])->name('admin.agency.show');
             Route::get('/update', [App\Http\Controllers\Admin\AgencyController::class, 'update'])->name('admin.agency.update');
         });
 
@@ -36,7 +37,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', [App\Http\Controllers\Admin\AirLineController::class, 'index'])->name('admin.airline.index');
             Route::get('/add', [App\Http\Controllers\Admin\AirLineController::class, 'create'])->name('admin.airline.create');
             Route::post('/store', [App\Http\Controllers\Admin\AirLineController::class, 'store'])->name('admin.airline.store');
-            Route::get('/edit', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
+            Route::get('/edit/{airline}', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
+            // Route::get('/show/{airline}', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
             Route::get('/update', [App\Http\Controllers\Admin\AirLineController::class, 'update'])->name('admin.airline.update');
         });
 

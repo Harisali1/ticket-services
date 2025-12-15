@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Livewire\Admin\Agency;
+namespace App\Livewire\Admin\User;
 
 use Livewire\Component;
-use App\Models\Admin\Agency;
+use App\Models\User;
 
-class AgencyList extends Component
+class UserList extends Component
 {
     public $filters = [
-        'agency_name' => '',
+        'name' => '',
+        'email' => '',
         'status' => '',
         'from' => '',
         'to' => '',
@@ -26,12 +27,14 @@ class AgencyList extends Component
 
     public function render()
     {
-        $agencies = Agency::query()
-            ->when($this->filters['agency_name'], function ($q) {
-                $q->where('name', 'like', '%' . $this->filters['agency_name'] . '%');
+        $users = User::query()
+            ->when($this->filters['name'], function ($q) {
+                $q->where('name', 'like', '%' . $this->filters['name'] . '%');
+            })
+            ->when($this->filters['email'], function ($q) {
+                $q->where('email', $this->filters['email']);
             })
             ->when($this->filters['status'], function ($q) {
-                // dd($this->filters['status']);
                 $q->where('status', $this->filters['status']);
             })
             ->when($this->filters['from'], function ($q) {
@@ -44,12 +47,12 @@ class AgencyList extends Component
             ->get();
 
         $stats = [
-            'all'       => Agency::count(),
-            'pending'   => Agency::where('status', 0)->count(),
-            'approved'  => Agency::where('status', 1)->count(),
-            'suspended' => Agency::where('status', 2)->count(),
+            'all'       => User::count(),
+            'pending'   => User::where('status', 0)->count(),
+            'approved'  => User::where('status', 1)->count(),
+            'suspended' => User::where('status', 2)->count(),
         ];
 
-        return view('livewire.admin.agency.agency-list', compact('agencies', 'stats'));
+        return view('livewire.admin.user.user-list', compact('users', 'stats'));
     }
 }
