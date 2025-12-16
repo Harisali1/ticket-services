@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum AgencyStatus: int
 {
-    case Pending   = 0;
-    case Approved  = 1;
-    case Suspended = 2;
+    case Pending   = 1;
+    case Approved  = 2;
+    case Suspended = 3;
 
     public function label(): string
     {

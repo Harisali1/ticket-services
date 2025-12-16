@@ -109,15 +109,23 @@
             </button>
           </div>
 
-          <!-- <div>
-              <label class="block text-sm text-gray-600 mb-1">Status</label>
-              <select name="status" id="status"
-                  class="w-full border rounded-md p-3 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                  <option value="1">Approved</option>
-                  <option value="0">Pending Approval</option>
-                  <option value="2">Suspended</option>
-              </select>
-          </div> -->
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Status</label>
+
+            <select name="status" id="status"
+                class="w-full border rounded-md p-3 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-400">
+
+                @foreach(\App\Enums\AgencyStatus::cases() as $status)
+                    <option value="{{ $status->value }}"
+                        @selected($agency->status === $status)>
+                        {{ $status->label() }}
+                    </option>
+                @endforeach
+
+            </select>
+          </div>
+
+
 
 
         </div>

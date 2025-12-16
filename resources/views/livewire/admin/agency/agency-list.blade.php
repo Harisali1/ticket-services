@@ -61,9 +61,9 @@
                 wire:model.defer="filters.status"
                 class="w-full border rounded-md p-3 bg-gray-50">
                 <option value="">Select</option>
-                <option value="1">Approved</option>
-                <option value="0">Pending</option>
-                <option value="2">Suspended</option>
+                <option value="1">Pending</option>
+                <option value="2">Approved</option>
+                <option value="3">Suspended</option>
             </select>
         </div>
 
@@ -103,6 +103,12 @@
     </div>
 
     <!-- Table -->
+<select wire:model.live="perPage" class="border p-2 rounded">
+    <option value="2">2</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+</select>
+
     <div class="overflow-auto border rounded-lg bg-white">
         <table class="min-w-full text-left text-sm">
             <thead class="bg-gray-100 border-b">
@@ -142,27 +148,17 @@
                             <div
                                 x-show="open"
                                 x-transition
-                                class="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg z-50"
-                            >
+                                class="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg z-50">
                                 <a
                                     href="{{ route('admin.agency.edit', $agency->id) }}"
-                                    class="block px-4 py-2 text-sm hover:bg-gray-100"
-                                >
+                                    class="block px-4 py-2 text-sm hover:bg-gray-100">
                                     Edit
                                 </a>
                                 <a
                                     href="{{ route('admin.agency.show', $agency->id) }}"
-                                    class="block px-4 py-2 text-sm hover:bg-gray-100"
-                                >
+                                    class="block px-4 py-2 text-sm hover:bg-gray-100">
                                     View Details
                                 </a>
-
-                                <!-- <button
-                                    wire:click="deleteAgency({{ $agency->id }})"
-                                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                >
-                                    View Details
-                                </button> -->
                             </div>
                         </td>
 
@@ -176,6 +172,10 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
+        
 
+    </div>
+    <div class="mt-4">
+        {{ $agencies->links() }}
+    </div>
 </div>

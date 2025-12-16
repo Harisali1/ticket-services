@@ -79,31 +79,42 @@
           </div>
 
           <!-- Password -->
-          <div class="relative">
-            <label class="block text-sm text-gray-600 mb-1">Password*</label>
-            <input type="password"name="password" id="password" placeholder="*******" class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
-
-            <button class="absolute right-3 top-10 text-gray-500 hover:text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.708.042C20.88 7.943 16.884 5 12 5 7.115 5 3.12 7.943 2.292 12.042c-.06.29-.06.627 0 .916C3.12 16.057 7.115 19 12 19c4.884 0 8.88-2.943 9.708-6.042.06-.289.06-.626 0-.916z" />
-              </svg>
-            </button>
+          <div x-data="{ show: false }" class="relative">
+              <label class="block text-sm text-gray-600 mb-1">
+                  Password*
+              </label>
+              <input :type="show ? 'text' : 'password'"
+                  wire:model.defer="password"
+                  placeholder="*******"
+                  class="w-full border rounded-md p-3 bg-gray-50 pr-10">
+              <button type="button"
+                  @click="show = !show"
+                  class="absolute right-3 top-10 text-gray-500 hover:text-black">
+                  <i class="fa" :class="show ? 'fa-eye' : 'fa-eye-slash'"></i>
+              </button>
           </div>
 
-          <div class="relative">
-            <label class="block text-sm text-gray-600 mb-1">Confirm Password*</label>
-            <input type="password" name="confirm_password" id="confirm_password" placeholder="*******" class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
 
-            <button class="absolute right-3 top-10 text-gray-500 hover:text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.708.042C20.88 7.943 16.884 5 12 5 7.115 5 3.12 7.943 2.292 12.042c-.06.29-.06.627 0 .916C3.12 16.057 7.115 19 12 19c4.884 0 8.88-2.943 9.708-6.042.06-.289.06-.626 0-.916z" />
-              </svg>
-            </button>
+          <div x-data="{ show: false }" class="relative">
+              <label class="block text-sm text-gray-600 mb-1">
+                  Confirm Password*
+              </label>
+
+              <input
+                  :type="show ? 'text' : 'password'"
+                  wire:model.defer="confirm_password"
+                  placeholder="*******"
+                  class="w-full border rounded-md p-3 bg-gray-50 pr-10">
+
+              <button
+                  type="button"
+                  @click="show = !show"
+                  class="absolute right-3 top-10 text-gray-500 hover:text-black">
+                  <!-- Eye -->
+                  <i class="fa" :class="show ? 'fa-eye' : 'fa-eye-slash'"></i>
+              </button>
           </div>
+
 
           <div>
               <label class="block text-sm text-gray-600 mb-1">Status</label>
