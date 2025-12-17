@@ -1,55 +1,76 @@
 <?php
 
-namespace App\Livewire\Admin\Agency;
+namespace App\Livewire\Admin\AirLine;
 
 use Livewire\Component;
-use App\Models\Admin\Agency;
+use Livewire\WithPagination;
+use App\Models\Admin\AirLine;
 
-class AgencyList extends Component
+class AirLineList extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'tailwind';
+
     public $filters = [
-        'agency_name' => '',
+        'name' => '',
+        'code' => '',
         'status' => '',
         'from' => '',
         'to' => '',
     ];
 
+    public $perPage = 10;
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    // Reset page when filters change
+    public function updatedFilters()
+    {
+        $this->resetPage();
+    }
+
     public function applyFilters()
     {
-        // Just re-render
+        $this->resetPage();
     }
 
     public function resetFilters()
     {
         $this->reset('filters');
+        $this->resetPage();
     }
 
     public function render()
     {
-        $agencies = Agency::query()
-            ->when($this->filters['agency_name'], function ($q) {
-                $q->where('name', 'like', '%' . $this->filters['agency_name'] . '%');
-            })
-            ->when($this->filters['status'], function ($q) {
-                // dd($this->filters['status']);
-                $q->where('status', $this->filters['status']);
-            })
-            ->when($this->filters['from'], function ($q) {
-                $q->whereDate('created_at', '>=', $this->filters['from']);
-            })
-            ->when($this->filters['to'], function ($q) {
-                $q->whereDate('created_at', '<=', $this->filters['to']);
-            })
+        $airlines = AirLine::query()
+            ->when($this->filters['name'], fn ($q) =>
+                $q->where('name', 'like', '%' . $this->filters['name'] . '%')
+            )
+            ->when($this->filters['code'], fn ($q) =>
+                $q->where('code', 'like', '%' . $this->filters['code'] . '%')
+            )
+            ->when($this->filters['status'] !== '', fn ($q) =>
+                $q->where('status', $this->filters['status'])
+            )
+            ->when($this->filters['from'], fn ($q) =>
+                $q->whereDate('created_at', '>=', $this->filters['from'])
+            )
+            ->when($this->filters['to'], fn ($q) =>
+                $q->whereDate('created_at', '<=', $this->filters['to'])
+            )
             ->latest()
-            ->get();
+            ->paginate($this->perPage);
 
         $stats = [
-            'all'       => Agency::count(),
-            'pending'   => Agency::where('status', 0)->count(),
-            'approved'  => Agency::where('status', 1)->count(),
-            'suspended' => Agency::where('status', 2)->count(),
+            'all'       => AirLine::count(),
+            'active'   => AirLine::where('status', 1)->count(),
+            'deactive'  => AirLine::where('status', 2)->count(),
         ];
 
-        return view('livewire.admin.agency.agency-list', compact('agencies', 'stats'));
+        return view('livewire.admin.airline.airline-list', compact('airlines', 'stats'));
     }
 }

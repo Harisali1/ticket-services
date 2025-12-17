@@ -11,10 +11,7 @@ class AgencyList extends Component
     use WithPagination;
 
     protected $paginationTheme = 'tailwind';
-    // protected function paginationView()
-    // {
-    //     return 'components.custom-pagination';
-    // }
+
 
     public $filters = [
         'agency_name' => '',

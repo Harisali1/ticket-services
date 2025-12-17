@@ -50,20 +50,27 @@
             <label class="text-sm text-gray-600">Name</label>
             <input
                 type="text"
-                wire:model.defer="filters.agency_name"
+                wire:model.defer="filters.name"
                 class="w-full border rounded-md p-3 bg-gray-50"
-                placeholder="Agency Name">
+                placeholder="Name">
         </div>
-
+        <div class="mb-4">
+            <label class="text-sm text-gray-600">Email</label>
+            <input
+                type="text"
+                wire:model.defer="filters.email"
+                class="w-full border rounded-md p-3 bg-gray-50"
+                placeholder="Email">
+        </div>
         <div class="mb-4">
             <label class="text-sm text-gray-600">Status</label>
             <select
                 wire:model.defer="filters.status"
                 class="w-full border rounded-md p-3 bg-gray-50">
                 <option value="">Select</option>
-                <option value="1">Approved</option>
-                <option value="0">Pending</option>
-                <option value="2">Suspended</option>
+                <option value="1">Pending</option>
+                <option value="2">Approved</option>
+                <option value="3">Suspended</option>
             </select>
         </div>
 
@@ -116,15 +123,15 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($users as $agency)
+                @forelse($users as $user)
                     <tr class="border-b">
                         <td class="p-3"><input type="checkbox"></td>
-                        <td class="p-3">{{ $agency->name }}</td>
-                        <td class="p-3">{{ $agency->email }}</td>
-                        <td class="p-3">{{ $agency->created_at->format('m/d/Y h:i a') }}</td>
+                        <td class="p-3">{{ $user->name }}</td>
+                        <td class="p-3">{{ $user->email }}</td>
+                        <td class="p-3">{{ $user->created_at->format('m/d/Y h:i a') }}</td>
                         <td class="p-3">
-                            <span class="{{ $agency->status->color() }}">
-                               {{ $agency->status->label() }}
+                            <span class="{{ $user->status->color() }}">
+                               {{ $user->status->label() }}
                             </span>
                         </td>
                         <td class="p-3 relative" x-data="{ open: false }">
@@ -143,24 +150,11 @@
                                 class="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg z-50"
                             >
                                 <a
-                                    href="{{ route('admin.agency.edit', $agency->id) }}"
+                                    href="{{ route('admin.user.edit', $user->id) }}"
                                     class="block px-4 py-2 text-sm hover:bg-gray-100"
                                 >
                                     Edit
                                 </a>
-                                <a
-                                    href="{{ route('admin.agency.show', $agency->id) }}"
-                                    class="block px-4 py-2 text-sm hover:bg-gray-100"
-                                >
-                                    View Details
-                                </a>
-
-                                <!-- <button
-                                    wire:click="deleteAgency({{ $agency->id }})"
-                                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                >
-                                    View Details
-                                </button> -->
                             </div>
                         </td>
 
@@ -168,12 +162,14 @@
                 @empty
                     <tr>
                         <td colspan="7" class="p-6 text-center text-gray-500">
-                            No agencies found
+                            No users found
                         </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-
+    <div class="mt-4">
+        {{ $users->links() }}
+    </div>
 </div>

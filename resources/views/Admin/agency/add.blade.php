@@ -86,6 +86,8 @@
               <input :type="show ? 'text' : 'password'"
                   wire:model.defer="password"
                   placeholder="*******"
+                  id="password"
+                  name="password"
                   class="w-full border rounded-md p-3 bg-gray-50 pr-10">
               <button type="button"
                   @click="show = !show"
@@ -104,6 +106,8 @@
                   :type="show ? 'text' : 'password'"
                   wire:model.defer="confirm_password"
                   placeholder="*******"
+                  id="confirm_password"
+                  name="confirm_password"
                   class="w-full border rounded-md p-3 bg-gray-50 pr-10">
 
               <button

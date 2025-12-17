@@ -1,12 +1,12 @@
 <div x-data="{ showFilter: false }" class="p-6 space-y-6 bg-gray-50 min-h-screen">
     <!-- Header -->
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold">Agencies List</h1>
+        <h1 class="text-2xl font-semibold">AirLine List</h1>
 
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.agency.create') }}"
+            <a href="{{ route('admin.airline.create') }}"
                class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md">
-                <span>+</span> Create Agency
+                <span>+</span> Create AirLine
             </a>
 
             <button
@@ -47,12 +47,20 @@
         </div>
 
         <div class="mb-4">
-            <label class="text-sm text-gray-600">Agency Name</label>
+            <label class="text-sm text-gray-600">Name</label>
             <input
                 type="text"
-                wire:model.defer="filters.agency_name"
+                wire:model.defer="filters.name"
                 class="w-full border rounded-md p-3 bg-gray-50"
-                placeholder="Agency Name">
+                placeholder="AirLine Name">
+        </div>
+        <div class="mb-4">
+            <label class="text-sm text-gray-600">Code</label>
+            <input
+                type="text"
+                wire:model.defer="filters.code"
+                class="w-full border rounded-md p-3 bg-gray-50"
+                placeholder="AirLine Code">
         </div>
 
         <div class="mb-4">
@@ -61,9 +69,8 @@
                 wire:model.defer="filters.status"
                 class="w-full border rounded-md p-3 bg-gray-50">
                 <option value="">Select</option>
-                <option value="1">Approved</option>
-                <option value="0">Pending</option>
-                <option value="2">Suspended</option>
+                <option value="1">Active</option>
+                <option value="2">DeActive</option>
             </select>
         </div>
 
@@ -108,27 +115,25 @@
             <thead class="bg-gray-100 border-b">
                 <tr>
                     <th class="p-3"><input type="checkbox"></th>
-                    <th class="p-3">Agency Name</th>
-                    <th class="p-3">P.IVA</th>
-                    <th class="p-3">Address</th>
-                    <th class="p-3">Created On</th>
+                    <th class="p-3">Name</th>
+                    <th class="p-3">Code</th>
                     <th class="p-3">Status</th>
+                    <th class="p-3">Created On</th>
                     <th class="p-3">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($agencies as $agency)
+                @forelse($airlines as $airline)
                     <tr class="border-b">
                         <td class="p-3"><input type="checkbox"></td>
-                        <td class="p-3">{{ $agency->name }}</td>
-                        <td class="p-3">{{ $agency->piv }}</td>
-                        <td class="p-3">{{ $agency->address }}</td>
-                        <td class="p-3">{{ $agency->created_at->format('m/d/Y h:i a') }}</td>
+                        <td class="p-3">{{ $airline->name }}</td>
+                        <td class="p-3">{{ $airline->code }}</td>
                         <td class="p-3">
-                            <span class="{{ $agency->status->color() }}">
-                               {{ $agency->status->label() }}
+                            <span class="{{ $airline->status->color() }}">
+                               {{ $airline->status->label() }}
                             </span>
                         </td>
+                        <td class="p-3">{{ $airline->created_at->format('m/d/Y h:i a') }}</td>
                         <td class="p-3 relative" x-data="{ open: false }">
                             <button
                                 @click="open = !open"
@@ -145,24 +150,11 @@
                                 class="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg z-50"
                             >
                                 <a
-                                    href="{{ route('admin.agency.edit', $agency->id) }}"
+                                    href="{{ route('admin.airline.edit', $airline->id) }}"
                                     class="block px-4 py-2 text-sm hover:bg-gray-100"
                                 >
                                     Edit
                                 </a>
-                                <a
-                                    href="{{ route('admin.agency.show', $agency->id) }}"
-                                    class="block px-4 py-2 text-sm hover:bg-gray-100"
-                                >
-                                    View Details
-                                </a>
-
-                                <!-- <button
-                                    wire:click="deleteAgency({{ $agency->id }})"
-                                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                >
-                                    View Details
-                                </button> -->
                             </div>
                         </td>
 
@@ -170,12 +162,14 @@
                 @empty
                     <tr>
                         <td colspan="7" class="p-6 text-center text-gray-500">
-                            No agencies found
+                            No airlines found
                         </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-
+ <div class="mt-4">
+        {{ $airlines->links() }}
+    </div>
 </div>

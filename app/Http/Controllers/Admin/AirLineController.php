@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Admin\AirLine;
 
 class AirLineController extends Controller
 {
@@ -15,48 +16,30 @@ class AirLineController extends Controller
         return view('Admin.airline.add');
     }
 
-     public function store(AgencyStoreRequest $request){
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50',
+            'logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+        ]);
 
-        $validated = $request->validated();
+        $logoPath = null;
 
-        DB::beginTransaction();
-
-        try {
-
-            // Create Agency
-            $agency = Agency::create([
-                'name'     => $validated['agency_name'],
-                'piv'             => $validated['piv'],
-                'address'  => $validated['agency_address'],
-            ]);
-
-            // Create User
-            $user = User::create([
-                'user_type_id' => 2,
-                'agency_id' => $agency->id,
-                'name'      => $validated['name'],
-                'email'     => $validated['email'],
-                'phone_no'  => $validated['phone_no'],
-                'password'  => bcrypt($validated['password']),
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Agency created successfully',
-            ], 201);
-
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong',
-                'error'   => $e->getMessage()
-            ], 500);
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('airlines', 'public');
         }
+
+        Airline::create([
+            'name' => $request->name,
+            'code' => $request->code,
+            'logo' => $logoPath,
+            'status' => $request->status,
+        ]);
+
+        return redirect()
+            ->route('admin.airline.index')
+            ->with('success', 'Airline created successfully');
     }
 
     public function show(Agency $agency){

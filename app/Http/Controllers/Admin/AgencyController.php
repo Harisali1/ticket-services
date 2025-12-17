@@ -27,21 +27,20 @@ class AgencyController extends Controller
 
         try {
 
-            // Create Agency
-            $agency = Agency::create([
-                'name'     => $validated['agency_name'],
-                'piv'             => $validated['piv'],
-                'address'  => $validated['agency_address'],
-            ]);
-
             // Create User
             $user = User::create([
                 'user_type_id' => 2,
-                'agency_id' => $agency->id,
                 'name'      => $validated['name'],
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
                 'password'  => bcrypt($validated['password']),
+            ]);
+            // Create Agency
+            $agency = Agency::create([
+                'user_id'   => $user->id,
+                'name'      => $validated['agency_name'],
+                'piv'       => $validated['piv'],
+                'address'   => $validated['agency_address'],
             ]);
 
             DB::commit();

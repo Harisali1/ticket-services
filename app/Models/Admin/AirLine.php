@@ -4,21 +4,18 @@ namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\AgencyStatus;
-use App\Models\User;
+use App\Enums\AirLineStatus;
 
-class Agency extends Model
+
+class AirLine extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
     protected $casts = [
-        'status' => AgencyStatus::class,
+        'status' => AirLineStatus::class,
     ];
 
-    public function user(){
-        return $this->hasOne(User::class);
-    }
 
 }

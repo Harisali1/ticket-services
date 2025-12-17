@@ -3,10 +3,15 @@
 namespace App\Livewire\Admin\User;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\User;
 
 class UserList extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'tailwind';
+
     public $filters = [
         'name' => '',
         'email' => '',
@@ -15,14 +20,28 @@ class UserList extends Component
         'to' => '',
     ];
 
+    public $perPage = 10;
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    // Reset page when filters change
+    public function updatedFilters()
+    {
+        $this->resetPage();
+    }
+
     public function applyFilters()
     {
-        // Just re-render
+        $this->resetPage();
     }
 
     public function resetFilters()
     {
         $this->reset('filters');
+        $this->resetPage();
     }
 
     public function render()
