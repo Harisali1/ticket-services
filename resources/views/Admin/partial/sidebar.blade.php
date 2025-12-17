@@ -38,7 +38,7 @@
           <span x-show="sidebar" class="whitespace-nowrap">User Management</span>
         </a>
 
-        <a href="#" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
+        <a href="{{ route('admin.pnr.index') }}" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
           <i class="fa fa-book" aria-hidden="true"></i>
           <span x-show="sidebar" class="whitespace-nowrap">Manage PNR</span>
         </a>

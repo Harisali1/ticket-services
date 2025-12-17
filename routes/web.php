@@ -50,6 +50,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/update', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.user.update');
         });
 
+        Route::prefix('pnr')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\PnrController::class, 'index'])->name('admin.pnr.index');
+            Route::get('/add', [App\Http\Controllers\Admin\PnrController::class, 'create'])->name('admin.pnr.create');
+            Route::post('/store', [App\Http\Controllers\Admin\PnrController::class, 'store'])->name('admin.pnr.store');
+            Route::get('/edit', [App\Http\Controllers\Admin\PnrController::class, 'edit'])->name('admin.pnr.edit');
+            Route::get('/update', [App\Http\Controllers\Admin\PnrController::class, 'update'])->name('admin.pnr.update');
+        });
+
     });
 });
 
