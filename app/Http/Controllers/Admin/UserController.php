@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserStoreRequest;
+use App\Models\User;
+use DB;
 
 class UserController extends Controller
 {
@@ -15,7 +18,7 @@ class UserController extends Controller
         return view('Admin.user.add');
     }
 
-    public function store(AgencyStoreRequest $request){
+    public function store(UserStoreRequest $request){
 
         $validated = $request->validated();
 
