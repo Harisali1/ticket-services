@@ -100,9 +100,7 @@
                 </button>
             </div>
 
-            <p class="mt-3 text-gray-600 font-medium">
-                40 Records Added
-            </p>
+            
         </div>
 
         <!-- Footer Buttons -->

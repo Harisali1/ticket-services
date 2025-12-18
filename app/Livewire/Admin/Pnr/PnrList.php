@@ -14,7 +14,7 @@ class PnrList extends Component
 
 
     public $filters = [
-        'pnr_name' => '',
+        'pnr_no' => '',
         'airline' => '',
         'status' => '',
         'from' => '',
@@ -47,9 +47,9 @@ class PnrList extends Component
 
     public function render()
     {
-        $agencies = Pnr::query()
-            ->when($this->filters['agency_name'], fn ($q) =>
-                $q->where('name', 'like', '%' . $this->filters['agency_name'] . '%')
+        $pnrs = Pnr::query()
+            ->when($this->filters['pnr_no'], fn ($q) =>
+                $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
             )
             ->when($this->filters['status'] !== '', fn ($q) =>
                 $q->where('status', $this->filters['status'])
@@ -64,12 +64,12 @@ class PnrList extends Component
             ->paginate($this->perPage);
 
         $stats = [
-            'all'       => Agency::count(),
-            'pending'   => Agency::where('status', 1)->count(),
-            'approved'  => Agency::where('status', 2)->count(),
-            'suspended' => Agency::where('status', 3)->count(),
+            'all'       => Pnr::count(),
+            'pending'   => Pnr::where('status', 1)->count(),
+            'approved'  => Pnr::where('status', 2)->count(),
+            'suspended' => Pnr::where('status', 3)->count(),
         ];
 
-        return view('livewire.admin.pnr.pnr-list', compact('agencies', 'stats'));
+        return view('livewire.admin.pnr.pnr-list', compact('pnrs', 'stats'));
     }
 }

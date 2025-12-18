@@ -1,12 +1,12 @@
 <div x-data="{ showFilter: false }" class="p-6 space-y-6 bg-gray-50 min-h-screen">
     <!-- Header -->
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold">Agencies List</h1>
+        <h1 class="text-2xl font-semibold">Pnr List</h1>
 
         <div class="flex items-center gap-3">
             <a href="{{ route('admin.pnr.create') }}"
                class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md">
-                <span>+</span> Create Agency
+                <span>+</span> Create Pnr
             </a>
 
             <button
@@ -47,10 +47,10 @@
         </div>
 
         <div class="mb-4">
-            <label class="text-sm text-gray-600">Agency Name</label>
+            <label class="text-sm text-gray-600">Pnr No</label>
             <input
                 type="text"
-                wire:model.defer="filters.agency_name"
+                wire:model.defer="filters.pnr_no"
                 class="w-full border rounded-md p-3 bg-gray-50"
                 placeholder="Agency Name">
         </div>
@@ -114,25 +114,25 @@
             <thead class="bg-gray-100 border-b">
                 <tr>
                     <th class="p-3"><input type="checkbox"></th>
-                    <th class="p-3">Agency Name</th>
-                    <th class="p-3">P.IVA</th>
-                    <th class="p-3">Address</th>
-                    <th class="p-3">Created On</th>
+                    <th class="p-3">Pnr No #</th>
+                    <th class="p-3">AirLine</th>
+                    <th class="p-3">Departure Date/Time</th>
+                    <th class="p-3">Arrival Date/Time</th>
                     <th class="p-3">Status</th>
                     <th class="p-3">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($agencies as $agency)
+                @forelse($pnrs as $pnr)
                     <tr class="border-b">
                         <td class="p-3"><input type="checkbox"></td>
-                        <td class="p-3">{{ $agency->name }}</td>
-                        <td class="p-3">{{ $agency->piv }}</td>
-                        <td class="p-3">{{ $agency->address }}</td>
-                        <td class="p-3">{{ $agency->created_at->format('m/d/Y h:i a') }}</td>
+                        <td class="p-3">{{ $pnr->pnr_no }}</td>
+                        <td class="p-3"></td>
+                        <td class="p-3"></td>
+                        <td class="p-3">{{ $pnr->created_at->format('m/d/Y h:i a') }}</td>
                         <td class="p-3">
-                            <span class="{{ $agency->status->color() }}">
-                               {{ $agency->status->label() }}
+                            <span class="{{ $pnr->status->color() }}">
+                               {{ $pnr->status->label() }}
                             </span>
                         </td>
                         <td class="p-3 relative" x-data="{ open: false }">
@@ -150,12 +150,12 @@
                                 x-transition
                                 class="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg z-50">
                                 <a
-                                    href="{{ route('admin.agency.edit', $agency->id) }}"
+                                    href="{{ route('admin.agency.edit', $pnr->id) }}"
                                     class="block px-4 py-2 text-sm hover:bg-gray-100">
                                     Edit
                                 </a>
                                 <a
-                                    href="{{ route('admin.agency.show', $agency->id) }}"
+                                    href="{{ route('admin.agency.show', $pnr->id) }}"
                                     class="block px-4 py-2 text-sm hover:bg-gray-100">
                                     View Details
                                 </a>
@@ -176,6 +176,6 @@
 
     </div>
     <div class="mt-4">
-        {{ $agencies->links() }}
+        {{ $pnrs->links() }}
     </div>
 </div>

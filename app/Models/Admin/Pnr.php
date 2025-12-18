@@ -12,9 +12,4 @@ class Pnr extends Model
 
     protected $guarded = [];
 
-    // protected $casts = [
-    //     'status' => PnrStatus::class,
-    // ];
-
-
 }

@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seats', function (Blueprint $table) {
+        Schema::create('baggages', function (Blueprint $table) {
             $table->id();
-            $table->integer('pnr_id');
-            $table->boolean('is_sold')->default(0);
-            $table->boolean('is_sale')->default(0);
-            $table->boolean('is_available')->default(0);
-            $table->string('price');
+            $table->string('name');
+            $table->boolean('status');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seats');
+        Schema::dropIfExists('baggages');
     }
 };
