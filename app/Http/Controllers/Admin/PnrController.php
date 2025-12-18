@@ -18,14 +18,16 @@ class PnrController extends Controller
         return view('Admin.pnr.add');
     }
 
-    public function store(UserStoreRequest $request){
+    public function store(Request $request){
 
+        
         $validated = $request->validated();
 
         DB::beginTransaction();
 
         try {
 
+            
             $user = User::create([
                 'user_type_id' => 1,
                 'name'      => $validated['name'],
