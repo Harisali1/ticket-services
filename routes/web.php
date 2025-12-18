@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    
+    Artisan::call('migrate', [
+        '--force' => true // REQUIRED for production
+    ]);
     return redirect()->route('login');
 });
 
