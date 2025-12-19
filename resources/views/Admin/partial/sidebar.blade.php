@@ -1,55 +1,50 @@
-<aside class="bg-black text-white flex flex-col py-6 transition-all duration-300" :class="sidebar ? 'w-64' : 'w-20'">
-  <div class="px-6 mb-8" x-show="sidebar">
-    <h1 class="text-xl font-semibold">Airline</h1>
-  </div>
+<div class="d-flex">
 
-    <!-- Toggle Button -->
-    <button class="text-white px-4 mb-4 focus:outline-none" @click="sidebar = !sidebar">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="#fff" viewBox="0 0 24 24">
-        <path d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-    </button>
-
-    <!-- Navigation -->
-    <nav class="flex flex-col gap-2 px-2">
- <!-- fa-2x -->
-      <!-- Active Menu -->
-      <!-- <div class="flex items-center gap-3 px-3 py-3 bg-gray-600 rounded cursor-pointer">
-        <i class="fa fa-tachometer" aria-hidden="true"></i>
-        <span x-show="sidebar" class="whitespace-nowrap">Dashboard</span>
-      </div> -->
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-3 bg-gray-600 rounded cursor-pointer">
-          <i class="fa fa-tachometer" aria-hidden="true"></i>
-        <span x-show="sidebar" class="whitespace-nowrap">Dashboard</span>
-        </a>
-      <!-- Other Menu -->
-        <a href="{{ route('admin.agency.index') }}" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
-          <i class="fa fa-building" aria-hidden="true"></i>
-          <span x-show="sidebar" class="whitespace-nowrap">Manage Agencies</span>
-        </a>
-
-        <a href="{{ route('admin.airline.index') }}" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
-          <i class="fa fa-plane" aria-hidden="true"></i>
-          <span x-show="sidebar" class="whitespace-nowrap">Manage Airline</span>
-        </a>
-
-        <a href="{{ route('admin.user.index') }}" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
-          <i class="fa fa-user" aria-hidden="true"></i>
-          <span x-show="sidebar" class="whitespace-nowrap">User Management</span>
-        </a>
-
-        <a href="{{ route('admin.pnr.index') }}" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
-          <i class="fa fa-book" aria-hidden="true"></i>
-          <span x-show="sidebar" class="whitespace-nowrap">Manage PNR</span>
-        </a>
-
-
+    <!-- Sidebar -->
+    <aside id="sidebar" class="bg-dark text-white expanded d-flex flex-column p-3">
         
+        <!-- Title -->
+        <div class="mb-4">
+            <h1 class="h5 mb-0">Airline</h1>
+        </div>
 
-        <a href="#" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-700 rounded cursor-pointer">
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          <span x-show="sidebar" class="whitespace-nowrap">Manage Bookings</span>
-        </a>
-    </nav>
+        <!-- Toggle Button -->
+        <!-- <button class="btn btn-outline-light mb-3" id="sidebarToggle">
+            <i class="fa fa-bars"></i>
+        </button> -->
 
-  </aside>
+        <!-- Navigation -->
+        <nav class="nav flex-column gap-2">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link text-white bg-secondary rounded d-flex align-items-center">
+                <i class="fa fa-tachometer me-3"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+
+            <a href="{{ route('admin.agency.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <i class="fa fa-building me-3"></i>
+                <span class="menu-text">Manage Agencies</span>
+            </a>
+
+            <a href="{{ route('admin.airline.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <i class="fa fa-plane me-3"></i>
+                <span class="menu-text">Manage Airline</span>
+            </a>
+
+            <a href="{{ route('admin.user.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <i class="fa fa-user me-3"></i>
+                <span class="menu-text">User Management</span>
+            </a>
+
+            <a href="{{ route('admin.pnr.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <i class="fa fa-book me-3"></i>
+                <span class="menu-text">Manage PNR</span>
+            </a>
+
+            <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <i class="fa fa-calendar me-3"></i>
+                <span class="menu-text">Manage Bookings</span>
+            </a>
+        </nav>
+    </aside>
+</div>
+

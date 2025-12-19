@@ -10,7 +10,7 @@ class AirLineList extends Component
 {
     use WithPagination;
 
-    protected $paginationTheme = 'tailwind';
+    protected $paginationTheme = 'bootstrap';
 
     public $filters = [
         'name' => '',

@@ -10,7 +10,7 @@ class AgencyList extends Component
 {
     use WithPagination;
 
-    protected $paginationTheme = 'tailwind';
+    protected $paginationTheme = 'bootstrap';
 
 
     public $filters = [
@@ -20,7 +20,7 @@ class AgencyList extends Component
         'to' => '',
     ];
 
-    public $perPage = 2;
+    public $perPage = 10;
 
     public function updatedPerPage()
     {

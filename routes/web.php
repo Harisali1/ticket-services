@@ -22,6 +22,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Livewire::setUpdateRoute(function ($handle) {
+    return Route::post('/custom/livewire/update', $handle);
+});
+
+Livewire::setUpdateRoute(function ($handle) {
+    return Route::post('public/livewire/update', $handle);
+});
 
 Route::group(['middleware' => 'auth'], function () {
     Route::prefix('admin')->group(function () {
@@ -33,7 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', [App\Http\Controllers\Admin\AgencyController::class, 'store'])->name('admin.agency.store');
             Route::get('/edit/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'edit'])->name('admin.agency.edit');
             Route::get('/show/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'show'])->name('admin.agency.show');
-            Route::get('/update', [App\Http\Controllers\Admin\AgencyController::class, 'update'])->name('admin.agency.update');
+            Route::post('/update', [App\Http\Controllers\Admin\AgencyController::class, 'update'])->name('admin.agency.update');
         });
 
         Route::prefix('airline')->group(function () {

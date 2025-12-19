@@ -3,13 +3,13 @@
     @include('Admin.partial.head')
     @yield('styles')
     @livewireStyles
-    <body class="bg-gray-100" x-data="{ sidebar: true, profileMenu: false }">
-        <div class="flex">
+    <body>
+        <div class="d-flex">
             <!-- Sidebar -->
             @include('Admin.partial.sidebar')
             <!-- end sidebar -->
             <!-- Main Content -->
-            <main class="flex-1">
+            <div class="flex-grow-1">
                 <!-- Top Navbar -->
                     @include('Admin.partial.header')
                 <!-- Top Navbar -->

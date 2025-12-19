@@ -4,233 +4,194 @@
 @endsection
 
 @section('content')
-<div class="p-6 space-y-6 bg-gray-50 min-h-screen">
+<div class="container py-4">
 
   <!-- Header -->
-  <div class="flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <a href="{{ route('admin.agency.index') }}" class="text-gray-600 hover:text-black">
-        ←
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <a href="{{ route('admin.agency.index') }}" class="text-decoration-none text-secondary">
+        &larr;
       </a>
-      <h1 class="text-2xl font-semibold">Create Agency</h1>
+      <h1 class="h4 mb-0">Create Agency</h1>
     </div>
-
-    <!-- <button class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-        viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5h2M12 3v2m0 14v2m0 0h-2m2 0h2M5 11H3m2 0H3m14 0h2m0 0h-2m0 0h2" />
-      </svg>
-      Edit Agency
-    </button> -->
   </div>
 
-  <hr />
+  <hr>
 
   <!-- Form Container -->
-  <div class="bg-white border rounded-lg p-6 space-y-10">
-
+  <div class="card p-4">
     <form id="agency-form">
-    <!-- Agency Details -->
-      <div>
-        <h2 class="font-semibold text-lg mb-4">Agency Details</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Agency Name -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Agency Name*</label>
-            <input type="text" placeholder="Enter Agency Name" name="agency_name" id="agency_name" class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-
-          <!-- P.IVA -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">P.IVA *</label>
-            <input type="text" name="piv" id="piv" placeholder="Enter Code" class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+      <!-- Agency Details -->
+      <h5 class="mb-3">Agency Details</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Agency Name*</label>
+          <input type="text" placeholder="Enter Agency Name" name="agency_name" id="agency_name" class="form-control">
         </div>
 
-        <!-- Address -->
-        <div class="mt-6">
-          <label class="block text-sm text-gray-600 mb-1">Agency Address*</label>
-          <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" class="w-full border rounded-md p-3 bg-gray-50" />
+        <div class="col-md-6">
+          <label class="form-label">P.IVA*</label>
+          <input type="text" name="piv" id="piv" placeholder="Enter Code" class="form-control">
         </div>
       </div>
 
-    <!-- User Details -->
-      <div>
-        <h2 class="font-semibold text-lg mb-4 mt-4">User Details</h2>
+      <div class="mt-3">
+        <label class="form-label">Agency Address*</label>
+        <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" class="form-control">
+      </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Name -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Name*</label>
-            <input type="text" name="name" id="name" placeholder="Enter Name" class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-
-          <!-- Email -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Email*</label>
-            <input type="text" name="email" id="email" placeholder="Enter Email Address" class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-
-          <!-- Phone -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Phone No*</label>
-            <input type="text" name="phone_no" id="phone_no" placeholder="Enter Phone No #" class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-
-          <!-- Password -->
-          <div x-data="{ show: false }" class="relative">
-              <label class="block text-sm text-gray-600 mb-1">
-                  Password*
-              </label>
-              <input :type="show ? 'text' : 'password'"
-                  wire:model.defer="password"
-                  placeholder="*******"
-                  id="password"
-                  name="password"
-                  class="w-full border rounded-md p-3 bg-gray-50 pr-10">
-              <button type="button"
-                  @click="show = !show"
-                  class="absolute right-3 top-10 text-gray-500 hover:text-black">
-                  <i class="fa" :class="show ? 'fa-eye' : 'fa-eye-slash'"></i>
-              </button>
-          </div>
-
-
-          <div x-data="{ show: false }" class="relative">
-              <label class="block text-sm text-gray-600 mb-1">
-                  Confirm Password*
-              </label>
-
-              <input
-                  :type="show ? 'text' : 'password'"
-                  wire:model.defer="confirm_password"
-                  placeholder="*******"
-                  id="confirm_password"
-                  name="confirm_password"
-                  class="w-full border rounded-md p-3 bg-gray-50 pr-10">
-
-              <button
-                  type="button"
-                  @click="show = !show"
-                  class="absolute right-3 top-10 text-gray-500 hover:text-black">
-                  <!-- Eye -->
-                  <i class="fa" :class="show ? 'fa-eye' : 'fa-eye-slash'"></i>
-              </button>
-          </div>
-
-
-          <div>
-              <label class="block text-sm text-gray-600 mb-1">Status</label>
-              <select name="status" id="status"
-                  class="w-full border rounded-md p-3 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                  <option value="1">Approved</option>
-                  <option value="0">Pending Approval</option>
-                  <option value="2">Suspended</option>
-              </select>
-          </div>
-
-
+      <!-- User Details -->
+      <h5 class="mt-4 mb-3">User Details</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Name*</label>
+          <input type="text" name="name" id="name" placeholder="Enter Name" class="form-control">
         </div>
-        <div class="flex justify-end gap-3 mt-10">
-            <a href="{{ route('admin.agency.index') }}" class="border border-gray-400 px-5 py-2 rounded-md">Cancel</a>
-            <button class="bg-black text-white px-5 py-2 rounded-md">Save</button>
+
+        <div class="col-md-6">
+          <label class="form-label">Email*</label>
+          <input type="email" name="email" id="email" placeholder="Enter Email Address" class="form-control">
         </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Phone No*</label>
+          <input type="text" name="phone_no" id="phone_no" placeholder="Enter Phone No #" class="form-control">
+        </div>
+
+        <!-- Password -->
+        <div class="col-md-6 position-relative">
+          <label class="form-label">Password*</label>
+          <input type="password" name="password" id="password" placeholder="*******" class="form-control pr-5">
+          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 me-2" onclick="togglePassword('password', this)">
+            <i class="fa fa-eye"></i>
+          </button>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="col-md-6 position-relative">
+          <label class="form-label">Confirm Password*</label>
+          <input type="password" name="confirm_password" id="confirm_password" placeholder="*******" class="form-control pr-5">
+          <button type="button" class="btn btn-secondary position-absolute top-0 end-0 me-2" onclick="togglePassword('confirm_password', this)">
+            <i class="fa fa-eye"></i>
+          </button>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Status</label>
+          <select name="status" id="status" class="form-select">
+            <option value="1">Approved</option>
+            <option value="0">Pending Approval</option>
+            <option value="2">Suspended</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <a href="{{ route('admin.agency.index') }}" class="btn btn-outline-secondary">Cancel</a>
+        <button class="btn btn-dark">Save</button>
       </div>
     </form>
   </div>
 </div>
-
 @endsection
 
 @section('scripts')
-  <script>
-    document.getElementById("agency-form").addEventListener("submit", function(e) {
-        e.preventDefault();
+<script>
+  function togglePassword(fieldId, btn) {
+    const input = document.getElementById(fieldId);
+    const icon = btn.querySelector('i');
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = "password";
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
 
-        function showError(message) {
-            Swal.fire({
-                toast: true,
-                position: "top-end",
-                icon: "error",
-                title: message,
-                showConfirmButton: false,
-                timer: 2500
-            });
-        }
+  document.getElementById("agency-form").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-        const formData = {
-            agency_name: document.getElementById("agency_name").value.trim(),
-            piv: document.getElementById("piv").value.trim(),
-            agency_address: document.getElementById("agency_address").value.trim(),
-            name: document.getElementById("name").value.trim(),
-            email: document.getElementById("email").value.trim(),
-            phone: document.getElementById("phone_no").value.trim(),
-            password: document.getElementById("password").value.trim(),
-            confirm_password: document.getElementById("confirm_password").value.trim(),
-            status: document.getElementById("status").value.trim(),
-        };
+    function showError(message) {
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+        timer: 2500
+      });
+    }
 
-        const validations = [
-            { field: "agency_name", message: "Agency name is required", test: v => v !== "" },
-            { field: "piv", message: "P.IVA is required", test: v => v !== "" },
-            { field: "agency_address", message: "Agency address is required", test: v => v !== "" },
-            { field: "name", message: "Name is required", test: v => v !== "" },
-            { field: "email", message: "Email is required", test: v => v !== "" },
-            { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
-            { field: "phone", message: "Phone must be at least 11 digits", test: v => v.length >= 11 },
-            { field: "password", message: "Password must be 6+ characters", test: v => v.length >= 6 },
-            { field: "confirm_password", message: "Passwords do not match", test: v => v === formData.password },
-            { field: "status", message: "Status is required", test: v => v !== "" },
-        ];
+    const formData = {
+      agency_name: document.getElementById("agency_name").value.trim(),
+      piv: document.getElementById("piv").value.trim(),
+      agency_address: document.getElementById("agency_address").value.trim(),
+      name: document.getElementById("name").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      phone: document.getElementById("phone_no").value.trim(),
+      password: document.getElementById("password").value.trim(),
+      confirm_password: document.getElementById("confirm_password").value.trim(),
+      status: document.getElementById("status").value.trim(),
+    };
 
-        for (const rule of validations) {
-            if (!rule.test(formData[rule.field])) {
-                showError(rule.message);
-                return;
-            }
-        }
+    const validations = [
+      { field: "agency_name", message: "Agency name is required", test: v => v !== "" },
+      { field: "piv", message: "P.IVA is required", test: v => v !== "" },
+      { field: "agency_address", message: "Agency address is required", test: v => v !== "" },
+      { field: "name", message: "Name is required", test: v => v !== "" },
+      { field: "email", message: "Email is required", test: v => v !== "" },
+      { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
+      { field: "phone", message: "Phone must be at least 11 digits", test: v => v.length >= 11 },
+      { field: "password", message: "Password must be 6+ characters", test: v => v.length >= 6 },
+      { field: "confirm_password", message: "Passwords do not match", test: v => v === formData.password },
+      { field: "status", message: "Status is required", test: v => v !== "" },
+    ];
 
-        Swal.fire({
-            title: "Processing...",
-            text: "Please wait",
-            didOpen: () => Swal.showLoading()
-        });
+    for (const rule of validations) {
+      if (!rule.test(formData[rule.field])) {
+        showError(rule.message);
+        return;
+      }
+    }
 
-        var data = $('#agency-form').serialize();
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.ajax({
-            url: "{{ route('admin.agency.store') }}",
-            method: "POST",
-            data: data,
-            dataType: 'json', // Set the expected data type to JSON
-            beforeSend: function(){
-                $('.error-container').html('');
-            },
-            success: function () {
-                window.location.href = "{{ route('admin.agency.index') }}";
-            },
-            error: function (xhr) {
-                Swal.close();
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "error",
-                    title: xhr.responseJSON.message,
-                    showConfirmButton: false,
-                    timer: 2500
-                });
-            }
-        });
+    Swal.fire({
+      title: "Processing...",
+      text: "Please wait",
+      didOpen: () => Swal.showLoading()
     });
-  </script>
+
+    var data = $('#agency-form').serialize();
+    $.ajaxSetup({
+      headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+    });
+
+    $.ajax({
+      url: "{{ route('admin.agency.store') }}",
+      method: "POST",
+      data: data,
+      dataType: 'json',
+      beforeSend: function(){
+        $('.error-container').html('');
+      },
+      success: function () {
+        window.location.href = "{{ route('admin.agency.index') }}";
+      },
+      error: function (xhr) {
+        Swal.close();
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "error",
+          title: xhr.responseJSON.message,
+          showConfirmButton: false,
+          timer: 2500
+        });
+      }
+    });
+  });
+</script>
 @endsection
-
-
-
-

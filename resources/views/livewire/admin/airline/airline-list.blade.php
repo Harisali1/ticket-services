@@ -1,175 +1,129 @@
-<div x-data="{ showFilter: false }" class="p-6 space-y-6 bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold">AirLine List</h1>
+<div class="container py-4">
 
-        <div class="flex items-center gap-3">
-            <a href="{{ route('admin.airline.create') }}"
-               class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md">
-                <span>+</span> Create AirLine
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">AirLine List</h1>
+
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.airline.create') }}" class="btn btn-dark">
+                + Create AirLine
             </a>
 
-            <button
-                @click="showFilter = true"
-                class="p-2 border rounded-md hover:bg-gray-100">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-                     fill="none" stroke="currentColor" stroke-width="1.5"
-                     viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M3 4h18M4 8h16M6 12h12M9 16h6M11 20h2"/>
+            <!-- Filter Button trigger offcanvas -->
+            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar" aria-controls="filterSidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
+                  <path d="M1.5 1.5a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .4.8L10 7.7v5.6a.5.5 0 0 1-.757.429L7 12.101l-2.243 1.628A.5.5 0 0 1 4 12.3V7.7L1.1 2.3a.5.5 0 0 1 .4-.8z"/>
                 </svg>
             </button>
         </div>
     </div>
 
-    <!-- Overlay -->
-    <div
-        x-show="showFilter"
-        @click="showFilter = false"
-        class="fixed inset-0 bg-black bg-opacity-30 z-40"
-        x-transition.opacity>
-    </div>
-
-    <!-- Filter Sidebar -->
-    <div
-        x-show="showFilter"
-        x-transition:enter="transition transform duration-300"
-        x-transition:enter-start="translate-x-full"
-        x-transition:enter-end="translate-x-0"
-        x-transition:leave="transition transform duration-300"
-        x-transition:leave-start="translate-x-0"
-        x-transition:leave-end="translate-x-full"
-        class="fixed top-0 right-0 w-80 h-full bg-white border-l z-50 p-6 overflow-y-auto"
-    >
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-lg font-semibold">Filters</h2>
-            <button @click="showFilter = false" class="text-xl">&times;</button>
+    <!-- Filter Sidebar using Bootstrap Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="filterSidebar">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Filters</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
-
-        <div class="mb-4">
-            <label class="text-sm text-gray-600">Name</label>
-            <input
-                type="text"
-                wire:model.defer="filters.name"
-                class="w-full border rounded-md p-3 bg-gray-50"
-                placeholder="AirLine Name">
-        </div>
-        <div class="mb-4">
-            <label class="text-sm text-gray-600">Code</label>
-            <input
-                type="text"
-                wire:model.defer="filters.code"
-                class="w-full border rounded-md p-3 bg-gray-50"
-                placeholder="AirLine Code">
-        </div>
-
-        <div class="mb-4">
-            <label class="text-sm text-gray-600">Status</label>
-            <select
-                wire:model.defer="filters.status"
-                class="w-full border rounded-md p-3 bg-gray-50">
-                <option value="">Select</option>
-                <option value="1">Active</option>
-                <option value="2">DeActive</option>
-            </select>
-        </div>
-
-        <div class="mb-6">
-            <label class="text-sm text-gray-600">Created Date</label>
-            <div class="grid grid-cols-2 gap-3">
-                <input type="date" wire:model.defer="filters.from" class="border rounded-md p-3 bg-gray-50">
-                <input type="date" wire:model.defer="filters.to" class="border rounded-md p-3 bg-gray-50">
+        <div class="offcanvas-body">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" wire:model.defer="filters.name" class="form-control" placeholder="Name">
             </div>
-        </div>
 
-        <div class="flex gap-3">
-            <button
-                wire:click="applyFilters"
-                @click="showFilter = false"
-                class="flex-1 bg-black text-white py-2 rounded-md">
-                Search
-            </button>
+            <div class="mb-3">
+                <label class="form-label">Code</label>
+                <input type="text" wire:model.defer="filters.code" class="form-control" placeholder="Code">
+            </div>
 
-            <button
-                wire:click="resetFilters"
-                @click="showFilter = false"
-                class="flex-1 border py-2 rounded-md">
-                Cancel
-            </button>
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select wire:model.defer="filters.status" class="form-select">
+                    <option value="">Select</option>
+                    <option value="1">Active</option>
+                    <option value="2">DeActive</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Created Date</label>
+                <div class="row g-2">
+                    <div class="col">
+                        <input type="date" wire:model.defer="filters.from" class="form-control">
+                    </div>
+                    <div class="col">
+                        <input type="date" wire:model.defer="filters.to" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button wire:click="applyFilters" data-bs-dismiss="offcanvas" class="btn btn-dark flex-fill">Search</button>
+                <button wire:click="resetFilters" data-bs-dismiss="offcanvas" class="btn btn-outline-secondary flex-fill">Cancel</button>
+            </div>
         </div>
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="row g-3 my-4">
         @foreach($stats as $label => $count)
-            <div class="bg-white border p-5 rounded-lg">
-                <p class="text-sm text-gray-500">{{ ucfirst($label) }}</p>
-                <p class="text-3xl font-semibold mt-2">{{ $count }}</p>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card p-3 text-center">
+                    <p class="text-muted mb-1">{{ ucfirst($label) }}</p>
+                    <h3 class="mb-0">{{ $count }}</h3>
+                </div>
             </div>
         @endforeach
     </div>
 
     <!-- Table -->
-    <div class="overflow-auto border rounded-lg bg-white">
-        <table class="min-w-full text-left text-sm">
-            <thead class="bg-gray-100 border-b">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
                 <tr>
-                    <th class="p-3"><input type="checkbox"></th>
-                    <th class="p-3">Name</th>
-                    <th class="p-3">Code</th>
-                    <th class="p-3">Status</th>
-                    <th class="p-3">Created On</th>
-                    <th class="p-3">Action</th>
+                    <th scope="col"><input type="checkbox"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Created On</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($airlines as $airline)
-                    <tr class="border-b">
-                        <td class="p-3"><input type="checkbox"></td>
-                        <td class="p-3">{{ $airline->name }}</td>
-                        <td class="p-3">{{ $airline->code }}</td>
-                        <td class="p-3">
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>{{ $airline->name }}</td>
+                        <td>{{ $airline->code }}</td>
+                        <td>
                             <span class="{{ $airline->status->color() }}">
-                               {{ $airline->status->label() }}
+                                {{ $airline->status->label() }}
                             </span>
                         </td>
-                        <td class="p-3">{{ $airline->created_at->format('m/d/Y h:i a') }}</td>
-                        <td class="p-3 relative" x-data="{ open: false }">
-                            <button
-                                @click="open = !open"
-                                @click.outside="open = false"
-                                class="text-xl px-2 rounded hover:bg-gray-100"
-                            >
-                                ⋮
-                            </button>
-
-                            <!-- Dropdown -->
-                            <div
-                                x-show="open"
-                                x-transition
-                                class="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg z-50"
-                            >
-                                <a
-                                    href="{{ route('admin.airline.edit', $airline->id) }}"
-                                    class="block px-4 py-2 text-sm hover:bg-gray-100"
-                                >
-                                    Edit
-                                </a>
+                        <td>{{ $airline->created_at->format('m/d/Y h:i a') }}</td>
+                        <td class="position-relative">
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton{{ $airline->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ⋮
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $airline->id }}">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.airline.edit', $airline->id) }}">Edit</a>
+                                    </li>
+                                </ul>
                             </div>
                         </td>
-
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="p-6 text-center text-gray-500">
-                            No airlines found
-                        </td>
+                        <td colspan="6" class="text-center text-muted">No airlines found</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
- <div class="mt-4">
+
+    <div class="mt-3">
         {{ $airlines->links() }}
     </div>
+
 </div>

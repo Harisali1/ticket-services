@@ -11,6 +11,8 @@ class AirLine extends Model
 {
     use HasFactory;
 
+    protected $table = 'air_lines';
+
     protected $guarded = [];
 
     protected $casts = [

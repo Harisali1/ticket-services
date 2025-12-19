@@ -73,6 +73,6 @@ class AgencyController extends Controller
     }
 
     public function update(Request $request, Agency $agency){
-        dd($request->all(), $agency);
+
     }
 }
