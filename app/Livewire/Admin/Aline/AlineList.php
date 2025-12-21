@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire\Admin\AirLine;
+namespace App\Livewire\Admin\Aline;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Admin\AirLine;
 
-class AirLineList extends Component
+class AlineList extends Component
 {
     use WithPagination;
 
@@ -71,6 +71,6 @@ class AirLineList extends Component
             'deactive'  => AirLine::where('status', 2)->count(),
         ];
 
-        return view('livewire.admin.airline.airline-list', compact('airlines', 'stats'));
+        return view('livewire.admin.aline.aline-list', compact('airlines', 'stats'));
     }
 }
