@@ -10,7 +10,7 @@ class PnrList extends Component
 {
     use WithPagination;
 
-    protected $paginationTheme = 'tailwind';
+    protected $paginationTheme = 'bootstrap';
 
 
     public $filters = [
@@ -47,7 +47,7 @@ class PnrList extends Component
 
     public function render()
     {
-        $pnrs = Pnr::query()
+        $pnrs = Pnr::with('seats', 'airline')
             ->when($this->filters['pnr_no'], fn ($q) =>
                 $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
             )

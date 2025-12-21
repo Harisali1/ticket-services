@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('pnrs', function (Blueprint $table) {
             $table->id();
-            $table->integer('pnr_no');
-            $table->integer('baggage_id');
+            $table->string('pnr_no');
+            $table->integer('baggage_id')->nullable();
             $table->integer('airline_id');
-            $table->string('document');
+            $table->integer('seats');
+            $table->string('pnr_file')->nullable();
             $table->date('departure_date');
             $table->time('departure_time');
             $table->date('arrival_date');
             $table->time('arrival_time');
-            $table->boolean('status');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

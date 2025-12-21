@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\UserStoreRequest;
-use App\Models\User;
+use App\Http\Requests\PnrStoreRequest;
+use App\Models\Admin\Pnr;
 use DB;
 
 class PnrController extends Controller
@@ -18,7 +18,7 @@ class PnrController extends Controller
         return view('Admin.pnr.add');
     }
 
-    public function store(Request $request){
+    public function store(PnrStoreRequest $request){
 
         
         $validated = $request->validated();
@@ -27,14 +27,20 @@ class PnrController extends Controller
 
         try {
 
-            
-            $user = User::create([
-                'user_type_id' => 1,
-                'name'      => $validated['name'],
-                'email'     => $validated['email'],
-                'phone_no'  => $validated['phone_no'],
-                'password'  => bcrypt($validated['password']),
-            ]);
+            $data = $request->validated();
+
+            // Handle file upload
+            if ($request->hasFile('pnr_file')) {
+                $data['pnr_file'] = $request->file('pnr_file')->store('pnr-documents', 'public');
+            }
+
+            $pnr = Pnr::create($data);
+
+            foreach (range(1, $data['seats']) as $i) {
+                $pnr->seats()->create([
+                    'price' => 0
+                ]);
+            }
 
             DB::commit();
 

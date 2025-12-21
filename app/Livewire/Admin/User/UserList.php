@@ -10,7 +10,7 @@ class UserList extends Component
 {
     use WithPagination;
 
-    protected $paginationTheme = 'tailwind';
+    protected $paginationTheme = 'bootstrap';
 
     public $filters = [
         'name' => '',
@@ -63,7 +63,7 @@ class UserList extends Component
                 $q->whereDate('created_at', '<=', $this->filters['to']);
             })
             ->latest()
-            ->get();
+            ->paginate($this->perPage);
 
         $stats = [
             'all'       => User::count(),
