@@ -45,9 +45,8 @@
                 <div class="col-md-4">
                     <label for="status" class="form-label">Status</label>
                     <select name="status" id="status" class="form-select">
-                        <option value="1">Approved</option>
-                        <option value="0">Pending Approval</option>
-                        <option value="2">Suspended</option>
+                        <option value="1">Active</option>
+                        <option value="2">DeActive</option>
                     </select>
                 </div>
             </div>
@@ -136,9 +135,20 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: function () { 
+            success: function (data) { 
                 Swal.close(); 
-                window.location.href = "{{ route('admin.airline.index') }}"; 
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "success",
+                    title: data.message,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ route('admin.airline.index') }}"; 
+                    }
+                });
             },
             error: function (xhr) {
                 Swal.close();

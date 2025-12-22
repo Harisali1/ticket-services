@@ -23,12 +23,7 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
 
-            <form method="POST"
-                  action="{{ route('admin.airline.update', $airline->id) }}"
-                  enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-
+            <form id="airline-form" enctype="multipart/form-data">
                 <!-- AirLine Details -->
                 <div class="mb-5">
                     <h5 class="fw-semibold mb-4">AirLine Details</h5>
@@ -36,7 +31,12 @@
                     <div class="row g-4">
 
                         <!-- Name -->
-                        <div class="col-md-4">
+                        <div class="col-md-4"> 
+                          <input type="hidden"
+                              name="id"
+                              id="id"
+                              value="{{ $airline->id }}"
+                              class="form-control bg-light">
                             <label class="form-label text-muted">Name *</label>
                             <input type="text"
                                    name="name"
@@ -57,8 +57,8 @@
 
                         <!-- Status -->
                         <div class="col-md-4">
-                            <label class="form-label">Status</label>
-                            <select name="status" class="form-select">
+                            <label for="status" class="form-label">Status</label>
+                            <select name="status" id="status" class="form-select">
                                 @foreach(\App\Enums\AirLineStatus::cases() as $status)
                                     <option value="{{ $status->value }}"
                                         @selected(old('status', $airline->status->value) == $status->value)>
@@ -165,7 +165,7 @@
         const formData = new FormData(form);
 
         $.ajax({
-            url: "{{ route('admin.airline.store') }}",
+            url: "{{ route('admin.airline.update') }}",
             type: "POST",
             data: formData,
             processData: false,
@@ -173,9 +173,20 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: function () { 
+            success: function (data) { 
                 Swal.close(); 
-                window.location.href = "{{ route('admin.airline.index') }}"; 
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "success",
+                    title: data.message,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ route('admin.airline.index') }}";  
+                    }
+                });
             },
             error: function (xhr) {
                 Swal.close();

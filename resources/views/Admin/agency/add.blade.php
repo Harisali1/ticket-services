@@ -1,6 +1,7 @@
 @extends('Admin.layouts.main')
 
 @section('styles')
+
 @endsection
 
 @section('content')
@@ -27,18 +28,18 @@
       <div class="row g-3">
         <div class="col-md-6">
           <label class="form-label">Agency Name*</label>
-          <input type="text" placeholder="Enter Agency Name" name="agency_name" id="agency_name" class="form-control">
+          <input type="text" placeholder="Enter Agency Name" name="agency_name" id="agency_name" class="form-control" value="{{ old('agency_name') }}">
         </div>
 
         <div class="col-md-6">
           <label class="form-label">P.IVA*</label>
-          <input type="text" name="piv" id="piv" placeholder="Enter Code" class="form-control">
+          <input type="text" name="piv" id="piv" placeholder="Enter Code" class="form-control" value="{{ old('piv') }}">
         </div>
       </div>
 
       <div class="mt-3">
         <label class="form-label">Agency Address*</label>
-        <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" class="form-control">
+        <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" class="form-control" value="{{ old('agency_address') }}">
       </div>
 
       <!-- User Details -->
@@ -46,24 +47,24 @@
       <div class="row g-3">
         <div class="col-md-6">
           <label class="form-label">Name*</label>
-          <input type="text" name="name" id="name" placeholder="Enter Name" class="form-control">
+          <input type="text" name="name" id="name" placeholder="Enter Name" class="form-control" value="{{ old('name') }}">
         </div>
 
         <div class="col-md-6">
           <label class="form-label">Email*</label>
-          <input type="email" name="email" id="email" placeholder="Enter Email Address" class="form-control">
+          <input type="email" name="email" id="email" placeholder="Enter Email Address" class="form-control" value="{{ old('email') }}">
         </div>
 
         <div class="col-md-6">
           <label class="form-label">Phone No*</label>
-          <input type="text" name="phone_no" id="phone_no" placeholder="Enter Phone No #" class="form-control">
+          <input type="text" name="phone_no" id="phone_no" placeholder="Enter Phone No #" class="form-control" value="{{ old('phone_no') }}">
         </div>
 
         <!-- Password -->
         <div class="col-md-6 position-relative">
           <label class="form-label">Password*</label>
           <input type="password" name="password" id="password" placeholder="*******" class="form-control pr-5">
-          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 me-2" onclick="togglePassword('password', this)">
+          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 me-2 password-hide-show" onclick="togglePassword('password', this)">
             <i class="fa fa-eye"></i>
           </button>
         </div>
@@ -72,7 +73,7 @@
         <div class="col-md-6 position-relative">
           <label class="form-label">Confirm Password*</label>
           <input type="password" name="confirm_password" id="confirm_password" placeholder="*******" class="form-control pr-5">
-          <button type="button" class="btn btn-secondary position-absolute top-0 end-0 me-2" onclick="togglePassword('confirm_password', this)">
+          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 me-2 password-hide-show" onclick="togglePassword('confirm_password', this)">
             <i class="fa fa-eye"></i>
           </button>
         </div>
@@ -177,8 +178,21 @@
       beforeSend: function(){
         $('.error-container').html('');
       },
-      success: function () {
-        window.location.href = "{{ route('admin.agency.index') }}";
+      success: function (data) {
+        Swal.close();
+        Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: "success",
+            title: data.message,
+            showConfirmButton: true,
+            confirmButtonText: "OK"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('admin.agency.index') }}";
+            }
+        });
+
       },
       error: function (xhr) {
         Swal.close();

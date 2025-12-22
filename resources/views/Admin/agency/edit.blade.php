@@ -1,8 +1,6 @@
 @extends('Admin.layouts.main')
 
 @section('styles')
-  <!-- Font Awesome for eye icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 @endsection
 
 @section('content')
@@ -28,6 +26,7 @@
       <h5 class="mb-3">Agency Details</h5>
       <div class="row g-3">
         <div class="col-md-6">
+          <input type="hidden" value="{{ $agency->id }}" id="id" name="id">
           <label class="form-label">Agency Name*</label>
           <input type="text" name="agency_name" id="agency_name" 
                  value="{{ $agency->name }}" 
@@ -74,11 +73,11 @@
         </div>
 
         <!-- Password -->
-        <div class="col-md-6 position-relative">
+        <!-- <div class="col-md-6 position-relative">
           <label class="form-label">Password*</label>
           <input type="password" name="password" id="password" 
                  placeholder="*******" class="form-control pr-5">
-          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2" 
+          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2 password-hide-show" 
                   onclick="togglePassword('password', this)">
             <i class="fa fa-eye"></i>
           </button>
@@ -88,11 +87,11 @@
           <label class="form-label">Confirm Password*</label>
           <input type="password" name="confirm_password" id="confirm_password" 
                  placeholder="*******" class="form-control pr-5">
-          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2" 
+          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2 password-hide-show" 
                   onclick="togglePassword('confirm_password', this)">
             <i class="fa fa-eye"></i>
           </button>
-        </div>
+        </div> -->
 
         <div class="col-md-6">
           <label class="form-label">Status</label>
@@ -109,7 +108,7 @@
       <!-- Form Actions -->
       <div class="d-flex justify-content-end gap-2 mt-4">
         <a href="{{ route('admin.agency.index') }}" class="btn btn-outline-secondary">Cancel</a>
-        <button class="btn btn-dark">Save</button>
+        <button class="btn btn-dark">Update</button>
       </div>
 
     </form>
@@ -120,22 +119,7 @@
 
 @section('scripts')
 <script>
-  // Toggle password visibility
-  function togglePassword(fieldId, btn) {
-    const input = document.getElementById(fieldId);
-    const icon = btn.querySelector('i');
-    if (input.type === "password") {
-      input.type = "text";
-      icon.classList.remove('fa-eye');
-      icon.classList.add('fa-eye-slash');
-    } else {
-      input.type = "password";
-      icon.classList.remove('fa-eye-slash');
-      icon.classList.add('fa-eye');
-    }
-  }
-
-  // Form validation & AJAX submit
+   // Form validation & AJAX submit
   document.getElementById("agency-form").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -157,8 +141,6 @@
       name: document.getElementById("name").value.trim(),
       email: document.getElementById("email").value.trim(),
       phone: document.getElementById("phone_no").value.trim(),
-      password: document.getElementById("password").value.trim(),
-      confirm_password: document.getElementById("confirm_password").value.trim(),
     };
 
     const validations = [
@@ -169,8 +151,6 @@
       { field: "email", message: "Email is required", test: v => v !== "" },
       { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
       { field: "phone", message: "Phone must be at least 11 digits", test: v => v.length >= 11 },
-      { field: "password", message: "Password must be 6+ characters", test: v => v.length >= 6 },
-      { field: "confirm_password", message: "Passwords do not match", test: v => v === formData.password },
     ];
 
     for (const rule of validations) {
@@ -191,13 +171,28 @@
       headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
     });
 
+    // var params = new URLSearchParams(data);
+    // var id = params.get('id');
+    // console.log(id); // 6
+
     $.ajax({
       url: "{{ route('admin.agency.update') }}",
       method: "POST",
       data: data,
       dataType: 'json',
-      success: function () {
-        window.location.href = "{{ route('admin.agency.index') }}";
+      success: function (data) {
+        Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: "success",
+            title: data.message,
+            showConfirmButton: true,
+            confirmButtonText: "OK"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('admin.agency.index') }}";
+            }
+        });      
       },
       error: function (xhr) {
         Swal.close();

@@ -49,5 +49,11 @@
         margin: 0;
         font-weight: 500;
     }
+    
+    .password-hide-show{
+      margin-top: 33px !important;
+      border: none !important;
+    }
+
 </style>
 </head>

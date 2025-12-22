@@ -53,6 +53,6 @@ class AirLineController extends Controller
     }
 
     public function update(Request $request, Agency $agency){
-        dd($request->all(), $agency);
+        dd($request->all());
     }
 }
