@@ -4,115 +4,171 @@
 @endsection
 
 @section('content')
-<div class="p-6 space-y-6 bg-gray-50 min-h-screen">
+<div class="container-fluid bg-light min-vh-100 py-4">
 
-  <!-- Header -->
-  <div class="flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <a href="{{ route('admin.agency.index') }}" class="text-gray-600 hover:text-black">
-        ←
-      </a>
-      <h1 class="text-2xl font-semibold">Create User</h1>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('admin.user.index') }}" class="text-secondary text-decoration-none fs-4">
+                ←
+            </a>
+            <h4 class="mb-0 fw-semibold">Edit User</h4>
+        </div>
     </div>
 
-    <!-- <button class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-        viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5h2M12 3v2m0 14v2m0 0h-2m2 0h2M5 11H3m2 0H3m14 0h2m0 0h-2m0 0h2" />
-      </svg>
-      Edit Agency
-    </button> -->
-  </div>
+    <hr>
 
-  <hr />
+    <!-- Form Container -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
 
-  <!-- Form Container -->
-  <div class="bg-white border rounded-lg p-6 space-y-10">
+            <form id="user-form">
 
-    <form>
-    <!-- User Details -->
-      <div>
-        <h2 class="font-semibold text-lg mb-4">User Details</h2>
+                <div class="row g-4">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Name -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Name*</label>
-            <input type="text" value="John Doe" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+                    <!-- Name -->
+                    <div class="col-md-6">
+                      <input type="hidden" name="id" id="id"
+                               class="form-control"
+                               value="{{ $user->id }}">
 
-          <!-- Email -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Email*</label>
-            <input type="text" value="john.doe@gmail.com" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+                        <label class="form-label text-muted">Name *</label>
+                        <input type="text" name="name" id="name"
+                               class="form-control"
+                               value="{{ $user->name }}"
+                               placeholder="Enter Name">
+                    </div>
 
-          <!-- Phone -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Phone No*</label>
-            <input type="text" value="+92-1234567890" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">Email *</label>
+                        <input type="text" name="email" id="email"
+                              value="{{ $user->email }}"
+                              class="form-control"
+                              placeholder="Enter Email Address">
+                    </div>
 
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Status</label>
-            <input type="text" value="+92-1234567890" readonly
-              class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+                    <!-- Phone -->
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">Phone No *</label>
+                        <input type="text" name="phone_no" id="phone_no"
+                              value="{{ $user->phone_no }}"
+                              class="form-control"
+                              placeholder="Enter Phone No">
+                    </div>
 
+                    <!-- Status -->
+                    <div class="col-md-6">
+                      <label class="form-label">Status</label>
+                      <select name="status" id="status" class="form-select">
+                        @foreach(\App\Enums\UserStatus::cases() as $status)
+                          <option value="{{ $status->value }}" @selected($user->status === $status)>
+                            {{ $status->label() }}
+                          </option>
+                        @endforeach
+                      </select>
+                    </div>
 
-          
-          <!-- Password -->
-          <!-- <div class="relative">
-            <label class="block text-sm text-gray-600 mb-1">Password*</label>
-            <input type="password" value="******" readonly
-              class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
+                </div>
 
-            <button class="absolute right-3 top-10 text-gray-500 hover:text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.708.042C20.88 7.943 16.884 5 12 5 7.115 5 3.12 7.943 2.292 12.042c-.06.29-.06.627 0 .916C3.12 16.057 7.115 19 12 19c4.884 0 8.88-2.943 9.708-6.042.06-.289.06-.626 0-.916z" />
-              </svg>
-            </button>
-          </div>
+                <!-- Actions -->
+                <div class="d-flex justify-content-end gap-3 mt-4">
+                    <a href="{{ route('admin.user.index') }}"
+                       class="btn btn-outline-secondary px-4">
+                        Cancel
+                    </a>
 
-          <div class="relative">
-            <label class="block text-sm text-gray-600 mb-1">Confirm Password*</label>
-            <input type="password" value="******" readonly
-              class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
+                    <button type="submit"
+                            class="btn btn-dark px-4">
+                        Save
+                    </button>
+                </div>
 
-            <button class="absolute right-3 top-10 text-gray-500 hover:text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.708.042C20.88 7.943 16.884 5 12 5 7.115 5 3.12 7.943 2.292 12.042c-.06.29-.06.627 0 .916C3.12 16.057 7.115 19 12 19c4.884 0 8.88-2.943 9.708-6.042.06-.289.06-.626 0-.916z" />
-              </svg>
-            </button>
-          </div> -->
+            </form>
 
-         
         </div>
-        <div class="mt-6">
-            <label class="block text-sm text-gray-600 mb-1">Agency Address*</label>
-            <input type="text" value="Office #302, Park Tower, Clifton Block 2, Karachi" readonly class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-        <div class="flex justify-end gap-3 mt-10">
-            <button class="border border-gray-400 px-5 py-2 rounded-md">Cancel</button>
-            <button class="bg-black text-white px-5 py-2 rounded-md">Save</button>
-        </div>
-      </div>
-    </form>
-  </div>
+    </div>
+
 </div>
-
 @endsection
 
 @section('scripts')
+<script>
+document.getElementById("user-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    function showError(message) {
+        Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: "error",
+            title: message,
+            showConfirmButton: false,
+            timer: 2500
+        });
+    }
+
+    const formData = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone_no").value.trim(),
+        status: document.getElementById("status").value.trim(),
+    };
+
+    const validations = [
+        { field: "name", message: "Name is required", test: v => v !== "" },
+        { field: "email", message: "Email is required", test: v => v !== "" },
+        { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
+        { field: "phone", message: "Phone must be at least 11 digits", test: v => v.length >= 11 },
+        { field: "status", message: "Status is required", test: v => v !== "" },
+    ];
+
+    for (const rule of validations) {
+        if (!rule.test(formData[rule.field])) {
+            showError(rule.message);
+            return;
+        }
+    }
+
+    Swal.fire({
+        title: "Processing...",
+        text: "Please wait",
+        didOpen: () => Swal.showLoading()
+    });
+
+    $.ajax({
+        url: "{{ route('admin.user.update') }}",
+        method: "POST",
+        data: $('#user-form').serialize(),
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (data) {
+            Swal.fire({
+              toast: true,
+              position: "top-end",
+              icon: "success",
+              title: data.message,
+              showConfirmButton: true,
+              confirmButtonText: "OK"
+          }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = "{{ route('admin.user.index') }}";
+              }
+          });
+        },
+        error: function (xhr) {
+            Swal.close();
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "error",
+                title: xhr.responseJSON?.message ?? 'Something went wrong',
+                showConfirmButton: false,
+                timer: 2500
+            });
+        }
+    });
+});
+</script>
 @endsection
-
-
-
-

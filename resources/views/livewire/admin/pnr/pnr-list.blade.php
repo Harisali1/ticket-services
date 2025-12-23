@@ -125,6 +125,11 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{{ route('admin.pnr.edit', $pnr->id) }}">Edit</a></li>
+                                    <li>
+                                       <button class="dropdown-item" wire:click="openPutOnSale({{ $pnr->id }})">
+                                            Put on sale
+                                        </button>
+                                    </li>
                                 </ul>
                             </div>
                         </td>
@@ -139,10 +144,85 @@
             </tbody>
         </table>
     </div>
+<div wire:ignore.self class="modal fade" id="putOnSaleModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
 
+                <!-- Header -->
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-semibold">Put on sale</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body pt-0">
+
+                    <p class="text-muted mb-4">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    </p>
+
+                    <h6 class="fw-semibold mb-3">Seat Details</h6>
+
+                    <div class="border rounded mb-4">
+                        <div class="d-flex justify-content-between p-3 border-bottom">
+                            <span>Total Seats</span>
+                            <strong>{{ $selectedPnr->total_seats ?? 0 }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between p-3 border-bottom">
+                            <span>Sold Seats</span>
+                            <strong>{{ $selectedPnr->sold_seats ?? 0 }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between p-3 border-bottom">
+                            <span>On Sale Seats</span>
+                            <strong>{{ $selectedPnr->on_sale_seats ?? 0 }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between p-3">
+                            <span>Available Seats</span>
+                            <strong>{{ $selectedPnr->available_seats ?? 0 }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Seats</label>
+                            <select class="form-select" wire:model="seats">
+                                <option value="">Select</option>
+                                @for($i = 1; $i <= ($selectedPnr->available_seats ?? 0); $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            @error('seats') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Price *</label>
+                            <input type="number" class="form-control"
+                                   wire:model="price"
+                                   placeholder="Enter price">
+                            @error('price') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer border-0">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-dark" wire:click="saveSale">
+                        Save
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <!-- Pagination -->
     <div>
         {{ $pnrs->links() }}
     </div>
 </div>
+<!-- ================== MODAL ================== -->
+    
+
+
 

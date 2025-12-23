@@ -23,7 +23,7 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
 
-            <form id="airline-form" enctype="multipart/form-data">
+            <form id="airline-form-update" enctype="multipart/form-data">
                 <!-- AirLine Details -->
                 <div class="mb-5">
                     <h5 class="fw-semibold mb-4">AirLine Details</h5>
@@ -40,6 +40,7 @@
                             <label class="form-label text-muted">Name *</label>
                             <input type="text"
                                    name="name"
+                                   id="name"
                                    value="{{ old('name', $airline->name) }}"
                                    class="form-control bg-light"
                                    required>
@@ -50,6 +51,7 @@
                             <label class="form-label text-muted">Code *</label>
                             <input type="text"
                                    name="code"
+                                   id="code"
                                    value="{{ old('code', $airline->code) }}"
                                    class="form-control bg-light"
                                    required>
@@ -57,8 +59,8 @@
 
                         <!-- Status -->
                         <div class="col-md-4">
-                            <label for="status" class="form-label">Status</label>
-                            <select name="status" id="status" class="form-select">
+                            <label for="status1" class="form-label">Status</label>
+                            <select name="status1" id="status1" class="form-select">
                                 @foreach(\App\Enums\AirLineStatus::cases() as $status)
                                     <option value="{{ $status->value }}"
                                         @selected(old('status', $airline->status->value) == $status->value)>
@@ -126,7 +128,7 @@
 @section('scripts')
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("airline-form");
+    const form = document.getElementById("airline-form-update");
     form.addEventListener("submit", function (e) {
         e.preventDefault();
         const showError = (message) => {
@@ -142,18 +144,18 @@
 
         const name   = document.getElementById("name").value.trim();
         const code   = document.getElementById("code").value.trim();
-        const status = document.getElementById("status").value;
+        const status = document.getElementById("status1").value;
         const logo   = document.getElementById("logo").files[0] ?? null;
 
         if (!name) { showError("Airline name is required"); return; }
         if (!code) { showError("Airline code is required"); return; }
         if (code.length < 2) { showError("Airline code must be at least 2 characters"); return; }
         if (!status) { showError("Status is required"); return; }
-        if (!logo) { showError("Airline logo is required"); return; }
+        // if (!logo) { showError("Airline logo is required"); return; }
 
-        const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-        if (!allowedTypes.includes(logo.type)) { showError("Logo must be JPG or PNG"); return; }
-        if (logo.size > 2097152) { showError("Logo size must be less than 2MB"); return; }
+        // const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+        // if (!allowedTypes.includes(logo.type)) { showError("Logo must be JPG or PNG"); return; }
+        // if (logo.size > 2097152) { showError("Logo size must be less than 2MB"); return; }
 
         Swal.fire({
             title: "Processing...",

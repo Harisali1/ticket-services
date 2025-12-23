@@ -21,7 +21,7 @@ class PnrStoreRequest extends FormRequest
             'departure_time' => ['required', 'date_format:H:i'],
             'arrival_date'   => ['required', 'date', 'after_or_equal:departure_date'],
             'arrival_time'   => ['required', 'date_format:H:i'],
-            'pnr_file'       => ['required', 'file', 'mimes:pdf,xls,xlsx,csv', 'max:5120'], // 5MB
+            'pnr_file'       => ['required', 'file', 'mimes:png,jpg,jpeg', 'max:5120'], // 5MB
         ];
     }
 
@@ -52,7 +52,7 @@ class PnrStoreRequest extends FormRequest
             'arrival_time.date_format'=> 'Arrival time format must be HH:MM.',
 
             'pnr_file.required'       => 'PNR document is required.',
-            'pnr_file.mimes'          => 'Only PDF, XLS, XLSX, or CSV files are allowed.',
+            'pnr_file.mimes'          => 'Only JPG, PNG, or JPEG files are allowed.',
             'pnr_file.max'            => 'PNR document must not exceed 5MB.',
         ];
     }

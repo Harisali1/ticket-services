@@ -52,7 +52,16 @@ class AirLineController extends Controller
         return view('Admin.airline.edit', compact('airline'));
     }
 
-    public function update(Request $request, Agency $agency){
-        dd($request->all());
+    public function update(Request $request){
+
+        AirLine::find($request->id)->update([
+            'name' => $request->name,
+            'code' => $request->code,
+            'status' => $request->status1,
+        ]);
+
+        return redirect()
+            ->route('admin.airline.index')
+            ->with('success', 'Airline updated successfully');
     }
 }

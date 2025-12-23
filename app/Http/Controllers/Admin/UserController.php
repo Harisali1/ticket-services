@@ -58,8 +58,39 @@ class UserController extends Controller
         return view('Admin.agency.show', compact('agency'));
     }
 
-    public function edit(Agency $agency){
-        $agency = Agency::with('user')->find($agency->id);
-        return view('Admin.agency.edit', compact('agency'));
+    public function edit(User $user){
+        return view('Admin.user.edit', compact('user'));
+    }
+
+    public function update(Request $request){
+        // $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+
+            User::find($request->id)->update([
+                'name'      => $request->name,
+                'email'     => $request->email,
+                'phone_no'  => $request->phone_no,
+            ]);
+           
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User updated successfully',
+            ], 201);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

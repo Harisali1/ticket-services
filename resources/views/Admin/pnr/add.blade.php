@@ -94,7 +94,7 @@
                                 Click or drop file here
                             </p>
                             <small class="text-muted">
-                                PDF, XLS, XLSX, CSV (Max 5MB)
+                                JPG, JPEG, PNG (Max 5MB)
                             </small>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                            id="pnr_file"
                            name="pnr_file"
                            class="d-none"
-                           accept=".pdf,.xls,.xlsx,.csv">
+                           accept="image/jpeg,image/png">
                 </div>
             </div>
 
@@ -148,10 +148,8 @@
         const fileName  = document.getElementById('pnr-filename');
         const removeBtn = document.getElementById('pnr-remove');
         const allowedTypes = [
-            'application/pdf',
-            'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'text/csv'
+            'image/jpeg',
+            'image/png'
         ];
 
         dropzone.addEventListener('click', () => fileInput.click());
@@ -159,7 +157,7 @@
             if (!this.files.length) return;
             const file = this.files[0];
             if (!allowedTypes.includes(file.type)) {
-                showError('Only PDF, Excel or CSV allowed');
+                showError('Only JPG, JPEG or PNG images are allowed');
                 this.value = '';
                 return;
             }
@@ -243,8 +241,8 @@
             // File type validation
             {
                 field: "pnr_file",
-                message: "Invalid file format (PDF, XLS, XLSX, CSV only)",
-                test: v => !v || /\.(pdf|xls|xlsx|csv)$/i.test(v.name)
+                message: "Invalid file format (JPG, PNG or JPEG only)",
+                test: v => !v || /\.(png|jpg|jpeg)$/i.test(v.name)
             }
         ];
 

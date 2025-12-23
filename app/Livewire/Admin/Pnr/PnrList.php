@@ -12,7 +12,12 @@ class PnrList extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-
+    public $perPage = 2;
+    // Modal data
+    public $selectedPnr;
+    public $seats;
+    public $price;
+    
     public $filters = [
         'pnr_no' => '',
         'airline' => '',
@@ -21,7 +26,15 @@ class PnrList extends Component
         'to' => '',
     ];
 
-    public $perPage = 2;
+    public function openPutOnSale($pnrId)
+    {
+        $this->selectedPnr = Pnr::findOrFail($pnrId);
+
+        $this->seats = null;
+        $this->price = null;
+
+        $this->dispatchBrowserEvent('open-put-on-sale-modal');
+    }
 
     public function updatedPerPage()
     {

@@ -49,15 +49,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', [App\Http\Controllers\Admin\AirLineController::class, 'store'])->name('admin.airline.store');
             Route::get('/edit/{airline}', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
             // Route::get('/show/{airline}', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
-            Route::get('/update', [App\Http\Controllers\Admin\AirLineController::class, 'update'])->name('admin.airline.update');
+            Route::post('/update', [App\Http\Controllers\Admin\AirLineController::class, 'update'])->name('admin.airline.update');
         });
 
         Route::prefix('user')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.user.index');
             Route::get('/add', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('admin.user.create');
             Route::post('/store', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.user.store');
-            Route::get('/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('admin.user.edit');
-            Route::get('/update', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.user.update');
+            Route::get('/edit/{user}', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('admin.user.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.user.update');
         });
 
         Route::prefix('pnr')->group(function () {
