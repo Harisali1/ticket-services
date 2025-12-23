@@ -17,7 +17,9 @@ return new class extends Migration
             $table->boolean('is_sold')->default(0);
             $table->boolean('is_sale')->default(0);
             $table->boolean('is_available')->default(0);
+            $table->boolean('is_cancel')->default(0);
             $table->string('price');
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }

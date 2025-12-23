@@ -118,7 +118,7 @@
                                 {{ $pnr->status->label() }}
                             </span>
                         </td>
-                        <td>
+                        <td wire:key="pnr-row-{{ $pnr->id }}">
                             <div class="dropdown">
                                 <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                     ⋮
@@ -128,6 +128,11 @@
                                     <li>
                                        <button class="dropdown-item" wire:click="openPutOnSale({{ $pnr->id }})">
                                             Put on sale
+                                        </button>
+                                    </li>
+                                    <li>
+                                       <button class="dropdown-item" wire:click="openCancelCurrentSale({{ $pnr->id }})">
+                                            Cancel Current sale
                                         </button>
                                     </li>
                                 </ul>
@@ -144,85 +149,166 @@
             </tbody>
         </table>
     </div>
-<div wire:ignore.self class="modal fade" id="putOnSaleModal" tabindex="-1">
+    
+    <!-- Pagination -->
+    <div>
+        {{ $pnrs->links() }}
+    </div>
+
+    <!-- put on sale modal -->
+    <div wire:ignore.self class="modal fade" id="putOnSaleModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
 
                 <!-- Header -->
                 <div class="modal-header border-0">
                     <h5 class="modal-title fw-semibold">Put on sale</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="closeAndRefresh()"></button>
                 </div>
 
                 <!-- Body -->
-                <div class="modal-body pt-0">
+                <form id="put-on-sale">
+                    <div class="modal-body pt-0">
 
-                    <p class="text-muted mb-4">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </p>
+                        <p class="text-muted mb-4">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            <input type="text" readonly id="pnr_id" name="pnr_id" wire:model="selectedPnrId">
 
-                    <h6 class="fw-semibold mb-3">Seat Details</h6>
+                        </p>
+                        <h6 class="fw-semibold mb-3">Seat Details</h6>
+                        <div class="border rounded mb-4">
+                            <div class="d-flex justify-content-between p-3 border-bottom">
+                                <span>Total Seats</span>
+                                <strong>{{ $selectedPnr->total_seats ?? 0 }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between p-3 border-bottom">
+                                <span>Sold Seats</span>
+                                <strong>{{ $selectedPnr->sold_seats ?? 0 }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between p-3 border-bottom">
+                                <span>On Sale Seats</span>
+                                <strong>{{ $selectedPnr->sale_seats ?? 0 }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between p-3">
+                                <span>Available Seats</span>
+                                <strong>{{ $selectedPnr->available_seats ?? 0 }}</strong>
+                            </div>
+                        </div>
 
-                    <div class="border rounded mb-4">
-                        <div class="d-flex justify-content-between p-3 border-bottom">
-                            <span>Total Seats</span>
-                            <strong>{{ $selectedPnr->total_seats ?? 0 }}</strong>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Seats</label>
+                                <select class="form-select" wire:model="seats" id="seats" name="seats">
+                                    <option value="">Select</option>
+                                    @for($i = 1; $i <= ($selectedPnr->available_seats ?? 0); $i++)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
+                                @error('seats') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Price *</label>
+                                
+                                
+                                <input type="number" class="form-control"
+                                    id="price" name="price"
+                                    wire:model="price"
+                                    placeholder="Enter price">
+                                @error('price') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between p-3 border-bottom">
-                            <span>Sold Seats</span>
-                            <strong>{{ $selectedPnr->sold_seats ?? 0 }}</strong>
-                        </div>
-                        <div class="d-flex justify-content-between p-3 border-bottom">
-                            <span>On Sale Seats</span>
-                            <strong>{{ $selectedPnr->on_sale_seats ?? 0 }}</strong>
-                        </div>
-                        <div class="d-flex justify-content-between p-3">
-                            <span>Available Seats</span>
-                            <strong>{{ $selectedPnr->available_seats ?? 0 }}</strong>
-                        </div>
+
                     </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Seats</label>
-                            <select class="form-select" wire:model="seats">
-                                <option value="">Select</option>
-                                @for($i = 1; $i <= ($selectedPnr->available_seats ?? 0); $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
-                            </select>
-                            @error('seats') <small class="text-danger">{{ $message }}</small> @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Price *</label>
-                            <input type="number" class="form-control"
-                                   wire:model="price"
-                                   placeholder="Enter price">
-                            @error('price') <small class="text-danger">{{ $message }}</small> @enderror
-                        </div>
-                    </div>
-
-                </div>
-
                 <!-- Footer -->
                 <div class="modal-footer border-0">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-dark" wire:click="saveSale">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAndRefresh()">Cancel</button>
+                    <button type="submit" class="btn btn-dark">
                         Save
                     </button>
                 </div>
+                </form>
+
 
             </div>
         </div>
     </div>
-    <!-- Pagination -->
-    <div>
-        {{ $pnrs->links() }}
+
+    <!-- cancel sale modal -->
+     <div wire:ignore.self class="modal fade" id="cancelCurrentSaleModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-semibold">Cancel Current Sale</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="closeAndRefresh()"></button>
+                </div>
+
+                <!-- Body -->
+                <form id="cancel-current-sale">
+                    <div class="modal-body pt-0">
+
+                        <p class="text-muted mb-4">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            <input type="text" readonly id="pnr_id" name="pnr_id" wire:model="selectedPnrId">
+
+                        </p>
+                        <h6 class="fw-semibold mb-3">Seat Details</h6>
+                        <div class="border rounded mb-4">
+                            <div class="d-flex justify-content-between p-3 border-bottom">
+                                <span>Total Seats</span>
+                                <strong>{{ $selectedPnr->total_seats ?? 0 }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between p-3 border-bottom">
+                                <span>Sold Seats</span>
+                                <strong>{{ $selectedPnr->sold_seats ?? 0 }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between p-3 border-bottom">
+                                <span>On Sale Seats</span>
+                                <strong>{{ $selectedPnr->sale_seats ?? 0 }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Cancel Sale</label>
+                                <select class="form-select" id="cancel_sale" name="cancel_sale">
+                                    <option value="">Select</option>
+                                    <option value="yes">YES</option>
+                                    <option value="no">NO</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Comments</label>
+                                <input type="text" class="form-control"
+                                    id="comment" name="comment"
+                                    wire:model="comment"
+                                    placeholder="Enter Your Comments">
+                                @error('comment') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+                        </div>
+
+                    </div>
+                <!-- Footer -->
+                <div class="modal-footer border-0">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAndRefresh()">Cancel</button>
+                    <button type="submit" class="btn btn-dark">
+                        Save
+                    </button>
+                </div>
+                </form>
+
+
+            </div>
+        </div>
     </div>
 </div>
 <!-- ================== MODAL ================== -->
-    
+ 
 
 
 
