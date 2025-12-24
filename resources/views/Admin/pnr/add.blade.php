@@ -28,17 +28,29 @@
 
                 <!-- Baggage -->
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Baggage</label>
+                    <label class="form-label text-muted">Departure</label>
                     <select class="form-select">
-                        <option>Select option</option>
+                        @foreach($airports as $airport)
+                            <option value="{{ $airport->id }}">{{ $airport->name }}</option>
+                        @endforeach
                     </select>
                 </div>
 
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Arrival</label>
+                    <select class="form-select">
+                        @foreach($airports as $airport)
+                            <option value="{{ $airport->id }}">{{ $airport->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <!-- Airline -->
                 <div class="col-md-3">
                     <label class="form-label text-muted">Airline</label>
                     <select class="form-select" id="airline_id" name="airline_id">
-                        <option value="1">PIA</option>
+                        @foreach($airlines as $airline)
+                            <option value="{{ $airline->id }}">{{ $airline->name }}</option>
+                        @endforeach
                     </select>
                 </div>
 

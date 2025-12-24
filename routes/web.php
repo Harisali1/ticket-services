@@ -48,8 +48,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/add', [App\Http\Controllers\Admin\AirLineController::class, 'create'])->name('admin.airline.create');
             Route::post('/store', [App\Http\Controllers\Admin\AirLineController::class, 'store'])->name('admin.airline.store');
             Route::get('/edit/{airline}', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
-            // Route::get('/show/{airline}', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
             Route::post('/update', [App\Http\Controllers\Admin\AirLineController::class, 'update'])->name('admin.airline.update');
+        });
+
+        Route::prefix('airport')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\AirportController::class, 'index'])->name('admin.airport.index');
+            Route::get('/add', [App\Http\Controllers\Admin\AirportController::class, 'create'])->name('admin.airport.create');
+            Route::post('/store', [App\Http\Controllers\Admin\AirportController::class, 'store'])->name('admin.airport.store');
+            Route::get('/edit/{airport}', [App\Http\Controllers\Admin\AirportController::class, 'edit'])->name('admin.airport.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\AirportController::class, 'update'])->name('admin.airport.update');
         });
 
         Route::prefix('user')->group(function () {
@@ -73,11 +80,11 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::prefix('booking')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.user.index');
-            Route::get('/add', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('admin.user.create');
-            Route::post('/store', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.user.store');
-            Route::get('/edit/{user}', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('admin.user.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.user.update');
+            Route::get('/', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('admin.booking.index');
+            Route::get('/add', [App\Http\Controllers\Admin\BookingController::class, 'create'])->name('admin.booking.create');
+            Route::post('/store', [App\Http\Controllers\Admin\BookingController::class, 'store'])->name('admin.booking.store');
+            Route::get('/edit/{user}', [App\Http\Controllers\Admin\BookingController::class, 'edit'])->name('admin.booking.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');
         });
 
     });

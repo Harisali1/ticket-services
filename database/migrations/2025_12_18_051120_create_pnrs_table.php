@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('pnrs', function (Blueprint $table) {
             $table->id();
             $table->string('pnr_no');
-            $table->integer('baggage_id')->nullable();
+            $table->integer('departure_id')->nullable();
+            $table->integer('arrival_id')->nullable();
             $table->integer('airline_id');
             $table->integer('seats');
             $table->string('pnr_file')->nullable();

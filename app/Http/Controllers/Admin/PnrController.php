@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PnrStoreRequest;
 use App\Models\Admin\Pnr;
 use App\Models\Admin\Seat;
+use App\Models\Admin\AirLine;
+use App\Models\Admin\Airport;
 use DB;
 
 class PnrController extends Controller
@@ -17,7 +19,9 @@ class PnrController extends Controller
     }
 
     public function create(){
-        return view('Admin.pnr.add');
+        $airlines = AirLine::where('status', 1)->get();
+        $airports = Airport::where('status', 1)->get();
+        return view('Admin.pnr.add', compact('airlines','airports'));
     }
 
     public function store(PnrStoreRequest $request){

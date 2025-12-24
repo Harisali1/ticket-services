@@ -30,9 +30,15 @@
                 <span class="menu-text">Manage Airline</span>
             </a>
 
+            <a href="{{ route('admin.airport.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <i class="fa fa-plane me-3"></i>
+                <span class="menu-text">Manage Airport</span>
+            </a>
+
+
             <a href="{{ route('admin.user.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                 <i class="fa fa-user me-3"></i>
-                <span class="menu-text">User Management</span>
+                <span class="menu-text">Manage User</span>
             </a>
 
             <a href="{{ route('admin.pnr.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
@@ -40,7 +46,7 @@
                 <span class="menu-text">Manage PNR</span>
             </a>
 
-            <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+            <a href="{{ route('admin.booking.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                 <i class="fa fa-calendar me-3"></i>
                 <span class="menu-text">Manage Bookings</span>
             </a>

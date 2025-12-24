@@ -6,8 +6,8 @@
     <!-- Top Bar -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('admin.airline.index') }}" class="text-decoration-none">&larr;</a>
-            <h1 class="h4 mb-0">Add Pnr</h1>
+            <a href="{{ route('admin.booking.index') }}" class="text-decoration-none">&larr;</a>
+            <h1 class="h4 mb-0">Create Booking</h1>
         </div>
     </div>
     <hr>
@@ -16,112 +16,47 @@
 
         <!-- Form -->
         <form id="pnr-form" enctype="multipart/form-data">
-            <h5 class="mb-3">Basic Details</h5>
+            <h5 class="mb-3">Search Pnr</h5>
             <!-- Grid -->
+             <hr>
             <div class="row g-3">
 
-                <!-- PNR -->
-                <div class="col-md-3">
-                    <label class="form-label text-muted">PNR Number *</label>
-                    <input type="text" id="pnr_no" name="pnr_no" class="form-control" value="{{ old('pnr_no') }}">
-                </div>
-
                 <!-- Baggage -->
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Baggage</label>
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Departure</label>
                     <select class="form-select">
                         <option>Select option</option>
                     </select>
                 </div>
 
-                <!-- Airline -->
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Airline</label>
-                    <select class="form-select" id="airline_id" name="airline_id">
-                        <option value="1">PIA</option>
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Arrival</label>
+                    <select class="form-select">
+                        <option>Select option</option>
                     </select>
                 </div>
 
-                <!-- Seats -->
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Seats</label>
-                    <input type="number" id="seats" name="seats" class="form-control">
-                </div>
-
                 <!-- Departure Date -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Departure Date *</label>
                     <input type="date" id="departure_date" name="departure_date" class="form-control">
                 </div>
-
-                <!-- Departure Time -->
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Departure Time *</label>
-                    <input type="time" id="departure_time" name="departure_time" class="form-control">
-                </div>
-
                 <!-- Arrival Date -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Arrival Date *</label>
                     <input type="date" id="arrival_date" name="arrival_date" class="form-control">
                 </div>
 
-                <!-- Arrival Time -->
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Arrival Time *</label>
-                    <input type="time" id="arrival_time" name="arrival_time" class="form-control">
-                </div>
-
-            </div>
-
-            <!-- Upload Section -->
-            <div class="mt-5">
-                <h6 class="fw-semibold text-secondary mb-3">
-                    Upload PNR Document
-                </h6>
-
-                <div id="pnr-dropzone"
-                     class="border border-2 border-dashed rounded p-4 bg-white d-flex align-items-center justify-content-between cursor-pointer">
-
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="border rounded d-flex align-items-center justify-content-center fs-4"
-                             style="width:48px;height:48px;">
-                            📄
-                        </div>
-
-                        <div>
-                            <p id="pnr-filename" class="mb-1 text-muted">
-                                Click or drop file here
-                            </p>
-                            <small class="text-muted">
-                                JPG, JPEG, PNG (Max 5MB)
-                            </small>
-                        </div>
-                    </div>
-
-                    <button type="button"
-                            id="pnr-remove"
-                            class="btn btn-link text-danger fs-4 d-none">
-                        🗑
+                    <button type="submit" class="btn btn-dark">
+                        Save
                     </button>
-
-                    <input type="file"
-                           id="pnr_file"
-                           name="pnr_file"
-                           class="d-none"
-                           accept="image/jpeg,image/png">
                 </div>
             </div>
+
 
             <!-- Footer Buttons -->
-            <div class="d-flex justify-content-end gap-3 mt-5">
-                <button type="button" class="btn btn-outline-secondary">
-                    Cancel
-                </button>
-                <button type="submit" class="btn btn-dark">
-                    Save
-                </button>
-            </div>
+            
 
         </form>
 

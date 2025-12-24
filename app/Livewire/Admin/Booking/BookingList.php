@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Livewire\Admin\Pnr;
+namespace App\Livewire\Admin\Booking;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Admin\Pnr;
-use App\Models\Admin\Seat;
+use App\Models\Admin\Booking;
 use DB;
 
-class PnrList extends Component
+class BookingList extends Component
 {
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
 
     public $perPage = 10;
+
     // Modal data
     public $selectedPnr;
     public $selectedPnrId;
@@ -97,7 +97,7 @@ class PnrList extends Component
 
     public function render()
     {
-        $pnrs = Pnr::with('seats', 'airline')
+        $bookings = Booking::query()
             ->when($this->filters['pnr_no'], fn ($q) =>
                 $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
             )
@@ -114,12 +114,13 @@ class PnrList extends Component
             ->paginate($this->perPage);
 
         $stats = [
-            'all'       => Pnr::count(),
-            'pending'   => Pnr::where('status', 1)->count(),
-            'approved'  => Pnr::where('status', 2)->count(),
-            'suspended' => Pnr::where('status', 3)->count(),
+            'all'       => Booking::count(),
+            'reserved'  => Booking::where('status', 1)->count(),
+            'ticketed'  => Booking::where('status', 2)->count(),
+            'paid'      => Booking::where('status', 3)->count(),
+            'abandoned' => Booking::where('status', 4)->count(),
         ];
 
-        return view('livewire.admin.pnr.pnr-list', compact('pnrs', 'stats'));
+        return view('livewire.admin.booking.booking-list', compact('bookings', 'stats'));
     }
 }

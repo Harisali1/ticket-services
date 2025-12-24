@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Admin\AirLine;
+use App\Models\Admin\Airport;
 
-class AirLineController extends Controller
+class AirportController extends Controller
 {
     public function index(){
-        return view('Admin.airline.list');
+        return view('Admin.airport.list');
     }
 
     public function create(){
-        return view('Admin.airline.add');
+        return view('Admin.airport.add');
     }
 
     public function store(Request $request)
@@ -21,44 +21,36 @@ class AirLineController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:50',
-            'logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ]);
 
-        $logoPath = null;
-
-        if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('airlines', 'public');
-        }
-
-        Airline::create([
+        Airport::create([
             'name' => $request->name,
             'code' => $request->code,
-            'logo' => $logoPath,
             'status' => $request->status,
         ]);
 
          return response()->json([
                 'success' => true,
-                'message' => 'AirLine created successfully',
+                'message' => 'AirPort created successfully',
             ], 201);
     }
 
 
-    public function edit(AirLine $airline){
-        return view('Admin.airline.edit', compact('airline'));
+    public function edit(AirPort $airport){
+        return view('Admin.airport.edit', compact('airport'));
     }
 
     public function update(Request $request){
 
-        AirLine::find($request->id)->update([
+        AirPort::find($request->id)->update([
             'name' => $request->name,
             'code' => $request->code,
-            'status' => $request->status1,
+            'status' => $request->status,
         ]);
 
          return response()->json([
                 'success' => true,
-                'message' => 'AirLine updated successfully',
+                'message' => 'AirPort updated successfully',
             ], 201);
     }
 }

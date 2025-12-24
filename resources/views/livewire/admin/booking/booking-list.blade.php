@@ -1,11 +1,11 @@
 <div class="container py-4">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h4">Pnr List</h1>
+        <h1 class="h4">Booking List</h1>
 
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('admin.pnr.create') }}" class="btn btn-dark">
-                + Create Pnr
+            <a href="{{ route('admin.booking.create') }}" class="btn btn-dark">
+                + Create Booking
             </a>
 
             <!-- Filter button triggers offcanvas -->
@@ -97,52 +97,48 @@
             <thead class="table-light">
                 <tr>
                     <th><input type="checkbox"></th>
-                    <th>Pnr No #</th>
-                    <th>AirLine</th>
+                    <th>Booking No #</th>
+                    <th>PNR No #</th>
                     <th>Departure Date/Time</th>
                     <th>Arrival Date/Time</th>
+                    <th>Seats</th>
+                    <th>Paid By</th>
+                    <th>Paid At</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($pnrs as $pnr)
+                @forelse($bookings as $booking)
                     <tr>
                         <td><input type="checkbox"></td>
-                        <td>{{ $pnr->pnr_no }}</td>
-                        <td>{{ $pnr->airline->name }}</td>
-                        <td>{{ $pnr->departure_date }}</td>
-                        <td>{{ $pnr->arrival_date }}</td>
+                        <td>123</td>
+                        <td>123</td>
+                        <td>123</td>
+                        <td>123</td>
+                        <td>123</td>
+                        <td>123</td>
+                        <td>123</td>
                         <td>
-                            <span class="{{ $pnr->status->color() }}">
-                                {{ $pnr->status->label() }}
+                            <span class="{{ $booking->status->color() }}">
+                                {{ $booking->status->label() }}
                             </span>
                         </td>
-                        <td wire:key="pnr-row-{{ $pnr->id }}">
+                        <td wire:key="booking-row-{{ $booking->id }}">
                             <div class="dropdown">
                                 <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                     ⋮
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{{ route('admin.pnr.edit', $pnr->id) }}">Edit</a></li>
-                                    <li>
-                                       <button class="dropdown-item" wire:click="openPutOnSale({{ $pnr->id }})">
-                                            Put on sale
-                                        </button>
-                                    </li>
-                                    <li>
-                                       <button class="dropdown-item" wire:click="openCancelCurrentSale({{ $pnr->id }})">
-                                            Cancel Current sale
-                                        </button>
-                                    </li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.booking.edit', $booking->id) }}">Edit</a></li>
                                 </ul>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            No agencies found
+                        <td colspan="10" class="text-center text-muted py-4">
+                            No Bookings found
                         </td>
                     </tr>
                 @endforelse
@@ -152,7 +148,7 @@
     
     <!-- Pagination -->
     <div>
-        {{ $pnrs->links() }}
+        {{ $bookings->links() }}
     </div>
 
     <!-- put on sale modal -->

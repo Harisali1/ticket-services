@@ -1,11 +1,10 @@
 @extends('Admin.layouts.main')
 
 @section('styles')
-
 @endsection
 
 @section('content')
-    @livewire('admin.booking.booking-list')
+    @livewire('admin.airport.airport-list')
 @endsection
 
 @section('scripts')
