@@ -26,7 +26,6 @@ class PnrController extends Controller
 
     public function store(PnrStoreRequest $request){
 
-        
         $validated = $request->validated();
 
         DB::beginTransaction();
@@ -35,6 +34,12 @@ class PnrController extends Controller
 
             $data = $request->validated();
 
+            $airlineCode = AirLine::find($data['airline_id']);
+            $departureCode = Airport::find($data['departure_id']);
+            $arrivalCode = Airport::find($data['arrival_id']);
+            $pnrId = DB::table('pnrs')->orderBy('id', 'desc')->value('id');
+
+            $data['pnr_no'] = $airlineCode->code.$departureCode->code.$arrivalCode->code.$pnrId+1;
             // Handle file upload
             if ($request->hasFile('pnr_file')) {
                 $data['pnr_file'] = $request->file('pnr_file')->store('pnr-documents', 'public');
@@ -52,7 +57,7 @@ class PnrController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'User created successfully',
+                'message' => 'Pnr created successfully',
             ], 201);
 
         } catch (\Exception $e) {

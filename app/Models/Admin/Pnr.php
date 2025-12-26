@@ -26,4 +26,12 @@ class Pnr extends Model
         return $this->belongsTo(AirLine::class);
     }
 
+    public function departure(){
+        return $this->belongsTo(Airport::class, 'departure_id', 'id');
+    }
+
+    public function arrival(){
+        return $this->belongsTo(Airport::class, 'arrival_id', 'id');
+    }
+
 }

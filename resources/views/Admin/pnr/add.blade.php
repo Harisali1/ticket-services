@@ -21,15 +21,16 @@
             <div class="row g-3">
 
                 <!-- PNR -->
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <label class="form-label text-muted">PNR Number *</label>
                     <input type="text" id="pnr_no" name="pnr_no" class="form-control" value="{{ old('pnr_no') }}">
-                </div>
+                </div> -->
 
                 <!-- Baggage -->
                 <div class="col-md-3">
                     <label class="form-label text-muted">Departure</label>
-                    <select class="form-select">
+                    <select class="form-select" id="departure_id" name="departure_id">
+                        <option value="">Please Select Departure</option>
                         @foreach($airports as $airport)
                             <option value="{{ $airport->id }}">{{ $airport->name }}</option>
                         @endforeach
@@ -38,7 +39,7 @@
 
                 <div class="col-md-3">
                     <label class="form-label text-muted">Arrival</label>
-                    <select class="form-select">
+                    <select class="form-select" id="arrival_id" name="arrival_id">
                         @foreach($airports as $airport)
                             <option value="{{ $airport->id }}">{{ $airport->name }}</option>
                         @endforeach
@@ -222,7 +223,9 @@
 
     // Collect form values
         const formData = {
-            pnr_no: document.getElementById("pnr_no").value.trim(),
+            // pnr_no: document.getElementById("pnr_no").value.trim(),
+            departure_id: document.getElementById("departure_id").value.trim(),
+            arrival_id: document.getElementById("arrival_id").value.trim(),
             airline_id: document.getElementById("airline_id").value.trim(),
             seats: document.getElementById("seats").value.trim(),
             departure_date: document.getElementById("departure_date").value,
@@ -234,7 +237,9 @@
 
         // Validation rules
         const validations = [
-            { field: "pnr_no", message: "PNR number is required", test: v => v !== "" },
+            // { field: "pnr_no", message: "PNR number is required", test: v => v !== "" },
+            { field: "departure_id", message: "Please select an departure", test: v => v !== "" },
+            { field: "arrival_id", message: "Please select an arrival", test: v => v !== "" },
             { field: "airline_id", message: "Please select an airline", test: v => v !== "" },
             { field: "seats", message: "Seats field is required", test: v => v !== "" },
             { field: "departure_date", message: "Departure date is required", test: v => v !== "" },
@@ -275,6 +280,8 @@
 
         const newFormData = new FormData();
         newFormData.append("pnr_no", formData.pnr_no);
+        newFormData.append("departure_id", formData.departure_id);
+        newFormData.append("arrival_id", formData.arrival_id);
         newFormData.append("airline_id", formData.airline_id);
         newFormData.append("seats", formData.seats);
         newFormData.append("departure_date", formData.departure_date);
@@ -293,9 +300,20 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: function (response) {
-                Swal.close();
-                window.location.href = "{{ route('admin.pnr.index') }}";
+            success: function (data) {
+                Swal.close(); 
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "success",
+                    title: data.message,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ route('admin.pnr.index') }}";
+                    }
+                });
             },
             error: function (xhr) {
                 Swal.close();

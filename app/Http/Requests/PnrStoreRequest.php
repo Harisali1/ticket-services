@@ -15,6 +15,8 @@ class PnrStoreRequest extends FormRequest
     {
         return [
             'pnr_no'         => ['required', 'string', 'max:255'],
+            'departure_id'   => ['required', 'integer', 'exists:airports,id'],
+            'arrival_id'     => ['required', 'integer', 'exists:airports,id'],
             'airline_id'     => ['required', 'integer', 'exists:air_lines,id'],
             'seats'          => ['required', 'integer', 'min:1'],
             'departure_date' => ['required', 'date'],
@@ -30,6 +32,12 @@ class PnrStoreRequest extends FormRequest
         return [
             'pnr_no.required'         => 'PNR number is required.',
             'pnr_no.max'              => 'PNR number cannot exceed 255 characters.',
+
+            'departure_id.required'     => 'Please select an departure.',
+            'departure_id.exists'       => 'Selected departure is invalid.',
+
+            'arrival_id.required'     => 'Please select an arrival.',
+            'arrival_id.exists'       => 'Selected arrival is invalid.',
 
             'airline_id.required'     => 'Please select an airline.',
             'airline_id.exists'       => 'Selected airline is invalid.',
