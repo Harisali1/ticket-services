@@ -42,8 +42,17 @@ class BookingController extends Controller
         ]);
     }
 
-    public function store(Request $request){
+    public function getPnrInfo(Request $request){
+        $data = $request->all();
         $pnrBookings = Pnr::with('departure','arrival','airline','seats')->find($request->pnr_id);
-        return view('admin.booking.create-booking', compact('pnrBookings'));
+        dd($pnrBookings);
+        return view('admin.booking.create-booking', compact('pnrBookings', 'data'));
+    }
+
+    public function checkSeatsAvailability(Request $request){
+
+        $pnr = Pnr::find($request->pnr_id);
+        $availableSeats = $pnr->seats()->where('is_sale', 1)->count();
+        dd($availableSeats);
     }
 }

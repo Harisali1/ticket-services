@@ -5,7 +5,7 @@
 
 @section('content')
 
-<div class="container-fluid px-4 py-3">
+<div class="container px-4 py-3">
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -28,46 +28,37 @@
     <div class="row g-3 mb-4">
         <div class="col-md-3">
             <label class="form-label small">Departure</label>
-            <select class="form-select">
-                <option>Karachi</option>
-            </select>
+            <input type="text" class="form-control" disabled id="departure_id" name="departure_id" value="{{ $pnrBookings->departure->name }}">
         </div>
 
         <div class="col-md-3">
             <label class="form-label small">Arrival</label>
-            <select class="form-select">
-                <option>Jeddah</option>
-            </select>
+            <input type="text" class="form-control" disabled id="arrival_id" name="arrival_id" value="{{ $pnrBookings->arrival->name }}">
         </div>
 
         <div class="col-md-3">
             <label class="form-label small">Departure Date/Time</label>
             <div class="input-group">
-                <input type="text" class="form-control" value="11/30/2025 at 11:00 am GMT">
-                <span class="input-group-text">
-                    <i class="bi bi-calendar"></i>
-                </span>
+                <input type="text" class="form-control" disabled id="departure_date" name="departure_date" value="{{ $pnrBookings->departure_date }}">
+                
             </div>
         </div>
 
         <div class="col-md-3">
             <label class="form-label small">Arrival Date/Time</label>
             <div class="input-group">
-                <input type="text" class="form-control" value="11/30/2025 at 11:00 am GMT">
-                <span class="input-group-text">
-                    <i class="bi bi-calendar"></i>
-                </span>
+                <input type="text" class="form-control" disabled id="arrival_date" name="arrival_date" value="{{ $pnrBookings->departure_date }}">    
             </div>
         </div>
 
         <div class="col-md-3">
             <label class="form-label small">Selected Seats</label>
-            <input type="text" class="form-control" value="2">
+            <input type="text" class="form-control" disabled value="{{ $data['seat'] }}">
         </div>
 
         <div class="col-md-3">
             <label class="form-label small">Total Tickets Price</label>
-            <input type="text" class="form-control" value="PKR 40,000/-">
+            <input type="text" class="form-control" disabled value="PKR 40,000/-">
         </div>
     </div>
 

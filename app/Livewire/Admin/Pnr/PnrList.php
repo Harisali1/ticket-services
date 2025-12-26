@@ -37,7 +37,7 @@ class PnrList extends Component
             ->selectRaw('
                 pnr_id,
                 COUNT(*) AS total_seats,
-                SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) AS available_seats,
+                SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS available_seats,
                 SUM(CASE WHEN is_sale = 1 THEN 1 ELSE 0 END) AS sale_seats,
                 SUM(CASE WHEN is_sold = 1 THEN 1 ELSE 0 END) AS sold_seats
             ')
@@ -60,7 +60,7 @@ class PnrList extends Component
             ->selectRaw('
                 pnr_id,
                 COUNT(*) AS total_seats,
-                SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) AS available_seats,
+                SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS available_seats,
                 SUM(CASE WHEN is_sale = 1 THEN 1 ELSE 0 END) AS sale_seats,
                 SUM(CASE WHEN is_sold = 1 THEN 1 ELSE 0 END) AS sold_seats
             ')

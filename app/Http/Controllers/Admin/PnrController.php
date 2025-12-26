@@ -49,6 +49,7 @@ class PnrController extends Controller
 
             foreach (range(1, $data['seats']) as $i) {
                 $pnr->seats()->create([
+                    'is_available' => 1,
                     'price' => 0
                 ]);
             }
@@ -85,14 +86,14 @@ class PnrController extends Controller
     public function seatStore(Request $request){
         
         $updated = Seat::where('pnr_id', $request->pnr_id)
-            ->where('is_available', 0)
+            ->where('is_available', 1)
             ->where('is_sale', 0)
             ->orderBy('id') // or seat_no
             ->limit((int) $request->seats)
             ->update([
                 'is_sale' => 1,
                 'price' => $request->price,
-                'is_available' => 1,
+                'is_available' => 0,
             ]);
 
             return response()->json([

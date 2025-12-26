@@ -31,10 +31,10 @@
                     <tr>
                         <td><input type="checkbox" class="form-check-input"></td>
                         <td>{{ $pnr->pnr_no }}</td>
-                        <td><strong>AirSial</strong></td>
-                        <td>11/30/2025 at 11:00 am GMT</td>
-                        <td>11/30/2025 at 11:00 am GMT</td>
-                        <td>20</td>
+                        <td><strong>{{ $pnr->airline->name }}</strong></td>
+                        <td>{{ $pnr->departure_date.' '. $pnr->departure_time }}</td>
+                        <td>{{ $pnr->arrival_date.' '. $pnr->arrival_time }}</td>
+                        <td>{{ $pnr->seats }}</td>
                         <td>
                             <li>
                                 <button class="dropdown-item" onclick="selectPNRBooking({{ $pnr->id }})">
@@ -64,7 +64,8 @@
                     </div>
 
                     <!-- Body -->
-                    <form id="pnr-select-seat">
+                    <form id="pnr-select-seat" method="POST" action="{{ route('admin.booking.pnr.info') }}">
+                        @csrf
                         <div class="modal-body pt-0">
 
                             <p class="text-muted mb-4">
@@ -86,8 +87,8 @@
                     <!-- Footer -->
                     <div class="modal-footer border-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cancel</button>
-                        <button class="btn btn-dark">
-                            Save
+                         <button type="submit" class="btn btn-dark">
+                            Confirm Seat
                         </button>
                     </div>
                     </form>

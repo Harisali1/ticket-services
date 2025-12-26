@@ -84,83 +84,70 @@
         modal.show();
     }
 
-    document.getElementById("pnr-select-seat").addEventListener("submit", function(e) {
-    e.preventDefault();
+    document.getElementById("pnr-select-seat").addEventListener("submit", function (e) {
+        e.preventDefault();
 
-    function showError(message) {
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "error",
-        title: message,
-        showConfirmButton: false,
-        timer: 2500
-      });
-    }
+        function showError(message) {
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "error",
+                title: message,
+                showConfirmButton: false,
+                timer: 2500
+            });
+        }
 
-    const formData = {
-      seat: document.getElementById("seat").value.trim(),
-    };
+        const seat = document.getElementById("seat").value.trim();
 
-    const validations = [
-      { field: "seat", message: "Seat is required", test: v => v !== "" },
-    ];
+        // Validation
+        if (seat === "") {
+            showError("Seat is required");
+            return;
+        }
 
-    for (const rule of validations) {
-      if (!rule.test(formData[rule.field])) {
-        showError(rule.message);
-        return;
-      }
-    }
-
-    Swal.fire({
-      title: "Processing...",
-      text: "Please wait",
-      didOpen: () => Swal.showLoading()
-    });
-
-    var data = $('#pnr-select-seat').serialize();
-    $.ajaxSetup({
-      headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-    });
-
-    $.ajax({
-      url: "{{ route('admin.booking.store') }}",
-      method: "POST",
-      data: data,
-      dataType: 'json',
-      beforeSend: function(){
-        $('.error-container').html('');
-      },
-      success: function (data) {
-        Swal.close();
+        // Optional loading
         Swal.fire({
-            toast: true,
-            position: "top-end",
-            icon: "success",
-            title: data.message,
-            showConfirmButton: true,
-            confirmButtonText: "OK"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "{{ route('admin.booking.index') }}";
+            title: "Processing...",
+            text: "Please wait",
+            didOpen: () => Swal.showLoading()
+        });
+
+        var data = $('#pnr-select-seat').serialize();
+        $.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+
+        $.ajax({
+            url: "{{ route('admin.booking.seats.availability') }}",
+            method: "POST",
+            data: data,
+            dataType: 'json',
+            beforeSend: function(){
+                $('.error-container').html('');
+            },
+            success: function (data) {
+                Swal.close();
+                e.target.submit();
+
+            },
+            error: function (xhr) {
+                Swal.close();
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "error",
+                    title: xhr.responseJSON.message,
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+                return false;
             }
         });
 
-      },
-      error: function (xhr) {
-        Swal.close();
-        Swal.fire({
-          toast: true,
-          position: "top-end",
-          icon: "error",
-          title: xhr.responseJSON.message,
-          showConfirmButton: false,
-          timer: 2500
-        });
-      }
+        // ✅ SUBMIT FORM NORMALLY
+        
     });
-  });
 
 </script>
 
