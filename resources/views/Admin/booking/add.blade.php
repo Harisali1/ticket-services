@@ -128,7 +128,19 @@
             },
             success: function (data) {
                 Swal.close();
-                e.target.submit();
+                if(data.code == 2){
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        icon: "error",
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
+                }
+                if(data.code == 1){
+                    e.target.submit();
+                }
 
             },
             error: function (xhr) {

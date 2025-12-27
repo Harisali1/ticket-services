@@ -47,7 +47,7 @@ class PnrController extends Controller
 
             $pnr = Pnr::create($data);
 
-            foreach (range(1, $data['seats']) as $i) {
+            foreach (range(1, $data['seats']) as $key => $i) {
                 $pnr->seats()->create([
                     'is_available' => 1,
                     'price' => 0

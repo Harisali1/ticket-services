@@ -45,7 +45,8 @@ class BookingController extends Controller
     public function getPnrInfo(Request $request){
         $data = $request->all();
         $pnrBookings = Pnr::with('departure','arrival','airline','seats')->find($request->pnr_id);
-        dd($pnrBookings);
+        $seatsPrice = $pnrBookings->seats()->where('is_sale', 1)->limit($request->seat)->get()->sum('price');
+        $data['total_seats_price'] = $seatsPrice;
         return view('admin.booking.create-booking', compact('pnrBookings', 'data'));
     }
 
@@ -53,6 +54,21 @@ class BookingController extends Controller
 
         $pnr = Pnr::find($request->pnr_id);
         $availableSeats = $pnr->seats()->where('is_sale', 1)->count();
-        dd($availableSeats);
+        if($availableSeats == 0){
+            return response()->json([
+                'code' => 2,
+                'message' => 'Seats not available',
+            ], 201);
+        }
+        elseif($availableSeats < $request->seat){
+            return response()->json([
+                'code' => 2,
+                'message' => 'Your Seats must be less then available seats',
+            ], 201); 
+        }else{
+            return response()->json([
+                'code' => 1,
+            ], 200); 
+        }
     }
 }
