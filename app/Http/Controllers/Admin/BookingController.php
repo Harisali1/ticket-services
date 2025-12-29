@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin\Airport;
 use App\Models\Admin\Pnr;
+use App\Models\Admin\Booking;
+use App\Models\Admin\Customer;
+use DB;
 
 class BookingController extends Controller
 {
@@ -69,6 +72,48 @@ class BookingController extends Controller
             return response()->json([
                 'code' => 1,
             ], 200); 
+        }
+    }
+
+    public function bookingSubmit(Request $request){
+
+        DB::beginTransaction();
+        try {
+
+            $bookingId = DB::table('bookings')->orderBy('id', 'desc')->value('id');
+            $bookingData = [
+                'pnr_id' => $request->pnr_id,
+                'booking_no' => 'BK-0000'.$bookingId,
+                'seats' => $request->seats,
+                'price' => $request->total_price,
+                'status' => 1
+            ];
+
+            $booking = Booking::create($bookingData);
+
+            $customerData =[];
+            foreach ($request->prefix as $key => $i) {
+                $customerData = [
+                    'booking_id' => $booking->id,
+                    'name_prefix' => $i,
+                    'name' => $request->name[$key],
+                ];
+                Customer::create($customerData);
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.booking.index');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 }

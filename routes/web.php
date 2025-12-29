@@ -85,8 +85,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/add', [App\Http\Controllers\Admin\BookingController::class, 'create'])->name('admin.booking.create');
             Route::post('/create', [App\Http\Controllers\Admin\BookingController::class, 'getPnrInfo'])->name('admin.booking.pnr.info');
             Route::post('/check_seats_availablity', [App\Http\Controllers\Admin\BookingController::class, 'checkSeatsAvailability'])->name('admin.booking.seats.availability');
-            Route::get('/edit/{user}', [App\Http\Controllers\Admin\BookingController::class, 'edit'])->name('admin.booking.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');
+            Route::post('/booking_submit', [App\Http\Controllers\Admin\BookingController::class, 'bookingSubmit'])->name('admin.booking.submit');
+            // Route::get('/edit/{user}', [App\Http\Controllers\Admin\BookingController::class, 'edit'])->name('admin.booking.edit');
+            // Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');
         });
 
     });

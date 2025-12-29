@@ -112,13 +112,13 @@
                 @forelse($bookings as $booking)
                     <tr>
                         <td><input type="checkbox"></td>
-                        <td>123</td>
-                        <td>123</td>
-                        <td>123</td>
-                        <td>123</td>
-                        <td>123</td>
-                        <td>123</td>
-                        <td>123</td>
+                        <td>{{ $booking->booking_no }}</td>
+                        <td>{{ $booking->pnr->pnr_no }}</td>
+                        <td>{{ $booking->pnr->departure_date }}</td>
+                        <td>{{ $booking->pnr->arrival_date }}</td>
+                        <td>{{ $booking->seats }}</td>
+                        <td></td>
+                        <td></td>
                         <td>
                             <span class="{{ $booking->status->color() }}">
                                 {{ $booking->status->label() }}
@@ -129,9 +129,6 @@
                                 <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                     ⋮
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{{ route('admin.booking.edit', $booking->id) }}">Edit</a></li>
-                                </ul>
                             </div>
                         </td>
                     </tr>
