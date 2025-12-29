@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Admin\Agency;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -56,8 +61,36 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone_no' => ['required', 'integer', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'business_name' => ['required', 'string', 'max:255'],
+            'piv' => ['required', 'string', 'max:255'],
+            'business_address' => ['required'],
         ]);
+    }
+
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        if ($response = $this->registered($request, $user)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+                    ? new JsonResponse([], 201)
+                    : redirect($this->redirectPath());
     }
 
     /**
@@ -68,10 +101,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user =  User::create([
+            'user_type_id' => 2,
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'phone_no' => $data['phone_no']
         ]);
+
+        Agency::create([
+            'user_id' => $user->id,
+            'name' => $data['business_name'],
+            'piv' => $data['piv'],
+            'address' => $data['business_address']
+        ]);
+
+        return $user;
     }
+
 }
