@@ -80,7 +80,6 @@
         <table class="table table-striped table-bordered align-middle">
             <thead class="table-light">
                 <tr>
-                    <th scope="col"><input type="checkbox"></th>
                     <th scope="col">Name</th>
                     <th scope="col">Code</th>
                     <th scope="col">Status</th>
@@ -91,7 +90,6 @@
             <tbody>
                 @forelse($airports as $airport)
                     <tr>
-                        <td><input type="checkbox"></td>
                         <td>{{ $airport->name }}</td>
                         <td>{{ $airport->code }}</td>
                         <td>

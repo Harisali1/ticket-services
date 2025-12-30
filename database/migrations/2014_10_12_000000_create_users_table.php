@@ -26,6 +26,7 @@ return new class extends Migration
         });
 
         User::create([
+            'user_type_id' => 1,
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('admin@123')

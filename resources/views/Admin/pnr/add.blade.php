@@ -1,5 +1,18 @@
 @extends('Admin.layouts.main')
 
+@section('styles')
+    <style>
+    .select2-container .select2-selection--single {
+        height: 38px;
+    }
+    .select2-selection__rendered {
+        line-height: 34px!important;
+    }
+    .select2-selection__arrow {
+        height: 38px;
+    }
+    </style>
+@endsection
 @section('content')
 <div class="container">
 
@@ -29,7 +42,7 @@
                 <!-- Baggage -->
                 <div class="col-md-3">
                     <label class="form-label text-muted">Departure</label>
-                    <select class="form-select" id="departure_id" name="departure_id">
+                    <select class="form-select select2" id="departure_id" name="departure_id">
                         <option value="">Please Select Departure</option>
                         @foreach($airports as $airport)
                             <option value="{{ $airport->id }}">{{ $airport->name }}</option>
@@ -39,7 +52,8 @@
 
                 <div class="col-md-3">
                     <label class="form-label text-muted">Arrival</label>
-                    <select class="form-select" id="arrival_id" name="arrival_id">
+                    <select class="form-select select2" id="arrival_id" name="arrival_id">
+                        <option value="">Please Select Arrival</option>
                         @foreach($airports as $airport)
                             <option value="{{ $airport->id }}">{{ $airport->name }}</option>
                         @endforeach
@@ -48,7 +62,8 @@
                 <!-- Airline -->
                 <div class="col-md-3">
                     <label class="form-label text-muted">Airline</label>
-                    <select class="form-select" id="airline_id" name="airline_id">
+                    <select class="form-select select2" id="airline_id" name="airline_id">
+                        <option value="">Please Select AirLine</option>
                         @foreach($airlines as $airline)
                             <option value="{{ $airline->id }}">{{ $airline->name }}</option>
                         @endforeach
@@ -144,6 +159,24 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function () {
+        $('#departure_id').select2({
+            placeholder: "Please Select Departure",
+            allowClear: true,
+            width: '100%'
+        });
+        $('#arrival_id').select2({
+            placeholder: "Please Select Arrival",
+            allowClear: true,
+            width: '100%'
+        });
+        $('#airline_id').select2({
+            placeholder: "Please Select Airline",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+
     function showError(message) {
         Swal.fire({
             toast: true,

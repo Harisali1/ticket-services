@@ -4,6 +4,7 @@
   <title>@yield('title')</title>
   <link href="{{ asset('css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ asset('vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendors/select2/dist/css/select2.min.css')}}" rel="stylesheet">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <style>
     body {

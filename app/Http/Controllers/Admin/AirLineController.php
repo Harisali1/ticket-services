@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin\AirLine;
+use DB;
+use App\Http\Requests\AirLineStoreRequest;
+use App\Http\Requests\AirLineUpdateRequest;
+use Illuminate\Support\Facades\Storage;
 
 class AirLineController extends Controller
 {
@@ -16,31 +20,44 @@ class AirLineController extends Controller
         return view('Admin.airline.add');
     }
 
-    public function store(Request $request)
+    public function store(AirLineStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50',
-            'logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
-        ]);
+        $validated = $request->validated();
 
-        $logoPath = null;
+        DB::beginTransaction();
 
-        if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('airlines', 'public');
-        }
+        try {
 
-        Airline::create([
-            'name' => $request->name,
-            'code' => $request->code,
-            'logo' => $logoPath,
-            'status' => $request->status,
-        ]);
+            $logoPath = null;
 
-         return response()->json([
-                'success' => true,
-                'message' => 'AirLine created successfully',
-            ], 201);
+            if ($request->hasFile('logo')) {
+                $logoPath = $request->file('logo')->store('airlines', 'public');
+            }
+
+            Airline::create([
+                'name' => $request->name,
+                'code' => $request->code,
+                'logo' => $logoPath,
+                'status' => $request->status,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                    'success' => true,
+                    'message' => 'AirLine created successfully',
+                ], 201);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }        
     }
 
 
@@ -48,17 +65,51 @@ class AirLineController extends Controller
         return view('Admin.airline.edit', compact('airline'));
     }
 
-    public function update(Request $request){
+    public function update(AirLineUpdateRequest $request){
 
-        AirLine::find($request->id)->update([
-            'name' => $request->name,
-            'code' => $request->code,
-            'status' => $request->status1,
-        ]);
+        $validated = $request->validated();
 
-         return response()->json([
+        DB::beginTransaction();
+
+        try {
+
+            $airline = AirLine::find($request->id);
+
+            if ($request->hasFile('logo')) {
+                // Delete old logo if exists
+                if ($airline->logo && Storage::disk('public')->exists($airline->logo)) {
+                    Storage::disk('public')->delete($airline->logo);
+                }
+                // Store new logo
+                $logoPath = $request->file('logo')->store('airlines', 'public');
+            }else{
+                $logoPath = $airline->logo;
+            }
+
+            AirLine::find($request->id)->update([
+                'name' => $request->name,
+                'code' => $request->code,
+                'status' => $request->status1,
+                'logo' => $logoPath
+            ]);
+
+            DB::commit();
+            
+            return response()->json([
                 'success' => true,
                 'message' => 'AirLine updated successfully',
             ], 201);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+
     }
 }

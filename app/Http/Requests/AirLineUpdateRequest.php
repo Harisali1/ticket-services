@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AirLineStoreRequest extends FormRequest
+class AirLineUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,7 +16,6 @@ class AirLineStoreRequest extends FormRequest
         return [
             'name'       => ['required', 'string', 'max:255'],
             'code'       => ['required', 'string', 'max:50'],
-            'logo'       => ['required', 'file', 'mimes:png,jpg,jpeg', 'max:5120'], // 5MB
         ];
     }
 
@@ -25,9 +24,6 @@ class AirLineStoreRequest extends FormRequest
         return [
             'name.required'      => 'Airline name is required',
             'code.required'      => 'Code is required',
-            'logo.required'       => 'logo is required.',
-            'logo.mimes'          => 'Only JPG, PNG, or JPEG files are allowed.',
-            'logo.max'            => 'Logo must not exceed 5MB.',
         ];
     }
 }

@@ -35,6 +35,7 @@ class AgencyController extends Controller
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
                 'password'  => bcrypt($validated['password']),
+                'status'    => $validated['status']
             ]);
 
             // Create Agency
@@ -43,6 +44,7 @@ class AgencyController extends Controller
                 'name'      => $validated['agency_name'],
                 'piv'       => $validated['piv'],
                 'address'   => $validated['agency_address'],
+                'status'    => $validated['status']
             ]);
 
             DB::commit();
@@ -77,7 +79,6 @@ class AgencyController extends Controller
     public function update(AgencyUpdateRequest $request){
 
         $validated = $request->validated();
-            // dd($request->all());
 
         DB::beginTransaction();
 
@@ -90,6 +91,7 @@ class AgencyController extends Controller
                 'name'      => $request->name,
                 'email'     => $request->email,
                 'phone_no'  => $request->phone_no,
+                'status'    => $request->status,
             ]);
             
             // Update Agency
@@ -98,6 +100,7 @@ class AgencyController extends Controller
                 'name'      => $request->agency_name,
                 'piv'       => $request->piv,
                 'address'   => $request->agency_address,
+                'status'    => $request->status,
             ]);
 
             DB::commit();

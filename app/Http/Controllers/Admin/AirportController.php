@@ -36,16 +36,16 @@ class AirportController extends Controller
     }
 
 
-    public function edit(AirPort $airport){
+    public function edit(Airport $airport){
         return view('Admin.airport.edit', compact('airport'));
     }
 
     public function update(Request $request){
 
-        AirPort::find($request->id)->update([
+        Airport::find($request->id)->update([
             'name' => $request->name,
             'code' => $request->code,
-            'status' => $request->status,
+            'status' => $request->status1,
         ]);
 
          return response()->json([

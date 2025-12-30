@@ -82,11 +82,10 @@
     </div>
 
     <!-- Table -->
-    <div class="table-responsive mb-4">
+    <div class="mb-4">
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th><input type="checkbox"></th>
                     <th>Agency Name</th>
                     <th>P.IVA</th>
                     <th>Address</th>
@@ -98,7 +97,6 @@
             <tbody>
                 @forelse($agencies as $agency)
                     <tr>
-                        <td><input type="checkbox"></td>
                         <td>{{ $agency->name }}</td>
                         <td>{{ $agency->piv }}</td>
                         <td>{{ $agency->address }}</td>

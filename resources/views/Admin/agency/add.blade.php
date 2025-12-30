@@ -81,9 +81,9 @@
         <div class="col-md-6">
           <label class="form-label">Status</label>
           <select name="status" id="status" class="form-select">
-            <option value="1">Approved</option>
-            <option value="0">Pending Approval</option>
-            <option value="2">Suspended</option>
+            <option value="1">Pending</option>
+            <option value="2">Approved</option>
+            <option value="3">Suspended</option>
           </select>
         </div>
       </div>
@@ -146,7 +146,7 @@
       { field: "name", message: "Name is required", test: v => v !== "" },
       { field: "email", message: "Email is required", test: v => v !== "" },
       { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
-      { field: "phone", message: "Phone must be at least 11 digits", test: v => v.length >= 11 },
+      { field: "phone", message: "Phone must be at least 10 digits", test: v => v.length >= 11 },
       { field: "password", message: "Password must be 6+ characters", test: v => v.length >= 6 },
       { field: "confirm_password", message: "Passwords do not match", test: v => v === formData.password },
       { field: "status", message: "Status is required", test: v => v !== "" },

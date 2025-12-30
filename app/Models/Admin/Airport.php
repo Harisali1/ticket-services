@@ -4,7 +4,7 @@ namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\AirLineStatus;
+use App\Enums\AirportStatus;
 
 class Airport extends Model
 {
@@ -13,6 +13,6 @@ class Airport extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'status' => AirLineStatus::class,
+        'status' => AirportStatus::class,
     ];
 }

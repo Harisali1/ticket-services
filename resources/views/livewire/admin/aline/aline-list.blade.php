@@ -76,11 +76,11 @@
     </div>
 
     <!-- Table -->
-    <div class="table-responsive">
+    <div class="">
         <table class="table table-striped table-bordered align-middle">
             <thead class="table-light">
                 <tr>
-                    <th scope="col"><input type="checkbox"></th>
+                    <th scope="col">Logo</th>
                     <th scope="col">Name</th>
                     <th scope="col">Code</th>
                     <th scope="col">Status</th>
@@ -91,7 +91,14 @@
             <tbody>
                 @forelse($airlines as $airline)
                     <tr>
-                        <td><input type="checkbox"></td>
+                        <td>
+                            <img src="{{ $airline->logo 
+                                ? asset('storage/'.$airline->logo) 
+                                : asset('images/no-logo.png') }}"
+                                alt="logo"
+                                class="rounded-circle border"
+                                style="width:45px;height:45px;object-fit:contain;">
+                        </td>
                         <td>{{ $airline->name }}</td>
                         <td>{{ $airline->code }}</td>
                         <td>

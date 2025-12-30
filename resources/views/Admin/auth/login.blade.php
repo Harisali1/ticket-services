@@ -56,6 +56,7 @@
 
             <!-- Links -->
             <div class="flex gap-3 justify-center mb-6 text-gray-600 text-sm">
+                <a href="{{ route('register') }}" class="text-gray-600 underline">Become an Agent</a>
                 <a href="#" class="text-gray-600 underline">Forgot Password?</a>
             </div>
 

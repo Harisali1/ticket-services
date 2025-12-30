@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use DB;
 
@@ -32,6 +33,7 @@ class UserController extends Controller
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
                 'password'  => bcrypt($validated['password']),
+                'status'    => $validated['status']
             ]);
 
             DB::commit();
@@ -62,8 +64,9 @@ class UserController extends Controller
         return view('Admin.user.edit', compact('user'));
     }
 
-    public function update(Request $request){
-        // $validated = $request->validated();
+    public function update(UserUpdateRequest $request){
+
+        $validated = $request->validated();
 
         DB::beginTransaction();
 
@@ -73,6 +76,7 @@ class UserController extends Controller
                 'name'      => $request->name,
                 'email'     => $request->email,
                 'phone_no'  => $request->phone_no,
+                'status'    => $request->status,
             ]);
            
             DB::commit();
