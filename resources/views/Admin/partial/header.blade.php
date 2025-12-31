@@ -6,6 +6,7 @@
                 <button class="btn btn-outline-secondary btn-sm" type="submit"><i class="fas fa-search"></i></button>
             </form>
 
+            <p class="mt-2">Remaining Balance: <span>0</span></p>
             <div class="dropdown ms-auto">
                 <a href="#" class="d-flex align-items-center text-dark text-decoration-none" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width:35px;height:35px;">JD</div>

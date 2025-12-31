@@ -139,8 +139,21 @@
             beforeSend: function(){
                 $('.error-container').html('');
             },
-            success: function(data) {
-                window.location.href = '<?php echo route('admin.dashboard') ?>'
+            success: function(response, textStatus, xhr) {
+                let statusCode = xhr.status; // 200, 401, etc.
+
+                if (statusCode === 204) {
+                    window.location.href = '{{ route("admin.dashboard") }}';
+                } else {
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        icon: "error",
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
+                }
             },
             error: function(xhr, textStatus, errorThrown) {
                 Swal.close();

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -41,5 +43,45 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return view('Admin.auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $this->validateLogin($request);
+
+        $user = User::where('email', $request->email)->first();
+
+        if($user->status->value == 1){
+            return response()->json([
+                'code' => 1,
+                'message' => 'Your Account Is Pending For Approval',
+            ], 201);
+        }
+        
+        if($user->status->value == 3){
+            return response()->json([
+                'code' => 1,
+                'message' => 'Your Account Is Suspended Now',
+            ], 201);
+        }
+
+        if (method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        if ($this->attemptLogin($request)) {
+            if ($request->hasSession()) {
+                $request->session()->put('auth.password_confirmed_at', time());
+            }
+
+            return $this->sendLoginResponse($request);
+        }
+
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
     }
 }

@@ -112,19 +112,83 @@
 
                     <input type="password" name="password" id="password" placeholder="Password" class="form-control mb-3">
 
-                    <input type="password" name="password_confirmation" id="password_confirmation"
-                        placeholder="Confirm Password" class="form-control mb-4">
+                    <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" class="form-control mb-2">
 
+                    <input type="checkbox" class="mt-2 mb-3" name="term-cond" id="term-cond"> I Accept <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#exampleModal">Terms And Condition</a>
                     <button type="submit" class="btn btn-dark w-100">Sign Up</button>
                 </form>
-
             </div>
-
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Modal Title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">      
+        <p>Privacy Notice on the Processing of Personal Data (Art. 13 EU Regulation 2016/679 – GDPR)</p>
+
+        <p>Divine Travel, as Data Controller, informs you that your personal data will be processed for the purpose of managing the Information Request Service. The data collected through this registration (email address) will be processed using electronic and IT tools in a lawful, correct, and transparent manner.</p>
+
+        <p><b>Purpose and Legal Basis of Processing</b></p>
+
+        Your Personal Data is processed solely to respond to your information request. Providing your data is necessary to use the Service; failure to provide such data will make it impossible to process your request.
+        The legal basis for processing is Article 6(1)(b) GDPR (processing necessary to take steps at your request prior to entering into a contract).
+
+        Data Recipients
+
+        Your data may be processed only by authorized personnel responsible for managing your request and, if necessary, by technicians responsible for IT system maintenance.
+        Your data will not be disclosed to third parties, except where required by law, nor will it be disseminated.
+
+        Data Retention
+
+        Your data will be retained for the time strictly necessary to process your request and, in any case, no longer than permitted by applicable laws.
+
+        Rights of the Data Subject
+
+        Pursuant to Articles 15–22 GDPR, you may exercise the following rights at any time:
+
+        right of access to personal data;
+
+        right to rectification or updating;
+
+        right to erasure (“right to be forgotten”);
+
+        right to restriction of processing;
+
+        right to data portability;
+
+        right to object to processing;
+
+        right to lodge a complaint with the Data Protection Authority.
+
+        To exercise your rights, you may write to: sales@divinetravel.it
+
+        Data Controller
+        The Data Controller is Divine Travel.
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('vendors/sweet_alert/sweetalert2.all.min.js') }}" ></script>
+<script src="{{ asset('/js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+
 <script>
 document.getElementById("registerForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -152,6 +216,7 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
         business_address: document.getElementById("business_address").value.trim(),
         password: document.getElementById("password").value.trim(),
         password_confirmation: document.getElementById("password_confirmation").value.trim(),
+        term_cond: document.getElementById("term-cond").checked
     };
 
     // Validation rules
@@ -170,7 +235,10 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
             message: "Passwords do not match",
             test: v => v === formData.password
         },
+        
     ];
+
+    
 
     for (const rule of validations) {
         if (!rule.test(formData[rule.field])) {
@@ -182,6 +250,11 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
 
     if (!valid) return;
 
+    if (!formData.term_cond) {
+        showError("Please accept Terms & Conditions");
+        return;
+    }
+    
     // Loader
     Swal.fire({
         title: "Processing...",

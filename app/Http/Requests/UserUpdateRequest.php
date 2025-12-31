@@ -14,6 +14,7 @@ class UserUpdateRequest extends FormRequest
 
     public function rules(): array
     {
+        dd($this->user);
         return [
             'name'     => ['required', 'string', 'max:255'],
 
@@ -21,7 +22,7 @@ class UserUpdateRequest extends FormRequest
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->ignore($this->user)
+                Rule::unique('users', 'email')->ignore($this->email)
             ],
 
             'phone_no' => ['required', 'digits_between:10,15'],

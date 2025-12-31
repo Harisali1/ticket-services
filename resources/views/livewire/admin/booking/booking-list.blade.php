@@ -96,7 +96,6 @@
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th><input type="checkbox"></th>
                     <th>Booking No #</th>
                     <th>PNR No #</th>
                     <th>Departure Date/Time</th>
@@ -111,7 +110,6 @@
             <tbody>
                 @forelse($bookings as $booking)
                     <tr>
-                        <td><input type="checkbox"></td>
                         <td>{{ $booking->booking_no }}</td>
                         <td>{{ $booking->pnr->pnr_no }}</td>
                         <td>{{ $booking->pnr->departure_date }}</td>

@@ -28,7 +28,7 @@ class UserController extends Controller
         try {
 
             $user = User::create([
-                'user_type_id' => 1,
+                'user_type_id' => 3,
                 'name'      => $validated['name'],
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
@@ -64,9 +64,7 @@ class UserController extends Controller
         return view('Admin.user.edit', compact('user'));
     }
 
-    public function update(UserUpdateRequest $request){
-
-        $validated = $request->validated();
+    public function update(Request $request){
 
         DB::beginTransaction();
 

@@ -91,7 +91,6 @@
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th><input type="checkbox"></th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Created On</th>
@@ -102,7 +101,6 @@
             <tbody>
                 @forelse($users as $user)
                     <tr>
-                        <td><input type="checkbox"></td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->created_at->format('m/d/Y h:i a') }}</td>

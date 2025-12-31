@@ -92,11 +92,10 @@
     </div>
 
     <!-- Table -->
-    <div class="table-responsive mb-4">
+    <div class="mb-4">
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th><input type="checkbox"></th>
                     <th>Pnr No #</th>
                     <th>AirLine</th>
                     <th>Departure Date/Time</th>
@@ -108,7 +107,6 @@
             <tbody>
                 @forelse($pnrs as $pnr)
                     <tr>
-                        <td><input type="checkbox"></td>
                         <td>{{ $pnr->pnr_no }}</td>
                         <td>{{ $pnr->airline->name }}</td>
                         <td>{{ $pnr->departure_date }}</td>
