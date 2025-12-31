@@ -28,7 +28,7 @@ class UserController extends Controller
         try {
 
             $user = User::create([
-                'user_type_id' => 3,
+                'user_type_id' => 1,
                 'name'      => $validated['name'],
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
