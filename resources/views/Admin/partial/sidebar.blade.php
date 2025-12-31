@@ -55,24 +55,22 @@
         @endif
         @if(Auth::user()->user_type_id == '2')
             <nav class="nav flex-column gap-2">
+                <a href="{{ route('admin.dashboard') }}" class="nav-link text-white bg-secondary rounded d-flex align-items-center">
+                    <i class="fa fa-tachometer me-3"></i>
+                    <span class="menu-text">Dashboard</span>
+                </a>
                 <a href="{{ route('admin.booking.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-plane me-3"></i>
                     <span class="menu-text">Search Flight</span>
                 </a>
-            </nav>
-            <nav class="nav flex-column gap-2">
                 <a href="{{ route('admin.booking.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-calendar me-3"></i>
                     <span class="menu-text">Manage Bookings</span>
                 </a>
-            </nav>
-            <nav class="nav flex-column gap-2">
                 <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-cog me-3"></i>
                     <span class="menu-text">Configuration </span>
                 </a>
-            </nav>
-            <nav class="nav flex-column gap-2">
                 <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">A/C Management </span>
