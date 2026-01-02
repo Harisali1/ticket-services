@@ -197,7 +197,7 @@
         });
 
         $("#airline_id").select2({
-            placeholder: "Search Arrival",
+            placeholder: "Search Airline",
             minimumInputLength: 2, // Minimum characters before sending the AJAX request
             allowClear: true,
             ajax: {

@@ -7,7 +7,9 @@
             <a href="{{ route('admin.pnr.create') }}" class="btn btn-dark">
                 + Create Pnr
             </a>
-
+             <a href="{{ route('admin.pnr.upload') }}" class="btn btn-dark">
+                ! Upload Pnr
+            </a>
             <!-- Filter button triggers offcanvas -->
             <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">

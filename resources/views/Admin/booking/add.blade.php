@@ -1,5 +1,17 @@
 @extends('Admin.layouts.main')
-
+@section('styles')
+    <style>
+    .select2-container .select2-selection--single {
+        height: 38px;
+    }
+    .select2-selection__rendered {
+        line-height: 34px!important;
+    }
+    .select2-selection__arrow {
+        height: 38px;
+    }
+    </style>
+@endsection
 @section('content')
 <div class="container">
 
@@ -21,29 +33,18 @@
     <hr>
 
     <div class="row g-3">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label class="form-label text-muted">Departure</label>
-            <select class="form-select" name="departure_id" required>
-                <option value="">Select</option>
-                @foreach($airports as $airport)
-                    <option value="{{ $airport->id }}" 
-                        {{ request('departure_id') == $airport->id ? 'selected' : '' }}>
-                        {{ $airport->name }}
-                    </option>
-                @endforeach
+            <select class="form-select" name="departure_id" id="departure_id" required>
+                <option value="">Select Departure</option>
             </select>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label class="form-label text-muted">Arrival</label>
-            <select class="form-select" name="arrival_id" required>
-                <option value="">Select</option>
-                @foreach($airports as $airport)
-                    <option value="{{ $airport->id }}"
-                        {{ request('arrival_id') == $airport->id ? 'selected' : '' }}>
-                        {{ $airport->name }}
-                    </option>
-                @endforeach
+            <select class="form-select" name="arrival_id" id="arrival_id" required>
+                <option value="">Select Arrival</option>
+                
             </select>
         </div>
 
@@ -78,88 +79,216 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function () {
+
+        $("#departure_id").select2({
+            placeholder: "Search Departure",
+            minimumInputLength: 2, // Minimum characters before sending the AJAX request
+            allowClear: true,
+            ajax: {
+                url: "{{ route('search.airport') }}", // Replace with your actual server endpoint
+                dataType: "json",
+                delay: 250, // Delay before sending the request in milliseconds
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.id,
+                                text: item.label // 'text' property is required by Select2
+                            };
+                        })
+                    };
+                },
+                cache: true // Enable caching of AJAX results
+            }
+        });
+
+        $("#arrival_id").select2({
+            placeholder: "Search Arrival",
+            minimumInputLength: 2, // Minimum characters before sending the AJAX request
+            allowClear: true,
+            ajax: {
+                url: "{{ route('search.airport') }}", // Replace with your actual server endpoint
+                dataType: "json",
+                delay: 250, // Delay before sending the request in milliseconds
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.id,
+                                text: item.label // 'text' property is required by Select2
+                            };
+                        })
+                    };
+                },
+                cache: true // Enable caching of AJAX results
+            }
+        });
+    });
+
     function selectPNRBooking(id){
         let modal = new bootstrap.Modal(document.getElementById('searchPnrSeatModal'));
         document.getElementById('pnr_id').value = id;
         modal.show();
     }
 
-    document.getElementById("pnr-select-seat").addEventListener("submit", function (e) {
-        e.preventDefault();
 
-        function showError(message) {
-            Swal.fire({
-                toast: true,
-                position: "top-end",
-                icon: "error",
-                title: message,
-                showConfirmButton: false,
-                timer: 2500
-            });
-        }
+    document.addEventListener("livewire:load", function () {
+        const form = document.getElementById("pnr-select-seat");
+        if (!form) return;
 
-        const seat = document.getElementById("seat").value.trim();
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-        // Validation
-        if (seat === "") {
-            showError("Seat is required");
-            return;
-        }
-
-        // Optional loading
-        Swal.fire({
-            title: "Processing...",
-            text: "Please wait",
-            didOpen: () => Swal.showLoading()
-        });
-
-        var data = $('#pnr-select-seat').serialize();
-        $.ajaxSetup({
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-        });
-
-        $.ajax({
-            url: "{{ route('admin.booking.seats.availability') }}",
-            method: "POST",
-            data: data,
-            dataType: 'json',
-            beforeSend: function(){
-                $('.error-container').html('');
-            },
-            success: function (data) {
-                Swal.close();
-                if(data.code == 2){
-                    Swal.fire({
-                        toast: true,
-                        position: "top-end",
-                        icon: "error",
-                        title: data.message,
-                        showConfirmButton: false,
-                        timer: 2500
-                    });
-                }
-                if(data.code == 1){
-                    e.target.submit();
-                }
-
-            },
-            error: function (xhr) {
-                Swal.close();
+            function showError(message) {
                 Swal.fire({
                     toast: true,
                     position: "top-end",
                     icon: "error",
-                    title: xhr.responseJSON.message,
+                    title: message,
                     showConfirmButton: false,
                     timer: 2500
                 });
-                return false;
             }
-        });
 
-        // ✅ SUBMIT FORM NORMALLY
-        
+            const seat = document.getElementById("seat").value.trim();
+
+            // Validation
+            if (seat === "") {
+                showError("Seat is required");
+                return;
+            }
+
+            // Optional loading
+            Swal.fire({
+                title: "Processing...",
+                text: "Please wait",
+                didOpen: () => Swal.showLoading()
+            });
+
+            var data = $('#pnr-select-seat').serialize();
+            $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+            });
+
+            $.ajax({
+                url: "{{ route('admin.booking.seats.availability') }}",
+                method: "POST",
+                data: data,
+                dataType: 'json',
+                beforeSend: function(){
+                    $('.error-container').html('');
+                },
+                success: function (data) {
+                    Swal.close();
+                    if(data.code == 2){
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            icon: "error",
+                            title: data.message,
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                    }
+                    if(data.code == 1){
+                        e.target.submit();
+                    }
+
+                },
+                error: function (xhr) {
+                    Swal.close();
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        icon: "error",
+                        title: xhr.responseJSON.message,
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
+                    return false;
+                }
+            });
+        });
     });
+
+
+    // document.getElementById("pnr-select-seat").addEventListener("submit", function (e) {
+    //     e.preventDefault();
+
+    //     function showError(message) {
+    //         Swal.fire({
+    //             toast: true,
+    //             position: "top-end",
+    //             icon: "error",
+    //             title: message,
+    //             showConfirmButton: false,
+    //             timer: 2500
+    //         });
+    //     }
+
+    //     const seat = document.getElementById("seat").value.trim();
+
+    //     // Validation
+    //     if (seat === "") {
+    //         showError("Seat is required");
+    //         return;
+    //     }
+
+    //     // Optional loading
+    //     Swal.fire({
+    //         title: "Processing...",
+    //         text: "Please wait",
+    //         didOpen: () => Swal.showLoading()
+    //     });
+
+    //     var data = $('#pnr-select-seat').serialize();
+    //     $.ajaxSetup({
+    //     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+    //     });
+
+    //     $.ajax({
+    //         url: "{{ route('admin.booking.seats.availability') }}",
+    //         method: "POST",
+    //         data: data,
+    //         dataType: 'json',
+    //         beforeSend: function(){
+    //             $('.error-container').html('');
+    //         },
+    //         success: function (data) {
+    //             Swal.close();
+    //             if(data.code == 2){
+    //                 Swal.fire({
+    //                     toast: true,
+    //                     position: "top-end",
+    //                     icon: "error",
+    //                     title: data.message,
+    //                     showConfirmButton: false,
+    //                     timer: 2500
+    //                 });
+    //             }
+    //             if(data.code == 1){
+    //                 e.target.submit();
+    //             }
+
+    //         },
+    //         error: function (xhr) {
+    //             Swal.close();
+    //             Swal.fire({
+    //                 toast: true,
+    //                 position: "top-end",
+    //                 icon: "error",
+    //                 title: xhr.responseJSON.message,
+    //                 showConfirmButton: false,
+    //                 timer: 2500
+    //             });
+    //             return false;
+    //         }
+    //     });
+
+    //     // ✅ SUBMIT FORM NORMALLY
+        
+    // });
 
 </script>
 

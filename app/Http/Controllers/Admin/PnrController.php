@@ -10,6 +10,9 @@ use App\Models\Admin\Seat;
 use App\Models\Admin\AirLine;
 use App\Models\Admin\Airport;
 use DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Exception;
 
 class PnrController extends Controller
 {
@@ -116,5 +119,82 @@ class PnrController extends Controller
                 'success' => true,
                 'message' => 'Cancel current sale successfully',
             ], 201);
+    }
+
+    public function uploadPnr(){
+        return view('Admin.pnr.upload-pnr');
+    }
+
+    public function uploadPnrSubmit(Request $request){
+        $request->validate([
+            'pnr_file' => 'required|file|mimes:csv,txt|max:5120', // 5MB
+        ]);
+
+        try {
+            // 1️ Get file
+            $file = $request->file('pnr_file');
+
+            // 2️ Generate unique filename
+            $fileName = 'pnr_' . time() . '_' . Str::random(6) . '.csv';
+
+            // 3️ Store file
+            $path = $file->storeAs('uploads/pnr', $fileName, 'public');
+
+            // 4️ Read CSV
+            $fullPath = storage_path('app/public/' . $path);
+            $rows = array_map('str_getcsv', file($fullPath));
+
+            if (count($rows) <= 1) {
+                return response()->json([
+                    'code' => 2,
+                    'message' => 'CSV file is empty'
+                ], 422);
+            }
+
+            // 5️ Remove header row
+            $header = array_shift($rows);
+
+            $insertData = [];
+
+            foreach ($rows as $index => $row) {
+                if (count($row) < count($header)) {
+                    continue; // skip invalid rows
+                }
+                $departure = Airport::where('code', $row[0])->first();
+                $arrival = Airport::where('code', $row[1])->first();
+                $airline = AirLine::where('code', $row[2])->first();
+                // Example mapping (adjust columns as needed)
+                $insertData[] = [
+                    'departure_id'   => $departure->id ?? null,
+                    'arrival_id'    => $arrival->id ?? null,
+                    'airline_id'      => $airline->id ?? null,
+                    'seats'  => $row[3] ?? null,
+                    'departure_date'  => $row[4] ?? null,
+                    'departure_time'  => $row[5] ?? null,
+                    'arrival_date'  => $row[6] ?? null,
+                    'arrival_time'  => $row[7] ?? null,
+                    'created_at'   => now(),
+                    'updated_at'   => now(),
+                ];
+            }
+
+            // 6️ Insert into DB (optional)
+            if (!empty($insertData)) {
+                DB::table('pnrs')->insert($insertData);
+            }
+
+            return response()->json([
+                'code' => 1,
+                'message' => 'PNR CSV uploaded successfully',
+                'total_rows' => count($insertData)
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'code' => 2,
+                'message' => 'Upload failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
