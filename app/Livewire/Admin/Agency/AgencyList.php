@@ -58,8 +58,13 @@ class AgencyList extends Component
             )
             ->when($this->filters['to'], fn ($q) =>
                 $q->whereDate('created_at', '<=', $this->filters['to'])
-            )
-            ->latest()
+            );
+
+            if(auth()->user()->user_type_id != 1){
+                $agencies = $agencies->where('created_by', auth()->user()->id);
+            }
+
+            $agencies = $agencies->latest()
             ->paginate($this->perPage);
 
         $stats = [

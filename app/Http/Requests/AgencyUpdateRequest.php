@@ -19,7 +19,7 @@ class AgencyUpdateRequest extends FormRequest
             'agency_address'    => ['required', 'string', 'max:500'],
             'name'              => ['required', 'string', 'max:255'],
             'email'             => ['required', 'email', 'max:255'],
-            'phone_no'          => ['required', 'digits_between:11,15'],
+            'phone_no'          => ['required'],
             'status'            => ['required'],
         ];
     }
@@ -34,7 +34,6 @@ class AgencyUpdateRequest extends FormRequest
             'email.required'            => 'Email is required',
             'email.email'               => 'Invalid email format',
             'phone_no.required'         => 'Phone number is required',
-            'phone_no.digits_between'   => 'Phone must be at least 11 digits',
             'status.required'           => 'Status is required',
         ];
     }

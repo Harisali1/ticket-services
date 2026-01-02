@@ -146,7 +146,7 @@
       { field: "name", message: "Name is required", test: v => v !== "" },
       { field: "email", message: "Email is required", test: v => v !== "" },
       { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
-      { field: "phone", message: "Phone must be at least 10 digits", test: v => v.length >= 11 },
+      { field: "phone", message: "Phone no required", test: v => v !== '' },
       { field: "password", message: "Password must be 6+ characters", test: v => v.length >= 6 },
       { field: "confirm_password", message: "Passwords do not match", test: v => v === formData.password },
       { field: "status", message: "Status is required", test: v => v !== "" },

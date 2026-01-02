@@ -30,6 +30,7 @@ return new class extends Migration
             $table->integer('residence_country_id')->nullable();
             $table->string('nationality')->nullable();
             $table->date('expiry_date')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

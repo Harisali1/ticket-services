@@ -19,8 +19,8 @@ class PnrController extends Controller
     }
 
     public function create(){
-        $airlines = AirLine::where('status', 1)->get();
-        $airports = Airport::where('status', 1)->get();
+        $airlines = AirLine::where('status', 1)->limit(10)->get();
+        $airports = Airport::where('status', 1)->limit(10)->get();
         return view('Admin.pnr.add', compact('airlines','airports'));
     }
 

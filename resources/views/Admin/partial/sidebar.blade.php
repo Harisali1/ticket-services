@@ -46,7 +46,10 @@
                     <i class="fa fa-book me-3"></i>
                     <span class="menu-text">Manage PNR</span>
                 </a>
-
+                 <a href="{{ route('admin.booking.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                    <i class="fa fa-plane me-3"></i>
+                    <span class="menu-text">Search Flight</span>
+                </a>
                 <a href="{{ route('admin.booking.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-calendar me-3"></i>
                     <span class="menu-text">Manage Bookings</span>
@@ -66,6 +69,10 @@
                 <a href="{{ route('admin.booking.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-calendar me-3"></i>
                     <span class="menu-text">Manage Bookings</span>
+                </a>
+                <a href="{{ route('admin.agency.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                    <i class="fa fa-building me-3"></i>
+                    <span class="menu-text">Sub Agencies</span>
                 </a>
                 <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-cog me-3"></i>

@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid p-4">
+    <div class="container p-4">
         <h5 class="mb-3">Quick Stats</h5>
         <div class="row g-3">
             <div class="col-md-3">

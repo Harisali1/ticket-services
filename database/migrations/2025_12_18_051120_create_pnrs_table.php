@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('arrival_date');
             $table->time('arrival_time');
             $table->boolean('status')->default(1);
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

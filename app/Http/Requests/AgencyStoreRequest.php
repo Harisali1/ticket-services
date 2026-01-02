@@ -20,7 +20,7 @@ class AgencyStoreRequest extends FormRequest
 
             'name'              => ['required', 'string', 'max:255'],
             'email'             => ['required', 'email', 'max:255'],
-            'phone_no'          => ['required', 'digits_between:10,15'],
+            'phone_no'          => ['required'],
 
             'password'          => ['required', 'string', 'min:6'],
             'confirm_password'  => ['required', 'same:password'],
@@ -41,7 +41,6 @@ class AgencyStoreRequest extends FormRequest
             'email.email'               => 'Invalid email format',
 
             'phone_no.required'         => 'Phone number is required',
-            'phone_no.digits_between'   => 'Phone must be at least 10 digits',
 
             'password.required'         => 'Password is required',
             'password.min'              => 'Password must be at least 6 characters',

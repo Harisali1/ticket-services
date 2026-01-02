@@ -43,10 +43,7 @@
                 <div class="col-md-3">
                     <label class="form-label text-muted">Departure</label>
                     <select class="form-select select2" id="departure_id" name="departure_id">
-                        <option value="">Please Select Departure</option>
-                        @foreach($airports as $airport)
-                            <option value="{{ $airport->id }}">{{ $airport->name }}</option>
-                        @endforeach
+                        <option selected value="">Please Select Departure</option>
                     </select>
                 </div>
 
@@ -54,9 +51,6 @@
                     <label class="form-label text-muted">Arrival</label>
                     <select class="form-select select2" id="arrival_id" name="arrival_id">
                         <option value="">Please Select Arrival</option>
-                        @foreach($airports as $airport)
-                            <option value="{{ $airport->id }}">{{ $airport->name }}</option>
-                        @endforeach
                     </select>
                 </div>
                 <!-- Airline -->
@@ -64,9 +58,6 @@
                     <label class="form-label text-muted">Airline</label>
                     <select class="form-select select2" id="airline_id" name="airline_id">
                         <option value="">Please Select AirLine</option>
-                        @foreach($airlines as $airline)
-                            <option value="{{ $airline->id }}">{{ $airline->name }}</option>
-                        @endforeach
                     </select>
                 </div>
 
@@ -160,20 +151,71 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
-        $('#departure_id').select2({
-            placeholder: "Please Select Departure",
+
+        $("#departure_id").select2({
+            placeholder: "Search Departure",
+            minimumInputLength: 2, // Minimum characters before sending the AJAX request
             allowClear: true,
-            width: '100%'
+            ajax: {
+                url: "{{ route('search.airport') }}", // Replace with your actual server endpoint
+                dataType: "json",
+                delay: 250, // Delay before sending the request in milliseconds
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.id,
+                                text: item.label // 'text' property is required by Select2
+                            };
+                        })
+                    };
+                },
+                cache: true // Enable caching of AJAX results
+            }
         });
-        $('#arrival_id').select2({
-            placeholder: "Please Select Arrival",
+
+        $("#arrival_id").select2({
+            placeholder: "Search Arrival",
+            minimumInputLength: 2, // Minimum characters before sending the AJAX request
             allowClear: true,
-            width: '100%'
+            ajax: {
+                url: "{{ route('search.airport') }}", // Replace with your actual server endpoint
+                dataType: "json",
+                delay: 250, // Delay before sending the request in milliseconds
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.id,
+                                text: item.label // 'text' property is required by Select2
+                            };
+                        })
+                    };
+                },
+                cache: true // Enable caching of AJAX results
+            }
         });
-        $('#airline_id').select2({
-            placeholder: "Please Select Airline",
+
+        $("#airline_id").select2({
+            placeholder: "Search Arrival",
+            minimumInputLength: 2, // Minimum characters before sending the AJAX request
             allowClear: true,
-            width: '100%'
+            ajax: {
+                url: "{{ route('search.airline') }}", // Replace with your actual server endpoint
+                dataType: "json",
+                delay: 250, // Delay before sending the request in milliseconds
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.id,
+                                text: item.label // 'text' property is required by Select2
+                            };
+                        })
+                    };
+                },
+                cache: true // Enable caching of AJAX results
+            }
         });
     });
 

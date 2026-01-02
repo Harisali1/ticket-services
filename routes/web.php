@@ -30,6 +30,10 @@ Livewire::setUpdateRoute(function ($handle) {
     return Route::post('public/livewire/update', $handle);
 });
 
+Route::get('search/airport', [App\Http\Controllers\Admin\DataListController::class, 'searchAirport'])->name('search.airport');
+Route::get('search/airline', [App\Http\Controllers\Admin\DataListController::class, 'searchAirLine'])->name('search.airline');
+
+
 Route::group(['middleware' => 'auth'], function () {
     Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');

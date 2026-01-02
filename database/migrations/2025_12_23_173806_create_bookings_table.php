@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('seats')->nullable();
             $table->string('price')->nullable();
             $table->boolean('status')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

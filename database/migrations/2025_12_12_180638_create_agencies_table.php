@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('piv');
             $table->text('address');
             $table->boolean('status')->default(1);
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

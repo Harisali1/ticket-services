@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
-            $table->string('logo');
+            $table->string('awb_prefix')->nullable();
+            $table->string('country')->nullable();
+            $table->string('logo')->nullable();
             $table->boolean('status')->default(1);
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

@@ -94,7 +94,7 @@
                         <td>
                             <img src="{{ $airline->logo 
                                 ? asset('storage/'.$airline->logo) 
-                                : asset('images/no-logo.png') }}"
+                                : asset('images/logo-placeholder.png') }}"
                                 alt="logo"
                                 class="rounded-circle border"
                                 style="width:45px;height:45px;object-fit:contain;">

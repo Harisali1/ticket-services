@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('code');
             $table->boolean('status')->default(1);
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

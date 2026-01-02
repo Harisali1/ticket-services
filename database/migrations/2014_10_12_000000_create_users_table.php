@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->boolean('status')->default(1);
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
 
@@ -29,7 +30,8 @@ return new class extends Migration
             'user_type_id' => 1,
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
-            'password' => bcrypt('admin@123')
+            'password' => bcrypt('admin@123'),
+            'status' => 2,
         ]);
     }
 

@@ -35,7 +35,8 @@ class AgencyController extends Controller
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
                 'password'  => bcrypt($validated['password']),
-                'status'    => $validated['status']
+                'status'    => $validated['status'],
+                'created_by'=> auth()->user()->id,
             ]);
 
             // Create Agency
@@ -44,7 +45,8 @@ class AgencyController extends Controller
                 'name'      => $validated['agency_name'],
                 'piv'       => $validated['piv'],
                 'address'   => $validated['agency_address'],
-                'status'    => $validated['status']
+                'status'    => $validated['status'],
+                'created_by'=> auth()->user()->id,
             ]);
 
             DB::commit();

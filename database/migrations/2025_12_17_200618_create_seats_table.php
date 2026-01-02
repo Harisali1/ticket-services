@@ -20,6 +20,7 @@ return new class extends Migration
             $table->boolean('is_cancel')->default(0);
             $table->string('price');
             $table->text('comment')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }
