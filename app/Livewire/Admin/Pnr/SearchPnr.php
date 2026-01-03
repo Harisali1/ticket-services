@@ -19,6 +19,7 @@ class SearchPnr extends Component
     public $arrival_id;
     public $departure_date;
     public $arrival_date;
+    public $trip_type;
     public $perPage = 2;
 
 
@@ -51,15 +52,19 @@ class SearchPnr extends Component
         $this->arrival_id = $initialFilters['arrival_id'] ?? null;
         $this->departure_date = $initialFilters['departure_date'] ?? null;
         $this->arrival_date = $initialFilters['arrival_date'] ?? null;
+        $this->trip_type = $initialFilters['trip_type'] ?? null;
     }
 
     public function render()
     {
+        
         $pnrs = Pnr::where('departure_id', $this->departure_id)
             ->where('arrival_id', $this->arrival_id)
-            ->whereDate('departure_date', $this->departure_date)
-            ->whereDate('arrival_date', $this->arrival_date)
-            ->with('airline', 'seats')
+            ->whereDate('departure_date', $this->departure_date);
+            if($this->trip_type == 'return'){
+                $pnrs = $pnrs->whereDate('arrival_date', $this->arrival_date);
+            }
+        $pnrs = $pnrs->with('airline', 'seats')
             ->paginate($this->perPage);
 
         return view('livewire.admin.pnr.search-pnr', compact('pnrs'));

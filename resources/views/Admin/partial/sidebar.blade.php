@@ -71,14 +71,14 @@
                     <span class="menu-text">Manage Bookings</span>
                 </a>
                 <a href="{{ route('admin.agency.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
-                    <i class="fa fa-building me-3"></i>
+                    <i class="fa fa-cog me-3"></i>
                     <span class="menu-text">Sub Agencies</span>
                 </a>
-                <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <!-- <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-cog me-3"></i>
                     <span class="menu-text">Configuration </span>
-                </a>
-                <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                </a> -->
+                <a href="{{ route('admin.bank.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">A/C Management </span>
                 </a>

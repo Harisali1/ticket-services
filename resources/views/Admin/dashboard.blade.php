@@ -7,6 +7,15 @@
     overflow-y: auto;
     padding-right: 10px;
 }
+.bg-gray{
+    background: #f2f2f2;
+}
+/* Make carousel arrows black */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
+
 </style>
 @endsection
 
@@ -41,70 +50,100 @@
         </div>
         @if(Auth::user()->user_type_id == '2')
         <div class="row g-3 mt-4">
-            <div class="col-md-4">
-                <div class="card card-stat">
-                    <h3>Account Details</h3>
-                    <p>Account No: 123456789012345</p>
-                    <p>Bank Name: 123456789012345</p>
-                    <p>Account Title: 123456789012345</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card card-stat">
-                    <h3>Notification</h3>
-                    <div class="scroll">
-                        <p>Privacy Notice on the Processing of Personal Data (Art. 13 EU Regulation 2016/679 – GDPR)</p>
-                        <p>Divine Travel, as Data Controller, informs you that your personal data will be processed for the purpose of managing the Information Request Service. The data collected through this registration (email address) will be processed using electronic and IT tools in a lawful, correct, and transparent manner.</p>
-                        <p><b>Purpose and Legal Basis of Processing</b></p>
-                        Your Personal Data is processed solely to respond to your information request. Providing your data is necessary to use the Service; failure to provide such data will make it impossible to process your request.
-                        The legal basis for processing is Article 6(1)(b) GDPR (processing necessary to take steps at your request prior to entering into a contract).
+           <div class="col-md-4">
+                <div class="card p-3 h-100 bg-gray">
+                    <h5 class="text-center mb-3">Account Details</h5>
 
-                        Data Recipients
+                    <div id="accountSlider" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
 
-                        Your data may be processed only by authorized personnel responsible for managing your request and, if necessary, by technicians responsible for IT system maintenance.
-                        Your data will not be disclosed to third parties, except where required by law, nor will it be disseminated.
+                            @foreach($bankDetails as $bank)
+                                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                    <p><strong>Account No:</strong> {{ $bank->ac_no }}</p>
+                                    <p><strong>Bank Name:</strong> {{ $bank->bank_name }}</p>
+                                    <p><strong>Account Title:</strong>{{ $bank->ac_title }}</p>
+                                </div>
+                            @endforeach
 
-                        Data Retention
+                        </div>
 
-                        Your data will be retained for the time strictly necessary to process your request and, in any case, no longer than permitted by applicable laws.
-
-                        Rights of the Data Subject
-
-                        Pursuant to Articles 15–22 GDPR, you may exercise the following rights at any time:
-
-                        right of access to personal data;
-
-                        right to rectification or updating;
-
-                        right to erasure (“right to be forgotten”);
-
-                        right to restriction of processing;
-
-                        right to data portability;
-
-                        right to object to processing;
-
-                        right to lodge a complaint with the Data Protection Authority.
-
-                        To exercise your rights, you may write to: sales@divinetravel.it
-
-                        Data Controller
-                        The Data Controller is Divine Travel.
+                        <!-- Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#accountSlider" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#accountSlider" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
                     </div>
-                    
                 </div>
             </div>
+
             <div class="col-md-4">
-                <div class="card card-stat">
-                    <h3>Today Reservations</h3>
-                    <p>right to lodge a complaint with the Data Protection Authority.
-
-                        To exercise your rights, you may write to: sales@divinetravel.it
-
-                        Data Controller
-                        The Data Controller is Divine Travel.</p>
+                <div class="card p-3 h-100">
+                    <h5 class="text-center mb-3">Notification</h5>
+                    <div style="max-height:200px; overflow-y:auto;">
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                    </div>
                 </div>
             </div>
+
+            
+            <div class="col-md-4">
+                <div class="card p-3 h-100">
+                    <h5 class="text-center mb-3">Today Reservations</h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>PNR</th>
+                                    <th>Route</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>ABC123</td>
+                                    <td>KHI → DXB</td>
+                                    <td>
+                                        <span class="badge bg-success">Confirmed</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>XYZ456</td>
+                                    <td>LHE → JED</td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>LMN789</td>
+                                    <td>ISB → DOH</td>
+                                    <td>
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
             
         </div>
         @endif

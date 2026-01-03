@@ -20,23 +20,25 @@ class BookingController extends Controller
         $airports = Airport::where('status', 1)->get();
 
         if ($request->isMethod('post')) {
-
             return view('Admin.booking.add', [
                 'airports' => $airports,
-                'showPnrSearch' => $request->filled([
+                'showPnrSearch' => $request->all([
                     'departure_id',
                     'arrival_id',
                     'departure_date',
-                    'arrival_date'
+                    'arrival_date',
+                    'trip_type',
                 ]),
                 'initialFilters' => $request->only([
                     'departure_id',
                     'arrival_id',
                     'departure_date',
-                    'arrival_date'
+                    'arrival_date',
+                    'trip_type'
                 ]),
             ]);
         }
+
 
         return view('Admin.booking.add', [
             'airports' => $airports,

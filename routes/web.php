@@ -96,6 +96,13 @@ Route::group(['middleware' => 'auth'], function () {
             // Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');
         });
 
+        Route::prefix('bank')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\BankController::class, 'index'])->name('admin.bank.index');
+            Route::get('/add', [App\Http\Controllers\Admin\BankController::class, 'create'])->name('admin.bank.create');
+            Route::post('/store', [App\Http\Controllers\Admin\BankController::class, 'store'])->name('admin.bank.store');
+            Route::get('/edit/{bank}', [App\Http\Controllers\Admin\BankController::class, 'edit'])->name('admin.bank.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\BankController::class, 'update'])->name('admin.bank.update');
+        });
     });
 });
 
