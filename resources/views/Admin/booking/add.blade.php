@@ -96,72 +96,75 @@
 
 @section('scripts')
 <script>
-$(document).ready(function () {
+    $(document).ready(function () {
 
-    /* ===============================
-       Select2
-    =============================== */
-    $("#departure_id").select2({
-        placeholder: "Search Departure",
-        minimumInputLength: 2,
-        ajax: {
-            url: "{{ route('search.airport') }}",
-            dataType: "json",
-            delay: 250,
-            processResults: function (data) {
-                return {
-                    results: data.map(item => ({
-                        id: item.id,
-                        text: item.label
-                    }))
-                };
+        /* ===============================
+        Select2
+        =============================== */
+        $("#departure_id").select2({
+            placeholder: "Search Departure",
+            minimumInputLength: 2,
+            ajax: {
+                url: "{{ route('search.airport') }}",
+                dataType: "json",
+                delay: 250,
+                processResults: function (data) {
+                    return {
+                        results: data.map(item => ({
+                            id: item.id,
+                            text: item.label
+                        }))
+                    };
+                }
+            }
+        });
+
+        $("#arrival_id").select2({
+            placeholder: "Search Arrival",
+            minimumInputLength: 2,
+            ajax: {
+                url: "{{ route('search.airport') }}",
+                dataType: "json",
+                delay: 250,
+                processResults: function (data) {
+                    return {
+                        results: data.map(item => ({
+                            id: item.id,
+                            text: item.label
+                        }))
+                    };
+                }
+            }
+        });
+
+        /* ===============================
+        Trip Type Logic
+        =============================== */
+        const arrivalWrapper = document.getElementById('arrival-date-wrapper');
+        const arrivalDate    = document.getElementById('arrival_date');
+
+        function toggleArrivalDate() {
+            const type = document.querySelector('input[name="trip_type"]:checked').value;
+
+            if (type === 'one_way') {
+                arrivalDate.required = false;
+                arrivalDate.value = '';
+                arrivalWrapper.classList.add('d-none');
+            } else {
+                arrivalDate.required = true;
+                arrivalWrapper.classList.remove('d-none');
             }
         }
+
+        document.querySelectorAll('input[name="trip_type"]').forEach(radio => {
+            radio.addEventListener('change', toggleArrivalDate);
+        });
+
+        // Initial load
+        toggleArrivalDate();
+
+        
     });
-
-    $("#arrival_id").select2({
-        placeholder: "Search Arrival",
-        minimumInputLength: 2,
-        ajax: {
-            url: "{{ route('search.airport') }}",
-            dataType: "json",
-            delay: 250,
-            processResults: function (data) {
-                return {
-                    results: data.map(item => ({
-                        id: item.id,
-                        text: item.label
-                    }))
-                };
-            }
-        }
-    });
-
-    /* ===============================
-       Trip Type Logic
-    =============================== */
-    const arrivalWrapper = document.getElementById('arrival-date-wrapper');
-    const arrivalDate    = document.getElementById('arrival_date');
-
-    function toggleArrivalDate() {
-        const type = document.querySelector('input[name="trip_type"]:checked').value;
-
-        if (type === 'one_way') {
-            arrivalDate.required = false;
-            arrivalDate.value = '';
-            arrivalWrapper.classList.add('d-none');
-        } else {
-            arrivalDate.required = true;
-            arrivalWrapper.classList.remove('d-none');
-        }
-    }
-
-    document.querySelectorAll('input[name="trip_type"]').forEach(radio => {
-        radio.addEventListener('change', toggleArrivalDate);
-    });
-
-    // Initial load
-    toggleArrivalDate();
 
     function selectPNRBooking(id){
         let modal = new bootstrap.Modal(document.getElementById('searchPnrSeatModal'));
@@ -169,86 +172,85 @@ $(document).ready(function () {
         modal.show();
     }
 
+    
+    document.addEventListener('DOMContentLoaded', function () {
 
-    document.addEventListener("livewire:load", function () {
-        const form = document.getElementById("pnr-select-seat");
-        if (!form) return;
+        // Re-bind after Livewire DOM updates
+        Livewire.hook('message.processed', () => {
+            bindSeatForm();
+        });
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
+        bindSeatForm();
 
-            function showError(message) {
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "error",
-                    title: message,
-                    showConfirmButton: false,
-                    timer: 2500
-                });
-            }
+        function bindSeatForm() {
 
-            const seat = document.getElementById("seat").value.trim();
+            const form = document.getElementById("pnr-select-seat");
+            if (!form || form.dataset.bound) return;
 
-            // Validation
-            if (seat === "") {
-                showError("Seat is required");
-                return;
-            }
+            form.dataset.bound = "true"; // prevent multiple bindings
 
-            // Optional loading
-            Swal.fire({
-                title: "Processing...",
-                text: "Please wait",
-                didOpen: () => Swal.showLoading()
-            });
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
 
-            var data = $('#pnr-select-seat').serialize();
-            $.ajaxSetup({
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-            });
-
-            $.ajax({
-                url: "{{ route('admin.booking.seats.availability') }}",
-                method: "POST",
-                data: data,
-                dataType: 'json',
-                beforeSend: function(){
-                    $('.error-container').html('');
-                },
-                success: function (data) {
-                    Swal.close();
-                    if(data.code == 2){
-                        Swal.fire({
-                            toast: true,
-                            position: "top-end",
-                            icon: "error",
-                            title: data.message,
-                            showConfirmButton: false,
-                            timer: 2500
-                        });
-                    }
-                    if(data.code == 1){
-                        e.target.submit();
-                    }
-
-                },
-                error: function (xhr) {
-                    Swal.close();
+                function showError(message) {
                     Swal.fire({
                         toast: true,
                         position: "top-end",
                         icon: "error",
-                        title: xhr.responseJSON.message,
+                        title: message,
                         showConfirmButton: false,
                         timer: 2500
                     });
-                    return false;
                 }
+
+                const seat = document.getElementById("seat")?.value.trim();
+
+                if (!seat) {
+                    showError("Seat is required");
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Processing...",
+                    text: "Please wait",
+                    didOpen: () => Swal.showLoading()
+                });
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': document
+                            .querySelector('meta[name="csrf-token"]')
+                            ?.getAttribute('content')
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ route('admin.booking.seats.availability') }}",
+                    method: "POST",
+                    data: $(form).serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        Swal.close();
+
+                        if (data.code === 2) {
+                            showError(data.message);
+                            return;
+                        }
+
+                        // ✅ allow actual submit if OK
+                        if (data.code === 1) {
+                            form.submit();
+                        }
+                    },
+                    error: function (xhr) {
+                        Swal.close();
+                        showError(xhr.responseJSON?.message || 'Something went wrong');
+                    }
+                });
             });
-        });
+        }
     });
-});
+
 </script>
 @endsection
 

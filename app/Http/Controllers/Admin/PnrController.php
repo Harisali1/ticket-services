@@ -9,6 +9,7 @@ use App\Models\Admin\Pnr;
 use App\Models\Admin\Seat;
 use App\Models\Admin\AirLine;
 use App\Models\Admin\Airport;
+use App\Models\Admin\Baggage;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -24,6 +25,7 @@ class PnrController extends Controller
     public function create(){
         $airlines = AirLine::where('status', 1)->limit(10)->get();
         $airports = Airport::where('status', 1)->limit(10)->get();
+        $baggages = Baggage::where('status', 1)->limit(10)->get();
         return view('Admin.pnr.add', compact('airlines','airports'));
     }
 
@@ -36,7 +38,6 @@ class PnrController extends Controller
         try {
 
             $data = $request->validated();
-
             $airlineCode = AirLine::find($data['airline_id']);
             $departureCode = Airport::find($data['departure_id']);
             $arrivalCode = Airport::find($data['arrival_id']);
@@ -49,6 +50,8 @@ class PnrController extends Controller
             }
 
             $pnr = Pnr::create($data);
+
+            $pnr->baggages()->sync($request->baggage_id);
 
             foreach (range(1, $data['seats']) as $key => $i) {
                 $pnr->seats()->create([

@@ -16,15 +16,16 @@ return new class extends Migration
             $table->string('pnr_no');
             $table->integer('departure_id')->nullable();
             $table->integer('arrival_id')->nullable();
-            $table->integer('airline_id');
+            $table->integer('airline_id')->nullable();
             $table->integer('seats');
-            $table->string('pnr_file')->nullable();
+            $table->string('price')->nullable();
             $table->date('departure_date');
             $table->time('departure_time');
             $table->date('arrival_date');
             $table->time('arrival_time');
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

@@ -58,7 +58,7 @@ class SearchPnr extends Component
     public function render()
     {
         
-        $pnrs = Pnr::where('departure_id', $this->departure_id)
+        $pnrs = Pnr::with('seats')->where('departure_id', $this->departure_id)
             ->where('arrival_id', $this->arrival_id)
             ->whereDate('departure_date', $this->departure_date);
             if($this->trip_type == 'return'){

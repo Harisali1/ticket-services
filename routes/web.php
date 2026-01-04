@@ -32,6 +32,7 @@ Livewire::setUpdateRoute(function ($handle) {
 
 Route::get('search/airport', [App\Http\Controllers\Admin\DataListController::class, 'searchAirport'])->name('search.airport');
 Route::get('search/airline', [App\Http\Controllers\Admin\DataListController::class, 'searchAirLine'])->name('search.airline');
+Route::get('search/baggage', [App\Http\Controllers\Admin\DataListController::class, 'searchBaggage'])->name('search.baggage');
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -102,6 +103,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', [App\Http\Controllers\Admin\BankController::class, 'store'])->name('admin.bank.store');
             Route::get('/edit/{bank}', [App\Http\Controllers\Admin\BankController::class, 'edit'])->name('admin.bank.edit');
             Route::post('/update', [App\Http\Controllers\Admin\BankController::class, 'update'])->name('admin.bank.update');
+        });
+
+        Route::prefix('baggage')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\BaggageController::class, 'index'])->name('admin.baggage.index');
+            Route::get('/add', [App\Http\Controllers\Admin\BaggageController::class, 'create'])->name('admin.baggage.create');
+            Route::post('/store', [App\Http\Controllers\Admin\BaggageController::class, 'store'])->name('admin.baggage.store');
+            Route::get('/edit/{baggage}', [App\Http\Controllers\Admin\BaggageController::class, 'edit'])->name('admin.baggage.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\BaggageController::class, 'update'])->name('admin.baggage.update');
         });
     });
 });

@@ -34,4 +34,9 @@ class Pnr extends Model
         return $this->belongsTo(Airport::class, 'arrival_id', 'id');
     }
 
+    public function baggages()
+    {
+        return $this->belongsToMany(Baggage::class, 'baggage_pnr', 'pnr_id', 'baggage_id');
+    }
+
 }

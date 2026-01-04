@@ -23,7 +23,7 @@ class PnrStoreRequest extends FormRequest
             'departure_time' => ['required', 'date_format:H:i'],
             'arrival_date'   => ['required', 'date', 'after_or_equal:departure_date'],
             'arrival_time'   => ['required', 'date_format:H:i'],
-            'pnr_file'       => ['required', 'file', 'mimes:png,jpg,jpeg', 'max:5120'], // 5MB
+            'price'          => ['required', 'integer'], // 5MB
         ];
     }
 
@@ -59,9 +59,8 @@ class PnrStoreRequest extends FormRequest
             'arrival_time.required'   => 'Arrival time is required.',
             'arrival_time.date_format'=> 'Arrival time format must be HH:MM.',
 
-            'pnr_file.required'       => 'PNR document is required.',
-            'pnr_file.mimes'          => 'Only JPG, PNG, or JPEG files are allowed.',
-            'pnr_file.max'            => 'PNR document must not exceed 5MB.',
+            'price.required'       => 'Price field is required.',
+            'price.integer'          => 'Price must be an integer.',
         ];
     }
 }

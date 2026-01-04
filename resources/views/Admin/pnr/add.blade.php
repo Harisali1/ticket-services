@@ -33,13 +33,6 @@
             <!-- Grid -->
             <div class="row g-3">
 
-                <!-- PNR -->
-                <!-- <div class="col-md-3">
-                    <label class="form-label text-muted">PNR Number *</label>
-                    <input type="text" id="pnr_no" name="pnr_no" class="form-control" value="{{ old('pnr_no') }}">
-                </div> -->
-
-                <!-- Baggage -->
                 <div class="col-md-3">
                     <label class="form-label text-muted">Departure</label>
                     <select class="form-select select2" id="departure_id" name="departure_id">
@@ -61,10 +54,22 @@
                     </select>
                 </div>
 
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Baggage</label>
+                    <select
+                        class="form-select select2"
+                        id="baggage_id"
+                        name="baggage_id[]"
+                        multiple>
+                        <option value="">Please Select Baggage</option>
+                    </select>
+                </div>
+
+
                 <!-- Seats -->
                 <div class="col-md-3">
                     <label class="form-label text-muted">Seats</label>
-                    <input type="number" id="seats" name="seats" class="form-control">
+                    <input type="number" id="seats" name="seats" class="form-control" placeholder="0">
                 </div>
 
                 <!-- Departure Date -->
@@ -91,45 +96,12 @@
                     <input type="time" id="arrival_time" name="arrival_time" class="form-control">
                 </div>
 
-            </div>
-
-            <!-- Upload Section -->
-            <div class="mt-5">
-                <h6 class="fw-semibold text-secondary mb-3">
-                    Upload PNR Document
-                </h6>
-
-                <div id="pnr-dropzone"
-                     class="border border-2 border-dashed rounded p-4 bg-white d-flex align-items-center justify-content-between cursor-pointer">
-
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="border rounded d-flex align-items-center justify-content-center fs-4"
-                             style="width:48px;height:48px;">
-                            📄
-                        </div>
-
-                        <div>
-                            <p id="pnr-filename" class="mb-1 text-muted">
-                                Click or drop file here
-                            </p>
-                            <small class="text-muted">
-                                JPG, JPEG, PNG (Max 5MB)
-                            </small>
-                        </div>
-                    </div>
-
-                    <button type="button"
-                            id="pnr-remove"
-                            class="btn btn-link text-danger fs-4 d-none">
-                        🗑
-                    </button>
-
-                    <input type="file"
-                           id="pnr_file"
-                           name="pnr_file"
-                           class="d-none"
-                           accept="image/jpeg,image/png">
+                <!-- Price -->
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Price</label>
+                    <input type="text" id="price" name="price" class="form-control" placeholder="0">
                 </div>
+
             </div>
 
             <!-- Footer Buttons -->
@@ -217,7 +189,31 @@
                 cache: true // Enable caching of AJAX results
             }
         });
+        
+        $('#baggage_id').select2({
+            placeholder: 'Please Select Baggage',
+            allowClear: true,
+            width: '100%',
+            ajax: {
+                url: "{{ route('search.baggage') }}", // Replace with your actual server endpoint
+                dataType: "json",
+                delay: 250, // Delay before sending the request in milliseconds
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.id,
+                                text: item.label // 'text' property is required by Select2
+                            };
+                        })
+                    };
+                },
+                cache: true // Enable caching of AJAX results
+            }
+        });
     });
+
+    
 
     function showError(message) {
         Swal.fire({
@@ -230,71 +226,10 @@
         });
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const dropzone = document.getElementById('pnr-dropzone');
-        const fileInput = document.getElementById('pnr_file');
-        const fileName  = document.getElementById('pnr-filename');
-        const removeBtn = document.getElementById('pnr-remove');
-        const allowedTypes = [
-            'image/jpeg',
-            'image/png'
-        ];
-
-        dropzone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', function () {
-            if (!this.files.length) return;
-            const file = this.files[0];
-            if (!allowedTypes.includes(file.type)) {
-                showError('Only JPG, JPEG or PNG images are allowed');
-                this.value = '';
-                return;
-            }
-
-            if (file.size > 5242880) { // 5MB
-                showError('Max file size is 5MB');
-                this.value = '';
-                return;
-            }
-
-            fileName.textContent = file.name;
-            removeBtn.classList.remove('hidden');
-        });
-
-        /* ============================
-        Drag & Drop
-        ============================ */
-        dropzone.addEventListener('dragover', e => {
-            e.preventDefault();
-            dropzone.classList.add('border-black');
-        });
-
-        dropzone.addEventListener('dragleave', () => {
-            dropzone.classList.remove('border-black');
-        });
-
-        dropzone.addEventListener('drop', e => {
-            e.preventDefault();
-            dropzone.classList.remove('border-black');
-
-            const file = e.dataTransfer.files[0];
-            fileInput.files = e.dataTransfer.files;
-            fileInput.dispatchEvent(new Event('change'));
-        });
-
-        /* ============================
-        Remove File
-        ============================ */
-        removeBtn.addEventListener('click', e => {
-            e.stopPropagation();
-            fileInput.value = '';
-            fileName.textContent = 'Click or drop file here';
-            removeBtn.classList.add('hidden');
-        });
-
-    });
-
     document.getElementById("pnr-form").addEventListener("submit", function (e) {
         e.preventDefault();
+
+            const baggageIds = $('#baggage_id').val(); // ARRAY
 
     // Collect form values
         const formData = {
@@ -303,11 +238,13 @@
             arrival_id: document.getElementById("arrival_id").value.trim(),
             airline_id: document.getElementById("airline_id").value.trim(),
             seats: document.getElementById("seats").value.trim(),
+            baggage_id: baggageIds,
             departure_date: document.getElementById("departure_date").value,
             departure_time: document.getElementById("departure_time").value,
             arrival_date: document.getElementById("arrival_date").value,
             arrival_time: document.getElementById("arrival_time").value,
-            pnr_file: document.getElementById("pnr_file").files[0] ?? null,
+            baggage_id: document.getElementById("baggage_id").value.trim(),
+            price: document.getElementById("price").value.trim(),
         };
 
         // Validation rules
@@ -316,26 +253,26 @@
             { field: "departure_id", message: "Please select an departure", test: v => v !== "" },
             { field: "arrival_id", message: "Please select an arrival", test: v => v !== "" },
             { field: "airline_id", message: "Please select an airline", test: v => v !== "" },
+            { field: "baggage_id", message: "Please select an baggage", test: v => v !== "" },
             { field: "seats", message: "Seats field is required", test: v => v !== "" },
             { field: "departure_date", message: "Departure date is required", test: v => v !== "" },
             { field: "departure_time", message: "Departure time is required", test: v => v !== "" },
             { field: "arrival_date", message: "Arrival date is required", test: v => v !== "" },
             { field: "arrival_time", message: "Arrival time is required", test: v => v !== "" },
-            { field: "pnr_file", message: "PNR document is required", test: v => v !== null },
-
+            { field: "price", message: "Price field is required", test: v => v !== "" },
             // File size ≤ 5MB
-            { 
-                field: "pnr_file",
-                message: "File size must be under 5MB",
-                test: v => !v || v.size <= 5242880
-            },
+            // { 
+            //     field: "pnr_file",
+            //     message: "File size must be under 5MB",
+            //     test: v => !v || v.size <= 5242880
+            // },
 
-            // File type validation
-            {
-                field: "pnr_file",
-                message: "Invalid file format (JPG, PNG or JPEG only)",
-                test: v => !v || /\.(png|jpg|jpeg)$/i.test(v.name)
-            }
+            // // File type validation
+            // {
+            //     field: "pnr_file",
+            //     message: "Invalid file format (JPG, PNG or JPEG only)",
+            //     test: v => !v || /\.(png|jpg|jpeg)$/i.test(v.name)
+            // }
         ];
 
         // Run validations
@@ -358,12 +295,20 @@
         newFormData.append("departure_id", formData.departure_id);
         newFormData.append("arrival_id", formData.arrival_id);
         newFormData.append("airline_id", formData.airline_id);
+        newFormData.append("baggage_id", formData.baggage_id);
         newFormData.append("seats", formData.seats);
         newFormData.append("departure_date", formData.departure_date);
         newFormData.append("departure_time", formData.departure_time);
         newFormData.append("arrival_date", formData.arrival_date);
         newFormData.append("arrival_time", formData.arrival_time);
-        newFormData.append("pnr_file", formData.pnr_file);
+        // newFormData.append("pnr_file", formData.pnr_file);
+        newFormData.append("price", formData.price);
+
+        baggageIds.forEach(id => {
+            newFormData.append("baggage_id[]", id);
+        });
+
+        console.log(newFormData);
 
         // Submit form normally after validation
         $.ajax({

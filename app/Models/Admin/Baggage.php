@@ -5,17 +5,16 @@ namespace App\Models\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Seat extends Model
+class Baggage extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function pnr(){
-        return $this->belongsTo(Pnr::class);
-    }
+    protected $table='baggages';
 
-    public function ticketPrice(){
-        return $this->sum('price');
+   public function pnrs()
+    {
+        return $this->belongsToMany(Pnr::class, 'baggage_pnr', 'baggage_id', 'pnr_id');
     }
 }

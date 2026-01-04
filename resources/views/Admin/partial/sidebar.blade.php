@@ -26,6 +26,10 @@
                     <span class="menu-text">Manage Agencies</span>
                 </a>
 
+                <a href="{{ route('admin.baggage.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                    <i class="fa fa-suitcase me-3"></i>
+                    <span class="menu-text">Baggages</span>
+                </a>
                 <a href="{{ route('admin.airline.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-plane me-3"></i>
                     <span class="menu-text">Manage Airline</span>
@@ -54,6 +58,10 @@
                     <i class="fa fa-calendar me-3"></i>
                     <span class="menu-text">Manage Bookings</span>
                 </a>
+                <a href="{{ route('admin.bank.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                    <i class="fa fa-money me-3"></i>
+                    <span class="menu-text">Bank Details</span>
+                </a>
             </nav>
         @endif
         @if(Auth::user()->user_type_id == '2')
@@ -80,7 +88,7 @@
                 </a> -->
                 <a href="{{ route('admin.bank.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
-                    <span class="menu-text">A/C Management </span>
+                    <span class="menu-text">Payments</span>
                 </a>
             </nav>
         @endif

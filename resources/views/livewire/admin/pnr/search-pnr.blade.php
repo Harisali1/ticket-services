@@ -60,7 +60,7 @@
                     <!-- Header -->
                     <div class="modal-header border-0">
                         <h5 class="modal-title fw-semibold">Select Number Of Seat</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="closeAndRefresh()"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <!-- Body -->
