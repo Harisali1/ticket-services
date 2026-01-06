@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\Seat;
 use App\Enums\PnrStatus;
+use App\Models\User;
+use Carbon;
 
 
 class Pnr extends Model
@@ -37,6 +39,27 @@ class Pnr extends Model
     public function baggages()
     {
         return $this->belongsToMany(Baggage::class, 'baggage_pnr', 'pnr_id', 'baggage_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function getSeatAvailableAttribute()
+    {
+        return $this->seats()
+            ->where('is_sale', 1)
+            ->count();
+    }
+
+    public function getDepartureDateTimeAttribute()
+    {
+        return \Carbon\Carbon::parse($this->departure_date.$this->departure_time)->format('d-M-y H:i');
+    }
+
+    public function getArrivalDateTimeAttribute()
+    {
+        return \Carbon\Carbon::parse($this->arrival_date.$this->arrival_time)->format('d-M-y H:i');
     }
 
 }

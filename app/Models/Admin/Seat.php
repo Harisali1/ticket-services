@@ -15,7 +15,5 @@ class Seat extends Model
         return $this->belongsTo(Pnr::class);
     }
 
-    public function ticketPrice(){
-        return $this->sum('price');
-    }
+
 }

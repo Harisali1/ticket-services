@@ -14,7 +14,7 @@
         </button> -->
 
         <!-- Navigation -->
-         @if(Auth::user()->user_type_id == '1')
+         @if(Auth::user()->user_type_id == '1' || Auth::user()->user_type_id == '3')
             <nav class="nav flex-column gap-2">
                 <a href="{{ route('admin.dashboard') }}" class="nav-link text-white bg-secondary rounded d-flex align-items-center">
                     <i class="fa fa-tachometer me-3"></i>
@@ -26,10 +26,10 @@
                     <span class="menu-text">Manage Agencies</span>
                 </a>
 
-                <a href="{{ route('admin.baggage.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <!-- <a href="{{ route('admin.baggage.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-suitcase me-3"></i>
                     <span class="menu-text">Baggages</span>
-                </a>
+                </a> -->
                 <a href="{{ route('admin.airline.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-plane me-3"></i>
                     <span class="menu-text">Manage Airline</span>

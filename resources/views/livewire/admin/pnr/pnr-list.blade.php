@@ -173,7 +173,7 @@
 
                         <p class="text-muted mb-4">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            <input type="text" readonly id="pnr_id" name="pnr_id" wire:model="selectedPnrId">
+                            <input type="hidden" readonly id="pnr_id" name="pnr_id" value="{{ $selectedPnrId }}">
 
                         </p>
                         <h6 class="fw-semibold mb-3">Seat Details</h6>
@@ -223,7 +223,7 @@
                     </div>
                 <!-- Footer -->
                 <div class="modal-footer border-0">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAndRefresh()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAndRefresh()">Cancel</button>
                     <button type="submit" class="btn btn-dark">
                         Save
                     </button>
@@ -253,7 +253,7 @@
 
                         <p class="text-muted mb-4">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            <input type="text" readonly id="pnr_id" name="pnr_id" wire:model="selectedPnrId">
+                            <input type="text" readonly id="pnr_id" name="pnr_id" value="{{ $selectedPnrId }}">
 
                         </p>
                         <h6 class="fw-semibold mb-3">Seat Details</h6>
@@ -295,7 +295,7 @@
                     </div>
                 <!-- Footer -->
                 <div class="modal-footer border-0">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAndRefresh()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAndRefresh()">Cancel</button>
                     <button type="submit" class="btn btn-dark">
                         Save
                     </button>

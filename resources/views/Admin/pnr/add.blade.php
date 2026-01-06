@@ -34,6 +34,15 @@
             <div class="row g-3">
 
                 <div class="col-md-3">
+                    <label class="form-label text-muted">Pnr Type</label>
+                    <select class="form-select select2" id="pnr_type" name="pnr_type">
+                        <option selected value="">Please Select Type</option>
+                        <option value="one_way">One Way</option>
+                        <option value="return">Return</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
                     <label class="form-label text-muted">Departure</label>
                     <select class="form-select select2" id="departure_id" name="departure_id">
                         <option selected value="">Please Select Departure</option>
@@ -56,12 +65,12 @@
 
                 <div class="col-md-3">
                     <label class="form-label text-muted">Baggage</label>
-                    <select
-                        class="form-select select2"
-                        id="baggage_id"
-                        name="baggage_id[]"
-                        multiple>
+                    <select class="form-select select2" id="baggage" name="baggage">
                         <option value="">Please Select Baggage</option>
+                        <option value="">0 PC</option>
+                        <option value="">1 PC</option>
+                        <option value="">2 PC</option>
+
                     </select>
                 </div>
 
@@ -229,50 +238,36 @@
     document.getElementById("pnr-form").addEventListener("submit", function (e) {
         e.preventDefault();
 
-            const baggageIds = $('#baggage_id').val(); // ARRAY
+            // const baggageIds = $('#baggage_id').val(); // ARRAY
 
     // Collect form values
         const formData = {
-            // pnr_no: document.getElementById("pnr_no").value.trim(),
+            pnr_type: document.getElementById("pnr_type").value.trim(),
             departure_id: document.getElementById("departure_id").value.trim(),
             arrival_id: document.getElementById("arrival_id").value.trim(),
             airline_id: document.getElementById("airline_id").value.trim(),
             seats: document.getElementById("seats").value.trim(),
-            baggage_id: baggageIds,
             departure_date: document.getElementById("departure_date").value,
             departure_time: document.getElementById("departure_time").value,
             arrival_date: document.getElementById("arrival_date").value,
             arrival_time: document.getElementById("arrival_time").value,
-            baggage_id: document.getElementById("baggage_id").value.trim(),
+            baggage: document.getElementById("baggage").value.trim(),
             price: document.getElementById("price").value.trim(),
         };
 
         // Validation rules
         const validations = [
-            // { field: "pnr_no", message: "PNR number is required", test: v => v !== "" },
+            { field: "pnr_type", message: "PNR type is required", test: v => v !== "" },
             { field: "departure_id", message: "Please select an departure", test: v => v !== "" },
             { field: "arrival_id", message: "Please select an arrival", test: v => v !== "" },
             { field: "airline_id", message: "Please select an airline", test: v => v !== "" },
-            { field: "baggage_id", message: "Please select an baggage", test: v => v !== "" },
+            { field: "baggage", message: "Please select an baggage", test: v => v !== "" },
             { field: "seats", message: "Seats field is required", test: v => v !== "" },
             { field: "departure_date", message: "Departure date is required", test: v => v !== "" },
             { field: "departure_time", message: "Departure time is required", test: v => v !== "" },
             { field: "arrival_date", message: "Arrival date is required", test: v => v !== "" },
             { field: "arrival_time", message: "Arrival time is required", test: v => v !== "" },
             { field: "price", message: "Price field is required", test: v => v !== "" },
-            // File size ≤ 5MB
-            // { 
-            //     field: "pnr_file",
-            //     message: "File size must be under 5MB",
-            //     test: v => !v || v.size <= 5242880
-            // },
-
-            // // File type validation
-            // {
-            //     field: "pnr_file",
-            //     message: "Invalid file format (JPG, PNG or JPEG only)",
-            //     test: v => !v || /\.(png|jpg|jpeg)$/i.test(v.name)
-            // }
         ];
 
         // Run validations
@@ -291,11 +286,11 @@
         });
 
         const newFormData = new FormData();
-        newFormData.append("pnr_no", formData.pnr_no);
+        newFormData.append("pnr_type", formData.pnr_type);
         newFormData.append("departure_id", formData.departure_id);
         newFormData.append("arrival_id", formData.arrival_id);
         newFormData.append("airline_id", formData.airline_id);
-        newFormData.append("baggage_id", formData.baggage_id);
+        newFormData.append("baggage", formData.baggage);
         newFormData.append("seats", formData.seats);
         newFormData.append("departure_date", formData.departure_date);
         newFormData.append("departure_time", formData.departure_time);
@@ -304,9 +299,9 @@
         // newFormData.append("pnr_file", formData.pnr_file);
         newFormData.append("price", formData.price);
 
-        baggageIds.forEach(id => {
-            newFormData.append("baggage_id[]", id);
-        });
+        // baggageIds.forEach(id => {
+        //     newFormData.append("baggage_id[]", id);
+        // });
 
         console.log(newFormData);
 

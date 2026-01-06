@@ -3,46 +3,108 @@
 
     <div class="card">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 table-striped table-scroll">
+                <colgroup>
+                    <col style="width: 130px">   <!-- PNR -->
+                    <col style="width: 50px">   <!-- Airline -->
+                    <col style="width: 240px">   <!-- Baggage -->
+                    <col style="width: 70px">    <!-- From -->
+                    <col style="width: 70px">    <!-- To -->
+                    <col style="width: 190px">   <!-- Departure -->
+                    <col style="width: 190px">   <!-- Arrival -->
+                    <!-- <col style="width: 90px">    Price -->
+                    <!-- <col style="width: 120px">   Seats -->
+                    <col style="width: 170px">    <!-- Action -->
+                </colgroup>
                 <thead class="table-light">
                     <tr>
-                        <th><input type="checkbox" class="form-check-input"></th>
-                        <th>
-                            <i class="bi bi-ticket-perforated me-1"></i> PNR #
-                        </th>
-                        <th>
-                            <i class="bi bi-airplane me-1"></i> Airline
-                        </th>
-                        <th>
-                            <i class="bi bi-airplane-engines me-1"></i> Departure Date/Time
-                        </th>
-                        <th>
-                            <i class="bi bi-airplane-fill me-1"></i> Arrival Date/Time
-                        </th>
-                        <th>
-                            <i class="bi bi-person-wheelchair me-1"></i> Available Seats
-                        </th>
+                        <th><i class="fa fa-ticket-perforated me-1"></i> PNR #</th>
+                        <th><i class="fa fa-airplane me-1"></i> Airline</th>
+                        <th><i class="fa fa-airplane me-1"></i> Baggage</th>
+                        <th><i class="fa fa-airplane me-1"></i> From</th>
+                        <th><i class="fa fa-airplane me-1"></i> To</th>
+                        <th><i class="fa fa-airplane-engines me-1"></i> Dept Date/Time</th>
+                        <th><i class="fa fa-airplane-fill me-1"></i> Arrival Date/Time</th>
+                        <!-- <th><i class="fa fa-airplane-fill me-1"></i> Price</th> -->
+                        <!-- <th><i class="fa fa-person-wheelchair me-1"></i> Seats</th> -->
                         <th>Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     @foreach($pnrs as $pnr)
-                    <tr>
-                        <td><input type="checkbox" class="form-check-input"></td>
-                        <td>{{ $pnr->pnr_no }}</td>
-                        <td><strong>{{ $pnr->airline->name }}</strong></td>
-                        <td>{{ $pnr->departure_date.' '. $pnr->departure_time }}</td>
-                        <td>{{ $pnr->arrival_date.' '. $pnr->arrival_time }}</td>
-                        <td>{{ $pnr->seats }}</td>
-                        <td>
-                            <li>
-                                <button class="dropdown-item" onclick="selectPNRBooking({{ $pnr->id }})">
-                                    Select
-                                </button>
-                            </li>
-                        </td>
-                    </tr>
+                        @if($pnr->pnr_type == 'return')
+                            <tr>
+                                <td>
+                                    {{ $pnr->pnr_no }}<hr>
+                                    {{ $pnr->pnr_no }}
+                                </td>
+                                <td>
+                                    <strong>{{ $pnr->airline->code }}</strong><hr>
+                                    <strong>{{ $pnr->airline->code }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ $pnr->baggages->pluck('name')->implode(', ') }}</strong><hr>
+                                    <strong>{{ $pnr->baggages->pluck('name')->implode(', ') }}</strong>
+                                </td>
+                                <td>
+                                    {{ $pnr->departure->code }}<hr>
+                                    {{ $pnr->arrival->code }}
+                                </td>
+                                <td>
+                                    {{ $pnr->arrival->code }}<hr>
+                                    {{ $pnr->departure->code }}
+                                </td>
+                                <td>
+                                    {{ $pnr->departure_date_time }}<hr>
+                                    {{ $pnr->arrival_date_time }}
+                                </td>
+                                <td>
+                                    {{ $pnr->arrival_date_time }}<hr>
+                                    {{ $pnr->departure_date_time }}
+                                </td>
+                                <!-- <td></td> -->
+                                <!-- <td></td> -->
+                                <td>
+                                    <p>{{ $pnr->seat_available }} seat available</p>
+                                    <button class="btn btn-primary" onclick="selectPNRBooking({{ $pnr->id }})">
+                                        {{ $pnr->price }} EUR
+                                    </button>
+                                </td>
+                            </tr>
+                        @else
+                            <tr>
+                                <td>
+                                    {{ $pnr->pnr_no }}
+                                </td>
+                                <td>
+                                    <strong>{{ $pnr->airline->code }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ $pnr->baggages->pluck('name')->implode(', ') }}</strong>
+                                </td>
+                                <td>
+                                    {{ $pnr->departure->code }}
+                                </td>
+                                <td>
+                                    {{ $pnr->arrival->code }}
+                                </td>
+                                <td>
+                                    {{ $pnr->departure_date_time }}
+                                </td>
+                                <td>
+                                    {{ $pnr->arrival_date_time }}
+                                </td>
+                                <!-- <td>{{ $pnr->price }}</td> -->
+                                <!-- <td>{{ $pnr->seat_available }}</td> -->
+                                <td>
+                                    <p>{{ $pnr->seat_available }} seat available</p>
+                                    <button class="btn btn-primary" onclick="selectPNRBooking({{ $pnr->id }})">
+                                        {{ $pnr->price }} EUR
+                                    </button>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                     
                 </tbody>

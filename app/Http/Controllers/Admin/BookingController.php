@@ -8,6 +8,7 @@ use App\Models\Admin\Airport;
 use App\Models\Admin\Pnr;
 use App\Models\Admin\Booking;
 use App\Models\Admin\Customer;
+use App\Models\Admin\Seat;
 use DB;
 
 class BookingController extends Controller
@@ -49,13 +50,21 @@ class BookingController extends Controller
 
     public function getPnrInfo(Request $request){
         $data = $request->all();
-        $pnrBookings = Pnr::with('departure','arrival','airline','seats')->find($request->pnr_id);
+        $pnrBookings = Pnr::with('departure','arrival','airline','seats','baggages','user')->find($request->pnr_id);
         $seatsPrice = $pnrBookings->seats()->where('is_sale', 1)->limit($request->seat)->get()->sum('price');
         $data['total_seats_price'] = $seatsPrice;
+        // dd($pnrBookings);
         return view('admin.booking.create-booking', compact('pnrBookings', 'data'));
     }
 
     public function checkSeatsAvailability(Request $request){
+
+        if($request->seat == 0){
+            return response()->json([
+                'code' => 2,
+                'message' => 'You must be enter at least one seat',
+            ], 201);
+        }
 
         $pnr = Pnr::find($request->pnr_id);
         $availableSeats = $pnr->seats()->where('is_sale', 1)->count();
@@ -68,7 +77,7 @@ class BookingController extends Controller
         elseif($availableSeats < $request->seat){
             return response()->json([
                 'code' => 2,
-                'message' => 'Your Seats must be less then available seats',
+                'message' => 'Your Seats must be less then or equal available seats',
             ], 201); 
         }else{
             return response()->json([
@@ -79,8 +88,22 @@ class BookingController extends Controller
 
     public function bookingSubmit(Request $request){
 
+
         DB::beginTransaction();
         try {
+
+            $pnrBookings = Pnr::with('departure','arrival','airline','seats','baggages','user')->find($request->pnr_id);
+            
+            $seatIds = $pnrBookings->seats()
+                        ->where('is_sale', 1)
+                        ->orderBy('id') // important
+                        ->limit($request->seats)
+                        ->pluck('id');
+
+            Seat::whereIn('id', $seatIds)->update([
+                'is_sale' => 0,
+                'is_sold' => 1
+            ]);
 
             $bookingId = DB::table('bookings')->orderBy('id', 'desc')->value('id');
             $bookingData = [

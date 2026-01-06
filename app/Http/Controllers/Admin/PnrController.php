@@ -42,16 +42,14 @@ class PnrController extends Controller
             $departureCode = Airport::find($data['departure_id']);
             $arrivalCode = Airport::find($data['arrival_id']);
             $pnrId = DB::table('pnrs')->orderBy('id', 'desc')->value('id');
-
             $data['pnr_no'] = $airlineCode->code.$departureCode->code.$arrivalCode->code.$pnrId+1;
-            // Handle file upload
-            if ($request->hasFile('pnr_file')) {
-                $data['pnr_file'] = $request->file('pnr_file')->store('pnr-documents', 'public');
-            }
+            $data['created_by'] = auth()->user()->id;
+
+            // $data = collect($data)->except('baggage_id')->toArray();
 
             $pnr = Pnr::create($data);
 
-            $pnr->baggages()->sync($request->baggage_id);
+            // $pnr->baggages()->sync($request->baggage_id);
 
             foreach (range(1, $data['seats']) as $key => $i) {
                 $pnr->seats()->create([

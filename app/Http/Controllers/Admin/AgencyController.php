@@ -23,10 +23,14 @@ class AgencyController extends Controller
     public function store(AgencyStoreRequest $request){
 
         $validated = $request->validated();
-
+        $status = 1;
         DB::beginTransaction();
 
         try {
+
+            if(auth()->user()->user_type_id == 1 || auth()->user()->user_type_id == 3){
+                $status = $request->status;
+            }
 
             // Create User
             $user = User::create([
@@ -35,7 +39,7 @@ class AgencyController extends Controller
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
                 'password'  => bcrypt($validated['password']),
-                'status'    => $validated['status'],
+                'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);
 
@@ -45,7 +49,7 @@ class AgencyController extends Controller
                 'name'      => $validated['agency_name'],
                 'piv'       => $validated['piv'],
                 'address'   => $validated['agency_address'],
-                'status'    => $validated['status'],
+                'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);
 
@@ -87,13 +91,16 @@ class AgencyController extends Controller
         try {
 
             $agency = Agency::find($request->id);
-
+            $status = $agency->status;
+            if(auth()->user()->user_type_id == 1 || auth()->user()->user_type_id == 3){
+                $status = $request->status;
+            }
             // Update User
             $user = User::find($agency->user_id)->update([
                 'name'      => $request->name,
                 'email'     => $request->email,
                 'phone_no'  => $request->phone_no,
-                'status'    => $request->status,
+                'status'    => $status,
             ]);
             
             // Update Agency
@@ -102,7 +109,7 @@ class AgencyController extends Controller
                 'name'      => $request->agency_name,
                 'piv'       => $request->piv,
                 'address'   => $request->agency_address,
-                'status'    => $request->status,
+                'status'    => $status,
             ]);
 
             DB::commit();

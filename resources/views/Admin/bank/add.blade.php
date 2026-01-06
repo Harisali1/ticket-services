@@ -53,20 +53,11 @@
                     </tr>
 
                     <tr>
-                        <th>Account No *</th>
+                        <th>Swift Code *</th>
                         <td>
                             <input type="text" name="ac_no" id="ac_no"
                                    class="form-control"
-                                   placeholder="Enter Account Number">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>Branch *</th>
-                        <td>
-                            <input type="text" name="branch" id="branch"
-                                   class="form-control"
-                                   placeholder="Enter Branch Name">
+                                   placeholder="Enter Swift Code">
                         </td>
                     </tr>
 

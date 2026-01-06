@@ -25,7 +25,6 @@ class AgencyStoreRequest extends FormRequest
             'password'          => ['required', 'string', 'min:6'],
             'confirm_password'  => ['required', 'same:password'],
 
-            'status'            => ['required'],
         ];
     }
 
@@ -48,7 +47,6 @@ class AgencyStoreRequest extends FormRequest
             'confirm_password.required' => 'Confirm password is required',
             'confirm_password.same'     => 'Passwords do not match',
 
-            'status.required'           => 'Status is required',
         ];
     }
 }

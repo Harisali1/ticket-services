@@ -78,14 +78,16 @@
           </button>
         </div>
 
-        <div class="col-md-6">
-          <label class="form-label">Status</label>
-          <select name="status" id="status" class="form-select">
-            <option value="1">Pending</option>
-            <option value="2">Approved</option>
-            <option value="3">Suspended</option>
-          </select>
-        </div>
+        @if(Auth::user()->user_type_id == '1' || Auth::user()->user_type_id == '3')
+          <div class="col-md-6">
+            <label class="form-label">Status</label>
+            <select name="status" id="status" class="form-select">
+              <option value="1">Pending</option>
+              <option value="2">Approved</option>
+              <option value="3">Suspended</option>
+            </select>
+          </div>
+        @endif
       </div>
 
       <div class="d-flex justify-content-end gap-2 mt-4">
@@ -99,6 +101,8 @@
 
 @section('scripts')
 <script>
+  const USER_TYPE = "{{ Auth::user()->user_type_id }}";
+
   function togglePassword(fieldId, btn) {
     const input = document.getElementById(fieldId);
     const icon = btn.querySelector('i');
@@ -136,7 +140,7 @@
       phone: document.getElementById("phone_no").value.trim(),
       password: document.getElementById("password").value.trim(),
       confirm_password: document.getElementById("confirm_password").value.trim(),
-      status: document.getElementById("status").value.trim(),
+      // status: document.getElementById("status").value.trim(),
     };
 
     const validations = [
@@ -149,8 +153,17 @@
       { field: "phone", message: "Phone no required", test: v => v !== '' },
       { field: "password", message: "Password must be 6+ characters", test: v => v.length >= 6 },
       { field: "confirm_password", message: "Passwords do not match", test: v => v === formData.password },
-      { field: "status", message: "Status is required", test: v => v !== "" },
+      // { field: "status", message: "Status is required", test: v => v !== "" },
     ];
+
+    if (USER_TYPE === "1" || USER_TYPE === "3") {
+      validations.push({
+        field: "status",
+        message: "Status is required",
+        test: v => v !== ""
+      });
+    }
+
 
     for (const rule of validations) {
       if (!rule.test(formData[rule.field])) {

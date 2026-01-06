@@ -58,8 +58,12 @@ class SearchPnr extends Component
     public function render()
     {
         
-        $pnrs = Pnr::with('seats')->where('departure_id', $this->departure_id)
+        $pnrs = Pnr::withCount(['seats as seat_available' => function ($q) {
+                    $q->where('is_sale', 1);
+                }])
+            ->where('departure_id', $this->departure_id)
             ->where('arrival_id', $this->arrival_id)
+            ->where('pnr_type', $this->trip_type)
             ->whereDate('departure_date', $this->departure_date);
             if($this->trip_type == 'return'){
                 $pnrs = $pnrs->whereDate('arrival_date', $this->arrival_date);
@@ -67,6 +71,7 @@ class SearchPnr extends Component
         $pnrs = $pnrs->with('airline', 'seats')
             ->paginate($this->perPage);
 
+        
         return view('livewire.admin.pnr.search-pnr', compact('pnrs'));
     }
 }

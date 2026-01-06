@@ -19,8 +19,7 @@ class BankController extends Controller
             $validated = $request->validate([
                 'bank_name' => 'required|string|max:255',
                 'ac_title'  => 'required|string|max:255',
-                'ac_no'     => 'required|string|max:255',
-                'branch'    => 'required|string|max:255',
+                'swift_code'     => 'required|string|max:255',
                 'iban'      => 'required|string|max:255',
                 'status'    => 'required|in:0,1',
             ]);
@@ -29,8 +28,7 @@ class BankController extends Controller
             BankDetail::create([
                 'bank_name' => $validated['bank_name'],
                 'ac_title'  => $validated['ac_title'],
-                'ac_no'     => $validated['ac_no'],
-                'branch'    => $validated['branch'],
+                'swift_code'     => $validated['swift_code'],
                 'iban'      => $validated['iban'],
                 'status'    => $validated['status'],
                 'created_by'=> auth()->user()->id,

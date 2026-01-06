@@ -92,7 +92,7 @@
             <i class="fa fa-eye"></i>
           </button>
         </div> -->
-
+      @if(Auth::user()->user_type_id == '1' || Auth::user()->user_type_id == '3')
         <div class="col-md-6">
           <label class="form-label">Status</label>
           <select name="status" id="status" class="form-select">
@@ -104,6 +104,7 @@
           </select>
         </div>
       </div>
+      @endif
 
       <!-- Form Actions -->
       <div class="d-flex justify-content-end gap-2 mt-4">

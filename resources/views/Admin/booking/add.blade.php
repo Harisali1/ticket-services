@@ -14,6 +14,18 @@
     .type-style {
         margin-left: 25px;
     }
+    .table-scroll {
+        max-height: 500px;
+        overflow-x: auto;
+    }
+
+    .table-scroll thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f8f9fa;
+    }
+
 </style>
 @endsection
 
@@ -32,12 +44,12 @@
             <!-- Trip Type -->
             <div class="col-md-3 mb-3">
                 <label class="me-3">
-                    <input type="radio" name="trip_type" value="one_way">
+                    <input type="radio" name="trip_type" value="one_way" {{ request('trip_type') === 'one_way' ? 'checked' : '' }}>
                     One Way
                 </label>
 
                 <label class="type-style">
-                    <input type="radio" name="trip_type" value="return" checked>
+                    <input type="radio" name="trip_type" value="return" {{ request('trip_type', 'return') === 'return' ? 'checked' : '' }}>
                     Return
                 </label>
             </div>
@@ -66,6 +78,7 @@
                            class="form-control"
                            name="departure_date"
                            id="departure_date"
+                           value="{{ old('departure_date', request('departure_date')) }}"
                            required>
                 </div>
 
@@ -74,7 +87,8 @@
                     <input type="date"
                            class="form-control"
                            name="arrival_date"
-                           id="arrival_date">
+                           id="arrival_date"
+                           value="{{ old('arrival_date', request('arrival_date')) }}">
                 </div>
 
                 <div class="col-md-2 align-self-end">
@@ -164,6 +178,24 @@
         toggleArrivalDate();
 
         
+        function setSelect2Value(selector, id, text) {
+            if (id && text) {
+                const option = new Option(text, id, true, true);
+                $(selector).append(option).trigger('change');
+            }
+        }
+
+        setSelect2Value(
+            '#departure_id',
+            $('#selected_departure_id').val(),
+            $('#selected_departure_text').val()
+        );
+
+        setSelect2Value(
+            '#arrival_id',
+            $('#selected_arrival_id').val(),
+            $('#selected_arrival_text').val()
+        );
     });
 
     function selectPNRBooking(id){

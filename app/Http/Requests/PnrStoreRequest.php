@@ -14,10 +14,11 @@ class PnrStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pnr_no'         => ['required', 'string', 'max:255'],
+            'pnr_type'       => ['required'],
             'departure_id'   => ['required', 'integer', 'exists:airports,id'],
             'arrival_id'     => ['required', 'integer', 'exists:airports,id'],
             'airline_id'     => ['required', 'integer', 'exists:air_lines,id'],
+            'baggage_id'     => ['required'],
             'seats'          => ['required', 'integer', 'min:1'],
             'departure_date' => ['required', 'date'],
             'departure_time' => ['required', 'date_format:H:i'],
@@ -30,8 +31,7 @@ class PnrStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'pnr_no.required'         => 'PNR number is required.',
-            'pnr_no.max'              => 'PNR number cannot exceed 255 characters.',
+            'pnr_type.required'         => 'PNR Type is required.',
 
             'departure_id.required'     => 'Please select an departure.',
             'departure_id.exists'       => 'Selected departure is invalid.',
@@ -41,6 +41,8 @@ class PnrStoreRequest extends FormRequest
 
             'airline_id.required'     => 'Please select an airline.',
             'airline_id.exists'       => 'Selected airline is invalid.',
+
+            'baggage_id.required'     => 'Please select at least one baggage.',
 
             'seats.required'          => 'Seats field is required.',
             'seats.integer'           => 'Seats must be a number.',
