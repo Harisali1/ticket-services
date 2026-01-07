@@ -9,6 +9,7 @@ use App\Models\Admin\Pnr;
 use App\Models\Admin\Booking;
 use App\Models\Admin\Customer;
 use App\Models\Admin\Seat;
+use App\Models\Admin\PassengerType;
 use DB;
 
 class BookingController extends Controller
@@ -19,6 +20,7 @@ class BookingController extends Controller
 
     public function create(Request $request){
         $airports = Airport::where('status', 1)->get();
+        $passengerTypes = PassengerType::all();
 
         if ($request->isMethod('post')) {
             return view('Admin.booking.add', [
@@ -57,21 +59,45 @@ class BookingController extends Controller
             'airports' => $airports,
             'showPnrSearch' => false,
             'initialFilters' => $request->all(),
+            'passengerTypes' => $passengerTypes,
         ]);
     }
 
     public function getPnrInfo(Request $request){
+
+        $seatSum = array_sum($request->seat);
+        $totalAmount = 0;
+        $fareDetails = [];
+
+        foreach($request->passenger_type as $index => $typeId){
+            $seatCount = (int) $request->seat[$index];
+            $passenger = PassengerType::join('pnr_passengers', 'pnr_passengers.passenger_type_id', '=', 'passenger_types.id')
+            ->where('passenger_type_id', $typeId)->first();
+
+            if (!$passenger) {
+                continue;
+            }
+            $rowTotal = $passenger->price * $seatCount + 200;
+            $fareDetails[] = [
+                'title'      => $passenger->title,
+                'price'      => $passenger->price,
+                'tax'        => 200,
+                'seat'       => $seatCount,
+                'row_total'  => $rowTotal,
+            ];
+            $totalAmount += $rowTotal;
+        }
+
         $data = $request->all();
-        $pnrBookings = Pnr::with('departure','arrival','airline','seats','baggages','user')->find($request->pnr_id);
-        $seatsPrice = $pnrBookings->seats()->where('is_sale', 1)->limit($request->seat)->get()->sum('price');
-        $data['total_seats_price'] = $seatsPrice;
-        // dd($pnrBookings);
-        return view('admin.booking.create-booking', compact('pnrBookings', 'data'));
+        $pnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->pnr_id);
+        
+        return view('Admin.booking.create-booking', compact('pnrBookings', 'data', 'fareDetails', 'totalAmount', 'seatSum'));
     }
 
     public function checkSeatsAvailability(Request $request){
 
-        if($request->seat == 0){
+        $seats = array_sum($request->seat);
+        if($seats == 0){
             return response()->json([
                 'code' => 2,
                 'message' => 'You must be enter at least one seat',
@@ -86,7 +112,7 @@ class BookingController extends Controller
                 'message' => 'Seats not available',
             ], 201);
         }
-        elseif($availableSeats < $request->seat){
+        elseif($availableSeats < $seats){
             return response()->json([
                 'code' => 2,
                 'message' => 'Your Seats must be less then or equal available seats',
@@ -100,11 +126,10 @@ class BookingController extends Controller
 
     public function bookingSubmit(Request $request){
 
-
         DB::beginTransaction();
         try {
 
-            $pnrBookings = Pnr::with('departure','arrival','airline','seats','baggages','user')->find($request->pnr_id);
+            $pnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->pnr_id);
             
             $seatIds = $pnrBookings->seats()
                         ->where('is_sale', 1)

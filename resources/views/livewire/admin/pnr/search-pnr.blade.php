@@ -168,22 +168,52 @@
                                 <input type="hidden" readonly id="pnr_id" name="pnr_id">
 
                             </p>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Seat *</label>
-                                    <input type="number" class="form-control"
-                                        id="seat" name="seat"
-                                        placeholder="Enter seat">
-                                    @error('price') <small class="text-danger">{{ $message }}</small> @enderror
-                                </div>
-                                <div class="col-md-3">
-                                    <select class="form-select select2" id="return_day_plus" name="return_day_plus">
-                                        @foreach($passengerTypes as $type)                                  
-                                            <option value="1">{{ $type->title .'('. $type->code .')' }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="table-responsive">
+                                
+
+                                <table class="table table-bordered align-middle" id="mytable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Seat *</th>
+                                            <th>Passenger Type</th>
+                                            <th width="120">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="number"
+                                                    class="form-control"
+                                                    name="seat[]"
+                                                    id="seat"
+                                                    min="0"
+                                                    placeholder="Enter seat" 
+                                                    required
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                                                    if (this.value !== '' && (this.value < 0 )) this.value = '';">
+                                            </td>
+                                            <td>
+                                                <select class="form-select select2 passenger-type"
+                                                        name="passenger_type[]" required>
+                                                    @foreach($passengerTypes as $type)
+                                                        <option value="{{ $type->id }}">
+                                                            {{ $type->title . ' (' . $type->code . ')' }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button"
+                                                        class="btn btn-success btn-sm addRow" onclick="addRow()">
+                                                    +
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
                             </div>
+
 
                         </div>
                     <!-- Footer -->
@@ -200,6 +230,44 @@
             </div>
         </div>
         <!-- end modal -->
+        <script>
+            const passengerOptions = `
+                    @foreach($passengerTypes as $type)
+                        <option value="{{ $type->id }}">
+                            {{ $type->title }} ({{ $type->code }})
+                        </option>
+                    @endforeach
+                `;
+
+            function addRow(){
+                let newRow = `
+                            <tr>
+                                <td>
+                                    <input type="number"
+                                        class="form-control"
+                                        name="seat[]"
+                                        min="0"
+                                        placeholder="Enter seat" required
+                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                                        if (this.value !== '' && (this.value < 0 )) this.value = '';">
+                                </td>
+                                <td>
+                                    <select class="form-select select2 passenger-type"
+                                            name="passenger_type[]" required>
+                                        ${passengerOptions}
+                                    </select>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm removeRow">−</button>
+                                </td>
+                            </tr>
+                            `;
+
+                // var str ="<tr><td>data 1</td><td>data 2</td><td>data 3</td></tr>";
+                $('#mytable tbody').append(newRow);
+            }
+        </script>
     </div>
 </div>
 

@@ -267,6 +267,7 @@
     }
 
     
+
     document.addEventListener('DOMContentLoaded', function () {
 
         // Re-bind after Livewire DOM updates

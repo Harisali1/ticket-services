@@ -114,10 +114,11 @@
         color: #fff;
     }
     .pnr-detail{
-        background: lightgray;
-        border: solid 1px #878787;
-        border-radius: 5px;
-        padding: 5px;
+        background: #0061A5;
+        padding: 10px;
+        color: white;
+        font-size: 17px;
+        font-family: inherit;
     }
   </style>
 @endsection
@@ -134,7 +135,7 @@
 
     <h5 class="fw-semibold">
         Total Tickets Price :
-        <span id="totalPrice">PKR {{ $pnrBookings->price }}/-</span>
+        <span id="totalPrice">PKR {{ $totalAmount }}/-</span>
     </h5>
   </div>
 
@@ -144,26 +145,6 @@
     <!-- PNR Details -->
      @csrf()
     <h3 class="fw-semibold mb-3 pnr-detail">PNR Details:</h3>
-
-    <!-- <div class="mb-3">
-        <h6 class="fw-bold mb-2">Select Baggage</h6>
-
-        <div class="row g-3 fare-group">
-            @foreach($pnrBookings->baggages as $baggage)
-            <div class="col-md-3">
-                <label class="fare-card">
-                    <input type="radio" name="fare" class="fare-radio" value="{{ $baggage->price + $pnrBookings->price }}">
-                    <div class="fare-box">
-                        <div class="fare-title">{{ $baggage->name }}</div>
-                        <div class="fare-price">{{ $baggage->price + $pnrBookings->price }}.00 EUR</div>
-                    </div>
-                </label>
-            </div>
-            @endforeach
-
-
-        </div>
-    </div> -->
 
     <div class="mb-4">
         <h6 class="text-primary fw-bold mb-3">OUTBOUND</h6>
@@ -232,116 +213,80 @@
     </div>
 
     @if($pnrBookings->pnr_type == 'return')
-    <!-- INBOUND -->
-    <div>
-        <h6 class="text-primary fw-bold mb-3">INBOUND</h6>
+        <!-- INBOUND -->
+        <div>
+            <h6 class="text-primary fw-bold mb-3">INBOUND</h6>
 
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
 
-                <div class="row align-items-center">
+                    <div class="row align-items-center">
 
-                    <!-- Airline -->
-                    <div class="col-md-1 text-center">
-                        <img src="{{ $pnrBookings->airline->logo 
-                                        ? asset('storage/'.$pnrBookings->airline->logo) 
-                                        : asset('images/logo-placeholder.png') }}"
-                                        alt="logo"
-                                        class="rounded-circle border"
-                                        style="width:25px;height:25px;object-fit:contain;">
-                    </div>
+                        <!-- Airline -->
+                        <div class="col-md-1 text-center">
+                            <img src="{{ $pnrBookings->airline->logo 
+                                            ? asset('storage/'.$pnrBookings->airline->logo) 
+                                            : asset('images/logo-placeholder.png') }}"
+                                            alt="logo"
+                                            class="rounded-circle border"
+                                            style="width:25px;height:25px;object-fit:contain;">
+                        </div>
 
-                    <!-- From / To -->
-                    <div class="col-md-3">
-                        <p class="mb-1">
-                            <small class="text-muted">From:</small><br>
-                            <strong>{{ $pnrBookings->return_departure_date_time }}</strong>
-                        </p>
-                        <p class="mb-0">
-                            <small class="text-muted">To:</small><br>
-                            <strong>{{ $pnrBookings->return_arrival_date_time }}</strong>
-                        </p>
-                    </div>
+                        <!-- From / To -->
+                        <div class="col-md-3">
+                            <p class="mb-1">
+                                <small class="text-muted">From:</small><br>
+                                <strong>{{ $pnrBookings->return_departure_date_time }}</strong>
+                            </p>
+                            <p class="mb-0">
+                                <small class="text-muted">To:</small><br>
+                                <strong>{{ $pnrBookings->return_arrival_date_time }}</strong>
+                            </p>
+                        </div>
 
-                    <!-- Airports -->
-                    <div class="col-md-1 text-center fw-bold fs-5">
-                        {{ $pnrBookings->return_departure->code }}
-                    </div>
-                    <div class="col-md-1 text-center fw-bold fs-5">
-                        {{ $pnrBookings->return_arrival->code }}
-                    </div>
+                        <!-- Airports -->
+                        <div class="col-md-1 text-center fw-bold fs-5">
+                            {{ $pnrBookings->return_departure->code }}
+                        </div>
+                        <div class="col-md-1 text-center fw-bold fs-5">
+                            {{ $pnrBookings->return_arrival->code }}
+                        </div>
 
-                    <div class="col-md-2 text-center">
-                        <small class="text-muted">Duration</small><br>
-                        <strong>{{ $pnrBookings->return_duration }}</strong>
-                    </div>
+                        <div class="col-md-2 text-center">
+                            <small class="text-muted">Duration</small><br>
+                            <strong>{{ $pnrBookings->return_duration }}</strong>
+                        </div>
 
-                    
+                        
 
-                    <!-- Aircraft -->
-                    <div class="col-md-2 text-center">
-                        <small class="text-muted">Airplane</small><br>
-                        <strong>{{ $pnrBookings->air_craft }}</strong>
-                    </div>
+                        <!-- Aircraft -->
+                        <div class="col-md-2 text-center">
+                            <small class="text-muted">Airplane</small><br>
+                            <strong>{{ $pnrBookings->air_craft }}</strong>
+                        </div>
 
-                    <!-- Flight Info -->
-                    <div class="col-md-2">
-                        <p class="mb-1">
-                            <small class="text-muted">Num.:</small>
-                            <strong>{{ $pnrBookings->flight_no }}</strong>
-                        </p>
-                        <p class="mb-0">
-                            <small class="text-muted">Class:</small>
-                            <strong>{{ $pnrBookings->class }}</strong>
-                        </p>
+                        <!-- Flight Info -->
+                        <div class="col-md-2">
+                            <p class="mb-1">
+                                <small class="text-muted">Num.:</small>
+                                <strong>{{ $pnrBookings->flight_no }}</strong>
+                            </p>
+                            <p class="mb-0">
+                                <small class="text-muted">Class:</small>
+                                <strong>{{ $pnrBookings->class }}</strong>
+                            </p>
+                        </div>
+
                     </div>
 
                 </div>
-
             </div>
         </div>
-    </div>
     @endif
 
-
-
     <input type="hidden" id="pnr_id" name="pnr_id" value="{{ $data['pnr_id'] }}">
-    <div class="row g-3 mb-4">
-      <div class="col-md-3">
-          <label class="form-label small">Departure</label>
-          <input type="text" class="form-control" readonly id="departure_id" name="departure_id" value="{{ $pnrBookings->departure->name }}">
-      </div>
-
-      <div class="col-md-3">
-          <label class="form-label small">Arrival</label>
-          <input type="text" class="form-control" readonly id="arrival_id" name="arrival_id" value="{{ $pnrBookings->arrival->name }}">
-      </div>
-
-      <div class="col-md-3">
-          <label class="form-label small">Departure Date/Time</label>
-          <div class="input-group">
-              <input type="text" class="form-control" readonly id="departure_date" name="departure_date" value="{{ $pnrBookings->departure_date_time }}">
-              
-          </div>
-      </div>
-
-      <div class="col-md-3">
-          <label class="form-label small">Arrival Date/Time</label>
-          <div class="input-group">
-              <input type="text" class="form-control" readonly id="arrival_date" name="arrival_date" value="{{ $pnrBookings->arrival_date_time }}">    
-          </div>
-      </div>
-
-      <div class="col-md-3">
-          <label class="form-label small">Selected Seats</label>
-          <input type="text" class="form-control" id="seats" name="seats" readonly value="{{ $data['seat'] }}">
-      </div>
-
-      <div class="col-md-3">
-          <label class="form-label small">Total Tickets Price</label>
-          <input type="text" class="form-control" id="total_price" name="total_price" readonly value="{{ $pnrBookings->price }}">
-      </div>
-    </div>
+    <input type="hidden" id="booking_seats" name="booking_seats" value="{{ $seatSum }}">
+    <input type="hidden" id="total_amount" name="total_amount" value="{{ $totalAmount }}">
 
     <h3 class="fw-semibold mb-3 pnr-detail">Agency Details:</h3>
 
@@ -353,7 +298,7 @@
         
         <div class="col-md-4">
             <label class="form-label small">Email</label>
-            <input type="text" class="form-control" id="email" name="email" readonly value="{{ $pnrBookings->user->email }}">
+            <input type="text" class="form-control" id="agency_email" name="agency_email" readonly value="{{ $pnrBookings->user->email }}">
         </div>
 
         <div class="col-md-4">
@@ -361,24 +306,61 @@
             <input type="text" class="form-control" id="phone_no" name="phone_no" readonly value="{{ $pnrBookings->user->phone_no }}">
         </div>
     </div>
-    
 
     <hr>
-    <!-- ================= STEP INDICATOR ================= -->
-    <div class="d-flex justify-content-center mb-4">
-        <div class="d-flex gap-5 fw-semibold">
-            <span id="step-indicator-1" class="text-primary">① Passenger Details</span>
-            <span id="step-indicator-2" class="text-muted">② Passenger Seat</span>
-        </div>
-    </div>
 
-    <!-- ================= STEP 1 ================= -->
+    <h3 class="fw-semibold mb-3 pnr-detail">Fare Details:</h3>
+
+    <table class="table table-bordered align-middle" id="mytable">
+        <thead class="table-light">
+            <tr>
+                <th>Passenger Type</th>
+                <th>Seat</th>
+                <th>Price</th>
+                <th>Tax</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $fareAmount = 0;
+                $taxAmount = 0;
+            @endphp
+            @foreach($fareDetails as $fare)
+                @php 
+                    $fareAmount += $fare['price']*$fare['seat'];
+                    $taxAmount += $fare['tax'];
+                @endphp
+                <tr>
+                    <td>
+                        {{ $fare['title'] }}
+                    </td>
+                    <td>
+                        {{ $fare['seat'] }}
+                    </td>
+                    <td>
+                        {{ $fare['price'] }}
+                    </td>
+                    <td>
+                        {{ $fare['tax'] }}
+                    </td>
+                    <td>
+                        {{ $fare['row_total'] }}
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h3 class="fw-semibold mb-3 pnr-detail">Passenger Details:</h3>
+
     <div id="step-1">
-      @foreach(range(1, $data['seat']) as $key => $i )
+      @foreach(range(1, $seatSum) as $key => $i )
         <div class="card card-body mt-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
               <h6 class="fw-semibold mb-0">Passenger {{ $key+1; }}: Basic Details</h6>
-              <!-- <span class="fw-semibold">Ticket Price : PKR {{ $data['total_seats_price']/$data['seat'] }}/-</span> -->
           </div>
 
           <div class="row g-3">
@@ -527,42 +509,48 @@
       @endforeach
     </div>
 
-    <!-- ================= STEP 2 ================= -->
-    <div id="step-2" class="d-none">
+    <hr>
+    <h3 class="fw-semibold mb-3 pnr-detail mt-2">Reservation Recap:</h3>
+    <div class="container mt-4">
+        <div class="row justify-content-end">
+            <div class="col-md-4">
 
-      <div class="seat-legend">
-        <div><span class="legend-box border border-primary"></span> Economy</div>
-        <div><span class="legend-box" style="border:2px solid #c7a0ff"></span> Business</div>
-        <div><span class="legend-box bg-primary"></span> Selected</div>
-        <div><span class="legend-box bg-secondary"></span> Occupied</div>
-      </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold">Fare Amount</span>
+                    <span class="fw-bold text-success">{{ $fareAmount }}.00 EUR</span>
+                </div>
 
-      <div class="d-flex justify-content-center">
-        <div>
-          @for($r=1;$r<=6;$r++)
-            <div class="seat-row">
-                <div class="seat economy"><i class="bi bi-person"></i></div>
-                <div class="seat economy"><i class="bi bi-person"></i></div>
-                <div class="seat occupied"><i class="bi bi-person"></i></div>
-                <div class="aisle"></div>
-                <div class="seat economy"><i class="bi bi-person"></i></div>
-                <div class="seat economy"><i class="bi bi-person"></i></div>
-                <div class="seat economy"><i class="bi bi-person"></i></div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold">Tax</span>
+                    <span class="fw-bold text-success">{{ $taxAmount }}.00 EUR</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold">
+                        Administrative Fee
+                        <!-- <button class="btn btn-sm btn-info ms-2">
+                            <i class="bi bi-pencil-square text-white"></i>
+                        </button> -->
+                    </span>
+                    <span class="fw-bold text-success">0.00 EUR</span>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Total Amount</span>
+                    <span class="fw-bold fs-4 text-success">{{ $totalAmount }}.00 EUR</span>
+                </div>
+
             </div>
-          @endfor
         </div>
-      </div>
-
     </div>
 
-    <!-- ================= BUTTONS ================= -->
-    <div class="d-flex justify-content-between mt-4">
-        <button type="button" id="prevBtn" class="btn btn-outline-secondary d-none">
-            ← Previous
-        </button>
 
-        <button type="button" id="nextBtn" class="btn btn-primary">
-            Next →
+    <!-- ================= BUTTONS ================= -->
+    <div class="d-flex justify-content-end mt-4">
+        <button type="button" onclick="validatePassengerDetails()" class="btn btn-success">
+            Submit
         </button>
     </div>
 
@@ -573,30 +561,10 @@
 
 @section('scripts')
 <script>
+    
 
-    document.querySelectorAll('.fare-radio').forEach(radio => {
-        radio.addEventListener('change', function () {
-            const price = this.value;
-
-            document.getElementById('totalPrice').innerHTML =
-                `PKR ${price}/-`;
-            document.getElementById('total_price').value = price;
-        });
-    });
-
-    let currentStep = 1;
-    const MAX_SEATS = {{ $data['seat'] }};
-
-    const step1 = document.getElementById('step-1');
-    const step2 = document.getElementById('step-2');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    const i1 = document.getElementById('step-indicator-1');
-    const i2 = document.getElementById('step-indicator-2');
-
-    /* ================= VALIDATION ================= */
-    function validateStep1() {
+    function validatePassengerDetails(){
+        const step1 = document.getElementById('step-1');
         let isValid = true;
 
         const inputs = step1.querySelectorAll('input[required], select[required], textarea[required]');
@@ -610,78 +578,14 @@
             }
         });
 
-        return isValid;
+        if(!isValid){
+            alert('Please fill all required passenger details before proceeding.');
+        }else{
+            document.getElementById('bookingForm').submit();
+        }
+        // return isValid;
     }
-
-    /* ================= STEP CONTROL ================= */
-    function showStep(step) {
-        if (step === 1) {
-            step1.classList.remove('d-none');
-            step2.classList.add('d-none');
-            prevBtn.classList.add('d-none');
-            nextBtn.innerText = 'Next →';
-            i1.classList.replace('text-muted','text-primary');
-            i2.classList.replace('text-primary','text-muted');
-        } else {
-            step1.classList.add('d-none');
-            step2.classList.remove('d-none');
-            prevBtn.classList.remove('d-none');
-            nextBtn.innerText = 'Confirm Booking';
-            i1.classList.replace('text-primary','text-muted');
-            i2.classList.replace('text-muted','text-primary');
-        }
-    }
-
-    /* ================= BUTTON EVENTS ================= */
-    nextBtn.onclick = () => {
-        if (currentStep === 1) {
-            if (!validateStep1()) {
-                alert('Please fill all required passenger details before proceeding.');
-                return;
-            }
-            currentStep = 2;
-            showStep(2);
-        } else {
-        if (selectedSeats.length < MAX_SEATS) {
-            alert(`Please select ${MAX_SEATS} seat(s) before confirming.`);
-            return;
-        }
-        document.getElementById('bookingForm').submit();
-        }
-    };
-
-    prevBtn.onclick = () => {
-        currentStep = 1;
-        showStep(1);
-    };
-
-/* ================= SEAT SELECTION ================= */
-
-    let selectedSeats = [];
-    document.querySelectorAll('.seat').forEach(seat => {
-        seat.addEventListener('click', function () {
-
-            if (this.classList.contains('occupied')) return;
-
-            // If already selected → unselect
-            if (this.classList.contains('selected')) {
-                this.classList.remove('selected');
-                selectedSeats = selectedSeats.filter(s => s !== this);
-                return;
-            }
-
-            // Limit reached
-            if (selectedSeats.length >= MAX_SEATS) {
-                alert(`You can only select ${MAX_SEATS} seat(s).`);
-                return;
-            }
-
-            // Select seat
-            this.classList.add('selected');
-            selectedSeats.push(this);
-        });
-    });
-
+    
 </script>
 
 @endsection
