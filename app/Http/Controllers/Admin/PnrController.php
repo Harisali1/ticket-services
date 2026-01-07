@@ -10,10 +10,13 @@ use App\Models\Admin\Seat;
 use App\Models\Admin\AirLine;
 use App\Models\Admin\Airport;
 use App\Models\Admin\Baggage;
+use App\Models\Admin\PassengerType;
+use App\Models\Admin\PnrPassenger;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Exception;
+use Carbon\Carbon;
 
 class PnrController extends Controller
 {
@@ -26,7 +29,8 @@ class PnrController extends Controller
         $airlines = AirLine::where('status', 1)->limit(10)->get();
         $airports = Airport::where('status', 1)->limit(10)->get();
         $baggages = Baggage::where('status', 1)->limit(10)->get();
-        return view('Admin.pnr.add', compact('airlines','airports'));
+        $passengerTypes = PassengerType::all();
+        return view('Admin.pnr.add', compact('airlines','airports','passengerTypes'));
     }
 
     public function store(PnrStoreRequest $request){
@@ -36,8 +40,61 @@ class PnrController extends Controller
         DB::beginTransaction();
 
         try {
+            $returnDuration=0;
+            $departure = $request->departure_date .' '. $request->departure_time_hour.':'.$request->departure_time_minute;
+            $arrival = $request->arrival_date .' '. $request->arrival_time_hour.':'.$request->arrival_time_minute;
+            $start = Carbon::createFromFormat('Y-m-d H:i', $departure);
+            $end   = Carbon::createFromFormat('Y-m-d H:i', $arrival);
+            $diff = $start->diff($end);
 
-            $data = $request->validated();
+            if($request->pnr_type == 'return'){
+                $return_departure = $request->return_departure_date .' '. $request->return_departure_time_hour.':'.$request->return_departure_time_minute;
+                $return_arrival = $request->return_arrival_date .' '. $request->return_arrival_time_hour.':'.$request->return_arrival_time_minute;
+                $start = Carbon::createFromFormat('Y-m-d H:i', $return_departure);
+                $end   = Carbon::createFromFormat('Y-m-d H:i', $return_arrival);
+                $returnDiff = $start->diff($end);
+                if($returnDiff->d != 0){
+                    $returnDuration = $returnDiff->d.'d '.$returnDiff->h.'h '.$returnDiff->i.'m';
+                }else{
+                    $returnDuration = $returnDiff->h.'h '.$returnDiff->i.'m';
+                }
+            }
+
+            if($diff->d != 0){
+                $duration = $diff->d.'d '.$diff->h.'h '.$diff->i.'m';
+            }else{
+                $duration = $diff->h.'h '.$diff->i.'m';
+            }
+
+            $data = [
+                'pnr_type' => $request->pnr_type,
+                'flight_no' => $request->flight_no,
+                'air_craft' => $request->air_craft,
+                'class' => $request->class,
+                'baggage' => $request->baggage,
+                'departure_id' => $request->departure_id,
+                'arrival_id' => $request->arrival_id,
+                'airline_id' => $request->airline_id,
+                'duration' => $duration,
+                'departure_date' => $request->departure_date,
+                'departure_time' => $request->departure_time_hour.':'.$request->departure_time_minute,
+                'arrival_date' => $request->arrival_date,
+                'arrival_time' => $request->arrival_time_hour.':'.$request->arrival_time_minute,
+                'seats' => $request->seats,
+                'price' => $request->price,
+            ];
+
+            if($request->pnr_type == 'return'){
+                $data['return_duration'] = $returnDuration;
+                $data['return_departure_id'] = $request->return_departure_id;
+                $data['return_arrival_id'] = $request->return_arrival_id;
+                $data['return_airline_id'] = $request->return_airline_id;
+                $data['return_departure_date'] = $request->return_departure_date;
+                $data['return_arrival_date'] = $request->return_arrival_date;
+                $data['return_departure_time'] = $request->return_departure_time_hour.':'.$request->return_departure_time_minute;
+                $data['return_arrival_time'] = $request->return_arrival_time_hour.':'.$request->return_arrival_time_minute;
+            }
+
             $airlineCode = AirLine::find($data['airline_id']);
             $departureCode = Airport::find($data['departure_id']);
             $arrivalCode = Airport::find($data['arrival_id']);
@@ -49,12 +106,32 @@ class PnrController extends Controller
 
             $pnr = Pnr::create($data);
 
-            // $pnr->baggages()->sync($request->baggage_id);
+            // // $pnr->baggages()->sync($request->baggage_id);
 
             foreach (range(1, $data['seats']) as $key => $i) {
                 $pnr->seats()->create([
                     'is_available' => 1,
                     'price' => 0
+                ]);
+            }
+
+            foreach($request->passenger_prices as $key => $pnrPassenger){
+                PnrPassenger::create([
+                    'pnr_id' => 1,
+                    'passenger_type_id' => $key,
+                    'price' => $pnrPassenger,
+                ]);
+            }
+
+            if(isset($request->put_on_sale)){
+                Seat::where('pnr_id', $pnr->id)
+                ->where('is_available', 1)
+                ->where('is_sale', 0)
+                ->orderBy('id') // or seat_no
+                ->limit((int) $data['seats'])
+                ->update([
+                    'is_sale' => 1,
+                    'is_available' => 0,
                 ]);
             }
 

@@ -18,12 +18,12 @@ class PnrStoreRequest extends FormRequest
             'departure_id'   => ['required', 'integer', 'exists:airports,id'],
             'arrival_id'     => ['required', 'integer', 'exists:airports,id'],
             'airline_id'     => ['required', 'integer', 'exists:air_lines,id'],
-            'baggage_id'     => ['required'],
+            'baggage'     => ['required'],
             'seats'          => ['required', 'integer', 'min:1'],
             'departure_date' => ['required', 'date'],
-            'departure_time' => ['required', 'date_format:H:i'],
+            // 'departure_time' => ['required', 'date_format:H:i'],
             'arrival_date'   => ['required', 'date', 'after_or_equal:departure_date'],
-            'arrival_time'   => ['required', 'date_format:H:i'],
+            // 'arrival_time'   => ['required', 'date_format:H:i'],
             'price'          => ['required', 'integer'], // 5MB
         ];
     }
@@ -32,6 +32,7 @@ class PnrStoreRequest extends FormRequest
     {
         return [
             'pnr_type.required'         => 'PNR Type is required.',
+            'flight_no.required'        => 'Flight No is required',
 
             'departure_id.required'     => 'Please select an departure.',
             'departure_id.exists'       => 'Selected departure is invalid.',
@@ -42,7 +43,7 @@ class PnrStoreRequest extends FormRequest
             'airline_id.required'     => 'Please select an airline.',
             'airline_id.exists'       => 'Selected airline is invalid.',
 
-            'baggage_id.required'     => 'Please select at least one baggage.',
+            'baggage.required'     => 'Please select at least one baggage.',
 
             'seats.required'          => 'Seats field is required.',
             'seats.integer'           => 'Seats must be a number.',
@@ -51,15 +52,9 @@ class PnrStoreRequest extends FormRequest
             'departure_date.required' => 'Departure date is required.',
             'departure_date.date'     => 'Invalid departure date.',
 
-            'departure_time.required' => 'Departure time is required.',
-            'departure_time.date_format' => 'Departure time format must be HH:MM.',
-
             'arrival_date.required'   => 'Arrival date is required.',
             'arrival_date.date'       => 'Invalid arrival date.',
             'arrival_date.after_or_equal' => 'Arrival date cannot be before departure date.',
-
-            'arrival_time.required'   => 'Arrival time is required.',
-            'arrival_time.date_format'=> 'Arrival time format must be HH:MM.',
 
             'price.required'       => 'Price field is required.',
             'price.integer'          => 'Price must be an integer.',

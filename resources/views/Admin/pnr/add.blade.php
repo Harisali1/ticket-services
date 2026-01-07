@@ -11,11 +11,13 @@
     .select2-selection__arrow {
         height: 38px;
     }
+    .select2-container--default{
+        width: -webkit-fill-available!important;
+    }
     </style>
 @endsection
 @section('content')
 <div class="container">
-
     <!-- Top Bar -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center gap-2">
@@ -24,73 +26,108 @@
         </div>
     </div>
     <hr>
-    <!-- Content -->
     <div class="card p-4">
-
-        <!-- Form -->
         <form id="pnr-form" enctype="multipart/form-data">
-            <h5 class="mb-3">Basic Details</h5>
-            <!-- Grid -->
+            <h5 class="mb-3">PNR & Flight Info</h5>
             <div class="row g-3">
-
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Pnr Type</label>
+                    <label class="form-label text-muted">PNR Type</label>
                     <select class="form-select select2" id="pnr_type" name="pnr_type">
-                        <option selected value="">Please Select Type</option>
+                        <option value="">Please Select Type</option>
                         <option value="one_way">One Way</option>
                         <option value="return">Return</option>
                     </select>
                 </div>
 
                 <div class="col-md-3">
+                    <label class="form-label text-muted">Flight No</label>
+                    <input type="text" name="flight_no" id="flight_no" class="form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Aircraft</label>
+                    <input type="text" name="air_craft" id="air_craft" class="form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Class</label>
+                    <select class="form-select" name="class" id="class">
+                        <option value="Y" selected>Y</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr>
+            <h5 class="mb-3">Route & Airline</h5>
+            <!-- Outbound -->
+            <div class="row g-3">
+                <div class="col-md-4">
                     <label class="form-label text-muted">Departure</label>
-                    <select class="form-select select2" id="departure_id" name="departure_id">
-                        <option selected value="">Please Select Departure</option>
-                    </select>
+                    <select class="form-select select2" id="departure_id" name="departure_id"></select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label class="form-label text-muted">Arrival</label>
-                    <select class="form-select select2" id="arrival_id" name="arrival_id">
-                        <option value="">Please Select Arrival</option>
-                    </select>
+                    <select class="form-select select2" id="arrival_id" name="arrival_id"></select>
                 </div>
-                <!-- Airline -->
-                <div class="col-md-3">
+
+                <div class="col-md-4">
                     <label class="form-label text-muted">Airline</label>
-                    <select class="form-select select2" id="airline_id" name="airline_id">
-                        <option value="">Please Select AirLine</option>
-                    </select>
+                    <select class="form-select select2" id="airline_id" name="airline_id"></select>
+                </div>
+            </div>
+
+            <!-- Return -->
+            <div class="row g-3 return-fields d-none mt-2">
+                <div class="col-md-4">
+                    <label for="return_departure_id" class="form-label text-muted">Return Departure</label>
+                    <select class="form-select select2 return-select" id="return_departure_id" name="return_departure_id"></select>
                 </div>
 
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Baggage</label>
-                    <select class="form-select select2" id="baggage" name="baggage">
-                        <option value="">Please Select Baggage</option>
-                        <option value="">0 PC</option>
-                        <option value="">1 PC</option>
-                        <option value="">2 PC</option>
-
-                    </select>
+                <div class="col-md-4">
+                    <label for="return_arrival_id" class="form-label text-muted">Return Arrival</label>
+                    <select class="form-select select2 return-select" id="return_arrival_id" name="return_arrival_id"></select>
                 </div>
 
-
-                <!-- Seats -->
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Seats</label>
-                    <input type="number" id="seats" name="seats" class="form-control" placeholder="0">
+                <div class="col-md-4">
+                    <label for="return_airline_id" class="form-label text-muted">Return Airline</label>
+                    <select class="form-select select2 return-select" id="return_airline_id" name="return_airline_id"></select>
                 </div>
+            </div>
 
-                <!-- Departure Date -->
+
+            <hr>
+            <h5 class="mb-3">Dates & Times</h5>
+            <div class="row g-3">
                 <div class="col-md-3">
                     <label class="form-label text-muted">Departure Date *</label>
                     <input type="date" id="departure_date" name="departure_date" class="form-control">
                 </div>
 
-                <!-- Departure Time -->
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Departure Time *</label>
-                    <input type="time" id="departure_time" name="departure_time" class="form-control">
+                    <label class="form-label text-muted">Departure Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input
+                            type="number"
+                            min="0"
+                            max="23"
+                            id="departure_time_hour"
+                            name="departure_time_hour"
+                            class="form-control"
+                            placeholder="HH"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
+                        <input
+                            type="number"
+                            min="0"
+                            max="59"
+                            id="departure_time_minute"
+                            name="departure_time_minute"
+                            class="form-control"
+                            placeholder="MM"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
+                    </div>
                 </div>
 
                 <!-- Arrival Date -->
@@ -102,18 +139,145 @@
                 <!-- Arrival Time -->
                 <div class="col-md-3">
                     <label class="form-label text-muted">Arrival Time *</label>
-                    <input type="time" id="arrival_time" name="arrival_time" class="form-control">
+                    <!-- <input type="time" id="time" name="time"> -->
+                    <div class="d-flex align-items-center gap-2">
+                        <input
+                            type="number"
+                            min="0"
+                            max="23"
+                            id="arrival_time_hour"
+                            name="arrival_time_hour"
+                            class="form-control"
+                            placeholder="HH"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
+                        <input
+                            type="number"
+                            min="0"
+                            max="59"
+                            id="arrival_time_minute"
+                            name="arrival_time_minute"
+                            class="form-control"
+                            placeholder="MM"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
+                    </div>
                 </div>
 
-                <!-- Price -->
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Departure Date</label>
+                    <input type="date" id="return_departure_date" name="return_departure_date" class="form-control">
+                </div>
+
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Departure Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                    <input
+                        type="number"
+                        min="0"
+                        max="23"
+                        id="return_departure_time_hour"
+                        name="return_departure_time_hour"
+                        class="form-control"
+                        placeholder="HH"
+                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                        if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
+                    <input
+                        type="number"
+                        min="0"
+                        max="59"
+                        id="return_departure_time_minute"
+                        name="return_departure_time_minute"
+                        class="form-control"
+                        placeholder="MM"
+                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                        if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
+                    </div>
+                </div>
+
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Arrival Date</label>
+                    <input type="date" id="return_arrival_date" name="return_arrival_date" class="form-control">
+                </div>
+
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Arrival Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                    <input
+                        type="number"
+                        min="0"
+                        max="23"
+                        id="return_arrival_time_hour"
+                        name="return_arrival_time_hour"
+                        class="form-control"
+                        placeholder="HH"
+                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                        if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
+                    <input
+                        type="number"
+                        min="0"
+                        max="59"
+                        id="return_arrival_time_minute"
+                        name="return_arrival_time_minute"
+                        class="form-control"
+                        placeholder="MM"
+                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                        if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
+                    </div>
+                </div>
+            </div> 
+
+            <hr>
+            <h5 class="mb-3">Baggage & Seats</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Baggage</label>
+                    <select class="form-select select2" id="baggage" name="baggage">
+                        <option value="">Please Select Baggage</option>
+                        <option value="0 PC">0 PC</option>
+                        <option value="2 PC">2 PC</option>
+                        <option value="3 PC">3 PC</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Seats</label>
+                    <input type="number" id="seats" name="seats" class="form-control">
+                </div>
+
                 <div class="col-md-3">
                     <label class="form-label text-muted">Price</label>
                     <input type="text" id="price" name="price" class="form-control" placeholder="0">
                 </div>
 
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Put On Sale</label>
+                    <input type="checkbox" id="put_on_sale" name="put_on_sale">
+                </div>
             </div>
 
-            <!-- Footer Buttons -->
+            <hr>
+            <h5 class="mb-3 mt-3">Passenger Types</h5>
+
+            @foreach($passengerTypes as $type)
+                <div class="row g-3 passenger-price-row" data-title="{{ $type->title }}">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted">{{ $type->title }}</label>
+                    </div>
+
+                    <div class="col-md-3">
+                        <input
+                            type="number"
+                            name="passenger_prices[{{ $type->id }}]"
+                            class="form-control passenger-price"
+                            placeholder="0"
+                            min="0"
+                            required>
+                    </div>
+                </div>
+            @endforeach
+
+
             <div class="d-flex justify-content-end gap-3 mt-5">
                 <button type="button" class="btn btn-outline-secondary">
                     Cancel
@@ -122,107 +286,17 @@
                     Save
                 </button>
             </div>
-
         </form>
-
     </div>
 </div>
 @endsection
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
+   $('#pnr_type').on('change', function () {
+    $('.return-fields').toggleClass('d-none', $(this).val() !== 'return');
+});
 
-        $("#departure_id").select2({
-            placeholder: "Search Departure",
-            minimumInputLength: 2, // Minimum characters before sending the AJAX request
-            allowClear: true,
-            ajax: {
-                url: "{{ route('search.airport') }}", // Replace with your actual server endpoint
-                dataType: "json",
-                delay: 250, // Delay before sending the request in milliseconds
-                processResults: function (data) {
-                    return {
-                        results: data.map(function (item) {
-                            return {
-                                id: item.id,
-                                text: item.label // 'text' property is required by Select2
-                            };
-                        })
-                    };
-                },
-                cache: true // Enable caching of AJAX results
-            }
-        });
-
-        $("#arrival_id").select2({
-            placeholder: "Search Arrival",
-            minimumInputLength: 2, // Minimum characters before sending the AJAX request
-            allowClear: true,
-            ajax: {
-                url: "{{ route('search.airport') }}", // Replace with your actual server endpoint
-                dataType: "json",
-                delay: 250, // Delay before sending the request in milliseconds
-                processResults: function (data) {
-                    return {
-                        results: data.map(function (item) {
-                            return {
-                                id: item.id,
-                                text: item.label // 'text' property is required by Select2
-                            };
-                        })
-                    };
-                },
-                cache: true // Enable caching of AJAX results
-            }
-        });
-
-        $("#airline_id").select2({
-            placeholder: "Search Airline",
-            minimumInputLength: 2, // Minimum characters before sending the AJAX request
-            allowClear: true,
-            ajax: {
-                url: "{{ route('search.airline') }}", // Replace with your actual server endpoint
-                dataType: "json",
-                delay: 250, // Delay before sending the request in milliseconds
-                processResults: function (data) {
-                    return {
-                        results: data.map(function (item) {
-                            return {
-                                id: item.id,
-                                text: item.label // 'text' property is required by Select2
-                            };
-                        })
-                    };
-                },
-                cache: true // Enable caching of AJAX results
-            }
-        });
-        
-        $('#baggage_id').select2({
-            placeholder: 'Please Select Baggage',
-            allowClear: true,
-            width: '100%',
-            ajax: {
-                url: "{{ route('search.baggage') }}", // Replace with your actual server endpoint
-                dataType: "json",
-                delay: 250, // Delay before sending the request in milliseconds
-                processResults: function (data) {
-                    return {
-                        results: data.map(function (item) {
-                            return {
-                                id: item.id,
-                                text: item.label // 'text' property is required by Select2
-                            };
-                        })
-                    };
-                },
-                cache: true // Enable caching of AJAX results
-            }
-        });
-    });
-
-    
 
     function showError(message) {
         Swal.fire({
@@ -235,116 +309,153 @@
         });
     }
 
+    function initSelect2(id, url) {
+        $(id).select2({
+            placeholder: 'Search',
+            allowClear: true,
+            minimumInputLength: 2,
+            ajax: {
+                url: url,
+                dataType: 'json',
+                delay: 250,
+                processResults: data => ({
+                    results: data.map(item => ({
+                        id: item.id,
+                        text: item.label
+                    }))
+                })
+            }
+        });
+    }
+
+    function setSelect2AjaxValue($select, id, text) {
+        if (!id) return;
+    
+        // Remove existing option if any
+        $select.find('option[value="' + id + '"]').remove();
+
+        // Create & select new option
+        const option = new Option(text, id, true, true);
+        $select.append(option).trigger('change');
+    }
+
+
+    $(document).ready(function () {
+        initSelect2('#departure_id', "{{ route('search.airport') }}");
+        initSelect2('#arrival_id', "{{ route('search.airport') }}");
+        initSelect2('#airline_id', "{{ route('search.airline') }}");
+        initSelect2('#return_departure_id', "{{ route('search.airport') }}");
+        initSelect2('#return_arrival_id', "{{ route('search.airport') }}");
+        initSelect2('#return_airline_id', "{{ route('search.airline') }}");
+    });
+
+    // Departure → Return Arrival
+    $('#departure_id').on('select2:select', function (e) {
+        const data = e.params.data;
+
+        setSelect2AjaxValue(
+            $('#return_arrival_id'),
+            data.id,
+            data.text
+        );
+    });
+
+    // Arrival → Return Departure
+    $('#arrival_id').on('select2:select', function (e) {
+        const data = e.params.data;
+
+        setSelect2AjaxValue(
+            $('#return_departure_id'),
+            data.id,
+            data.text
+        );
+    });
+
     document.getElementById("pnr-form").addEventListener("submit", function (e) {
         e.preventDefault();
 
-            // const baggageIds = $('#baggage_id').val(); // ARRAY
+        const isReturn = document.getElementById("pnr_type").value === 'return';
 
-    // Collect form values
-        const formData = {
-            pnr_type: document.getElementById("pnr_type").value.trim(),
-            departure_id: document.getElementById("departure_id").value.trim(),
-            arrival_id: document.getElementById("arrival_id").value.trim(),
-            airline_id: document.getElementById("airline_id").value.trim(),
-            seats: document.getElementById("seats").value.trim(),
-            departure_date: document.getElementById("departure_date").value,
-            departure_time: document.getElementById("departure_time").value,
-            arrival_date: document.getElementById("arrival_date").value,
-            arrival_time: document.getElementById("arrival_time").value,
-            baggage: document.getElementById("baggage").value.trim(),
-            price: document.getElementById("price").value.trim(),
+        const fields = {
+            pnr_type: {value: document.getElementById("pnr_type").value, message: "PNR Type is required"},
+            flight_no: {value: document.getElementById("flight_no").value, message: "Flight number is required"},
+            departure_id: {value: document.getElementById("departure_id").value, message: "Please select departure"},
+            arrival_id: {value: document.getElementById("arrival_id").value, message: "Please select arrival"},
+            airline_id: {value: document.getElementById("airline_id").value, message: "Please select airline"},
+            departure_date: {value: document.getElementById("departure_date").value, message: "Departure date is required"},
+            departure_time_hour: {value: document.getElementById("departure_time_hour").value, message: "Departure time is required"},
+            departure_time_minute: {value: document.getElementById("departure_time_minute").value, message: "Departure time is required"},
+            arrival_date: {value: document.getElementById("arrival_date").value,message: "Arrival date is required"},
+            arrival_time_hour: {value: document.getElementById("arrival_time_hour").value,message: "Arrival time is required"},
+            arrival_time_minute: {value: document.getElementById("arrival_time_minute").value,message: "Arrival time is required"},
+            baggage: {value: document.getElementById("baggage").value,message: "Please select baggage"},
+            seats: {value: document.getElementById("seats").value,message: "Seats are required"},
+            price: {value: document.getElementById("price").value,message: "Price is required"}
         };
 
-        // Validation rules
-        const validations = [
-            { field: "pnr_type", message: "PNR type is required", test: v => v !== "" },
-            { field: "departure_id", message: "Please select an departure", test: v => v !== "" },
-            { field: "arrival_id", message: "Please select an arrival", test: v => v !== "" },
-            { field: "airline_id", message: "Please select an airline", test: v => v !== "" },
-            { field: "baggage", message: "Please select an baggage", test: v => v !== "" },
-            { field: "seats", message: "Seats field is required", test: v => v !== "" },
-            { field: "departure_date", message: "Departure date is required", test: v => v !== "" },
-            { field: "departure_time", message: "Departure time is required", test: v => v !== "" },
-            { field: "arrival_date", message: "Arrival date is required", test: v => v !== "" },
-            { field: "arrival_time", message: "Arrival time is required", test: v => v !== "" },
-            { field: "price", message: "Price field is required", test: v => v !== "" },
-        ];
-
-        // Run validations
-        for (const rule of validations) {
-            if (!rule.test(formData[rule.field])) {
-                showError(rule.message);
+        /* --------------------
+        BASIC VALIDATION
+        -------------------- */
+        for (const key in fields) {
+            if (!fields[key].value) {
+                showError(fields[key].message);
                 return;
             }
         }
 
-        // Show loading
+        /* --------------------
+        RETURN PNR VALIDATION
+        -------------------- */
+        if (isReturn) {
+            const returnFields = {
+                return_departure_id: {value: document.getElementById("return_departure_id").value,message: "Return departure is required"},
+                return_arrival_id: {value: document.getElementById("return_arrival_id").value,message: "Return arrival is required"},
+                return_airline_id: {value: document.getElementById("return_airline_id").value,message: "Return airline is required"},
+                return_departure_date: {value: document.querySelector('[name="return_departure_date"]').value,message: "Return departure date is required"},
+                return_departure_time_hour: {value: document.querySelector('[name="return_departure_time_hour"]').value,message: "Return departure time is required"},
+                return_departure_time_minute: {value: document.querySelector('[name="return_departure_time_minute"]').value,message: "Return departure time is required"},
+                return_arrival_date: {value: document.querySelector('[name="return_arrival_date"]').value,message: "Return arrival date is required"},
+                return_arrival_time_hour: {value: document.querySelector('[name="return_arrival_time_hour"]').value,message: "Return arrival time is required"},
+                return_arrival_time_minute: {value: document.querySelector('[name="return_arrival_time_minute"]').value,message: "Return arrival time is required"}
+            };
+
+            for (const key in returnFields) {
+                if (!returnFields[key].value) {
+                    showError(returnFields[key].message);
+                    return;
+                }
+            }
+        }
+
+        /* --------------------
+        SUBMIT FORM
+        -------------------- */
         Swal.fire({
             title: "Processing...",
-            text: "Please wait",
             didOpen: () => Swal.showLoading()
         });
 
-        const newFormData = new FormData();
-        newFormData.append("pnr_type", formData.pnr_type);
-        newFormData.append("departure_id", formData.departure_id);
-        newFormData.append("arrival_id", formData.arrival_id);
-        newFormData.append("airline_id", formData.airline_id);
-        newFormData.append("baggage", formData.baggage);
-        newFormData.append("seats", formData.seats);
-        newFormData.append("departure_date", formData.departure_date);
-        newFormData.append("departure_time", formData.departure_time);
-        newFormData.append("arrival_date", formData.arrival_date);
-        newFormData.append("arrival_time", formData.arrival_time);
-        // newFormData.append("pnr_file", formData.pnr_file);
-        newFormData.append("price", formData.price);
+        const formData = new FormData(this);
 
-        // baggageIds.forEach(id => {
-        //     newFormData.append("baggage_id[]", id);
-        // });
-
-        console.log(newFormData);
-
-        // Submit form normally after validation
         $.ajax({
             url: "{{ route('admin.pnr.store') }}",
             type: "POST",
-            data: newFormData,
-            processData: false, // IMPORTANT
-            contentType: false, // IMPORTANT
+            data: formData,
+            processData: false,
+            contentType: false,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: function (data) {
-                Swal.close(); 
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "success",
-                    title: data.message,
-                    showConfirmButton: true,
-                    confirmButtonText: "OK"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "{{ route('admin.pnr.index') }}";
-                    }
-                });
+            success: function (res) {
+                Swal.fire("Success", res.message, "success")
+                    .then(() => window.location.href = "{{ route('admin.pnr.index') }}");
             },
             error: function (xhr) {
-                Swal.close();
-
-                let message = "Something went wrong";
-
-                if (xhr.responseJSON?.errors) {
-                    message = Object.values(xhr.responseJSON.errors)[0][0];
-                } else if (xhr.responseJSON?.message) {
-                    message = xhr.responseJSON.message;
-                }
-
-                showError(message);
+                showError(xhr.responseJSON?.message || "Something went wrong");
             }
         });
     });
+
 </script>
 
 @endsection

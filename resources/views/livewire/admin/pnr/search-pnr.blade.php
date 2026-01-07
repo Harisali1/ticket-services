@@ -5,28 +5,30 @@
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 table-striped table-scroll">
                 <colgroup>
-                    <col style="width: 130px">   <!-- PNR -->
-                    <col style="width: 50px">   <!-- Airline -->
-                    <col style="width: 240px">   <!-- Baggage -->
-                    <col style="width: 70px">    <!-- From -->
-                    <col style="width: 70px">    <!-- To -->
-                    <col style="width: 190px">   <!-- Departure -->
-                    <col style="width: 190px">   <!-- Arrival -->
-                    <!-- <col style="width: 90px">    Price -->
-                    <!-- <col style="width: 120px">   Seats -->
-                    <col style="width: 170px">    <!-- Action -->
+                    <col style="width: 80px">
+                    <col style="width: 50px">
+                    <col style="width: 80px">
+                    <col style="width: 50px">
+                    <col style="width: 50px">
+                    <col style="width: 80px">
+                    <col style="width: 80px">
+                    <col style="width: 190px">
+                    <col style="width: 190px">
+                    <col style="width: 100px">
+                    <col style="width: 220px">
                 </colgroup>
                 <thead class="table-light">
                     <tr>
-                        <th><i class="fa fa-ticket-perforated me-1"></i> PNR #</th>
-                        <th><i class="fa fa-airplane me-1"></i> Airline</th>
-                        <th><i class="fa fa-airplane me-1"></i> Baggage</th>
+                        <th><i class="fa fa-ticket-perforated me-1"></i>Vector</th>
+                        <th><i class="fa fa-ticket-perforated me-1"></i>Flight</th>
+                        <th><i class="fa fa-ticket-perforated me-1"></i>Air Craft</th>
+                        <th><i class="fa fa-airplane me-1"></i> Class</th>
+                        <th><i class="fa fa-airplane me-1"></i> Fare</th>
                         <th><i class="fa fa-airplane me-1"></i> From</th>
                         <th><i class="fa fa-airplane me-1"></i> To</th>
-                        <th><i class="fa fa-airplane-engines me-1"></i> Dept Date/Time</th>
-                        <th><i class="fa fa-airplane-fill me-1"></i> Arrival Date/Time</th>
-                        <!-- <th><i class="fa fa-airplane-fill me-1"></i> Price</th> -->
-                        <!-- <th><i class="fa fa-person-wheelchair me-1"></i> Seats</th> -->
+                        <th><i class="fa fa-airplane-engines me-1"></i> Departure </th>
+                        <th><i class="fa fa-airplane-fill me-1"></i> Arrival </th>
+                        <th><i class="fa fa-airplane-fill me-1"></i> Duration</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -36,16 +38,34 @@
                         @if($pnr->pnr_type == 'return')
                             <tr>
                                 <td>
-                                    {{ $pnr->pnr_no }}<hr>
-                                    {{ $pnr->pnr_no }}
+                                    <img src="{{ $pnr->airline->logo 
+                                        ? asset('storage/'.$pnr->airline->logo) 
+                                        : asset('images/logo-placeholder.png') }}"
+                                        alt="logo"
+                                        class="rounded-circle border"
+                                        style="width:25px;height:25px;object-fit:contain;"><hr>
+                                    <img src="{{ $pnr->airline->logo 
+                                        ? asset('storage/'.$pnr->airline->logo) 
+                                        : asset('images/logo-placeholder.png') }}"
+                                        alt="logo"
+                                        class="rounded-circle border"
+                                        style="width:25px;height:25px;object-fit:contain;">
                                 </td>
                                 <td>
-                                    <strong>{{ $pnr->airline->code }}</strong><hr>
-                                    <strong>{{ $pnr->airline->code }}</strong>
+                                    {{ $pnr->flight_no }}<hr>
+                                    {{ $pnr->flight_no }}
                                 </td>
                                 <td>
-                                    <strong>{{ $pnr->baggages->pluck('name')->implode(', ') }}</strong><hr>
-                                    <strong>{{ $pnr->baggages->pluck('name')->implode(', ') }}</strong>
+                                    {{ $pnr->air_craft }}<hr>
+                                    {{ $pnr->air_craft }}
+                                </td>
+                                <td>
+                                    {{ $pnr->class }}<hr>
+                                    {{ $pnr->class }}
+                                </td>
+                                <td>
+                                    {{ $pnr->baggage }}<hr>
+                                    {{ $pnr->baggage }}
                                 </td>
                                 <td>
                                     {{ $pnr->departure->code }}<hr>
@@ -57,13 +77,16 @@
                                 </td>
                                 <td>
                                     {{ $pnr->departure_date_time }}<hr>
-                                    {{ $pnr->arrival_date_time }}
+                                    {{ $pnr->return_departure_date_time }}
                                 </td>
                                 <td>
                                     {{ $pnr->arrival_date_time }}<hr>
-                                    {{ $pnr->departure_date_time }}
+                                    {{ $pnr->return_arrival_date_time }}
                                 </td>
-                                <!-- <td></td> -->
+                                <td>
+                                    {{ $pnr->duration }}<hr>
+                                    {{ $pnr->return_duration }}
+                                </td>
                                 <!-- <td></td> -->
                                 <td>
                                     <p>{{ $pnr->seat_available }} seat available</p>
@@ -75,13 +98,24 @@
                         @else
                             <tr>
                                 <td>
-                                    {{ $pnr->pnr_no }}
+                                    <img src="{{ $pnr->airline->logo 
+                                        ? asset('storage/'.$pnr->airline->logo) 
+                                        : asset('images/logo-placeholder.png') }}"
+                                        alt="logo"
+                                        class="rounded-circle border"
+                                        style="width:25px;height:25px;object-fit:contain;">
                                 </td>
                                 <td>
-                                    <strong>{{ $pnr->airline->code }}</strong>
+                                    {{ $pnr->flight_no }}
                                 </td>
                                 <td>
-                                    <strong>{{ $pnr->baggages->pluck('name')->implode(', ') }}</strong>
+                                    {{ $pnr->air_craft }}
+                                </td>
+                                <td>
+                                    {{ $pnr->class }}
+                                </td>
+                                <td>
+                                    {{ $pnr->baggage }}
                                 </td>
                                 <td>
                                     {{ $pnr->departure->code }}
@@ -95,8 +129,7 @@
                                 <td>
                                     {{ $pnr->arrival_date_time }}
                                 </td>
-                                <!-- <td>{{ $pnr->price }}</td> -->
-                                <!-- <td>{{ $pnr->seat_available }}</td> -->
+                                <td>{{ $pnr->duration }}</td>
                                 <td>
                                     <p>{{ $pnr->seat_available }} seat available</p>
                                     <button class="btn btn-primary" onclick="selectPNRBooking({{ $pnr->id }})">
@@ -142,6 +175,13 @@
                                         id="seat" name="seat"
                                         placeholder="Enter seat">
                                     @error('price') <small class="text-danger">{{ $message }}</small> @enderror
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select select2" id="return_day_plus" name="return_day_plus">
+                                        @foreach($passengerTypes as $type)                                  
+                                            <option value="1">{{ $type->title .'('. $type->code .')' }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
 

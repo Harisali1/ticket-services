@@ -36,9 +36,26 @@ class Pnr extends Model
         return $this->belongsTo(Airport::class, 'arrival_id', 'id');
     }
 
-    public function baggages()
+    public function return_airline(){
+        return $this->belongsTo(AirLine::class, 'return_airline_id', 'id');
+    }
+
+    public function return_departure(){
+        return $this->belongsTo(Airport::class, 'return_departure_id', 'id');
+    }
+
+    public function return_arrival(){
+        return $this->belongsTo(Airport::class, 'return_arrival_id', 'id');
+    }
+
+    // public function baggages()
+    // {
+    //     return $this->belongsToMany(Baggage::class, 'baggage_pnr', 'pnr_id', 'baggage_id');
+    // }
+
+    public function pnr_passenger()
     {
-        return $this->belongsToMany(Baggage::class, 'baggage_pnr', 'pnr_id', 'baggage_id');
+        return $this->belongsToMany(PnrPassenger::class, 'pnr_passengers', 'pnr_id', 'passenger_type_id');
     }
 
     public function user(){
@@ -60,6 +77,16 @@ class Pnr extends Model
     public function getArrivalDateTimeAttribute()
     {
         return \Carbon\Carbon::parse($this->arrival_date.$this->arrival_time)->format('d-M-y H:i');
+    }
+
+    public function getReturnDepartureDateTimeAttribute()
+    {
+        return \Carbon\Carbon::parse($this->return_departure_date.$this->return_departure_time)->format('d-M-y H:i');
+    }
+
+    public function getReturnArrivalDateTimeAttribute()
+    {
+        return \Carbon\Carbon::parse($this->return_arrival_date.$this->return_arrival_time)->format('d-M-y H:i');
     }
 
 }

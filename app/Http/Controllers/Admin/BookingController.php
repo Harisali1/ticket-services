@@ -24,18 +24,30 @@ class BookingController extends Controller
             return view('Admin.booking.add', [
                 'airports' => $airports,
                 'showPnrSearch' => $request->all([
+                    'trip_type',
                     'departure_id',
                     'arrival_id',
                     'departure_date',
-                    'arrival_date',
-                    'trip_type',
+                    'day_minus',
+                    'day_plus',
+                    'return_departure_id',
+                    'return_arrival_id',
+                    'return_departure_date',
+                    'return_day_minus',
+                    'return_day_plus'
                 ]),
                 'initialFilters' => $request->only([
+                    'trip_type',
                     'departure_id',
                     'arrival_id',
                     'departure_date',
-                    'arrival_date',
-                    'trip_type'
+                    'day_minus',
+                    'day_plus',
+                    'return_departure_id',
+                    'return_arrival_id',
+                    'return_departure_date',
+                    'return_day_minus',
+                    'return_day_plus'
                 ]),
             ]);
         }

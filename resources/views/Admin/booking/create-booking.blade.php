@@ -145,7 +145,7 @@
      @csrf()
     <h3 class="fw-semibold mb-3 pnr-detail">PNR Details:</h3>
 
-    <div class="mb-3">
+    <!-- <div class="mb-3">
         <h6 class="fw-bold mb-2">Select Baggage</h6>
 
         <div class="row g-3 fare-group">
@@ -163,7 +163,145 @@
 
 
         </div>
+    </div> -->
+
+    <div class="mb-4">
+        <h6 class="text-primary fw-bold mb-3">OUTBOUND</h6>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <!-- Airline -->
+                    <div class="col-md-1 text-center">
+                       <img src="{{ $pnrBookings->airline->logo 
+                                        ? asset('storage/'.$pnrBookings->airline->logo) 
+                                        : asset('images/logo-placeholder.png') }}"
+                                        alt="logo"
+                                        class="rounded-circle border"
+                                        style="width:25px;height:25px;object-fit:contain;">
+                    </div>
+
+                    <!-- From / To -->
+                    <div class="col-md-3">
+                        <p class="mb-1">
+                            <small class="text-muted">From:</small><br>
+                            <strong>{{ $pnrBookings->departure_date_time }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">To:</small><br>
+                            <strong>{{ $pnrBookings->arrival_date_time }}</strong>
+                        </p>
+                    </div>
+
+                    <!-- Airports -->
+                    <div class="col-md-1 text-center fw-bold fs-5">
+                        {{ $pnrBookings->departure->code}}
+                    </div>
+                     <div class="col-md-1 text-center fw-bold fs-5">
+                        {{ $pnrBookings->arrival->code}}
+                    </div>
+
+                    <div class="col-md-2 text-center">
+                        <small class="text-muted">Duration</small><br>
+                        <strong>{{ $pnrBookings->duration }}</strong>
+                    </div>
+
+                   
+
+                    <!-- Aircraft -->
+                    <div class="col-md-2 text-center">
+                        <small class="text-muted">Airplane</small><br>
+                        <strong>{{ $pnrBookings->air_craft }}</strong>
+                    </div>
+
+                    <!-- Flight Info -->
+                    <div class="col-md-2">
+                        <p class="mb-1">
+                            <small class="text-muted">Num.:</small>
+                            <strong>{{ $pnrBookings->flight_no }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">Class:</small>
+                            <strong>{{ $pnrBookings->class }}</strong>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
     </div>
+
+    @if($pnrBookings->pnr_type == 'return')
+    <!-- INBOUND -->
+    <div>
+        <h6 class="text-primary fw-bold mb-3">INBOUND</h6>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+
+                <div class="row align-items-center">
+
+                    <!-- Airline -->
+                    <div class="col-md-1 text-center">
+                        <img src="{{ $pnrBookings->airline->logo 
+                                        ? asset('storage/'.$pnrBookings->airline->logo) 
+                                        : asset('images/logo-placeholder.png') }}"
+                                        alt="logo"
+                                        class="rounded-circle border"
+                                        style="width:25px;height:25px;object-fit:contain;">
+                    </div>
+
+                    <!-- From / To -->
+                    <div class="col-md-3">
+                        <p class="mb-1">
+                            <small class="text-muted">From:</small><br>
+                            <strong>{{ $pnrBookings->return_departure_date_time }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">To:</small><br>
+                            <strong>{{ $pnrBookings->return_arrival_date_time }}</strong>
+                        </p>
+                    </div>
+
+                    <!-- Airports -->
+                    <div class="col-md-1 text-center fw-bold fs-5">
+                        {{ $pnrBookings->return_departure->code }}
+                    </div>
+                    <div class="col-md-1 text-center fw-bold fs-5">
+                        {{ $pnrBookings->return_arrival->code }}
+                    </div>
+
+                    <div class="col-md-2 text-center">
+                        <small class="text-muted">Duration</small><br>
+                        <strong>{{ $pnrBookings->return_duration }}</strong>
+                    </div>
+
+                    
+
+                    <!-- Aircraft -->
+                    <div class="col-md-2 text-center">
+                        <small class="text-muted">Airplane</small><br>
+                        <strong>{{ $pnrBookings->air_craft }}</strong>
+                    </div>
+
+                    <!-- Flight Info -->
+                    <div class="col-md-2">
+                        <p class="mb-1">
+                            <small class="text-muted">Num.:</small>
+                            <strong>{{ $pnrBookings->flight_no }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">Class:</small>
+                            <strong>{{ $pnrBookings->class }}</strong>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @endif
 
 
 

@@ -25,6 +25,9 @@
         z-index: 2;
         background: #f8f9fa;
     }
+    .select2-container--default{
+        width: -webkit-fill-available!important;
+    }
 
 </style>
 @endsection
@@ -82,22 +85,83 @@
                            required>
                 </div>
 
-                <div class="col-md-2" id="arrival-date-wrapper">
-                    <label class="form-label text-muted">Arrival Date</label>
-                    <input type="date"
-                           class="form-control"
-                           name="arrival_date"
-                           id="arrival_date"
-                           value="{{ old('arrival_date', request('arrival_date')) }}">
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Day -</label>
+                    <select class="form-select select2" id="day_minus" name="day_minus">
+                        <option value="1">-1</option>
+                        <option value="2">-2</option>
+                        <option value="3" selected>-3</option>
+                    </select>
                 </div>
 
-                <div class="col-md-2 align-self-end">
-                    <button type="submit" class="btn btn-dark w-100">
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Day +</label>
+                    <select class="form-select select2" id="day_plus" name="day_plus">
+                        <option value="1">+1</option>
+                        <option value="2">+2</option>
+                        <option value="3" selected>+3</option>
+                    </select>
+                </div>
+
+                
+
+            </div>
+
+            <div class="row g-3 d-none mt-1" id="return-fields">
+
+                <div class="col-md-3">
+                    <!-- <label class="form-label text-muted">Departure</label> -->
+                    <select class="form-select" name="return_departure_id" id="return_departure_id">
+                        <option value="">Select Departure</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- <label class="form-label text-muted">Arrival</label> -->
+                    <select class="form-select" name="return_arrival_id" id="return_arrival_id">
+                        <option value="">Select Arrival</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <!-- <label class="form-label text-muted">Departure Date</label> -->
+                    <input type="date"
+                           class="form-control"
+                           name="return_departure_date"
+                           id="return_departure_date"
+                           value="{{ old('return_departure_date', request('return_departure_date')) }}">
+                </div>
+
+                <div class="col-md-2">
+                    <!-- <label class="form-label text-muted">Day -</label> -->
+                    <select class="form-select select2" id="return_day_minus" name="return_day_minus">
+                        <option value="1">-1</option>
+                        <option value="2">-2</option>
+                        <option value="3" selected>-3</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <!-- <label class="form-label text-muted">Day +</label> -->
+                    <select class="form-select select2" id="return_day_plus" name="return_day_plus">
+                        <option value="1">+1</option>
+                        <option value="2">+2</option>
+                        <option value="3" selected>+3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-dark">
                         Search
                     </button>
                 </div>
-
             </div>
+
+                
+
+           
         </form>
 
         @if($showPnrSearch)
@@ -112,90 +176,88 @@
 <script>
     $(document).ready(function () {
 
+        function toggleReturnFields() {
+            const tripType = $('input[name="trip_type"]:checked').val();
+
+            if (tripType === 'return') {
+                $('#return-fields').removeClass('d-none');
+            } else {
+                $('#return-fields').addClass('d-none');
+            }
+        }
+
+        // On radio change
+        $('input[name="trip_type"]').on('change', function () {
+            toggleReturnFields();
+        });
+
+        // On page load
+        toggleReturnFields();
         /* ===============================
         Select2
         =============================== */
-        $("#departure_id").select2({
-            placeholder: "Search Departure",
-            minimumInputLength: 2,
-            ajax: {
-                url: "{{ route('search.airport') }}",
-                dataType: "json",
-                delay: 250,
-                processResults: function (data) {
-                    return {
+
+        function initSelect2(id, url) {
+            $(id).select2({
+                placeholder: 'Search',
+                allowClear: true,
+                minimumInputLength: 2,
+                ajax: {
+                    url: url,
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: data => ({
                         results: data.map(item => ({
                             id: item.id,
                             text: item.label
                         }))
-                    };
+                    })
                 }
-            }
-        });
-
-        $("#arrival_id").select2({
-            placeholder: "Search Arrival",
-            minimumInputLength: 2,
-            ajax: {
-                url: "{{ route('search.airport') }}",
-                dataType: "json",
-                delay: 250,
-                processResults: function (data) {
-                    return {
-                        results: data.map(item => ({
-                            id: item.id,
-                            text: item.label
-                        }))
-                    };
-                }
-            }
-        });
-
-        /* ===============================
-        Trip Type Logic
-        =============================== */
-        const arrivalWrapper = document.getElementById('arrival-date-wrapper');
-        const arrivalDate    = document.getElementById('arrival_date');
-
-        function toggleArrivalDate() {
-            const type = document.querySelector('input[name="trip_type"]:checked').value;
-
-            if (type === 'one_way') {
-                arrivalDate.required = false;
-                arrivalDate.value = '';
-                arrivalWrapper.classList.add('d-none');
-            } else {
-                arrivalDate.required = true;
-                arrivalWrapper.classList.remove('d-none');
-            }
+            });
         }
 
-        document.querySelectorAll('input[name="trip_type"]').forEach(radio => {
-            radio.addEventListener('change', toggleArrivalDate);
-        });
-
-        // Initial load
-        toggleArrivalDate();
-
+        function setSelect2AjaxValue($select, id, text) {
+            if (!id) return;
         
-        function setSelect2Value(selector, id, text) {
-            if (id && text) {
-                const option = new Option(text, id, true, true);
-                $(selector).append(option).trigger('change');
-            }
+            // Remove existing option if any
+            $select.find('option[value="' + id + '"]').remove();
+
+            // Create & select new option
+            const option = new Option(text, id, true, true);
+            $select.append(option).trigger('change');
         }
 
-        setSelect2Value(
-            '#departure_id',
-            $('#selected_departure_id').val(),
-            $('#selected_departure_text').val()
-        );
 
-        setSelect2Value(
-            '#arrival_id',
-            $('#selected_arrival_id').val(),
-            $('#selected_arrival_text').val()
-        );
+        $(document).ready(function () {
+            initSelect2('#departure_id', "{{ route('search.airport') }}");
+            initSelect2('#arrival_id', "{{ route('search.airport') }}");
+            initSelect2('#return_departure_id', "{{ route('search.airport') }}");
+            initSelect2('#return_arrival_id', "{{ route('search.airport') }}");
+        });
+
+        // Departure → Return Arrival
+        $('#departure_id').on('select2:select', function (e) {
+            const data = e.params.data;
+
+            setSelect2AjaxValue(
+                $('#return_arrival_id'),
+                data.id,
+                data.text
+            );
+            // $('#return_arrival_id').prop('readonly', true);
+        });
+
+        // Arrival → Return Departure
+        $('#arrival_id').on('select2:select', function (e) {
+            const data = e.params.data;
+
+            setSelect2AjaxValue(
+                $('#return_departure_id'),
+                data.id,
+                data.text
+            );
+            // $('#return_departure_id').prop('readonly', true);
+        });
     });
 
     function selectPNRBooking(id){
