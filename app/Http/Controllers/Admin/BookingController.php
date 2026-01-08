@@ -10,7 +10,9 @@ use App\Models\Admin\Booking;
 use App\Models\Admin\Customer;
 use App\Models\Admin\Seat;
 use App\Models\Admin\PassengerType;
+use App\Models\Admin\BookingPassenger;
 use DB;
+use PDF;
 
 class BookingController extends Controller
 {
@@ -79,6 +81,7 @@ class BookingController extends Controller
             }
             $rowTotal = $passenger->price * $seatCount + 200;
             $fareDetails[] = [
+                'type_id'    => $passenger->passenger_type_id,
                 'title'      => $passenger->title,
                 'price'      => $passenger->price,
                 'tax'        => 200,
@@ -154,18 +157,41 @@ class BookingController extends Controller
             $booking = Booking::create($bookingData);
 
             $customerData =[];
-            foreach ($request->prefix as $key => $i) {
+            foreach ($request->customer_name as $key => $i) {
                 $customerData = [
                     'booking_id' => $booking->id,
-                    'name_prefix' => $i,
-                    'name' => $request->name[$key],
+                    'name_prefix' => $request->customer_prefix[$key],
+                    'name' => $request->customer_name[$key],
+                    'surname' => $request->customer_surname[$key],
+                    'gender' => $request->customer_gender[$key],
+                    'email' => $request->customer_email[$key],
+                    'phone_no' => $request->customer_phone[$key],
+                    'dob' => $request->customer_dob[$key],
+                    'address' => $request->customer_address[$key],
+                    'postal_code' => $request->customer_postal_code[$key],
+                    'passport_type' => $request->customer_passport_type[$key],
+                    'passport_number' => $request->customer_passport_number[$key],
+                    'nationality' => $request->customer_nationality[$key],
+                    'expiry_date' => $request->customer_expiry_date[$key],
                 ];
                 Customer::create($customerData);
             }
 
-            DB::commit();
+            foreach($request->fareDetails as $type){
+                BookingPassenger::create([
+                    'pnr_id' => $request->pnr_id,
+                    'booking_id' => $booking->id,
+                    'passenger_type_id' => $type['type_id'],
+                ]);
+            }
+            
+            $bookingCustomer = Customer::where('booking_id', $booking->id)->get();
+            $requestData = $request->all();
 
-            return redirect()->route('admin.booking.index');
+            DB::commit();
+            return view('Admin.booking.detail-booking', 
+                compact('pnrBookings', 'booking', 'bookingCustomer', 'requestData'))
+                ->with('success', 'Booking has been created successfully');
 
         } catch (\Exception $e) {
 
@@ -178,4 +204,12 @@ class BookingController extends Controller
             ], 500);
         }
     }
+
+    public function itineraryPrint(){
+        
+        $pdf = PDF::loadView('Admin/print/itinerary');
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream('my-pdf.pdf');
+    }
+
 }

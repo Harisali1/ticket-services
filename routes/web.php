@@ -90,6 +90,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/create', [App\Http\Controllers\Admin\BookingController::class, 'getPnrInfo'])->name('admin.booking.pnr.info');
             Route::post('/check_seats_availablity', [App\Http\Controllers\Admin\BookingController::class, 'checkSeatsAvailability'])->name('admin.booking.seats.availability');
             Route::post('/booking_submit', [App\Http\Controllers\Admin\BookingController::class, 'bookingSubmit'])->name('admin.booking.submit');
+            Route::get('/print/itinerary', [App\Http\Controllers\Admin\BookingController::class, 'itineraryPrint'])->name('admin.booking.print.itinerary');
+            
             // Route::get('/edit/{user}', [App\Http\Controllers\Admin\BookingController::class, 'edit'])->name('admin.booking.edit');
             // Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');
         });

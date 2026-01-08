@@ -14,28 +14,41 @@ return new class extends Migration
         Schema::create('pnrs', function (Blueprint $table) {
             $table->id();
             $table->string('pnr_no');
+            $table->string('ref_no')->nullable();
             $table->string('pnr_type')->nullable();
             $table->string('flight_no')->nullable();
             $table->string('air_craft')->nullable();
             $table->string('class')->nullable();
             $table->string('baggage')->nullable();
+
             $table->integer('departure_id')->nullable();
             $table->integer('arrival_id')->nullable();
             $table->integer('airline_id')->nullable();
+            
             $table->integer('return_departure_id')->nullable();
             $table->integer('return_arrival_id')->nullable();
             $table->integer('return_airline_id')->nullable();
+            
             $table->string('duration')->nullable();
             $table->integer('seats')->nullable();
-            $table->string('price')->nullable();
+            $table->string('base_price')->nullable();
+            $table->string('tax')->nullable();
+            $table->string('total')->nullable();
+
+            $table->string('return_base_price')->nullable();
+            $table->string('return_tax')->nullable();
+            $table->string('return_total')->nullable();
+
             $table->date('departure_date')->nullable();
             $table->time('departure_time')->nullable();
             $table->date('arrival_date')->nullable();
             $table->time('arrival_time')->nullable();
+            
             $table->date('return_departure_date')->nullable();
             $table->time('return_departure_time')->nullable();
             $table->date('return_arrival_date')->nullable();
             $table->time('return_arrival_time')->nullable();
+            
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

@@ -326,7 +326,7 @@
                 $fareAmount = 0;
                 $taxAmount = 0;
             @endphp
-            @foreach($fareDetails as $fare)
+            @foreach($fareDetails as $index => $fare)
                 @php 
                     $fareAmount += $fare['price']*$fare['seat'];
                     $taxAmount += $fare['tax'];
@@ -348,6 +348,7 @@
                         {{ $fare['row_total'] }}
                     </td>
                 </tr>
+                <input type="hidden" name="fareDetails[{{ $index }}][type_id]" value="{{ $fare['type_id'] }}">
             @endforeach
         </tbody>
     </table>
@@ -366,7 +367,7 @@
           <div class="row g-3">
             <div class="col-md-3">
                 <label class="form-label small">Name Prefix</label>
-                <select class="form-select" id="prefix[]" name="prefix[]" required>
+                <select class="form-select" id="customer_prefix[]" name="customer_prefix[]">
                     <option value="">Select</option>
                     <option value="Mr">Mr</option>
                     <option value="Mrs">Mrs</option>
@@ -377,19 +378,19 @@
 
             <div class="col-md-3">
               <label class="form-label small">Name*</label>
-              <input type="text" class="form-control" id="name[]" name="name[]" required>
+              <input type="text" class="form-control" id="customer_name[]" name="customer_name[]" required>
               <div class="invalid-feedback">This field is required</div>
             </div>
 
             <div class="col-md-3">
                 <label class="form-label small">Surname*</label>
-                <input type="text" class="form-control" id="surname[]" name="surname[]" required>
+                <input type="text" class="form-control" id="customer_surname[]" name="customer_surname[]">
                 <div class="invalid-feedback">This field is required</div>
             </div>
 
             <div class="col-md-3">
                 <label class="form-label small">Gender*</label>
-                <select class="form-select" id="gender[]" name="gender[]" required>
+                <select class="form-select" id="customer_gender[]" name="customer_gender[]">
                     <option value="">Select</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -399,14 +400,14 @@
 
             <div class="col-md-3">
                 <label class="form-label small">Email*</label>
-                <input type="email" class="form-control" id="email[]" name="email[]" required>
+                <input type="email" class="form-control" id="customer_email[]" name="customer_email[]" required>
                 <div class="invalid-feedback">This field is required</div>
             </div>
 
             <div class="col-md-3">
                 <label class="form-label small">Phone*</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="phone[]" name="phone[]" required>
+                    <input type="text" class="form-control" id="customer_phone[]" name="customer_phone[]" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
             </div>
@@ -414,14 +415,14 @@
             <div class="col-md-3">
                 <label class="form-label small">D.O.B*</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="dob[]" name="dob[]" required>
+                    <input type="text" class="form-control" id="customer_dob[]" name="customer_dob[]" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <label class="form-label small">Country</label>
-                <select class="form-select" id="country_id[]" name="country_id[]" required>
+                <select class="form-select" id="customer_country_id[]" name="customer_country_id[]">
                     <option value="">Select</option>
                     <option value="pak">Pakistan</option>
                     <option value="sau">Saudi Arabia</option>
@@ -432,14 +433,14 @@
             <div class="col-md-6">
                 <label class="form-label small">Address</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="address[]" name="address[]" required>
+                    <input type="text" class="form-control" id="customer_address[]" name="customer_address[]">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <label class="form-label small">City</label>
-                <select class="form-select" id="city_id[]" name="city_id[]" required>
+                <select class="form-select" id="customer_city_id[]" name="customer_city_id[]">
                     <option value="">Select</option>
                     <option value="pak">Pakistan</option>
                     <option value="sau">Saudi Arabia</option>
@@ -450,7 +451,7 @@
             <div class="col-md-3">
                 <label class="form-label small">Postal Code</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="postal_code[]" name="postal_code[]" required>
+                    <input type="text" class="form-control" id="customer_postal_code[]" name="customer_postal_code[]">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
             </div>
@@ -460,8 +461,8 @@
             </div>
 
             <div class="col-md-3">
-                <label class="form-label small">Passport Type</label>
-                <select class="form-select" id="passport_type[]" name="passport_type[]" required>
+                <label class="form-label small">Passport Country</label>
+                <select class="form-select" id="customer_passport_type[]" name="customer_passport_type[]" required>
                     <option value="">Select</option>
                     <option value="pak">Pakistan</option>
                     <option value="sau">Saudi Arabia</option>
@@ -472,24 +473,24 @@
             <div class="col-md-3">
                 <label class="form-label small">Passport Number</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="passport_number[]" name="passport_number[]" required>
+                    <input type="text" class="form-control" id="customer_passport_number[]" name="customer_passport_number[]" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
                 <label class="form-label small">Residence Country</label>
-                <select class="form-select" id="residence_country[]" name="residence_country[]" required>
+                <select class="form-select" id="customer_residence_country[]" name="customer_residence_country[]" required>
                     <option value="">Select</option>
                     <option value="pak">Pakistan</option>
                     <option value="sau">Saudi Arabia</option>
                 </select>
                 <div class="invalid-feedback">This field is required</div>
-            </div>
+            </div> -->
 
             <div class="col-md-3">
                 <label class="form-label small">Nationality</label>
-                <select class="form-select" id="nationality[]" name="nationality[]" required>
+                <select class="form-select" id="customer_nationality[]" name="customer_nationality[]" required>
                     <option value="">Select</option>
                     <option value="pak">Pakistan</option>
                     <option value="sau">Saudi Arabia</option>
@@ -500,7 +501,7 @@
             <div class="col-md-3">
                 <label class="form-label small">Expiry Date</label>
                 <div class="input-group">
-                    <input type="date" class="form-control" id="expiry_date[]" name="expiry_date[]" required>
+                    <input type="date" class="form-control" id="customer_expiry_date[]" name="customer_expiry_date[]" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
             </div>
@@ -563,14 +564,14 @@
 <script>
     
 
-    function validatePassengerDetails(){
+    function validatePassengerDetails() {
         const step1 = document.getElementById('step-1');
         let isValid = true;
 
-        const inputs = step1.querySelectorAll('input[required], select[required], textarea[required]');
+        const inputs = step1.querySelectorAll('[required]');
 
         inputs.forEach(input => {
-            if (!input.value.trim()) {
+            if (!input.value || input.value.trim() === '') {
                 input.classList.add('is-invalid');
                 isValid = false;
             } else {
@@ -578,13 +579,14 @@
             }
         });
 
-        if(!isValid){
+        if (!isValid) {
             alert('Please fill all required passenger details before proceeding.');
-        }else{
-            document.getElementById('bookingForm').submit();
+            return false;
         }
-        // return isValid;
+
+        document.getElementById('bookingForm').submit();
     }
+
     
 </script>
 

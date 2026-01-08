@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('passenger_types', function (Blueprint $table) {
+        Schema::create('booking_passengers', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->string('code')->nullable();
-            $table->boolean('status')->default(1);
+            $table->integer('pnr_id')->nullable();
+            $table->integer('booking_id')->nullable();
+            $table->integer('passenger_type_id')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('passenger_types');
+        Schema::dropIfExists('booking_passengers');
     }
 };
