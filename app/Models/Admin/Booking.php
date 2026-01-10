@@ -5,6 +5,7 @@ namespace App\Models\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\BookingStatus;
+use App\Models\User;
 
 class Booking extends Model
 {
@@ -22,5 +23,19 @@ class Booking extends Model
 
     public function customers(){
         return $this->hasMany(Customer::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function getBookingDateAttribute()
+    {
+        return \Carbon\Carbon::parse($this->created_at)->format('d-M-y H:i');
+    }
+
+    public function getFareLimitDateAttribute()
+    {
+        return \Carbon\Carbon::parse($this->created_at->addDay())->format('d-M-y H:i');
     }
 }

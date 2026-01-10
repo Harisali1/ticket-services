@@ -19,6 +19,8 @@ return new class extends Migration
             $table->datetime('paid_at')->nullable();
             $table->string('seats')->nullable();
             $table->string('price')->nullable();
+            $table->string('meal')->nullable();
+            $table->string('wheel_chair')->nullable();
             $table->boolean('status')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamps();

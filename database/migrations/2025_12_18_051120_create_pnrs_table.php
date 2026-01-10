@@ -29,16 +29,6 @@ return new class extends Migration
             $table->integer('return_arrival_id')->nullable();
             $table->integer('return_airline_id')->nullable();
             
-            $table->string('duration')->nullable();
-            $table->integer('seats')->nullable();
-            $table->string('base_price')->nullable();
-            $table->string('tax')->nullable();
-            $table->string('total')->nullable();
-
-            $table->string('return_base_price')->nullable();
-            $table->string('return_tax')->nullable();
-            $table->string('return_total')->nullable();
-
             $table->date('departure_date')->nullable();
             $table->time('departure_time')->nullable();
             $table->date('arrival_date')->nullable();
@@ -48,7 +38,19 @@ return new class extends Migration
             $table->time('return_departure_time')->nullable();
             $table->date('return_arrival_date')->nullable();
             $table->time('return_arrival_time')->nullable();
+
+            $table->string('duration')->nullable();
+            $table->string('return_duration')->nullable();
             
+            $table->string('base_price')->nullable();
+            $table->string('tax')->nullable();
+            $table->string('total')->nullable();
+
+            $table->string('return_base_price')->nullable();
+            $table->string('return_tax')->nullable();
+            $table->string('return_total')->nullable();
+
+            $table->integer('seats')->nullable();
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

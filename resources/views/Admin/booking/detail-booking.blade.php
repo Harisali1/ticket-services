@@ -11,13 +11,12 @@
     <div class="bg-primary text-white px-4 py-3 d-flex justify-content-between align-items-center">
         <div>
             <small>Home / Booking List / Booking Detail</small>
-            <strong class="ms-2">ICFQsT5r1E_3D</strong>
+            <strong class="ms-2"></strong>
         </div>
         <div class="btn-group">
             <button class="btn btn-danger btn-sm">Cancel PNR</button>
-            <button class="btn btn-warning btn-sm">Refresh</button>
             <button class="btn btn-success btn-sm">Ticket</button>
-            <a href="{{ route('admin.booking.print.itinerary') }}"><button class="btn btn-secondary btn-sm">Print Itinerary</button></a>
+            <a href="{{ route('admin.booking.print.itinerary', $booking->id) }}"><button class="btn btn-secondary btn-sm">Print Itinerary</button></a>
         </div>
     </div>
 
@@ -35,33 +34,34 @@
 
 
     <!-- Booking Info -->
-    <div class="card mx-4 mb-4">
+    <div class="card mx-4 mb-4 mt-4">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-3">
-                    <h5 class="text-warning">SKYALLOT</h5>
-                    <span class="badge bg-info">PNR CREATED</span>
-                    <p class="fw-bold mt-2">55A5F7</p>
+                <div class="col-md-4">
+                    <!-- <h5 class="text-warning">SKYALLOT</h5> -->
+                    <img src="{{ $booking->pnr->airline->logo 
+                            ? asset('storage/'.$booking->pnr->airline->logo) 
+                                : asset('images/logo-placeholder.png') }}"
+                                alt="logo"
+                                class="rounded-circle border"
+                                style="width:45px;height:45px;object-fit:contain;">
+                    <span class="badge bg-info">PNR CREATED </span><span class="ml-4">{{ $booking->booking_no }}<span>
+                    
                 </div>
 
-                <div class="col-md-3">
-                    <small>Universal Record</small>
-                    <p>AL-3DUd_2BkW_2FuTc_3D</p>
-                </div>
-
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="row text-center">
                         <div class="col">
                             <small>Fare Time Limit</small>
-                            <p>09 Jan 10:14</p>
+                            <p>{{ $booking->fare_limit_date }}</p>
                         </div>
                         <div class="col">
                             <small>Booking Date</small>
-                            <p>08 Jan 10:16</p>
+                            <p>{{ $booking->booking_date }}</p>
                         </div>
                         <div class="col">
                             <small>Sync Date</small>
-                            <p>08 Jan 10:16</p>
+                            <p>{{ $booking->booking_date }}</p>
                         </div>
                     </div>
                 </div>
@@ -70,9 +70,9 @@
             <hr>
 
             <div class="row align-items-center">
-                <div class="col-md-3">Base: <strong>500.00 EUR</strong></div>
-                <div class="col-md-3">Tax: <strong>200.00 EUR</strong></div>
-                <div class="col-md-3 text-success fw-bold fs-5">Total: 700.00 EUR</div>
+                <div class="col-md-3">Base: <strong>{{ $booking->pnr->base_price }}.00 EUR</strong></div>
+                <div class="col-md-3">Tax: <strong>{{ $booking->pnr->tax}}.00 EUR</strong></div>
+                <div class="col-md-3 text-success fw-bold fs-5">Total: {{ $booking->pnr->total }}.00 EUR</div>
                 <div class="col-md-3 text-end">
                     <button class="btn btn-success btn-sm">Requote</button>
                 </div>
@@ -82,45 +82,263 @@
 
     <!-- Flight Segments -->
     <div class="card mx-4 mb-4">
-        <div class="card-header bg-light fw-bold">Outbound</div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3">Sat 31 Jan 2026<br><strong>FCO → DSS</strong></div>
-                <div class="col-md-2">6h 0m</div>
-                <div class="col-md-2">AZ854</div>
-                <div class="col-md-2">Economy (Y)</div>
-                <div class="col-md-1"><span class="badge bg-success">HK</span></div>
-            </div>
-        </div>
+        <div class="p-4">
+        <h6 class="text-primary fw-bold">OUTBOUND</h6>
+        <div class="card border-0">
+            <div class="card-body p-0">
+                <div class="row align-items-center">
+                    <!-- Airline -->
+                    <div class="col-md-1 text-center">
+                       <img src="{{ $booking->pnr->airline->logo 
+                            ? asset('storage/'.$booking->pnr->airline->logo) 
+                                : asset('images/logo-placeholder.png') }}"
+                                alt="logo"
+                                class="rounded-circle border"
+                                style="width:45px;height:45px;object-fit:contain;">
+                    </div>
 
-        <div class="card-header bg-light fw-bold">Inbound</div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3">Sun 15 Feb 2026<br><strong>DSS → FCO</strong></div>
-                <div class="col-md-2">5h 30m</div>
-                <div class="col-md-2">AZ855</div>
-                <div class="col-md-2">Economy (Y)</div>
-                <div class="col-md-1"><span class="badge bg-success">HK</span></div>
+                    <!-- From / To -->
+                    <div class="col-md-2">
+                        <p class="mb-1">
+                            <small class="text-muted">From:</small><br>
+                            <strong>{{ $booking->pnr->departure_date_time }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">To:</small><br>
+                            <strong>{{ $booking->pnr->arrival_date_time }}</strong>
+                        </p>
+                    </div>
+
+                    <!-- Airports -->
+                    <div class="col-md-1 text-center fw-bold fs-5">
+                        {{ $booking->pnr->departure->code}}
+                    </div>
+                     <div class="col-md-1 text-center fw-bold fs-5">
+                        {{ $booking->pnr->arrival->code}}
+                    </div>
+
+                    <div class="col-md-2 text-center">
+                        <small class="text-muted">Duration</small><br>
+                        <strong>{{ $booking->pnr->duration }}</strong>
+                    </div>
+
+                   
+
+                    <!-- Aircraft -->
+                    <div class="col-md-2 text-center">
+                        <small class="text-muted">Airplane</small><br>
+                        <strong>{{ $booking->pnr->air_craft }}</strong>
+                    </div>
+
+                    <!-- Flight Info -->
+                    <div class="col-md-2">
+                        <p class="mb-1">
+                            <small class="text-muted">Num.:</small>
+                            <strong>{{ $booking->pnr->flight_no }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">Class:</small>
+                            <strong>{{ $booking->pnr->class }}</strong>
+                        </p>
+                    </div>
+
+                    <div class="col-md-1">
+                        <button class="btn btn-success btn-sm">HK</button>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Passenger -->
-    <div class="card mx-4 mb-4">
-        <div class="card-header bg-primary text-white d-flex justify-content-between">
-            Passenger 1 (ADT)
-            <button class="btn btn-success btn-sm">Edit Passenger Data</button>
+    @if($booking->pnr->pnr_type == 'return')
+        <!-- INBOUND -->
+        <div class="p-4">
+            <h6 class="text-primary fw-bold">INBOUND</h6>
+            <div class="card border-0">
+                <div class="card-body p-0">
+                    <div class="row align-items-center">
+                        <!-- Airline -->
+                        <div class="col-md-1 text-center">
+                            <img src="{{ $booking->pnr->airline->logo 
+                            ? asset('storage/'.$booking->pnr->airline->logo) 
+                                : asset('images/logo-placeholder.png') }}"
+                                alt="logo"
+                                class="rounded-circle border"
+                                style="width:45px;height:45px;object-fit:contain;">
+                        </div>
+
+                        <!-- From / To -->
+                        <div class="col-md-2">
+                            <p class="mb-1">
+                                <small class="text-muted">From:</small><br>
+                                <strong>{{ $booking->pnr->return_departure_date_time }}</strong>
+                            </p>
+                            <p class="mb-0">
+                                <small class="text-muted">To:</small><br>
+                                <strong>{{ $booking->pnr->return_arrival_date_time }}</strong>
+                            </p>
+                        </div>
+
+                        <!-- Airports -->
+                        <div class="col-md-1 text-center fw-bold fs-5">
+                            FSS
+                        </div>
+                        <div class="col-md-1 text-center fw-bold fs-5">
+                            DSS
+                        </div>
+
+                        <div class="col-md-2 text-center">
+                            <small class="text-muted">Duration</small><br>
+                            <strong>{{ $booking->pnr->return_duration }}</strong>
+                        </div>
+
+                        
+
+                        <!-- Aircraft -->
+                        <div class="col-md-2 text-center">
+                            <small class="text-muted">Airplane</small><br>
+                            <strong>{{ $booking->pnr->air_craft }}</strong>
+                        </div>
+
+                        <!-- Flight Info -->
+                        <div class="col-md-2">
+                            <p class="mb-1">
+                                <small class="text-muted">Num.:</small>
+                                <strong>{{ $booking->pnr->flight_no }}</strong>
+                            </p>
+                            <p class="mb-0">
+                                <small class="text-muted">Class:</small>
+                                <strong>{{ $booking->pnr->class }}</strong>
+                            </p>
+                        </div>
+
+                        <div class="col-md-1">
+                            <button class="btn btn-success btn-sm">HK</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <div class="card-body">
+    @endif
+    </div>
+
+    <!-- Passenger -->
+     @foreach($customers as $index => $customer)
+<form class="passenger-form mb-4">
+    <div class="card mx-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            Passenger {{ $index + 1 }} (ADT)
+
+            <button type="button"
+                class="btn btn-success btn-sm edit-btn"
+                data-target="passenger-{{ $index }}">
+                Edit Passenger Data
+            </button>
+        </div>
+
+        <div class="card-body passenger-{{ $index }}">
             <div class="row">
-                <div class="col-md-4">Name: <strong>John Doe</strong></div>
-                <div class="col-md-4">DOB: 22 May 1999</div>
-                <div class="col-md-4">Gender: Male</div>
+                <div class="col-md-4">
+                    Name:
+                    <input type="text"
+                           class="form-control readonly-input"
+                           name="name[]"
+                           value="{{ $customer->name }}"
+                           disabled>
+                </div>
+
+                <div class="col-md-4">
+                    DOB:
+                    <input type="date"
+                           class="form-control readonly-input"
+                           name="dob[]"
+                           value="{{ $customer->dob }}"
+                           disabled>
+                </div>
+
+                <div class="col-md-4">
+                    Gender:
+                    <input type="text"
+                           class="form-control readonly-input"
+                           name="gender[]"
+                           value="{{ $customer->gender }}"
+                           disabled>
+                </div>
             </div>
+
             <div class="row mt-2">
-                <div class="col-md-4">Email: email@gmail.com</div>
-                <div class="col-md-4">Phone: +92 344 1231231</div>
+                <div class="col-md-4">
+                    Email:
+                    <input type="email"
+                           class="form-control readonly-input"
+                           name="email[]"
+                           value="{{ $customer->email }}"
+                           disabled>
+                </div>
+
+                <div class="col-md-4">
+                    Phone:
+                    <input type="text"
+                           class="form-control readonly-input"
+                           name="phone[]"
+                           value="{{ $customer->phone_no }}"
+                           disabled>
+                </div>
             </div>
+        </div>
+    </div>
+</form>
+@endforeach
+
+    <div class="card mx-4 mb-4">
+
+        <!-- Header -->
+        <div class="bg-primary text-white px-3 py-2" data-bs-toggle="collapse" data-bs-target="#fareRules">
+            <strong>Fare Rules</strong> ▼
+        </div>
+
+        <div id="fareRules" class="collapse show border p-3">
+            <!-- Body -->
+            <div class="border p-3">
+
+                <div class="row">
+                    <!-- Rules -->
+                    <div class="col-md-12">
+                        <span class="badge bg-light text-dark mb-2">Regole</span>
+
+                        <div class="border p-3 bg-light small"
+                            style="max-height: 260px; overflow-y: auto; white-space: pre-line;">
+                                - Si ricorda che i 30Kg compresi DEVONO essere in 1 Bagaglio
+                                - Tutti i passeggeri hanno l'obbligo di riconfermare l'orario 3 GIORNI PRIMA DELLA PARTENZA
+
+                                - Cambio data a 7gg prima della partenza GRATUITO, da pagare solo differenza tariffaria
+                                - Cambio data entro 6gg dalla partenza fino a 24ore prima del volo: 100euro + differenza tariffaria
+                                - Penale di cancellazione 7gg prima della partenza: 100euro a tratta
+                                - Penale di cancellazione entro i 6gg dalla partenza fino a 24ore prima del volo: 200euro a tratta
+                                - In caso di No-Show non sono previsti rimborsi (entro le 24ore dal volo il biglietto è da considerarsi No-show)
+                                - Cambio data in caso di No-Show penale 200euro + differenza tariffaria
+                                - Bagaglio a mano Adulto e Child 10kg
+                                - Secondo Bagaglio Extra da 23Kg: 70euro a tratta
+                                - Secondo Bagaglio Extra da 30Kg: 100euro a tratta
+                                - Terzo Bagaglio o superiore da 23Kg: 100euro a tratta
+                                - Terzo Bagaglio o superiore da 30Kg: 120euro a tratta
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Baggage -->
+    <div class="card mx-4 mb-4">
+        <div class="card-header bg-primary text-white">Document</div>
+        <div class="card-body">
+            
         </div>
     </div>
 
@@ -130,13 +348,15 @@
         <div class="card-body">
             <ul class="list-group">
                 <li class="list-group-item d-flex justify-content-between">
-                    ROME (FCO) → DAKAR (DSS)
-                    <span>2 Pc / 8 Kg</span>
+                    {{ $booking->pnr->departure->name }} ({{ $booking->pnr->departure->code }}) → {{ $booking->pnr->arrival->name }} ({{ $booking->pnr->arrival->code }})
+                    <span> {{ $booking->pnr->baggage }} / 8 Kg</span>
                 </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    DAKAR (DSS) → ROME (FCO)
-                    <span>2 Pc / 8 Kg</span>
-                </li>
+                @if($booking->pnr->pnr_type == 'return')
+                    <li class="list-group-item d-flex justify-content-between">
+                        {{ $booking->pnr->return_departure->name }} ({{ $booking->pnr->return_departure->code }}) → {{ $booking->pnr->return_arrival->name }} ({{ $booking->pnr->return_arrival->code }})
+                        <span>{{ $booking->pnr->baggage }} / 8 Kg</span>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -145,9 +365,9 @@
     <div class="card mx-4 mb-5">
         <div class="card-header bg-success text-white">Reservation Recap</div>
         <div class="card-body text-end">
-            <p>Fare Amount: <strong>500.00 EUR</strong></p>
-            <p>Tax: <strong>200.00 EUR</strong></p>
-            <h4 class="text-success">Total: 700.00 EUR</h4>
+            <p>Fare Amount: <strong>{{ $booking->pnr->base_price }}.00 EUR</strong></p>
+            <p>Tax: <strong>{{ $booking->pnr->tax }}.00 EUR</strong></p>
+            <h4 class="text-success">Total: {{ $booking->pnr->total }}.00 EUR</h4>
         </div>
     </div>
 
@@ -157,7 +377,30 @@
 
 @section('scripts')
 <script>
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('edit-btn')) {
 
+        const targetClass = e.target.dataset.target;
+        const container = document.querySelector('.' + targetClass);
+        const inputs = container.querySelectorAll('.readonly-input');
+
+        const isReadonly = inputs[0].hasAttribute('disabled');
+
+        inputs.forEach(input => {
+            if (isReadonly) {
+                input.removeAttribute('disabled');
+            } else {
+                input.setAttribute('disabled', true);
+            }
+        });
+
+        // Toggle button text
+        e.target.innerText = isReadonly ? 'Save Passenger Data' : 'Edit Passenger Data';
+        e.target.classList.toggle('btn-success');
+        e.target.classList.toggle('btn-warning');
+    }
+});
 </script>
+
 
 @endsection

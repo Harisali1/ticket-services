@@ -69,6 +69,7 @@ class PnrController extends Controller
             $data = [
                 'pnr_type' => $request->pnr_type,
                 'flight_no' => $request->flight_no,
+                'ref_no' => $request->ref_no,
                 'air_craft' => $request->air_craft,
                 'class' => $request->class,
                 'baggage' => $request->baggage,
@@ -76,12 +77,14 @@ class PnrController extends Controller
                 'arrival_id' => $request->arrival_id,
                 'airline_id' => $request->airline_id,
                 'duration' => $duration,
+                'base_price' =>$request->base_price,
+                'tax' => $request->tax,
+                'total' => $request->total,
                 'departure_date' => $request->departure_date,
                 'departure_time' => $request->departure_time_hour.':'.$request->departure_time_minute,
                 'arrival_date' => $request->arrival_date,
                 'arrival_time' => $request->arrival_time_hour.':'.$request->arrival_time_minute,
                 'seats' => $request->seats,
-                'price' => $request->price,
             ];
 
             if($request->pnr_type == 'return'){
@@ -93,6 +96,9 @@ class PnrController extends Controller
                 $data['return_arrival_date'] = $request->return_arrival_date;
                 $data['return_departure_time'] = $request->return_departure_time_hour.':'.$request->return_departure_time_minute;
                 $data['return_arrival_time'] = $request->return_arrival_time_hour.':'.$request->return_arrival_time_minute;
+                $data['return_base_price'] = $request->return_base_price;
+                $data['return_tax'] = $request->return_tax;
+                $data['return_total'] = $request->return_total;
             }
 
             $airlineCode = AirLine::find($data['airline_id']);
@@ -117,7 +123,7 @@ class PnrController extends Controller
 
             foreach($request->passenger_prices as $key => $pnrPassenger){
                 PnrPassenger::create([
-                    'pnr_id' => 1,
+                    'pnr_id' => $pnr->id,
                     'passenger_type_id' => $key,
                     'price' => $pnrPassenger,
                 ]);

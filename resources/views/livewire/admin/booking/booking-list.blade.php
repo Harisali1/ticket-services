@@ -122,12 +122,20 @@
                                 {{ $booking->status->label() }}
                             </span>
                         </td>
-                        <td wire:key="booking-row-{{ $booking->id }}">
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    ⋮
+                        <td>
+                            @if($booking->status->label() === 'Created')
+                                <button class="btn btn-sm btn-primary" type="button">
+                                    PNR
                                 </button>
-                            </div>
+                            @elseif($booking->status->label() === 'Ticketed')
+                                <button class="btn btn-sm btn-primary" type="button">
+                                    TKT
+                                </button>
+                            @else
+                                <button class="btn btn-sm btn-primary" type="button">
+                                    CN
+                                </button>
+                            @endif
                         </td>
                     </tr>
                 @empty

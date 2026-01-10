@@ -316,7 +316,7 @@
             <tr>
                 <th>Passenger Type</th>
                 <th>Seat</th>
-                <th>Price</th>
+                <th>Base Fare</th>
                 <th>Tax</th>
                 <th>Total</th>
             </tr>
@@ -355,161 +355,206 @@
 
     <hr>
 
+    
+
+    <hr>
+
     <h3 class="fw-semibold mb-3 pnr-detail">Passenger Details:</h3>
 
     <div id="step-1">
       @foreach(range(1, $seatSum) as $key => $i )
         <div class="card card-body mt-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-              <h6 class="fw-semibold mb-0">Passenger {{ $key+1; }}: Basic Details</h6>
-          </div>
-
-          <div class="row g-3">
-            <div class="col-md-3">
-                <label class="form-label small">Name Prefix</label>
-                <select class="form-select" id="customer_prefix[]" name="customer_prefix[]">
-                    <option value="">Select</option>
-                    <option value="Mr">Mr</option>
-                    <option value="Mrs">Mrs</option>
-                    <option value="Ms">Ms</option>
-                </select>
-                <div class="invalid-feedback">This field is required</div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-semibold mb-0">Passenger {{ $key+1; }}: Basic Details</h6>
             </div>
 
-            <div class="col-md-3">
-              <label class="form-label small">Name*</label>
-              <input type="text" class="form-control" id="customer_name[]" name="customer_name[]" required>
-              <div class="invalid-feedback">This field is required</div>
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label small">Surname*</label>
-                <input type="text" class="form-control" id="customer_surname[]" name="customer_surname[]">
-                <div class="invalid-feedback">This field is required</div>
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label small">Gender*</label>
-                <select class="form-select" id="customer_gender[]" name="customer_gender[]">
-                    <option value="">Select</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-                <div class="invalid-feedback">This field is required</div>
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label small">Email*</label>
-                <input type="email" class="form-control" id="customer_email[]" name="customer_email[]" required>
-                <div class="invalid-feedback">This field is required</div>
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label small">Phone*</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="customer_phone[]" name="customer_phone[]" required>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label small">Name Prefix</label>
+                    <select class="form-select" id="customer_prefix[]" name="customer_prefix[]">
+                        <option value="">Select</option>
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                    </select>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
-            </div>
 
-            <div class="col-md-3">
-                <label class="form-label small">D.O.B*</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="customer_dob[]" name="customer_dob[]" required>
+                <div class="col-md-3">
+                <label class="form-label small">Name*</label>
+                <input type="text" class="form-control" id="customer_name[]" name="customer_name[]" required>
+                <div class="invalid-feedback">This field is required</div>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small">Surname*</label>
+                    <input type="text" class="form-control" id="customer_surname[]" name="customer_surname[]">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
-            </div>
 
-            <div class="col-md-3">
-                <label class="form-label small">Country</label>
-                <select class="form-select" id="customer_country_id[]" name="customer_country_id[]">
-                    <option value="">Select</option>
-                    <option value="pak">Pakistan</option>
-                    <option value="sau">Saudi Arabia</option>
-                </select>
-                <div class="invalid-feedback">This field is required</div>
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label small">Address</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="customer_address[]" name="customer_address[]">
+                <div class="col-md-3">
+                    <label class="form-label small">Gender*</label>
+                    <select class="form-select" id="customer_gender[]" name="customer_gender[]">
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
-            </div>
 
-            <div class="col-md-3">
-                <label class="form-label small">City</label>
-                <select class="form-select" id="customer_city_id[]" name="customer_city_id[]">
-                    <option value="">Select</option>
-                    <option value="pak">Pakistan</option>
-                    <option value="sau">Saudi Arabia</option>
-                </select>
-                <div class="invalid-feedback">This field is required</div>
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label small">Postal Code</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="customer_postal_code[]" name="customer_postal_code[]">
+                <div class="col-md-3">
+                    <label class="form-label small">Email*</label>
+                    <input type="email" class="form-control" id="customer_email[]" name="customer_email[]" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
-            </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
-              <h6 class="fw-semibold mb-0">Document Details</h6>
-            </div>
+                <div class="col-md-3">
+                    <label class="form-label small">Phone*</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="customer_phone[]" name="customer_phone[]" required>
+                        <div class="invalid-feedback">This field is required</div>
+                    </div>
+                </div>
 
-            <div class="col-md-3">
-                <label class="form-label small">Passport Country</label>
-                <select class="form-select" id="customer_passport_type[]" name="customer_passport_type[]" required>
-                    <option value="">Select</option>
-                    <option value="pak">Pakistan</option>
-                    <option value="sau">Saudi Arabia</option>
-                </select>
-                <div class="invalid-feedback">This field is required</div>
-            </div>
+                <div class="col-md-3">
+                    <label class="form-label small">D.O.B*</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="customer_dob[]" name="customer_dob[]" required>
+                        <div class="invalid-feedback">This field is required</div>
+                    </div>
+                </div>
 
-            <div class="col-md-3">
-                <label class="form-label small">Passport Number</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="customer_passport_number[]" name="customer_passport_number[]" required>
+                <div class="col-md-3">
+                    <label class="form-label small">Country</label>
+                    <select class="form-select" id="customer_country_id[]" name="customer_country_id[]">
+                        <option value="">Select</option>
+                        <option value="pak">Pakistan</option>
+                        <option value="sau">Saudi Arabia</option>
+                    </select>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
-            </div>
 
-            <!-- <div class="col-md-3">
-                <label class="form-label small">Residence Country</label>
-                <select class="form-select" id="customer_residence_country[]" name="customer_residence_country[]" required>
-                    <option value="">Select</option>
-                    <option value="pak">Pakistan</option>
-                    <option value="sau">Saudi Arabia</option>
-                </select>
-                <div class="invalid-feedback">This field is required</div>
-            </div> -->
+                <div class="col-md-6">
+                    <label class="form-label small">Address</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="customer_address[]" name="customer_address[]">
+                        <div class="invalid-feedback">This field is required</div>
+                    </div>
+                </div>
 
-            <div class="col-md-3">
-                <label class="form-label small">Nationality</label>
-                <select class="form-select" id="customer_nationality[]" name="customer_nationality[]" required>
-                    <option value="">Select</option>
-                    <option value="pak">Pakistan</option>
-                    <option value="sau">Saudi Arabia</option>
-                </select>
-                <div class="invalid-feedback">This field is required</div>
-            </div>
-            
-            <div class="col-md-3">
-                <label class="form-label small">Expiry Date</label>
-                <div class="input-group">
-                    <input type="date" class="form-control" id="customer_expiry_date[]" name="customer_expiry_date[]" required>
+                <div class="col-md-3">
+                    <label class="form-label small">City</label>
+                    <select class="form-select" id="customer_city_id[]" name="customer_city_id[]">
+                        <option value="">Select</option>
+                        <option value="pak">Pakistan</option>
+                        <option value="sau">Saudi Arabia</option>
+                    </select>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small">Postal Code</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="customer_postal_code[]" name="customer_postal_code[]">
+                        <div class="invalid-feedback">This field is required</div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+                <h6 class="fw-semibold mb-0">Document Details</h6>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small">Passport Country</label>
+                    <select class="form-select" id="customer_passport_type[]" name="customer_passport_type[]" required>
+                        <option value="">Select</option>
+                        <option value="pak">Pakistan</option>
+                        <option value="sau">Saudi Arabia</option>
+                    </select>
+                    <div class="invalid-feedback">This field is required</div>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small">Passport Number</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="customer_passport_number[]" name="customer_passport_number[]" required>
+                        <div class="invalid-feedback">This field is required</div>
+                    </div>
+                </div>
+
+                <!-- <div class="col-md-3">
+                    <label class="form-label small">Residence Country</label>
+                    <select class="form-select" id="customer_residence_country[]" name="customer_residence_country[]" required>
+                        <option value="">Select</option>
+                        <option value="pak">Pakistan</option>
+                        <option value="sau">Saudi Arabia</option>
+                    </select>
+                    <div class="invalid-feedback">This field is required</div>
+                </div> -->
+
+                <div class="col-md-3">
+                    <label class="form-label small">Nationality</label>
+                    <select class="form-select" id="customer_nationality[]" name="customer_nationality[]" required>
+                        <option value="">Select</option>
+                        <option value="pak">Pakistan</option>
+                        <option value="sau">Saudi Arabia</option>
+                    </select>
+                    <div class="invalid-feedback">This field is required</div>
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label small">Expiry Date</label>
+                    <div class="input-group">
+                        <input type="date" class="form-control" id="customer_expiry_date[]" name="customer_expiry_date[]" required>
+                        <div class="invalid-feedback">This field is required</div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
       @endforeach
     </div>
 
+    <hr>
+    <h3 class="fw-semibold mb-3 pnr-detail">Special Request:</h3>
+
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label small">Meal</label>
+            <select class="form-select" id="meal" name="meal" required>
+                <option value="">Select</option>
+                <option value="Hindu Meal">Hindu Meal</option>
+                <option value="Sea Food Meal">Sea Food Meal</option>
+                <option value="Kosher Meal">Kosher Meal</option>
+                <option value="Vegetarian Oriental Meal">Vegetarian Oriental Meal</option>
+                <option value="Vegetarian Vegan Meal">Vegetarian Vegan Meal</option>
+                <option value="Low Salt Meal">Low Salt Meal</option>
+                <option value="Low Calorie Meal">Low Calorie Meal</option>
+                <option value="Bland Meal">Bland Meal</option>
+                <option value="Vegetarian Jain Meal">Vegetarian Jain Meal</option>
+                <option value="Diabetic Meal">Diabetic Meal</option>
+                <option value="Vegetarian Hindu Meal">Vegetarian Hindu Meal</option>
+                <option value="Special Meal">Special Meal</option>
+                <option value="Gluten Intollerant Meal">Gluten Intollerant Meal</option>
+                <option value="Low Fat Meal">Low Fat Meal</option>
+                <option value="Baby Meal">Baby Meal</option>
+                <option value="Vegetarian Raw Meal">Vegetarian Raw Meal</option>
+                <option value="Fruit Platter Meal">Fruit Platter Meal</option>
+                <option value="Child Meal">Child Meal</option>
+                <option value="Moslem Meal">Moslem Meal</option>
+                <option value="Low Lactose Meal">Low Lactose Meal</option>
+                <option value="Vegetarian Lacto-ovo Meal">Vegetarian Lacto-ovo Meal</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label small">Wheel Chair</label>
+            <select class="form-select" id="wheel_chair" name="wheel_chair" required>
+                <option value="">Select</option>
+                <option value="WHEELCHAIR (CAN CLIMB STAIRS)">WHEELCHAIR (CAN CLIMB STAIRS)</option>
+                <option value="WHEELCHAIR (CAN NOT CLIMB STAIRS)">WHEELCHAIR (CAN NOT CLIMB STAIRS)</option>
+                <option value="WHEELCHAIR (ALL THE WAY TO SEAT)">WHEELCHAIR (ALL THE WAY TO SEAT)</option>
+            </select>
+        </div>
+    </div>
     <hr>
     <h3 class="fw-semibold mb-3 pnr-detail mt-2">Reservation Recap:</h3>
     <div class="container mt-4">

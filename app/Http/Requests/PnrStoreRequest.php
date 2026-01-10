@@ -21,10 +21,8 @@ class PnrStoreRequest extends FormRequest
             'baggage'     => ['required'],
             'seats'          => ['required', 'integer', 'min:1'],
             'departure_date' => ['required', 'date'],
-            // 'departure_time' => ['required', 'date_format:H:i'],
             'arrival_date'   => ['required', 'date', 'after_or_equal:departure_date'],
-            // 'arrival_time'   => ['required', 'date_format:H:i'],
-            'price'          => ['required', 'integer'], // 5MB
+            'base_price'          => ['required', 'integer'], // 5MB
         ];
     }
 
@@ -56,8 +54,8 @@ class PnrStoreRequest extends FormRequest
             'arrival_date.date'       => 'Invalid arrival date.',
             'arrival_date.after_or_equal' => 'Arrival date cannot be before departure date.',
 
-            'price.required'       => 'Price field is required.',
-            'price.integer'          => 'Price must be an integer.',
+            'base_price.required'       => 'Price field is required.',
+            'base_price.integer'          => 'Price must be an integer.',
         ];
     }
 }

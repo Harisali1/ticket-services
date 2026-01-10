@@ -11,6 +11,7 @@ use App\Models\Admin\Customer;
 use App\Models\Admin\Seat;
 use App\Models\Admin\PassengerType;
 use App\Models\Admin\BookingPassenger;
+use App\Models\Admin\FareRule;
 use DB;
 use PDF;
 
@@ -137,7 +138,7 @@ class BookingController extends Controller
             $seatIds = $pnrBookings->seats()
                         ->where('is_sale', 1)
                         ->orderBy('id') // important
-                        ->limit($request->seats)
+                        ->limit((int)$request->booking_seats)
                         ->pluck('id');
 
             Seat::whereIn('id', $seatIds)->update([
@@ -149,9 +150,12 @@ class BookingController extends Controller
             $bookingData = [
                 'pnr_id' => $request->pnr_id,
                 'booking_no' => 'BK-0000'.$bookingId,
-                'seats' => $request->seats,
-                'price' => $request->total_price,
-                'status' => 1
+                'seats' => $request->booking_seats,
+                'price' => $request->total + $request->return_total,
+                'meal' => $request->meal,
+                'wheel_chair' => $request->wheel_chair,
+                'status' => 1,
+                'created_by' => auth()->user()->id
             ];
 
             $booking = Booking::create($bookingData);
@@ -185,13 +189,12 @@ class BookingController extends Controller
                 ]);
             }
             
-            $bookingCustomer = Customer::where('booking_id', $booking->id)->get();
-            $requestData = $request->all();
-
             DB::commit();
-            return view('Admin.booking.detail-booking', 
-                compact('pnrBookings', 'booking', 'bookingCustomer', 'requestData'))
-                ->with('success', 'Booking has been created successfully');
+
+            return redirect()->route('admin.booking.details',[
+                'booking' => $booking->id,
+                'pnr' => $request->pnr_id
+            ]);
 
         } catch (\Exception $e) {
 
@@ -205,11 +208,23 @@ class BookingController extends Controller
         }
     }
 
-    public function itineraryPrint(){
+    public function itineraryPrint($bookingId){
         
-        $pdf = PDF::loadView('Admin/print/itinerary');
+        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'user')->find($bookingId);
+        $response['booking'] = $bookingData->toArray();
+
+        // dd($response);
+        $pdf = PDF::loadView('Admin/print/itinerary', $response);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('my-pdf.pdf');
     }
 
+    public function bookingDetails($bookingId, $pnrId){
+
+        $booking = Booking::with('pnr', 'pnr.airline')->find($bookingId);
+        $customers = Customer::where('booking_id', $bookingId)->get();
+        $pnr = Pnr::find($pnrId);
+        $fareRules = FareRule::all();
+        return view('Admin.booking.detail-booking', compact('booking', 'pnr', 'fareRules', 'customers'));
+    }
 }

@@ -45,6 +45,11 @@
                 </div>
 
                 <div class="col-md-3">
+                    <label class="form-label text-muted">Reference PNR No #</label>
+                    <input type="text" name="ref_no" id="ref_no" class="form-control">
+                </div>
+
+                <div class="col-md-3">
                     <label class="form-label text-muted">Aircraft</label>
                     <input type="text" name="air_craft" id="air_craft" class="form-control">
                 </div>
@@ -245,37 +250,71 @@
                     <input type="number" id="seats" name="seats" class="form-control">
                 </div>
 
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Price</label>
-                    <input type="text" id="price" name="price" class="form-control" placeholder="0">
-                </div>
-
-                <div class="col-md-3">
+                <div class="col-md-3" style="margin-top:50px">
                     <label class="form-label text-muted">Put On Sale</label>
                     <input type="checkbox" id="put_on_sale" name="put_on_sale">
                 </div>
             </div>
 
             <hr>
+            <h5 class="mb-3">Prices</h5>
+
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Base Fare</label>
+                    <input type="text" id="base_price" name="base_price" class="form-control" placeholder="0" readonly>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Tax</label>
+                    <input type="text" id="tax" name="tax" class="form-control" placeholder="0" readonly>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Total</label>
+                    <input type="text" id="total" name="total" class="form-control" placeholder="0" readonly>
+                </div>
+            </div>
+
+            <div class="row g-3 return-fields d-none mt-2">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Return Base Fare</label>
+                    <input type="text" id="return_base_price" name="return_base_price" class="form-control" onkeyup="returnFunction()" placeholder="0">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Return Tax</label>
+                    <input type="text" id="return_tax" name="return_tax" class="form-control" placeholder="0" onkeyup="returnFunction()">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Return Total</label>
+                    <input type="text" id="return_total" name="return_total" class="form-control" placeholder="0" readonly>
+                </div>
+            </div>
+
+            <hr>
             <h5 class="mb-3 mt-3">Passenger Types</h5>
 
-            @foreach($passengerTypes as $type)
-                <div class="row g-3 passenger-price-row" data-title="{{ $type->title }}">
-                    <div class="col-md-4">
-                        <label class="form-label text-muted">{{ $type->title }}</label>
-                    </div>
+            
+                <div class="row g-3 passenger-price-row" id="passenger-type-row">
+                    @foreach($passengerTypes as $type)
+                        <div class="col-md-2">
+                            <label class="form-label text-muted">{{ $type->title }}</label>
+                        </div>
 
-                    <div class="col-md-3">
-                        <input
-                            type="number"
-                            name="passenger_prices[{{ $type->id }}]"
-                            class="form-control passenger-price"
-                            placeholder="0"
-                            min="0"
-                            required>
-                    </div>
+                        <div class="col-md-2">
+                            <input
+                                type="number"
+                                name="passenger_prices[{{ $type->id }}]"
+                                class="form-control passenger-price"
+                                placeholder="0"
+                                min="0"
+                                {{ $loop->first ? '' : 'readonly' }}>
+                        </div>
+                    @endforeach
                 </div>
-            @endforeach
+            
 
 
             <div class="d-flex justify-content-end gap-3 mt-5">
@@ -293,10 +332,51 @@
 
 @section('scripts')
 <script>
-   $('#pnr_type').on('change', function () {
-    $('.return-fields').toggleClass('d-none', $(this).val() !== 'return');
-});
+    $('#pnr_type').on('change', function () {
+        $('.return-fields').toggleClass('d-none', $(this).val() !== 'return');
+    });
 
+    function returnFunction(){
+        const returnBasePriceInput = document.getElementById('return_base_price');
+        const returnTaxInput       = document.getElementById('return_tax');
+        const returnTotalInput     = document.getElementById('return_total');
+        returnTotalInput.value = parseFloat(returnBasePriceInput.value) + parseFloat(returnTaxInput.value);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const passengerPrices = document.querySelectorAll('.passenger-price');
+
+        const basePriceInput = document.getElementById('base_price');
+        const taxInput       = document.getElementById('tax');
+        const totalInput     = document.getElementById('total');
+        
+        
+
+        if (!passengerPrices.length) return;
+
+        const firstPassenger = passengerPrices[0];
+
+        firstPassenger.addEventListener('keyup', function () {
+            const price = parseFloat(this.value) || 0;
+
+            /* -------- Base / Tax / Total -------- */
+            basePriceInput.value = price;
+            taxInput.value = price > 0 ? 100 : 0;
+            totalInput.value = price + (price > 0 ? 100 : 0);
+
+            /* -------- 2nd Passenger (price - 10) -------- */
+            if (passengerPrices[1]) {
+                passengerPrices[1].value = Math.max(price - 10, 0);
+            }
+
+            /* -------- Last Passenger (fixed 50) -------- */
+            if (passengerPrices.length > 2) {
+                passengerPrices[passengerPrices.length - 1].value = 50;
+            }
+        });
+
+    });
 
     function showError(message) {
         Swal.fire({
@@ -375,7 +455,6 @@
         e.preventDefault();
 
         const isReturn = document.getElementById("pnr_type").value === 'return';
-
         const fields = {
             pnr_type: {value: document.getElementById("pnr_type").value, message: "PNR Type is required"},
             flight_no: {value: document.getElementById("flight_no").value, message: "Flight number is required"},
@@ -390,7 +469,7 @@
             arrival_time_minute: {value: document.getElementById("arrival_time_minute").value,message: "Arrival time is required"},
             baggage: {value: document.getElementById("baggage").value,message: "Please select baggage"},
             seats: {value: document.getElementById("seats").value,message: "Seats are required"},
-            price: {value: document.getElementById("price").value,message: "Price is required"}
+            price: {value: document.getElementById("base_price").value,message: "Price is required"}
         };
 
         /* --------------------
@@ -424,6 +503,16 @@
                     showError(returnFields[key].message);
                     return;
                 }
+            }
+        }
+
+        const passengerPrices = document.querySelectorAll('.passenger-price');
+
+        for (let i = 0; i < passengerPrices.length; i++) {
+            if (passengerPrices[i].value === '' || passengerPrices[i].value <= 0) {
+                showError('All passenger prices are required');
+                passengerPrices[i].focus();
+                return;
             }
         }
 
