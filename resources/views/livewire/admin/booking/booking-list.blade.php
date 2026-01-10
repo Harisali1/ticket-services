@@ -124,13 +124,17 @@
                         </td>
                         <td>
                             @if($booking->status->label() === 'Created')
-                                <button class="btn btn-sm btn-primary" type="button">
-                                    PNR
-                                </button>
+                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}">
+                                    <button class="btn btn-sm btn-info" type="button">
+                                        PNR
+                                    </button>
+                                </a>
                             @elseif($booking->status->label() === 'Ticketed')
-                                <button class="btn btn-sm btn-primary" type="button">
-                                    TKT
-                                </button>
+                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}">
+                                    <button class="btn btn-sm btn-success" type="button">
+                                        TKT
+                                    </button>
+                                </a>
                             @else
                                 <button class="btn btn-sm btn-primary" type="button">
                                     CN

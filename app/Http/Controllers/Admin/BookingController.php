@@ -210,8 +210,12 @@ class BookingController extends Controller
 
     public function itineraryPrint($bookingId){
         
-        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'user')->find($bookingId);
+        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
+        $response['customers'] = Customer::join('booking_passengers', 'booking_passengers.booking_id', '=', 'customers.booking_id')
+        ->join('passenger_types', 'booking_passengers.passenger_type_id', '=', 'passenger_types.id')
+        ->where('customers.booking_id', $bookingId)
+        ->get(['passenger_types.title', 'customers.name', 'customers.phone_no', 'customers.dob']);
 
         // dd($response);
         $pdf = PDF::loadView('Admin/print/itinerary', $response);
@@ -226,5 +230,16 @@ class BookingController extends Controller
         $pnr = Pnr::find($pnrId);
         $fareRules = FareRule::all();
         return view('Admin.booking.detail-booking', compact('booking', 'pnr', 'fareRules', 'customers'));
+    }
+
+    public function ticketedBooking(Request $request){
+
+        Booking::where('id', $request->id)->update(['status' => 2]);
+        $booking = Booking::with('pnr', 'pnr.airline')->find($request->id);
+        $customers = Customer::where('booking_id', $request->id)->get();
+        $pnr = Pnr::find($booking->pnr_id);
+        $fareRules = FareRule::all();
+        return view('Admin.booking.detail-booking', compact('booking', 'pnr', 'fareRules', 'customers'));
+
     }
 }

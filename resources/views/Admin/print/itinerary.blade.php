@@ -114,18 +114,16 @@
         <div class="reservation-box">
             <strong>Reservation Number:</strong> {{ $booking['booking_no'] }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
-            <strong>Reservation Date:</strong> {{ $booking['booking_date'] }}
+            <strong>Reservation Date:</strong> {{ $booking['created_at'] }}
         </div>
     </div>
 
     <!-- AGENCY -->
     <div class="section-title">Agency Details</div>
     <div class="small-text">
-        <strong>AMK SERVIZIO DI KHAN ATTA MUHAMMAD</strong><br>
-        Corso G Mazzini 71<br>
-        Santa Croce Sull Arno 56029<br>
-        Phone: 3333713515<br>
-        Email: AMKSERVIZIO@GMAIL.COM
+        <strong>{{ $booking['user']['name'] }}</strong><br>
+        <strong>Phone:</strong> {{ $booking['user']['phone_no'] }}<br>
+        <strong>Email:</strong> {{ $booking['user']['email'] }}
     </div>
 
     <!-- TRAVELERS -->
@@ -140,12 +138,14 @@
             </tr>
         </thead>
         <tbody>
+            @foreach($customers as $customer)
             <tr>
-                <td>ADT</td>
-                <td>Name Name</td>
-                <td>22 May 1999</td>
-                <td>+92 344 1231231</td>
+                <td>{{ $customer->title }}</td>
+                <td>{{ $customer->name }}</td>
+                <td>{{ $customer->dob }}</td>
+                <td>{{ $customer->phone_no }}</td>
             </tr>
+            @endforeach
         </tbody>
     </table>
 
@@ -153,64 +153,66 @@
     <div class="section-title">Flight Details – One Way</div>
     <div class="flight-box">
         <div class="flight-header">
-            ITA Airways (AZ) – Flight 854 – 31 January 2026
-            <span class="right">Operated by ITA</span>
+            {{ $booking['pnr']['airline']['name'] }} ({{ $booking['pnr']['airline']['code'] }}) – Flight {{ $booking['pnr']['flight_no'] }} – {{ \Carbon\Carbon::parse($booking['pnr']['departure_date'])->format('d F Y') }}
+            <!-- <span class="right">Operated by ITA</span> -->
         </div>
         <div class="clearfix"></div>
 
         <table class="small-text">
             <tr>
                 <td><strong>Class:</strong> Economy</td>
-                <td><strong>Fare Class:</strong> Y</td>
+                <td><strong>Fare Class:</strong> {{ $booking['pnr']['class'] }}</td>
             </tr>
             <tr>
-                <td colspan="2"><strong>Baggage:</strong> ADT – 2 PC</td>
+                <td colspan="2"><strong>Baggage:</strong> ADT – {{ $booking['pnr']['baggage'] }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     <strong>Departure:</strong><br>
-                    15:10 – Rome (FCO), Fiumicino – Italy
+                    {{ $booking['pnr']['departure_time'] }} – {{ $booking['pnr']['departure']['name'] }} ({{ $booking['pnr']['departure']['code'] }}) – {{ $booking['pnr']['departure']['country'] }}
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
                     <strong>Arrival:</strong><br>
-                    20:10 – Dakar (DSS), Blaise Diagne – Senegal
+                    {{ $booking['pnr']['arrival_time'] }} – {{ $booking['pnr']['arrival']['name'] }} ({{ $booking['pnr']['arrival']['code'] }}) – {{ $booking['pnr']['arrival']['country'] }}
                 </td>
             </tr>
         </table>
     </div>
 
     <!-- RETURN -->
-    <div class="section-title">Flight Details – Return</div>
+     @if($booking['pnr']['pnr_type'] == 'return')
+    <div class="section-title">Flight Details – {{ \Illuminate\Support\Str::camel($booking['pnr']['pnr_type']) }}</div>
     <div class="flight-box">
         <div class="flight-header">
-            ITA Airways (AZ) – Flight 855 – 14 February 2026
-            <span class="right">Operated by ITA</span>
+            {{ $booking['pnr']['return_airline']['name'] }} ({{ $booking['pnr']['return_airline']['code'] }}) – Flight {{ $booking['pnr']['flight_no'] }} – {{ \Carbon\Carbon::parse($booking['pnr']['return_departure_date'])->format('d F Y') }}
+            <!-- <span class="right">Operated by ITA</span> -->
         </div>
         <div class="clearfix"></div>
 
         <table class="small-text">
             <tr>
                 <td><strong>Class:</strong> Economy</td>
-                <td><strong>Fare Class:</strong> Y</td>
+                <td><strong>Fare Class:</strong> {{ $booking['pnr']['class'] }}</td>
             </tr>
             <tr>
-                <td colspan="2"><strong>Baggage:</strong> ADT – 2 PC</td>
+                <td colspan="2"><strong>Baggage:</strong> ADT – {{ $booking['pnr']['baggage'] }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     <strong>Departure:</strong><br>
-                    23:50 – Dakar (DSS), Blaise Diagne – Senegal
+                    {{ $booking['pnr']['return_departure_time'] }} – {{ $booking['pnr']['return_departure']['name'] }} ({{ $booking['pnr']['return_departure']['code'] }}) – {{ $booking['pnr']['return_departure']['country'] }}
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
                     <strong>Arrival:</strong><br>
-                    06:20 – Rome (FCO), Fiumicino – Italy
+                    {{ $booking['pnr']['return_arrival_time'] }} – {{ $booking['pnr']['return_arrival']['name'] }} ({{ $booking['pnr']['return_arrival']['code'] }}) – {{ $booking['pnr']['return_arrival']['country'] }}
                 </td>
             </tr>
         </table>
     </div>
+    @endif
 
 </div>

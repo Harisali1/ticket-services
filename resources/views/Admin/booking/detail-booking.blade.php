@@ -14,8 +14,10 @@
             <strong class="ms-2"></strong>
         </div>
         <div class="btn-group">
+            @if($booking->status->label() === 'Created')
             <button class="btn btn-danger btn-sm">Cancel PNR</button>
-            <button class="btn btn-success btn-sm">Ticket</button>
+            <button class="btn btn-success btn-sm" onclick="ticketedBooking({{ $booking->id }})">Ticket</button>
+            @endif
             <a href="{{ route('admin.booking.print.itinerary', $booking->id) }}"><button class="btn btn-secondary btn-sm">Print Itinerary</button></a>
         </div>
     </div>
@@ -294,6 +296,49 @@
 </form>
 @endforeach
 
+
+    <div class="card mx-4 mb-4">
+        <div class="card-header bg-primary text-white">Special Request:</div>
+        <div class="card-body row">
+            <div class="col-md-3">
+            <label class="form-label small">Meal</label>
+            <select class="form-select" id="meal" name="meal" required>
+                <option value="">Select</option>
+                <option value="Hindu Meal">Hindu Meal</option>
+                <option value="Sea Food Meal">Sea Food Meal</option>
+                <option value="Kosher Meal">Kosher Meal</option>
+                <option value="Vegetarian Oriental Meal">Vegetarian Oriental Meal</option>
+                <option value="Vegetarian Vegan Meal">Vegetarian Vegan Meal</option>
+                <option value="Low Salt Meal">Low Salt Meal</option>
+                <option value="Low Calorie Meal">Low Calorie Meal</option>
+                <option value="Bland Meal">Bland Meal</option>
+                <option value="Vegetarian Jain Meal">Vegetarian Jain Meal</option>
+                <option value="Diabetic Meal">Diabetic Meal</option>
+                <option value="Vegetarian Hindu Meal">Vegetarian Hindu Meal</option>
+                <option value="Special Meal">Special Meal</option>
+                <option value="Gluten Intollerant Meal" {{ $booking->meal == 'Gluten Intollerant Meal' ? 'selected' : '' }}>Gluten Intollerant Meal</option>
+                <option value="Low Fat Meal">Low Fat Meal</option>
+                <option value="Baby Meal">Baby Meal</option>
+                <option value="Vegetarian Raw Meal">Vegetarian Raw Meal</option>
+                <option value="Fruit Platter Meal">Fruit Platter Meal</option>
+                <option value="Child Meal">Child Meal</option>
+                <option value="Moslem Meal">Moslem Meal</option>
+                <option value="Low Lactose Meal">Low Lactose Meal</option>
+                <option value="Vegetarian Lacto-ovo Meal">Vegetarian Lacto-ovo Meal</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label small">Wheel Chair</label>
+            <select class="form-select" id="wheel_chair" name="wheel_chair" required>
+                <option value="">Select</option>
+                <option value="WHEELCHAIR (CAN CLIMB STAIRS)">WHEELCHAIR (CAN CLIMB STAIRS)</option>
+                <option value="WHEELCHAIR (CAN NOT CLIMB STAIRS)">WHEELCHAIR (CAN NOT CLIMB STAIRS)</option>
+                <option value="WHEELCHAIR (ALL THE WAY TO SEAT)">WHEELCHAIR (ALL THE WAY TO SEAT)</option>
+            </select>
+        </div>
+        </div>
+    </div>
+
     <div class="card mx-4 mb-4">
 
         <!-- Header -->
@@ -377,29 +422,75 @@
 
 @section('scripts')
 <script>
-document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('edit-btn')) {
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('edit-btn')) {
 
-        const targetClass = e.target.dataset.target;
-        const container = document.querySelector('.' + targetClass);
-        const inputs = container.querySelectorAll('.readonly-input');
+            const targetClass = e.target.dataset.target;
+            const container = document.querySelector('.' + targetClass);
+            const inputs = container.querySelectorAll('.readonly-input');
 
-        const isReadonly = inputs[0].hasAttribute('disabled');
+            const isReadonly = inputs[0].hasAttribute('disabled');
 
-        inputs.forEach(input => {
-            if (isReadonly) {
-                input.removeAttribute('disabled');
-            } else {
-                input.setAttribute('disabled', true);
+            inputs.forEach(input => {
+                if (isReadonly) {
+                    input.removeAttribute('disabled');
+                } else {
+                    input.setAttribute('disabled', true);
+                }
+            });
+
+            // Toggle button text
+            e.target.innerText = isReadonly ? 'Save Passenger Data' : 'Edit Passenger Data';
+            e.target.classList.toggle('btn-success');
+            e.target.classList.toggle('btn-warning');
+        }
+    });
+
+    function ticketedBooking(id){
+            Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to save this PNR?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Save it",
+            cancelButtonText: "Cancel",
+            reverseButtons: true
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: "Processing...",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ route('admin.booking.ticketed') }}",
+                    type: "GET",
+                    data: {id: id},
+                    success: function (res) {
+                        Swal.fire("Success", res.message, "success")
+                            .then(() => {
+                                window.location.href = "{{ route('admin.pnr.index') }}";
+                            });
+                    },
+                    error: function (xhr) {
+                        Swal.fire(
+                            "Error",
+                            xhr.responseJSON?.message || "Something went wrong",
+                            "error"
+                        );
+                    }
+                });
+
             }
+
         });
 
-        // Toggle button text
-        e.target.innerText = isReadonly ? 'Save Passenger Data' : 'Edit Passenger Data';
-        e.target.classList.toggle('btn-success');
-        e.target.classList.toggle('btn-warning');
     }
-});
 </script>
 
 
