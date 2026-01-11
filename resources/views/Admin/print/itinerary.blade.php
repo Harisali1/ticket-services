@@ -108,7 +108,7 @@
     <!-- HEADER -->
     <div class="header">
         <div class="route">
-            ({{ $booking['pnr']['departure']['code'] }}) → ({{ $booking['pnr']['arrival']['code'] }}) → ({{ $booking['pnr']['return_arrival']['code'] }})
+            ({{ $booking['pnr']['departure']['code'] }}) → ({{ $booking['pnr']['arrival']['code'] }}) {{ (isset($booking['pnr']['return_arrival'])) ? '→ ('.$booking['pnr']['return_arrival']['code'].')' : ''}}
         </div>
 
         <div class="reservation-box">
@@ -131,7 +131,6 @@
     <table class="table small-text">
         <thead>
             <tr>
-                <th width="10%">PTC</th>
                 <th width="35%">Traveler Name</th>
                 <th width="20%">Birth Date</th>
                 <th width="35%">Phone Number</th>
@@ -140,7 +139,6 @@
         <tbody>
             @foreach($customers as $customer)
             <tr>
-                <td>{{ $customer->title }}</td>
                 <td>{{ $customer->name }}</td>
                 <td>{{ $customer->dob }}</td>
                 <td>{{ $customer->phone_no }}</td>

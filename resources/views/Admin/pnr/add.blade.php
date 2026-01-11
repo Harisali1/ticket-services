@@ -36,6 +36,7 @@
                         <option value="">Please Select Type</option>
                         <option value="one_way">One Way</option>
                         <option value="return">Return</option>
+                        <option value="open_jaw">Open Jaw</option>
                     </select>
                 </div>
 
@@ -333,7 +334,8 @@
 @section('scripts')
 <script>
     $('#pnr_type').on('change', function () {
-        $('.return-fields').toggleClass('d-none', $(this).val() !== 'return');
+        const show = ['return', 'open_jaw'].includes($(this).val());
+        $('.return-fields').toggleClass('d-none', !show);
     });
 
     function returnFunction(){

@@ -1,7 +1,25 @@
 @extends('Admin.layouts.main')
 
 @section('styles')
-  
+  <style>
+        .ticket-badge {
+            background-color: #5cb85c;
+            font-size: 13px;
+            padding: 6px 10px;
+            border-radius: 4px;
+        }
+        .status-badge {
+            background-color: #5cb85c;
+            font-size: 13px;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .copy-icon {
+            margin-left: 6px;
+            font-size: 14px;
+        }
+    </style>
+
 @endsection
 
 @section('content')
@@ -15,8 +33,8 @@
         </div>
         <div class="btn-group">
             @if($booking->status->label() === 'Created')
-            <button class="btn btn-danger btn-sm">Cancel PNR</button>
-            <button class="btn btn-success btn-sm" onclick="ticketedBooking({{ $booking->id }})">Ticket</button>
+                <button class="btn btn-danger btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'cancel')">Cancel PNR</button>
+                <button class="btn btn-success btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'ticket')">Ticket</button>
             @endif
             <a href="{{ route('admin.booking.print.itinerary', $booking->id) }}"><button class="btn btn-secondary btn-sm">Print Itinerary</button></a>
         </div>
@@ -47,7 +65,14 @@
                                 alt="logo"
                                 class="rounded-circle border"
                                 style="width:45px;height:45px;object-fit:contain;">
-                    <span class="badge bg-info">PNR CREATED </span><span class="ml-4">{{ $booking->booking_no }}<span>
+                    @if($booking->status->label() === 'Created')
+                        <span class="badge bg-info">PNR CREATED </span>
+                    @elseif($booking->status->label() === 'Ticketed')
+                        <span class="badge bg-success">PNR TICKETED </span>
+                    @else
+                        <span class="badge bg-info">PNR CREATED </span>                
+                    @endif
+                    <span class="ml-4"> {{ $booking->booking_no }}<span>
                     
                 </div>
 
@@ -72,13 +97,63 @@
             <hr>
 
             <div class="row align-items-center">
-                <div class="col-md-3">Base: <strong>{{ $booking->pnr->base_price }}.00 EUR</strong></div>
-                <div class="col-md-3">Tax: <strong>{{ $booking->pnr->tax}}.00 EUR</strong></div>
-                <div class="col-md-3 text-success fw-bold fs-5">Total: {{ $booking->pnr->total }}.00 EUR</div>
+                <div class="col-md-3">Base: <strong>{{ $booking->price }}.00 EUR</strong></div>
+                <div class="col-md-3">Tax: <strong>{{ $booking->tax}}.00 EUR</strong></div>
+                <div class="col-md-3 text-success fw-bold fs-5">Total: {{ $booking->total_amount }}.00 EUR</div>
                 <div class="col-md-3 text-end">
                     <button class="btn btn-success btn-sm">Requote</button>
                 </div>
             </div>
+
+            @if($booking->status->label() === 'Ticketed')
+            <hr>
+
+            <div class="container mt-4">
+                <!-- Row 1 -->
+                <div class="row align-items-center mb-2">
+                    <div class="col-md-6">
+                        <span class="me-2">Ticket Number</span>
+                        <a href="{{ route('admin.booking.print.ticketed', $booking->id) }}">
+                            <span class="badge ticket-badge">
+                                {{ $booking->dept_ticket_no }} <i class="bi bi-files copy-icon"></i>
+                            </span>
+                        </a>
+                    </div>
+
+                    
+                    <div class="col-md-6 text-end">
+                        <span class="me-2">Ticket Status</span>
+                        <span class="badge status-badge">
+                            {{$booking->status->label()}} <i class="bi bi-caret-down-fill ms-1"></i>
+                        </span>
+                    </div>
+                    
+                </div>
+                
+                @if($booking->pnr->pnr_type != 'one_way')
+                    <!-- Row 2 -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-6">
+                            <span class="me-2">Ticket Number</span>
+                            <span class="badge ticket-badge">
+                                {{ $booking->arr_ticket_no }} <i class="bi bi-files copy-icon"></i>
+                            </span>
+                        </div>
+
+                        <div class="col-md-6 text-end">
+                            <span class="me-2">Ticket Status</span>
+                            <span class="badge status-badge">
+                                {{$booking->status->label()}} <i class="bi bi-caret-down-fill ms-1"></i>
+                            </span>
+                        </div>
+                    </div>
+                @endif
+                <!-- Button -->
+                <button class="btn btn-primary btn-sm">
+                    <i class="bi bi-send"></i> Send tickets by email
+                </button>
+            </div>
+            @endif
         </div>
     </div>
 
@@ -410,9 +485,9 @@
     <div class="card mx-4 mb-5">
         <div class="card-header bg-success text-white">Reservation Recap</div>
         <div class="card-body text-end">
-            <p>Fare Amount: <strong>{{ $booking->pnr->base_price }}.00 EUR</strong></p>
-            <p>Tax: <strong>{{ $booking->pnr->tax }}.00 EUR</strong></p>
-            <h4 class="text-success">Total: {{ $booking->pnr->total }}.00 EUR</h4>
+            <p>Fare Amount: <strong>{{  $booking->price }}.00 EUR</strong></p>
+            <p>Tax: <strong>{{ $booking->tax }}.00 EUR</strong></p>
+            <h4 class="text-success">Total: {{ $booking->total_amount }}.00 EUR</h4>
         </div>
     </div>
 
@@ -446,13 +521,13 @@
         }
     });
 
-    function ticketedBooking(id){
+    function ticketedBooking(id, status){
             Swal.fire({
             title: "Are you sure?",
-            text: "Do you want to save this PNR?",
+            text: "Do you want to Ticketed this Booking?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Yes, Save it",
+            confirmButtonText: "Yes",
             cancelButtonText: "Cancel",
             reverseButtons: true
         }).then((result) => {
@@ -470,11 +545,11 @@
                 $.ajax({
                     url: "{{ route('admin.booking.ticketed') }}",
                     type: "GET",
-                    data: {id: id},
+                    data: {id: id, status: status},
                     success: function (res) {
                         Swal.fire("Success", res.message, "success")
                             .then(() => {
-                                window.location.href = "{{ route('admin.pnr.index') }}";
+                                window.location.href = "{{ route('admin.booking.index') }}";
                             });
                     },
                     error: function (xhr) {

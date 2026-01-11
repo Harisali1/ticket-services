@@ -45,17 +45,26 @@
             <hr>
 
             <!-- Trip Type -->
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <label class="me-3">
-                    <input type="radio" name="trip_type" value="one_way" {{ request('trip_type') === 'one_way' ? 'checked' : '' }}>
+                    <input type="radio" name="trip_type" value="one_way"
+                        {{ request('trip_type', 'one_way') === 'one_way' ? 'checked' : '' }}>
                     One Way
                 </label>
 
                 <label class="type-style">
-                    <input type="radio" name="trip_type" value="return" {{ request('trip_type', 'return') === 'return' ? 'checked' : '' }}>
+                    <input type="radio" name="trip_type" value="return"
+                        {{ request('trip_type') === 'return' ? 'checked' : '' }}>
                     Return
                 </label>
+
+                <label class="type-style">
+                    <input type="radio" name="trip_type" value="open_jaw"
+                        {{ request('trip_type') === 'open_jaw' ? 'checked' : '' }}>
+                    Open Jaw
+                </label>
             </div>
+
 
             <hr>
 
@@ -179,7 +188,7 @@
         function toggleReturnFields() {
             const tripType = $('input[name="trip_type"]:checked').val();
 
-            if (tripType === 'return') {
+            if (tripType === 'return' || tripType === 'open_jaw') {
                 $('#return-fields').removeClass('d-none');
             } else {
                 $('#return-fields').addClass('d-none');
@@ -193,6 +202,7 @@
 
         // On page load
         toggleReturnFields();
+
         /* ===============================
         Select2
         =============================== */

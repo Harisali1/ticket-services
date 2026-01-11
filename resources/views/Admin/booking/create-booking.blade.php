@@ -135,7 +135,7 @@
 
     <h5 class="fw-semibold">
         Total Tickets Price :
-        <span id="totalPrice">PKR {{ $totalAmount }}/-</span>
+        <span id="totalPrice">PKR {{ $data['totalAmount'] }}/-</span>
     </h5>
   </div>
 
@@ -286,7 +286,9 @@
 
     <input type="hidden" id="pnr_id" name="pnr_id" value="{{ $data['pnr_id'] }}">
     <input type="hidden" id="booking_seats" name="booking_seats" value="{{ $seatSum }}">
-    <input type="hidden" id="total_amount" name="total_amount" value="{{ $totalAmount }}">
+    <input type="hidden" id="total_fare" name="total_fare" value="{{ $data['totalBaseFareAmount'] }}">
+    <input type="hidden" id="total_tax" name="total_tax" value="{{ $data['totalTax'] }}">
+    <input type="hidden" id="total_amount" name="total_amount" value="{{ $data['totalAmount'] }}">
 
     <h3 class="fw-semibold mb-3 pnr-detail">Agency Details:</h3>
 
@@ -317,8 +319,12 @@
                 <th>Passenger Type</th>
                 <th>Seat</th>
                 <th>Base Fare</th>
+                @if($pnrBookings->pnr_type == 'return' || $pnrBookings->pnr_type == 'open_jaw')
+                    <th>Return Base Fare</th>
+                @endif
+                <th>Total Fare Amount</th>
                 <th>Tax</th>
-                <th>Total</th>
+                <th>Grand Total</th>
             </tr>
         </thead>
         <tbody>
@@ -328,7 +334,7 @@
             @endphp
             @foreach($fareDetails as $index => $fare)
                 @php 
-                    $fareAmount += $fare['price']*$fare['seat'];
+                    $fareAmount += $fare['total_fare_amount'];
                     $taxAmount += $fare['tax'];
                 @endphp
                 <tr>
@@ -339,7 +345,15 @@
                         {{ $fare['seat'] }}
                     </td>
                     <td>
-                        {{ $fare['price'] }}
+                        {{ $fare['base_fare'] }}
+                    </td>
+                    @if($pnrBookings->pnr_type == 'return' || $pnrBookings->pnr_type == 'open_jaw')
+                        <td>
+                            {{ $fare['return_base_fare'] }}
+                        </td>
+                    @endif
+                    <td>
+                        {{ $fare['total_fare_amount'] }}
                     </td>
                     <td>
                         {{ $fare['tax'] }}
@@ -349,6 +363,7 @@
                     </td>
                 </tr>
                 <input type="hidden" name="fareDetails[{{ $index }}][type_id]" value="{{ $fare['type_id'] }}">
+                <input type="hidden" name="fareDetails[{{ $index }}][seat]" value="{{ $fare['seat'] }}">
             @endforeach
         </tbody>
     </table>
@@ -426,11 +441,7 @@
 
                 <div class="col-md-3">
                     <label class="form-label small">Country</label>
-                    <select class="form-select" id="customer_country_id[]" name="customer_country_id[]">
-                        <option value="">Select</option>
-                        <option value="pak">Pakistan</option>
-                        <option value="sau">Saudi Arabia</option>
-                    </select>
+                    <input type="text" class="form-control" id="customer_country[]" name="customer_country[]">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
@@ -444,11 +455,7 @@
 
                 <div class="col-md-3">
                     <label class="form-label small">City</label>
-                    <select class="form-select" id="customer_city_id[]" name="customer_city_id[]">
-                        <option value="">Select</option>
-                        <option value="pak">Pakistan</option>
-                        <option value="sau">Saudi Arabia</option>
-                    </select>
+                    <input type="text" class="form-control" id="customer_city[]" name="customer_city[]">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
@@ -466,11 +473,7 @@
 
                 <div class="col-md-3">
                     <label class="form-label small">Passport Country</label>
-                    <select class="form-select" id="customer_passport_type[]" name="customer_passport_type[]" required>
-                        <option value="">Select</option>
-                        <option value="pak">Pakistan</option>
-                        <option value="sau">Saudi Arabia</option>
-                    </select>
+                    <input type="text" class="form-control" id="customer_passport_county[]" name="customer_passport_county[]">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
@@ -585,7 +588,7 @@
 
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="fw-bold">Total Amount</span>
-                    <span class="fw-bold fs-4 text-success">{{ $totalAmount }}.00 EUR</span>
+                    <span class="fw-bold fs-4 text-success">{{ $data['totalAmount'] }}.00 EUR</span>
                 </div>
 
             </div>
@@ -628,6 +631,11 @@
             alert('Please fill all required passenger details before proceeding.');
             return false;
         }
+
+        Swal.fire({
+            title: "Processing...",
+            didOpen: () => Swal.showLoading()
+        });
 
         document.getElementById('bookingForm').submit();
     }

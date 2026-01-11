@@ -93,6 +93,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/details/{booking}/pnr/{pnr}',[App\Http\Controllers\Admin\BookingController::class, 'bookingDetails'])->name('admin.booking.details');
             Route::get('/print/itinerary/booking/{booking}/', [App\Http\Controllers\Admin\BookingController::class, 'itineraryPrint'])->name('admin.booking.print.itinerary');
             Route::get('/ticketed', [App\Http\Controllers\Admin\BookingController::class, 'ticketedBooking'])->name('admin.booking.ticketed');
+            Route::get('/print/ticketed/{id}/', [App\Http\Controllers\Admin\BookingController::class, 'printTicketed'])->name('admin.booking.print.ticketed');
             
             // Route::get('/edit/{user}', [App\Http\Controllers\Admin\BookingController::class, 'edit'])->name('admin.booking.edit');
             // Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');

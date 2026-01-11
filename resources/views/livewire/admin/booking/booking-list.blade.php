@@ -136,7 +136,7 @@
                                     </button>
                                 </a>
                             @else
-                                <button class="btn btn-sm btn-primary" type="button">
+                                <button class="btn btn-sm btn-danger" type="button">
                                     CN
                                 </button>
                             @endif

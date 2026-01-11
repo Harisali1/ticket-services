@@ -99,9 +99,13 @@
             <thead class="table-light">
                 <tr>
                     <th>Pnr No #</th>
+                    <th>Pnr Type #</th>
                     <th>AirLine</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
                     <th>Departure Date/Time</th>
                     <th>Arrival Date/Time</th>
+                    <th>Available Seat</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -110,9 +114,13 @@
                 @forelse($pnrs as $pnr)
                     <tr>
                         <td>{{ $pnr->pnr_no }}</td>
+                        <td>{{ $pnr->pnr_type }}</td>
                         <td>{{ $pnr->airline->name }}</td>
-                        <td>{{ $pnr->departure_date }}</td>
-                        <td>{{ $pnr->arrival_date }}</td>
+                        <td>{{ $pnr->departure->code }}</td>
+                        <td>{{ $pnr->arrival->code }}</td>
+                        <td>{{ $pnr->departure_date_time }}</td>
+                        <td>{{ $pnr->arrival_date_time }}</td>
+                        <td>{{ $pnr->seat_available }}</td>
                         <td>
                             <span class="{{ $pnr->status->color() }}">
                                 {{ $pnr->status->label() }}

@@ -19,8 +19,12 @@ return new class extends Migration
             $table->datetime('paid_at')->nullable();
             $table->string('seats')->nullable();
             $table->string('price')->nullable();
+            $table->string('tax')->nullable();
+            $table->string('total_amount')->nullable();
             $table->string('meal')->nullable();
             $table->string('wheel_chair')->nullable();
+            $table->string('dept_ticket_no')->nullable();
+            $table->string('arr_ticket_no')->nullable();
             $table->boolean('status')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamps();
