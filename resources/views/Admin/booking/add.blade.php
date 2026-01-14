@@ -28,7 +28,15 @@
     .select2-container--default{
         width: -webkit-fill-available!important;
     }
-
+    .pnr-shadow-box {
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .shoadow-master{
+        background: lightgray!important;
+    }
 </style>
 @endsection
 

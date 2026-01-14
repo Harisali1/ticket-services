@@ -1,233 +1,431 @@
 @extends('Admin.layouts.main')
 
 @section('styles')
+    <style>
+        .select2-container .select2-selection--single {
+            height: 38px;
+        }
+        .select2-selection__rendered {
+            line-height: 34px!important;
+        }
+        .select2-selection__arrow {
+            height: 38px;
+        }
+        .select2-container--default{
+            width: -webkit-fill-available!important;
+        }
+    </style>
 @endsection
 
 @section('content')
-<div class="p-6 space-y-6 bg-gray-50 min-h-screen">
-
-  <!-- Header -->
-  <div class="flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <a href="{{ route('admin.agency.index') }}" class="text-gray-600 hover:text-black">
-        ←
-      </a>
-      <h1 class="text-2xl font-semibold">Update Agency</h1>
+<div class="container">
+    <!-- Top Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('admin.airline.index') }}" class="text-decoration-none">&larr;</a>
+            <h1 class="h4 mb-0">{{ isset($pnr) ? 'Edit PNR' : 'Add PNR' }}</h1>
+        </div>
     </div>
-  </div>
+    <hr>
+    <div class="card p-4">
+        <form id="pnr-edit-form" enctype="multipart/form-data">
+            <!-- PNR & Flight Info -->
+            <h5 class="mb-3">PNR & Flight Info</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">PNR Type</label>
+                    <select class="form-select select2" id="pnr_type" name="pnr_type">
+                        <option value="">Please Select Type</option>
+                        <option value="one_way" {{ (old('pnr_type', $pnr->pnr_type ?? '') == 'one_way') ? 'selected' : '' }}>One Way</option>
+                        <option value="return" {{ (old('pnr_type', $pnr->pnr_type ?? '') == 'return') ? 'selected' : '' }}>Return</option>
+                        <option value="open_jaw" {{ (old('pnr_type', $pnr->pnr_type ?? '') == 'open_jaw') ? 'selected' : '' }}>Open Jaw</option>
+                    </select>
+                </div>
 
-  <hr />
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Flight No</label>
+                    <input type="text" name="flight_no" id="flight_no" class="form-control" value="{{ old('flight_no', $pnr->flight_no ?? '') }}">
+                </div>
 
-  <!-- Form Container -->
-  <div class="bg-white border rounded-lg p-6 space-y-10">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Reference PNR No #</label>
+                    <input type="text" name="ref_no" id="ref_no" class="form-control" value="{{ old('ref_no', $pnr->ref_no ?? '') }}">
+                </div>
 
-    <form id="agency-form">
-    <!-- Agency Details -->
-      <div>
-        <h2 class="font-semibold text-lg mb-4">Agency Details</h2>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Aircraft</label>
+                    <input type="text" name="air_craft" id="air_craft" class="form-control" value="{{ old('air_craft', $pnr->air_craft ?? '') }}">
+                </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Agency Name -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Agency Name*</label>
-            <input type="text" placeholder="Enter Agency Name" name="agency_name" id="agency_name"
-              value="{{ $agency->name }}"
-              class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Class</label>
+                    <select class="form-select" name="class" id="class">
+                        <option value="Y" {{ (old('class', $pnr->class ?? 'Y') == 'Y') ? 'selected' : '' }}>Y</option>
+                    </select>
+                </div>
+            </div>
 
-          <!-- P.IVA -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">P.IVA *</label>
-            <input type="text" name="piv" id="piv" placeholder="Enter Code" 
-            value="{{ $agency->piv }}"
-            class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
-        </div>
+            <!-- Route & Airline -->
+            <hr>
+            <h5 class="mb-3">Route & Airline</h5>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label text-muted">Departure</label>
+                    <select class="form-select select2" id="departure_id" name="departure_id"></select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted">Arrival</label>
+                    <select class="form-select select2" id="arrival_id" name="arrival_id"></select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted">Airline</label>
+                    <select class="form-select select2" id="airline_id" name="airline_id"></select>
+                </div>
+            </div>
 
-        <!-- Address -->
-        <div class="mt-6">
-          <label class="block text-sm text-gray-600 mb-1">Agency Address*</label>
-          <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" 
-          value="{{ $agency->address }}"
-          class="w-full border rounded-md p-3 bg-gray-50" />
-        </div>
-      </div>
+            <!-- Return Fields -->
+            <div class="row g-3 return-fields mt-2 {{ (old('pnr_type', $pnr->pnr_type ?? '') == 'return' || old('pnr_type', $pnr->pnr_type ?? '') == 'open_jaw') ? '' : 'd-none' }}">
+                <div class="col-md-4">
+                    <label for="return_departure_id" class="form-label text-muted">Return Departure</label>
+                    <select class="form-select select2 return-select" id="return_departure_id" name="return_departure_id"></select>
+                </div>
+                <div class="col-md-4">
+                    <label for="return_arrival_id" class="form-label text-muted">Return Arrival</label>
+                    <select class="form-select select2 return-select" id="return_arrival_id" name="return_arrival_id"></select>
+                </div>
+                <div class="col-md-4">
+                    <label for="return_airline_id" class="form-label text-muted">Return Airline</label>
+                    <select class="form-select select2 return-select" id="return_airline_id" name="return_airline_id"></select>
+                </div>
+            </div>
 
-    <!-- User Details -->
-      <div>
-        <h2 class="font-semibold text-lg mb-4 mt-4">User Details</h2>
+            <!-- Dates & Times -->
+            <hr>
+            <h5 class="mb-3">Dates & Times</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Departure Date *</label>
+                    <input type="date" id="departure_date" name="departure_date" class="form-control" value="{{ old('departure_date', $pnr->departure_date ?? '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Departure Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number" min="0" max="23" id="departure_time_hour" name="departure_time_hour" class="form-control" placeholder="HH"
+                               value="{{ old('departure_time_hour', $pnr->departure_time_hour ?? '') }}">
+                        <input type="number" min="0" max="59" id="departure_time_minute" name="departure_time_minute" class="form-control" placeholder="MM"
+                               value="{{ old('departure_time_minute', $pnr->departure_time_minute ?? '') }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Arrival Date *</label>
+                    <input type="date" id="arrival_date" name="arrival_date" class="form-control" value="{{ old('arrival_date', $pnr->arrival_date ?? '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Arrival Time *</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number" min="0" max="23" id="arrival_time_hour" name="arrival_time_hour" class="form-control" placeholder="HH"
+                               value="{{ old('arrival_time_hour', $pnr->arrival_time_hour ?? '') }}">
+                        <input type="number" min="0" max="59" id="arrival_time_minute" name="arrival_time_minute" class="form-control" placeholder="MM"
+                               value="{{ old('arrival_time_minute', $pnr->arrival_time_minute ?? '') }}">
+                    </div>
+                </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Name -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Name*</label>
-            <input type="text" name="name" id="name" placeholder="Enter Name" 
-            value="{{ $agency->user->name }}"
-            class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+                <!-- Return Dates & Times -->
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Departure Date</label>
+                    <input type="date" id="return_departure_date" name="return_departure_date" class="form-control"
+                           value="{{ old('return_departure_date', $pnr->return_departure_date ?? '') }}">
+                </div>
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Departure Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number" min="0" max="23" id="return_departure_time_hour" name="return_departure_time_hour" class="form-control" placeholder="HH"
+                               value="{{ old('return_departure_time_hour', $pnr->return_departure_time_hour ?? '') }}">
+                        <input type="number" min="0" max="59" id="return_departure_time_minute" name="return_departure_time_minute" class="form-control" placeholder="MM"
+                               value="{{ old('return_departure_time_minute', $pnr->return_departure_time_minute ?? '') }}">
+                    </div>
+                </div>
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Arrival Date</label>
+                    <input type="date" id="return_arrival_date" name="return_arrival_date" class="form-control"
+                           value="{{ old('return_arrival_date', $pnr->return_arrival_date ?? '') }}">
+                </div>
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Arrival Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number" min="0" max="23" id="return_arrival_time_hour" name="return_arrival_time_hour" class="form-control" placeholder="HH"
+                               value="{{ old('return_arrival_time_hour', $pnr->return_arrival_time_hour ?? '') }}">
+                        <input type="number" min="0" max="59" id="return_arrival_time_minute" name="return_arrival_time_minute" class="form-control" placeholder="MM"
+                               value="{{ old('return_arrival_time_minute', $pnr->return_arrival_time_minute ?? '') }}">
+                    </div>
+                </div>
+            </div>
 
-          <!-- Email -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Email*</label>
-            <input type="text" name="email" id="email" placeholder="Enter Email Address" 
-            value="{{ $agency->user->email }}"
-            class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+            <!-- Baggage & Seats -->
+            <hr>
+            <h5 class="mb-3">Baggage & Seats</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Baggage</label>
+                    <select class="form-select select2" id="baggage" name="baggage">
+                        <option value="">Please Select Baggage</option>
+                        <option value="0 PC" {{ (old('baggage', $pnr->baggage ?? '') == '0 PC') ? 'selected' : '' }}>0 PC</option>
+                        <option value="2 PC" {{ (old('baggage', $pnr->baggage ?? '') == '2 PC') ? 'selected' : '' }}>2 PC</option>
+                        <option value="3 PC" {{ (old('baggage', $pnr->baggage ?? '') == '3 PC') ? 'selected' : '' }}>3 PC</option>
+                    </select>
+                </div>
 
-          <!-- Phone -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Phone No*</label>
-            <input type="text" name="phone_no" id="phone_no" placeholder="Enter Phone No #" 
-            value="{{ $agency->user->phone_no }}"
-            class="w-full border rounded-md p-3 bg-gray-50" />
-          </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Seats</label>
+                    <input type="number" id="seats" name="seats" class="form-control" value="{{ old('seats', $pnr->seats ?? '') }}">
+                </div>
 
-          <!-- Password -->
-          <div class="relative">
-            <label class="block text-sm text-gray-600 mb-1">Password*</label>
-            <input type="password"name="password" id="password" placeholder="*******" class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
+                <div class="col-md-3" style="margin-top:50px">
+                    <label class="form-label text-muted">Put On Sale</label>
+                    <input type="checkbox" id="put_on_sale" name="put_on_sale" {{ (old('put_on_sale', $pnr->put_on_sale ?? false)) ? 'checked' : '' }}>
+                </div>
+            </div>
 
-            <button class="absolute right-3 top-10 text-gray-500 hover:text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.708.042C20.88 7.943 16.884 5 12 5 7.115 5 3.12 7.943 2.292 12.042c-.06.29-.06.627 0 .916C3.12 16.057 7.115 19 12 19c4.884 0 8.88-2.943 9.708-6.042.06-.289.06-.626 0-.916z" />
-              </svg>
-            </button>
-          </div>
+            <!-- Prices -->
+            <hr>
+            <h5 class="mb-3">Prices</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Base Fare</label>
+                    <input type="text" id="base_price" name="base_price" class="form-control" placeholder="0" readonly value="{{ old('base_price', $pnr->base_price ?? '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Tax</label>
+                    <input type="text" id="tax" name="tax" class="form-control" placeholder="0" readonly value="{{ old('tax', $pnr->tax ?? '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Total</label>
+                    <input type="text" id="total" name="total" class="form-control" placeholder="0" readonly value="{{ old('total', $pnr->total ?? '') }}">
+                </div>
+            </div>
 
-          <div class="relative">
-            <label class="block text-sm text-gray-600 mb-1">Confirm Password*</label>
-            <input type="password" name="confirm_password" id="confirm_password" placeholder="*******" class="w-full border rounded-md p-3 bg-gray-50 pr-10" />
+            <div class="row g-3 return-fields d-none mt-2">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Return Base Fare</label>
+                    <input type="text" id="return_base_price" name="return_base_price" class="form-control" onkeyup="returnFunction()" placeholder="0"
+                           value="{{ old('return_base_price', $pnr->return_base_price ?? '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Return Tax</label>
+                    <input type="text" id="return_tax" name="return_tax" class="form-control" placeholder="0" onkeyup="returnFunction()" value="{{ old('return_tax', $pnr->return_tax ?? '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Return Total</label>
+                    <input type="text" id="return_total" name="return_total" class="form-control" placeholder="0" readonly value="{{ old('return_total', $pnr->return_total ?? '') }}">
+                </div>
+            </div>
 
-            <button class="absolute right-3 top-10 text-gray-500 hover:text-black">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.708.042C20.88 7.943 16.884 5 12 5 7.115 5 3.12 7.943 2.292 12.042c-.06.29-.06.627 0 .916C3.12 16.057 7.115 19 12 19c4.884 0 8.88-2.943 9.708-6.042.06-.289.06-.626 0-.916z" />
-              </svg>
-            </button>
-          </div>
-
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Status</label>
-
-            <select name="status" id="status"
-                class="w-full border rounded-md p-3 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-400">
-
-                @foreach(\App\Enums\AgencyStatus::cases() as $status)
-                    <option value="{{ $status->value }}"
-                        @selected($agency->status === $status)>
-                        {{ $status->label() }}
-                    </option>
+            <!-- Passenger Types -->
+            <hr>
+            <h5 class="mb-3 mt-3">Passenger Types</h5>
+            <div class="row g-3 passenger-price-row" id="passenger-type-row">
+                @foreach($pnrPassenger as $type)
+                    <div class="col-md-2">
+                        <label class="form-label text-muted">{{ $type->title }}</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input
+                            type="number"
+                            name="passenger_prices[{{ $type->id }}]"
+                            class="form-control passenger-price"
+                            placeholder="0"
+                            min="0"
+                            value="{{ old('passenger_prices.'.$type->id, $type->price ?? '') }}"
+                            {{ $loop->first ? '' : 'readonly' }}>
+                    </div>
                 @endforeach
+            </div>
 
-            </select>
-          </div>
-
-
-
-
-        </div>
-        <div class="flex justify-end gap-3 mt-10">
-            <a href="{{ route('admin.agency.index') }}" class="border border-gray-400 px-5 py-2 rounded-md">Cancel</a>
-            <button class="bg-black text-white px-5 py-2 rounded-md">Save</button>
-        </div>
-      </div>
-    </form>
-  </div>
+            <div class="d-flex justify-content-end gap-3 mt-5">
+                <button type="button" class="btn btn-outline-secondary">Cancel</button>
+                <button type="submit" class="btn btn-dark">Save</button>
+            </div>
+        </form>
+    </div>
 </div>
-
 @endsection
 
 @section('scripts')
-  <script>
-    document.getElementById("agency-form").addEventListener("submit", function(e) {
-        e.preventDefault();
+<script>
+    $('#pnr_type').on('change', function () {
+        const show = ['return', 'open_jaw'].includes($(this).val());
+        $('.return-fields').toggleClass('d-none', !show);
+    });
 
-        function showError(message) {
-            Swal.fire({
-                toast: true,
-                position: "top-end",
-                icon: "error",
-                title: message,
-                showConfirmButton: false,
-                timer: 2500
+    function returnFunction(){
+        const returnBasePriceInput = document.getElementById('return_base_price');
+        const returnTaxInput       = document.getElementById('return_tax');
+        const returnTotalInput     = document.getElementById('return_total');
+        returnTotalInput.value = parseFloat(returnBasePriceInput.value || 0) + parseFloat(returnTaxInput.value || 0);
+    }
+
+    function showError(message) {
+        Swal.fire({toast: true, position: "top-end", icon: "error", title: message, showConfirmButton: false, timer: 2500});
+    }
+      
+    document.addEventListener('DOMContentLoaded', function () {
+        const passengerPrices = document.querySelectorAll('.passenger-price');
+        const basePriceInput = document.getElementById('base_price');
+        const taxInput       = document.getElementById('tax');
+        const totalInput     = document.getElementById('total');
+
+        if (passengerPrices.length > 0) {
+            passengerPrices[0].addEventListener('keyup', function () {
+                const price = parseFloat(this.value) || 0;
+                basePriceInput.value = price;
+                taxInput.value = price > 0 ? 100 : 0;
+                totalInput.value = price + (price > 0 ? 100 : 0);
+
+                if (passengerPrices[1]) passengerPrices[1].value = Math.max(price - 10, 0);
+                if (passengerPrices.length > 2) passengerPrices[passengerPrices.length - 1].value = 50;
             });
         }
 
-        const formData = {
-            agency_name: document.getElementById("agency_name").value.trim(),
-            piv: document.getElementById("piv").value.trim(),
-            agency_address: document.getElementById("agency_address").value.trim(),
-            name: document.getElementById("name").value.trim(),
-            email: document.getElementById("email").value.trim(),
-            phone: document.getElementById("phone_no").value.trim(),
-            password: document.getElementById("password").value.trim(),
-            confirm_password: document.getElementById("confirm_password").value.trim(),
-            // status: document.getElementById("status").value.trim(),
+        
+
+        function initSelect2(id, url) {
+            $(id).select2({
+                placeholder: 'Search',
+                allowClear: true,
+                minimumInputLength: 2,
+                ajax: {
+                    url: url,
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: data => ({
+                        results: data.map(item => ({id: item.id, text: item.label}))
+                    })
+                }
+            });
+        }
+
+        function setSelect2AjaxValue($select, id, text) {
+            if (!id) return;
+            $select.find('option[value="' + id + '"]').remove();
+            const option = new Option(text, id, true, true);
+            $select.append(option).trigger('change');
+        }
+
+        // Init Select2
+        initSelect2('#departure_id', "{{ route('search.airport') }}");
+        initSelect2('#arrival_id', "{{ route('search.airport') }}");
+        initSelect2('#airline_id', "{{ route('search.airline') }}");
+        initSelect2('#return_departure_id', "{{ route('search.airport') }}");
+        initSelect2('#return_arrival_id', "{{ route('search.airport') }}");
+        initSelect2('#return_airline_id', "{{ route('search.airline') }}");
+
+        @if(isset($pnr))
+            setSelect2AjaxValue($('#departure_id'), '{{ $pnr->departure_id }}', '{{ $pnr->departure->name ?? '' }}');
+            setSelect2AjaxValue($('#arrival_id'), '{{ $pnr->arrival_id }}', '{{ $pnr->arrival->name ?? '' }}');
+            setSelect2AjaxValue($('#airline_id'), '{{ $pnr->airline_id }}', '{{ $pnr->airline->name ?? '' }}');
+
+            @if(in_array($pnr->pnr_type, ['return', 'open_jaw']))
+                $('.return-fields').removeClass('d-none');
+                setSelect2AjaxValue($('#return_departure_id'), '{{ $pnr->return_departure_id }}', '{{ $pnr->return_departure->name ?? '' }}');
+                setSelect2AjaxValue($('#return_arrival_id'), '{{ $pnr->return_arrival_id }}', '{{ $pnr->return_arrival->name ?? '' }}');
+                setSelect2AjaxValue($('#return_airline_id'), '{{ $pnr->return_airline_id }}', '{{ $pnr->return_airline->name ?? '' }}');
+            @endif
+        @endif
+    });
+
+    document.getElementById("pnr-edit-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const isReturn = document.getElementById("pnr_type").value === 'return';
+        const fields = {
+            pnr_type: {value: document.getElementById("pnr_type").value, message: "PNR Type is required"},
+            flight_no: {value: document.getElementById("flight_no").value, message: "Flight number is required"},
+            departure_id: {value: document.getElementById("departure_id").value, message: "Please select departure"},
+            arrival_id: {value: document.getElementById("arrival_id").value, message: "Please select arrival"},
+            airline_id: {value: document.getElementById("airline_id").value, message: "Please select airline"},
+            departure_date: {value: document.getElementById("departure_date").value, message: "Departure date is required"},
+            departure_time_hour: {value: document.getElementById("departure_time_hour").value, message: "Departure time is required"},
+            departure_time_minute: {value: document.getElementById("departure_time_minute").value, message: "Departure time is required"},
+            arrival_date: {value: document.getElementById("arrival_date").value,message: "Arrival date is required"},
+            arrival_time_hour: {value: document.getElementById("arrival_time_hour").value,message: "Arrival time is required"},
+            arrival_time_minute: {value: document.getElementById("arrival_time_minute").value,message: "Arrival time is required"},
+            baggage: {value: document.getElementById("baggage").value,message: "Please select baggage"},
+            seats: {value: document.getElementById("seats").value,message: "Seats are required"},
+            price: {value: document.getElementById("base_price").value,message: "Price is required"}
         };
 
-        const validations = [
-            { field: "agency_name", message: "Agency name is required", test: v => v !== "" },
-            { field: "piv", message: "P.IVA is required", test: v => v !== "" },
-            { field: "agency_address", message: "Agency address is required", test: v => v !== "" },
-            { field: "name", message: "Name is required", test: v => v !== "" },
-            { field: "email", message: "Email is required", test: v => v !== "" },
-            { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
-            { field: "phone", message: "Phone must be at least 11 digits", test: v => v.length >= 11 },
-            { field: "password", message: "Password must be 6+ characters", test: v => v.length >= 6 },
-            { field: "confirm_password", message: "Passwords do not match", test: v => v === formData.password },
-            // { field: "status", message: "Status is required", test: v => v !== "" },
-        ];
-
-        for (const rule of validations) {
-            if (!rule.test(formData[rule.field])) {
-                showError(rule.message);
+        /* --------------------
+        BASIC VALIDATION
+        -------------------- */
+        for (const key in fields) {
+            if (!fields[key].value) {
+                showError(fields[key].message);
                 return;
             }
         }
 
+        /* --------------------
+        RETURN PNR VALIDATION
+        -------------------- */
+        if (isReturn) {
+            const returnFields = {
+                return_departure_id: {value: document.getElementById("return_departure_id").value,message: "Return departure is required"},
+                return_arrival_id: {value: document.getElementById("return_arrival_id").value,message: "Return arrival is required"},
+                return_airline_id: {value: document.getElementById("return_airline_id").value,message: "Return airline is required"},
+                return_departure_date: {value: document.querySelector('[name="return_departure_date"]').value,message: "Return departure date is required"},
+                return_departure_time_hour: {value: document.querySelector('[name="return_departure_time_hour"]').value,message: "Return departure time is required"},
+                return_departure_time_minute: {value: document.querySelector('[name="return_departure_time_minute"]').value,message: "Return departure time is required"},
+                return_arrival_date: {value: document.querySelector('[name="return_arrival_date"]').value,message: "Return arrival date is required"},
+                return_arrival_time_hour: {value: document.querySelector('[name="return_arrival_time_hour"]').value,message: "Return arrival time is required"},
+                return_arrival_time_minute: {value: document.querySelector('[name="return_arrival_time_minute"]').value,message: "Return arrival time is required"}
+            };
+
+            for (const key in returnFields) {
+                if (!returnFields[key].value) {
+                    showError(returnFields[key].message);
+                    return;
+                }
+            }
+        }
+
+        const passengerPrices = document.querySelectorAll('.passenger-price');
+
+        for (let i = 0; i < passengerPrices.length; i++) {
+            if (passengerPrices[i].value === '' || passengerPrices[i].value <= 0) {
+                showError('All passenger prices are required');
+                passengerPrices[i].focus();
+                return;
+            }
+        }
+
+        /* --------------------
+        SUBMIT FORM
+        -------------------- */
         Swal.fire({
             title: "Processing...",
-            text: "Please wait",
             didOpen: () => Swal.showLoading()
         });
 
-        var data = $('#agency-form').serialize();
-        $.ajaxSetup({
+        const formData = new FormData(this);
+
+        
+        $.ajax({
+            url: "{{ route('admin.pnr.update', $pnr) }}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.ajax({
-            url: "{{ route('admin.agency.update') }}",
-            method: "POST",
-            data: data,
-            dataType: 'json', // Set the expected data type to JSON
-            beforeSend: function(){
-                $('.error-container').html('');
             },
-            success: function () {
-                window.location.href = "{{ route('admin.agency.index') }}";
+            success: function (res) {
+                Swal.fire("Success", res.message, "success")
+                    .then(() => window.location.href = "{{ route('admin.pnr.index') }}");
             },
             error: function (xhr) {
-                Swal.close();
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "error",
-                    title: xhr.responseJSON.message,
-                    showConfirmButton: false,
-                    timer: 2500
-                });
+                showError(xhr.responseJSON?.message || "Something went wrong");
             }
         });
     });
-  </script>
+</script>
 @endsection
-
-
-
-

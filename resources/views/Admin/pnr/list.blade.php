@@ -1,7 +1,16 @@
 @extends('Admin.layouts.main')
 
 @section('styles')
+    <style>
+        .table {
+            min-width: 1300px; /* ensures space */
+        }
 
+        .table thead th {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -10,25 +19,71 @@
 
 @section('scripts')
 <script>
-    window.addEventListener('open-put-on-sale-modal', () => {
-        new bootstrap.Modal(
-            document.getElementById('putOnSaleModal')
-        ).show();
-    });
+    
+    function putOnSaleAndCancel(id, type, message) {
+        
+        let swalOptions = {
+            title: "Are you sure?",
+            text: message,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "Cancel",
+            reverseButtons: true
+        };
 
-    window.addEventListener('open-cancel-current-sale-modal', () => {
-        new bootstrap.Modal(
-            document.getElementById('cancelCurrentSaleModal')
-        ).show();
-    });
+        // 👇 Show input ONLY for cancel
+        if (type === 'cancel') {
+            swalOptions.input = 'text';
+            swalOptions.inputPlaceholder = 'Enter cancel reason';
+            swalOptions.inputValidator = (value) => {
+                if (!value) {
+                    return 'Cancel reason is required';
+                }
+            };
+        }
 
-    function closeAndRefresh() {
-        $('#putOnSaleModal').modal('hide');
-        $('#cancelCurrentSaleModal').modal('hide');
-        setTimeout(function () {
-            location.reload();
-        }, 300);
+        Swal.fire(swalOptions).then((result) => {
+
+            if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: "Processing...",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ route('admin.pnr.sale.cancel') }}",
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    data: {
+                        id: id,
+                        type: type,
+                        reason: type === 'cancel' ? result.value : null
+                    },
+                    success: function (res) {
+                        Swal.fire("Success", res.message, "success")
+                            .then(() => {
+                                window.location.href = "{{ route('admin.pnr.index') }}";
+                            });
+                    },
+                    error: function (xhr) {
+                        Swal.fire(
+                            "Error",
+                            xhr.responseJSON?.message || "Something went wrong",
+                            "error"
+                        );
+                    }
+                });
+            }
+        });
     }
+
 
     function showError(message) {
         Swal.fire({
@@ -41,109 +96,6 @@
         });
     }
 
-    document.getElementById("put-on-sale").addEventListener("submit", function (e) {
-        e.preventDefault();
-        // Collect form values
-        const formData = {
-            seats: document.getElementById("seats").value.trim(),
-            price: document.getElementById("price").value.trim(),
-        };
-        // Validation rules
-        const validations = [
-            { field: "seats", message: "Seats field is required", test: v => v !== "" },
-            { field: "price", message: "Price field is required", test: v => v !== "" }
-        ];
-        // Run validations
-        for (const rule of validations) {
-            if (!rule.test(formData[rule.field])) {
-                showError(rule.message);
-                return;
-            }
-        }
-        // Show loading
-        Swal.fire({
-            title: "Processing...",
-            text: "Please wait",
-            didOpen: () => Swal.showLoading()
-        });
-
-        var data = $('#put-on-sale').serialize();
-        $.ajax({
-            url: "{{ route('admin.pnr.seats.store') }}",
-            type: "POST",
-            data: data,
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (response) {
-                Swal.close();
-                window.location.href = "{{ route('admin.pnr.index') }}";
-            },
-            error: function (xhr) {
-                Swal.close();
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "error",
-                    title: xhr.responseJSON.message,
-                    showConfirmButton: false,
-                    timer: 2500
-                });
-            }
-        });
-    });
-
-    document.getElementById("cancel-current-sale").addEventListener("submit", function (e) {
-        e.preventDefault();
-        // Collect form values
-        const formData = {
-            price: document.getElementById("comment").value.trim(),
-        };
-        // Validation rules
-        const validations = [
-            { field: "price", message: "Comment field is required", test: v => v !== "" }
-        ];
-        // Run validations
-        for (const rule of validations) {
-            if (!rule.test(formData[rule.field])) {
-                showError(rule.message);
-                return;
-            }
-        }
-        // Show loading
-        Swal.fire({
-            title: "Processing...",
-            text: "Please wait",
-            didOpen: () => Swal.showLoading()
-        });
-
-        var data = $('#cancel-current-sale').serialize();
-        $.ajax({
-            url: "{{ route('admin.pnr.seats.cancel') }}",
-            type: "POST",
-            data: data,
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (response) {
-                Swal.close();
-                window.location.href = "{{ route('admin.pnr.index') }}";
-            },
-            error: function (xhr) {
-                Swal.close();
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "error",
-                    title: xhr.responseJSON.message,
-                    showConfirmButton: false,
-                    timer: 2500
-                });
-            }
-        });
-    });
 </script>
 @endsection
 

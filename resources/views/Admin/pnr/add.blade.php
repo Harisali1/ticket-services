@@ -21,7 +21,7 @@
     <!-- Top Bar -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('admin.airline.index') }}" class="text-decoration-none">&larr;</a>
+            <a href="{{ route('admin.pnr.index') }}" class="text-decoration-none">&larr;</a>
             <h1 class="h4 mb-0">Add Pnr</h1>
         </div>
     </div>
@@ -61,23 +61,32 @@
                         <option value="Y" selected>Y</option>
                     </select>
                 </div>
+                <!-- <div class="col-md-3">
+                    <label class="form-label text-muted">Connected Flight</label>
+                    <input type="checkbox" id="connected_flight" name="connected_flight">
+                </div> -->
             </div>
 
             <hr>
             <h5 class="mb-3">Route & Airline</h5>
             <!-- Outbound -->
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label text-muted">Departure</label>
                     <select class="form-select select2" id="departure_id" name="departure_id"></select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Middle Arrival</label>
+                    <select class="form-select select2" id="middle_arrival_id" name="middle_arrival_id"></select>
+                </div>
+
+                <div class="col-md-3">
                     <label class="form-label text-muted">Arrival</label>
                     <select class="form-select select2" id="arrival_id" name="arrival_id"></select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label text-muted">Airline</label>
                     <select class="form-select select2" id="airline_id" name="airline_id"></select>
                 </div>
@@ -85,17 +94,20 @@
 
             <!-- Return -->
             <div class="row g-3 return-fields d-none mt-2">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="return_departure_id" class="form-label text-muted">Return Departure</label>
                     <select class="form-select select2 return-select" id="return_departure_id" name="return_departure_id"></select>
                 </div>
-
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Return Middle Arrival</label>
+                    <select class="form-select select2" id="return_middle_arrival_id" name="return_middle_arrival_id"></select>
+                </div>
+                <div class="col-md-3">
                     <label for="return_arrival_id" class="form-label text-muted">Return Arrival</label>
                     <select class="form-select select2 return-select" id="return_arrival_id" name="return_arrival_id"></select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="return_airline_id" class="form-label text-muted">Return Airline</label>
                     <select class="form-select select2 return-select" id="return_airline_id" name="return_airline_id"></select>
                 </div>
@@ -105,12 +117,12 @@
             <hr>
             <h5 class="mb-3">Dates & Times</h5>
             <div class="row g-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Departure Date *</label>
                     <input type="date" id="departure_date" name="departure_date" class="form-control">
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Departure Time</label>
                     <div class="d-flex align-items-center gap-2">
                         <input
@@ -136,14 +148,68 @@
                     </div>
                 </div>
 
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Middle Arrival Time</label>
+                    <!-- <input type="time" id="time" name="time"> -->
+                    <div class="d-flex align-items-center gap-2">
+                        <input
+                            type="number"
+                            min="0"
+                            max="23"
+                            id="middle_arrival_time_hour"
+                            name="middle_arrival_time_hour"
+                            class="form-control"
+                            placeholder="HH"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
+                        <input
+                            type="number"
+                            min="0"
+                            max="59"
+                            id="middle_arrival_time_minute"
+                            name="middle_arrival_time_minute"
+                            class="form-control"
+                            placeholder="MM"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
+                    </div>
+                </div>
+                <!-- Arrival Time -->
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Rest Time *</label>
+                    <!-- <input type="time" id="time" name="time"> -->
+                    <div class="d-flex align-items-center gap-2">
+                        <input
+                            type="number"
+                            min="0"
+                            max="23"
+                            id="rest_time_hour"
+                            name="rest_time_hour"
+                            class="form-control"
+                            placeholder="HH"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
+                        <input
+                            type="number"
+                            min="0"
+                            max="59"
+                            id="rest_time_minute"
+                            name="rest_time_minute"
+                            class="form-control"
+                            placeholder="MM"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
+                    </div>
+                </div>
+
                 <!-- Arrival Date -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Arrival Date *</label>
                     <input type="date" id="arrival_date" name="arrival_date" class="form-control">
                 </div>
 
                 <!-- Arrival Time -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Arrival Time *</label>
                     <!-- <input type="time" id="time" name="time"> -->
                     <div class="d-flex align-items-center gap-2">
@@ -240,9 +306,8 @@
                     <label class="form-label text-muted">Baggage</label>
                     <select class="form-select select2" id="baggage" name="baggage">
                         <option value="">Please Select Baggage</option>
-                        <option value="0 PC">0 PC</option>
+                        <option value="1 PC">1 PC</option>
                         <option value="2 PC">2 PC</option>
-                        <option value="3 PC">3 PC</option>
                     </select>
                 </div>
 
@@ -424,9 +489,11 @@
 
     $(document).ready(function () {
         initSelect2('#departure_id', "{{ route('search.airport') }}");
+        initSelect2('#middle_arrival_id', "{{ route('search.airport') }}");
         initSelect2('#arrival_id', "{{ route('search.airport') }}");
         initSelect2('#airline_id', "{{ route('search.airline') }}");
         initSelect2('#return_departure_id', "{{ route('search.airport') }}");
+        initSelect2('#return_middle_arrival_id', "{{ route('search.airport') }}");
         initSelect2('#return_arrival_id', "{{ route('search.airport') }}");
         initSelect2('#return_airline_id', "{{ route('search.airline') }}");
     });

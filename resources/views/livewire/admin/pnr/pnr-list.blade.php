@@ -94,69 +94,85 @@
     </div>
 
     <!-- Table -->
-    <div class="mb-4">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>Pnr No #</th>
-                    <th>Pnr Type #</th>
-                    <th>AirLine</th>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Departure Date/Time</th>
-                    <th>Arrival Date/Time</th>
-                    <th>Available Seat</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($pnrs as $pnr)
-                    <tr>
-                        <td>{{ $pnr->pnr_no }}</td>
-                        <td>{{ $pnr->pnr_type }}</td>
-                        <td>{{ $pnr->airline->name }}</td>
-                        <td>{{ $pnr->departure->code }}</td>
-                        <td>{{ $pnr->arrival->code }}</td>
-                        <td>{{ $pnr->departure_date_time }}</td>
-                        <td>{{ $pnr->arrival_date_time }}</td>
-                        <td>{{ $pnr->seat_available }}</td>
-                        <td>
-                            <span class="{{ $pnr->status->color() }}">
-                                {{ $pnr->status->label() }}
-                            </span>
-                        </td>
-                        <td wire:key="pnr-row-{{ $pnr->id }}">
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    ⋮
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{{ route('admin.pnr.edit', $pnr->id) }}">Edit</a></li>
-                                    <li>
-                                       <button class="dropdown-item" wire:click="openPutOnSale({{ $pnr->id }})">
-                                            Put on sale
+     <div class="container">
+        <div class="mb-4">
+            <div class="table-responsive" style="overflow-x:auto;">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Pnr No #</th>
+                            <th>Pnr Type #</th>
+                            <th>AirLine</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Departure Date/Time</th>
+                            <th>Arrival Date/Time</th>
+                            <th>Total Seat</th>
+                            <th>Available Seat</th>
+                            <th>On Sale</th>
+                            <th>Is Sold</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($pnrs as $pnr)
+                            <tr>
+                                <td>{{ $pnr->pnr_no }}</td>
+                                <td>{{ $pnr->pnr_type }}</td>
+                                <td>{{ $pnr->airline->name }}</td>
+                                <td>{{ $pnr->departure->code }}</td>
+                                <td>{{ $pnr->arrival->code }}</td>
+                                <td>{{ $pnr->departure_date_time }}</td>
+                                <td>{{ $pnr->arrival_date_time }}</td>
+                                <td>{{ $pnr->seats }}</td>
+                                <td>{{ $pnr->seat_available }}</td>
+                                <td>{{ $pnr->seat_is_sale }}</td>
+                                <td>{{ $pnr->seat_is_sold }}</td>
+                                <td>
+                                    <span class="{{ $pnr->status->color() }}">
+                                        {{ $pnr->status->label() }}
+                                    </span>
+                                </td>
+                                <td wire:key="pnr-row-{{ $pnr->id }}">
+                                    <div class="dropdown">
+                                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            ⋮
                                         </button>
-                                    </li>
-                                    <li>
-                                       <button class="dropdown-item" wire:click="openCancelCurrentSale({{ $pnr->id }})">
-                                            Cancel Current sale
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            No agencies found
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="{{ route('admin.pnr.edit', $pnr) }}">Edit</a></li>
+                                            @if($pnr->seat_available > 0)
+                                                <li>
+                                                    <button class="dropdown-item" onclick="putOnSaleAndCancel({{ $pnr->id }}, 'sale', 'Do you want to put on sale this PNR?')">
+                                                        Put on sale
+                                                    </button>
+                                                </li>
+                                            @endif
+                                            @if($pnr->seat_is_sale > 0)
+                                                <li>
+                                                    <button class="dropdown-item" onclick="putOnSaleAndCancel({{ $pnr->id }}, 'cancel', 'Do you want to cancel this sale?')">
+                                                        Cancel Current sale
+                                                    </button>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="12" class="text-center text-muted py-4">
+                                    No PNRs found
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+     </div>
+    
     
     <!-- Pagination -->
     <div>

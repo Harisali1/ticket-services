@@ -100,7 +100,7 @@
                         <td>{{ $agency->name }}</td>
                         <td>{{ $agency->piv }}</td>
                         <td>{{ $agency->address }}</td>
-                        <td>{{ $agency->created_at->format('m/d/Y h:i a') }}</td>
+                        <td>{{ $agency->created_date }}</td>
                         <td>
                             <span class="{{ $agency->status->color() }}">
                                 {{ $agency->status->label() }}

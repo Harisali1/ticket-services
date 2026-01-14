@@ -32,6 +32,10 @@ class Pnr extends Model
         return $this->belongsTo(Airport::class, 'departure_id', 'id');
     }
 
+    public function middle_arrival(){
+        return $this->belongsTo(Airport::class, 'middle_arrival_id', 'id');
+    }
+
     public function arrival(){
         return $this->belongsTo(Airport::class, 'arrival_id', 'id');
     }
@@ -48,11 +52,6 @@ class Pnr extends Model
         return $this->belongsTo(Airport::class, 'return_arrival_id', 'id');
     }
 
-    // public function baggages()
-    // {
-    //     return $this->belongsToMany(Baggage::class, 'baggage_pnr', 'pnr_id', 'baggage_id');
-    // }
-
     public function pnr_passenger()
     {
         return $this->belongsToMany(PnrPassenger::class, 'pnr_passengers', 'pnr_id', 'passenger_type_id');
@@ -62,16 +61,50 @@ class Pnr extends Model
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
-    public function getSeatAvailableAttribute()
+    public function getSeatIsSaleAttribute()
     {
         return $this->seats()
             ->where('is_sale', 1)
             ->count();
     }
 
+    public function getSeatAvailableAttribute()
+    {
+        return $this->seats()
+            ->where('is_available', 1)
+            ->count();
+    }
+
+    public function getSeatIsSoldAttribute()
+    {
+        return $this->seats()
+            ->where('is_sold', 1)
+            ->count();
+    }
+
     public function getDepartureDateTimeAttribute()
     {
         return \Carbon\Carbon::parse($this->departure_date.$this->departure_time)->format('d-M-y H:i');
+    }
+
+    public function getMiddleArrivalDateTimeAttribute()
+    {
+        return \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getDepartureDateTimeAttribute())
+        ->setTimeFromTimeString($this->middle_arrival_time)->format('d-M-y H:i');
+    }
+
+    public function getMiddleDepartureDateTimeAttribute()
+    {
+        $datetime = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleArrivalDateTimeAttribute());
+        // $datetime = $this->getMiddleArrivalDateTimeAttribute();
+        $duration = $this->rest_time;
+        [$hours, $minutes] = explode(':', $duration);
+
+
+        $result = $datetime
+            ->addHours($hours)
+            ->addMinutes($minutes);
+        return $result->format('d-M-y H:i');
     }
 
     public function getArrivalDateTimeAttribute()
@@ -87,6 +120,46 @@ class Pnr extends Model
     public function getReturnArrivalDateTimeAttribute()
     {
         return \Carbon\Carbon::parse($this->return_arrival_date.$this->return_arrival_time)->format('d-M-y H:i');
+    }
+
+    public function getDepartureTimeHourAttribute(){
+        $departureTime = explode(':', $this->departure_time);
+        return $departureTime[0];
+    }
+
+    public function getDepartureTimeMinuteAttribute(){
+        $departureTime = explode(':', $this->departure_time);
+        return $departureTime[1];
+    }
+
+    public function getArrivalTimeHourAttribute(){
+        $arrivalTime = explode(':', $this->arrival_time);
+        return $arrivalTime[0];
+    }
+
+    public function getArrivalTimeMinuteAttribute(){
+        $arrivalTime = explode(':', $this->arrival_time);
+        return $arrivalTime[1];
+    }
+
+    public function getReturnDepartureTimeHourAttribute(){
+        $departureTime = explode(':', $this->return_departure_time);
+        return (isset($departureTime[0])) ? $departureTime[0] : null;
+    }
+
+    public function getReturnDepartureTimeMinuteAttribute(){
+        $departureTime = explode(':', $this->return_departure_time);
+        return (isset($departureTime[1])) ? $departureTime[1] : null;
+    }
+
+    public function getReturnArrivalTimeHourAttribute(){
+        $arrivalTime = explode(':', $this->return_arrival_time);
+        return (isset($arrivalTime[0])) ? $arrivalTime[0] : null;
+    }
+
+    public function getReturnArrivalTimeMinuteAttribute(){
+        $arrivalTime = explode(':', $this->return_arrival_time);
+        return (isset($arrivalTime[1])) ? $arrivalTime[1] : null;
     }
 
 }

@@ -73,10 +73,11 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', [App\Http\Controllers\Admin\PnrController::class, 'index'])->name('admin.pnr.index');
             Route::get('/add', [App\Http\Controllers\Admin\PnrController::class, 'create'])->name('admin.pnr.create');
             Route::post('/store', [App\Http\Controllers\Admin\PnrController::class, 'store'])->name('admin.pnr.store');
-            Route::get('/edit', [App\Http\Controllers\Admin\PnrController::class, 'edit'])->name('admin.pnr.edit');
-            Route::get('/update', [App\Http\Controllers\Admin\PnrController::class, 'update'])->name('admin.pnr.update');
+            Route::get('/edit/{pnr}', [App\Http\Controllers\Admin\PnrController::class, 'edit'])->name('admin.pnr.edit');
+            Route::post('/update/{pnr}', [App\Http\Controllers\Admin\PnrController::class, 'update'])->name('admin.pnr.update');
             Route::get('/upload', [App\Http\Controllers\Admin\PnrController::class, 'uploadPnr'])->name('admin.pnr.upload');
             Route::post('/upload', [App\Http\Controllers\Admin\PnrController::class, 'uploadPnrSubmit'])->name('admin.pnr.upload.submit');
+            Route::post('/put_on_sale_and_cancel', [App\Http\Controllers\Admin\PnrController::class, 'putOnSaleAndCancel'])->name('admin.pnr.sale.cancel');
             Route::prefix('seats')->group(function () {
                 Route::post('/store', [App\Http\Controllers\Admin\PnrController::class, 'seatStore'])->name('admin.pnr.seats.store');
                 Route::post('/cancel', [App\Http\Controllers\Admin\PnrController::class, 'seatCancel'])->name('admin.pnr.seats.cancel');
@@ -93,7 +94,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/details/{booking}/pnr/{pnr}',[App\Http\Controllers\Admin\BookingController::class, 'bookingDetails'])->name('admin.booking.details');
             Route::get('/print/itinerary/booking/{booking}/', [App\Http\Controllers\Admin\BookingController::class, 'itineraryPrint'])->name('admin.booking.print.itinerary');
             Route::get('/ticketed', [App\Http\Controllers\Admin\BookingController::class, 'ticketedBooking'])->name('admin.booking.ticketed');
-            Route::get('/print/ticketed/{id}/', [App\Http\Controllers\Admin\BookingController::class, 'printTicketed'])->name('admin.booking.print.ticketed');
+            Route::get('/print/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'printTicketed'])->name('admin.booking.print.ticketed');
+            Route::get('/sendemail/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'sendEmailTicketed'])->name('admin.booking.send.email.ticketed');
             
             // Route::get('/edit/{user}', [App\Http\Controllers\Admin\BookingController::class, 'edit'])->name('admin.booking.edit');
             // Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');
@@ -114,6 +116,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/edit/{baggage}', [App\Http\Controllers\Admin\BaggageController::class, 'edit'])->name('admin.baggage.edit');
             Route::post('/update', [App\Http\Controllers\Admin\BaggageController::class, 'update'])->name('admin.baggage.update');
         });
+
+        Route::prefix('payment')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('admin.payment.index');
+            Route::get('/add', [App\Http\Controllers\Admin\PaymentController::class, 'create'])->name('admin.payment.create');
+            Route::post('/store', [App\Http\Controllers\Admin\PaymentController::class, 'store'])->name('admin.payment.store');
+            Route::get('/edit/{payment}', [App\Http\Controllers\Admin\PaymentController::class, 'edit'])->name('admin.payment.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\PaymentController::class, 'update'])->name('admin.payment.update');
+        });
+
     });
 });
 

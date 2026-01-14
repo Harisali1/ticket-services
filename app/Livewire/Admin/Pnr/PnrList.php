@@ -30,48 +30,48 @@ class PnrList extends Component
         'to' => '',
     ];
 
-    public function openPutOnSale($pnrId)
-    {
+    // public function openPutOnSale($pnrId)
+    // {
 
-       $seats = Seat::where('pnr_id', $pnrId)
-            ->selectRaw('
-                pnr_id,
-                COUNT(*) AS total_seats,
-                SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS available_seats,
-                SUM(CASE WHEN is_sale = 1 THEN 1 ELSE 0 END) AS sale_seats,
-                SUM(CASE WHEN is_sold = 1 THEN 1 ELSE 0 END) AS sold_seats
-            ')
-            ->groupBy('pnr_id')
-            ->first();
+    //    $seats = Seat::where('pnr_id', $pnrId)
+    //         ->selectRaw('
+    //             pnr_id,
+    //             COUNT(*) AS total_seats,
+    //             SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS available_seats,
+    //             SUM(CASE WHEN is_sale = 1 THEN 1 ELSE 0 END) AS sale_seats,
+    //             SUM(CASE WHEN is_sold = 1 THEN 1 ELSE 0 END) AS sold_seats
+    //         ')
+    //         ->groupBy('pnr_id')
+    //         ->first();
 
-        $this->selectedPnr = $seats;
+    //     $this->selectedPnr = $seats;
         
-        $this->selectedPnrId = $pnrId;
-        $this->seats = null;
-        $this->price = null;
+    //     $this->selectedPnrId = $pnrId;
+    //     $this->seats = null;
+    //     $this->price = null;
 
-        $this->dispatch('open-put-on-sale-modal');
-    }
+    //     $this->dispatch('open-put-on-sale-modal');
+    // }
 
-    public function openCancelCurrentSale($pnrId)
-    {
+    // public function openCancelCurrentSale($pnrId)
+    // {
 
-       $seats = Seat::where('pnr_id', $pnrId)
-            ->selectRaw('
-                pnr_id,
-                COUNT(*) AS total_seats,
-                SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS available_seats,
-                SUM(CASE WHEN is_sale = 1 THEN 1 ELSE 0 END) AS sale_seats,
-                SUM(CASE WHEN is_sold = 1 THEN 1 ELSE 0 END) AS sold_seats
-            ')
-            ->groupBy('pnr_id')
-            ->first();
+    //    $seats = Seat::where('pnr_id', $pnrId)
+    //         ->selectRaw('
+    //             pnr_id,
+    //             COUNT(*) AS total_seats,
+    //             SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) AS available_seats,
+    //             SUM(CASE WHEN is_sale = 1 THEN 1 ELSE 0 END) AS sale_seats,
+    //             SUM(CASE WHEN is_sold = 1 THEN 1 ELSE 0 END) AS sold_seats
+    //         ')
+    //         ->groupBy('pnr_id')
+    //         ->first();
 
-        $this->selectedPnr = $seats;
-        $this->selectedPnrId = $pnrId;
-        $this->comment = null;
-        $this->dispatch('open-cancel-current-sale-modal');
-    }
+    //     $this->selectedPnr = $seats;
+    //     $this->selectedPnrId = $pnrId;
+    //     $this->comment = null;
+    //     $this->dispatch('open-cancel-current-sale-modal');
+    // }
 
     public function updatedPerPage()
     {

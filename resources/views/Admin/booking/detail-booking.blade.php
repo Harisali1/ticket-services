@@ -33,8 +33,8 @@
         </div>
         <div class="btn-group">
             @if($booking->status->label() === 'Created')
-                <button class="btn btn-danger btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'cancel')">Cancel PNR</button>
-                <button class="btn btn-success btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'ticket')">Ticket</button>
+                <button class="btn btn-danger btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'cancel', 'Do you want to Cancel this Booking?')">Cancel PNR</button>
+                <button class="btn btn-success btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'ticket', 'Do you want to Ticketed this Booking?')">Ticket</button>
             @endif
             <a href="{{ route('admin.booking.print.itinerary', $booking->id) }}"><button class="btn btn-secondary btn-sm">Print Itinerary</button></a>
         </div>
@@ -113,7 +113,7 @@
                 <div class="row align-items-center mb-2">
                     <div class="col-md-6">
                         <span class="me-2">Ticket Number</span>
-                        <a href="{{ route('admin.booking.print.ticketed', $booking->id) }}">
+                        <a href="{{ route('admin.booking.print.ticketed', [$booking->id, 'dept']) }}">
                             <span class="badge ticket-badge">
                                 {{ $booking->dept_ticket_no }} <i class="bi bi-files copy-icon"></i>
                             </span>
@@ -135,9 +135,11 @@
                     <div class="row align-items-center mb-3">
                         <div class="col-md-6">
                             <span class="me-2">Ticket Number</span>
-                            <span class="badge ticket-badge">
-                                {{ $booking->arr_ticket_no }} <i class="bi bi-files copy-icon"></i>
-                            </span>
+                            <a href="{{ route('admin.booking.print.ticketed', [$booking->id, 'arr']) }}">
+                                <span class="badge ticket-badge">
+                                    {{ $booking->arr_ticket_no }} <i class="bi bi-files copy-icon"></i>
+                                </span>
+                            </a>
                         </div>
 
                         <div class="col-md-6 text-end">
@@ -149,9 +151,12 @@
                     </div>
                 @endif
                 <!-- Button -->
-                <button class="btn btn-primary btn-sm">
-                    <i class="bi bi-send"></i> Send tickets by email
-                </button>
+                <a href="{{ route('admin.booking.send.email.ticketed', [$booking->id, 'dept']) }}">
+                    <button class="btn btn-primary btn-sm">
+                        <i class="bi bi-send"></i> Send tickets by email
+                    </button>
+                </a>
+                
             </div>
             @endif
         </div>
@@ -521,10 +526,10 @@
         }
     });
 
-    function ticketedBooking(id, status){
-            Swal.fire({
+    function ticketedBooking(id, status, message){
+        Swal.fire({
             title: "Are you sure?",
-            text: "Do you want to Ticketed this Booking?",
+            text: message,
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Yes",

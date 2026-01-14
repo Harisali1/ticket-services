@@ -99,13 +99,17 @@
                 DIALLO, YORO
             </td>
             <td width="25%">
-                <div class="value">7030001030550</div>
+                @if($type == 'dept')
+                    <div class="value">{{ $booking['dept_ticket_no'] }}</div>
+                @else
+                    <div class="value">{{ $booking['arr_ticket_no'] }}</div>
+                @endif
             </td>
             <td width="25%">
-                <div class="value">126DDC</div>
+                <div class="value">{{ $booking['booking_no'] }}</div>
             </td>
             <td width="25%">
-                <div class="value">17 December 2025</div>
+                <div class="value">{{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y') }}</div>
             </td>
         </tr>
     </table>
@@ -129,8 +133,13 @@
         <tr>
             <td width="45%">
                 <div class="label">Departure</div>
-                {{ $booking['pnr']['departure']['name'] }} ({{ $booking['pnr']['departure']['code'] }}), {{ $booking['pnr']['departure']['country'] }}<br>
-                <strong>{{ $booking['pnr']['departure_time'] }}</strong>
+                @if($type == 'dept')
+                    {{ $booking['pnr']['departure']['name'] }} ({{ $booking['pnr']['departure']['code'] }}), {{ $booking['pnr']['departure']['country'] }}<br>
+                    <strong>{{ $booking['pnr']['departure_time'] }}</strong>
+                @else
+                    {{ $booking['pnr']['return_departure']['name'] }} ({{ $booking['pnr']['return_departure']['code'] }}), {{ $booking['pnr']['return_departure']['country'] }}<br>
+                    <strong>{{ $booking['pnr']['return_departure_time'] }}</strong>
+                @endif
             </td>
 
             <td width="10%" class="center">
@@ -139,8 +148,13 @@
 
             <td width="45%">
                 <div class="label">Arrival</div>
-                {{ $booking['pnr']['arrival']['name'] }} ({{ $booking['pnr']['arrival']['code'] }}), {{ $booking['pnr']['arrival']['country'] }}<br>
-                <strong>{{ $booking['pnr']['arrival_time'] }}</strong>
+                 @if($type == 'dept')
+                    {{ $booking['pnr']['arrival']['name'] }} ({{ $booking['pnr']['arrival']['code'] }}), {{ $booking['pnr']['arrival']['country'] }}<br>
+                    <strong>{{ $booking['pnr']['arrival_time'] }}</strong>
+                @else
+                    {{ $booking['pnr']['return_arrival']['name'] }} ({{ $booking['pnr']['return_arrival']['code'] }}), {{ $booking['pnr']['return_arrival']['country'] }}<br>
+                    <strong>{{ $booking['pnr']['return_arrival_time'] }}</strong>
+                @endif
             </td>
         </tr>
     </table>

@@ -9,6 +9,7 @@ use App\Http\Requests\AgencyUpdateRequest;
 use App\Models\Admin\Agency;
 use App\Models\User;
 use DB;
+use Illuminate\Support\Facades\Mail;
 
 class AgencyController extends Controller
 {
@@ -17,6 +18,12 @@ class AgencyController extends Controller
     }
 
     public function create(){
+        // Mail::send('Admin.email_template.check', ['data' => 6871007], function ($message) {
+        //     $message->from("harismusharaf9001@gmail.com")
+        //     ->to("noreply@agency.divinetravel.it")
+        //     ->subject('Notice of Delivery - Order# 6871007');
+        // });
+
         return view('Admin.agency.add');
     }
 

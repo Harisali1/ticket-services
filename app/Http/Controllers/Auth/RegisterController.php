@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\SignupMail;
+use Illuminate\Support\Facades\Mail;
+use DB;
 
 class RegisterController extends Controller
 {
@@ -101,22 +104,43 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user =  User::create([
-            'user_type_id' => 2,
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'phone_no' => $data['phone_no']
-        ]);
+        DB::beginTransaction();
 
-        Agency::create([
-            'user_id' => $user->id,
-            'name' => $data['business_name'],
-            'piv' => $data['piv'],
-            'address' => $data['business_address']
-        ]);
+        try {
+            $user =  User::create([
+                'user_type_id' => 2,
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'phone_no' => $data['phone_no']
+            ]);
 
-        return $user;
+            $agency = Agency::create([
+                'user_id' => $user->id,
+                'name' => $data['business_name'],
+                'piv' => $data['piv'],
+                'address' => $data['business_address']
+            ]);
+
+            Mail::to($user->email)->send(new SignupMail($user, $agency));
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'you have successfully registered your agency registeration email send to your email address',
+            ], 200);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
 }

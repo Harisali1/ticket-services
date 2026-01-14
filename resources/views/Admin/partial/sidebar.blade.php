@@ -26,10 +26,6 @@
                     <span class="menu-text">Manage Agencies</span>
                 </a>
 
-                <!-- <a href="{{ route('admin.baggage.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
-                    <i class="fa fa-suitcase me-3"></i>
-                    <span class="menu-text">Baggages</span>
-                </a> -->
                 <a href="{{ route('admin.airline.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-plane me-3"></i>
                     <span class="menu-text">Manage Airline</span>
@@ -82,10 +78,7 @@
                     <i class="fa fa-cog me-3"></i>
                     <span class="menu-text">Sub Agencies</span>
                 </a>
-                <!-- <a href="#" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
-                    <i class="fa fa-cog me-3"></i>
-                    <span class="menu-text">Configuration </span>
-                </a> -->
+
                 <a href="{{ route('admin.bank.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">Payments</span>

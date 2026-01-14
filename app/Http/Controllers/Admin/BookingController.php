@@ -14,6 +14,7 @@ use App\Models\Admin\BookingPassenger;
 use App\Models\Admin\FareRule;
 use DB;
 use PDF;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -307,15 +308,36 @@ class BookingController extends Controller
 
     }
 
-    public function printTicketed($bookingId){
+    public function printTicketed($bookingId,$type){
 
         $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
         ->get(['customers.name', 'customers.phone_no', 'customers.dob']);
+        $response['type'] = $type;
 
         $pdf = PDF::loadView('Admin/print/ticketed', $response);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('my-pdf.pdf');
+        
+    }
+
+    public function sendEmailTicketed($bookingId,$type){
+
+        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
+        $response['booking'] = $bookingData->toArray();
+        $response['customers'] = Customer::where('customers.booking_id', $bookingId)
+        ->get(['customers.name', 'customers.phone_no', 'customers.dob']);
+        $response['type'] = $type;
+
+        $pdf = PDF::loadView('Admin/print/ticketed', $response);
+        $pdf->setPaper('A4', 'portrait');
+
+        Mail::send('Admin.email_template.check', ['data' => 6871007], function ($message) use ($pdf) {
+            $message->to('noreply@agency.divinetravel.it')
+                ->subject('Notice of Delivery - Order# 6871007')
+                ->attachData($pdf->output(), 'ticket.pdf');
+        });
+        
     }
 }

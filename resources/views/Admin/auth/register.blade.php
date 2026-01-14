@@ -273,9 +273,17 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
         method: "POST",
         data: $('#registerForm').serialize(),
         dataType: "json",
-        success: function(response) {
+        success: function(data) {
+            console.log(data);
             Swal.close();
-            window.location.href = "{{ route('admin.dashboard') }}";
+            // Swal.fire({
+            //     toast: true,
+            //     position: "top-end",
+            //     icon: "error",
+            //     title: response.message,
+            //     showConfirmButton: false,
+            //     timer: 9500
+            // });
         },
         error: function(xhr) {
             Swal.close();
