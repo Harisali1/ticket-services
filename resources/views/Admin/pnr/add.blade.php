@@ -236,12 +236,12 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 return-fields d-none">
+                <div class="col-md-2 return-fields d-none">
                     <label class="form-label text-muted">Return Departure Date</label>
                     <input type="date" id="return_departure_date" name="return_departure_date" class="form-control">
                 </div>
 
-                <div class="col-md-3 return-fields d-none">
+                <div class="col-md-2 return-fields d-none">
                     <label class="form-label text-muted">Return Departure Time</label>
                     <div class="d-flex align-items-center gap-2">
                     <input
@@ -267,12 +267,66 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 return-fields d-none">
+                <div class="col-md-2 return-fields d-none">
+                    <label class="form-label text-muted">Middle Arrival Time</label>
+                    <!-- <input type="time" id="time" name="time"> -->
+                    <div class="d-flex align-items-center gap-2">
+                        <input
+                            type="number"
+                            min="0"
+                            max="23"
+                            id="middle_return_arrival_time_hour"
+                            name="middle_return_arrival_time_hour"
+                            class="form-control"
+                            placeholder="HH"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
+                        <input
+                            type="number"
+                            min="0"
+                            max="59"
+                            id="middle_return_arrival_time_minute"
+                            name="middle_return_arrival_time_minute"
+                            class="form-control"
+                            placeholder="MM"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
+                    </div>
+                </div>
+                <!-- Arrival Time -->
+                <div class="col-md-2 return-fields d-none">
+                    <label class="form-label text-muted">Rest Time *</label>
+                    <!-- <input type="time" id="time" name="time"> -->
+                    <div class="d-flex align-items-center gap-2">
+                        <input
+                            type="number"
+                            min="0"
+                            max="23"
+                            id="return_rest_time_hour"
+                            name="return_rest_time_hour"
+                            class="form-control"
+                            placeholder="HH"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
+                        <input
+                            type="number"
+                            min="0"
+                            max="59"
+                            id="return_rest_time_minute"
+                            name="return_rest_time_minute"
+                            class="form-control"
+                            placeholder="MM"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
+                            if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
+                    </div>
+                </div>
+
+                <div class="col-md-2 return-fields d-none">
                     <label class="form-label text-muted">Return Arrival Date</label>
                     <input type="date" id="return_arrival_date" name="return_arrival_date" class="form-control">
                 </div>
 
-                <div class="col-md-3 return-fields d-none">
+                <div class="col-md-2 return-fields d-none">
                     <label class="form-label text-muted">Return Arrival Time</label>
                     <div class="d-flex align-items-center gap-2">
                     <input

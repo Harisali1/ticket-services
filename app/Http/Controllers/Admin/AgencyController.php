@@ -46,6 +46,7 @@ class AgencyController extends Controller
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
                 'password'  => bcrypt($validated['password']),
+                'show_pass' => $data['password'],
                 'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);
@@ -55,6 +56,7 @@ class AgencyController extends Controller
                 'user_id'   => $user->id,
                 'name'      => $validated['agency_name'],
                 'piv'       => $validated['piv'],
+                'show_pass' => $data['password'],
                 'address'   => $validated['agency_address'],
                 'status'    => $status,
                 'created_by'=> auth()->user()->id,

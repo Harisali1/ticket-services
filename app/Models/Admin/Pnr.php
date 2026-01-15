@@ -48,6 +48,10 @@ class Pnr extends Model
         return $this->belongsTo(Airport::class, 'return_departure_id', 'id');
     }
 
+    public function middle_return_arrival(){
+        return $this->belongsTo(Airport::class, 'return_middle_arrival_id', 'id');
+    }
+
     public function return_arrival(){
         return $this->belongsTo(Airport::class, 'return_arrival_id', 'id');
     }
@@ -93,18 +97,68 @@ class Pnr extends Model
         ->setTimeFromTimeString($this->middle_arrival_time)->format('d-M-y H:i');
     }
 
+    public function getMiddleReturnArrivalDateTimeAttribute()
+    {
+        return \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getReturnDepartureDateTimeAttribute())
+        ->setTimeFromTimeString($this->middle_return_arrival_time)->format('d-M-y H:i');
+    }
+
     public function getMiddleDepartureDateTimeAttribute()
     {
         $datetime = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleArrivalDateTimeAttribute());
-        // $datetime = $this->getMiddleArrivalDateTimeAttribute();
         $duration = $this->rest_time;
         [$hours, $minutes] = explode(':', $duration);
-
-
         $result = $datetime
             ->addHours($hours)
             ->addMinutes($minutes);
         return $result->format('d-M-y H:i');
+    }
+
+    public function getMiddleReturnDepartureDateTimeAttribute()
+    {
+        $datetime = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleReturnArrivalDateTimeAttribute());
+        $duration = $this->return_rest_time;
+        [$hours, $minutes] = explode(':', $duration);
+        $result = $datetime
+            ->addHours($hours)
+            ->addMinutes($minutes);
+        return $result->format('d-M-y H:i');
+    }
+
+    public function getFirstDurationAttribute(){
+        $start = \Carbon\Carbon::createFromFormat('H:i:s', $this->departure_time);
+        $end   = \Carbon\Carbon::createFromFormat('H:i', $this->middle_arrival_time);
+
+        $diff = $start->diff($end);
+
+        return $diff->format('%H'.'h %I'.'m');
+    }
+
+    public function getFirstReturnDurationAttribute(){
+        $start = \Carbon\Carbon::createFromFormat('H:i:s', $this->return_departure_time);
+        $end   = \Carbon\Carbon::createFromFormat('H:i', $this->middle_return_arrival_time);
+
+        $diff = $start->diff($end);
+
+        return $diff->format('%H'.'h %I'.'m');
+    }
+
+    public function getSecondDurationAttribute(){
+        $start = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleDepartureDateTimeAttribute());
+        $end   = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getArrivalDateTimeAttribute());
+
+        $diff = $start->diff($end);
+
+        return $diff->format('%H'.'h %I'.'m');
+    }
+
+    public function getSecondReturnDurationAttribute(){
+        $start = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleReturnDepartureDateTimeAttribute());
+        $end   = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getReturnArrivalDateTimeAttribute());
+
+        $diff = $start->diff($end);
+
+        return $diff->format('%H'.'h %I'.'m');
     }
 
     public function getArrivalDateTimeAttribute()

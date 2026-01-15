@@ -97,8 +97,13 @@ class BookingList extends Component
 
     public function render()
     {
-        $bookings = Booking::query()
-            ->when($this->filters['pnr_no'], fn ($q) =>
+        $bookings = Booking::query();
+
+        if(auth()->user()->user_type_id != 1){
+            $bookings = $bookings->where('created_by', auth()->user()->id);
+        }
+
+        $bookings = $bookings->when($this->filters['pnr_no'], fn ($q) =>
                 $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
             )
             ->when($this->filters['status'] !== '', fn ($q) =>

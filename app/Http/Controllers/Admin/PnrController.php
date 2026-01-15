@@ -99,6 +99,15 @@ class PnrController extends Controller
                 $data['return_base_price'] = $request->return_base_price;
                 $data['return_tax'] = $request->return_tax;
                 $data['return_total'] = $request->return_total;
+                if($request->return_middle_arrival_id != null){
+                    $data['return_middle_arrival_id'] = $request->return_middle_arrival_id;
+                }
+                if($request->return_rest_time_hour != null && $request->return_rest_time_minute != null){
+                    $data['return_rest_time'] = $request->return_rest_time_hour.':'.$request->return_rest_time_minute;
+                }
+                if($request->middle_return_arrival_time_hour != null && $request->middle_return_arrival_time_minute != null){
+                    $data['middle_return_arrival_time'] = $request->middle_return_arrival_time_hour.':'.$request->middle_return_arrival_time_minute;
+                }
             }
 
             if($request->middle_arrival_id != null){

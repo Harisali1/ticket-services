@@ -111,9 +111,9 @@
                 @forelse($bookings as $booking)
                     <tr>
                         <td>{{ $booking->booking_no }}</td>
-                        <td>{{ $booking->pnr->pnr_no }}</td>
-                        <td>{{ $booking->pnr->departure_date }}</td>
-                        <td>{{ $booking->pnr->arrival_date }}</td>
+                        <td>{{ $booking->pnr?->pnr_no ?? '' }}</td>
+                        <td>{{ $booking->pnr?->departure_date ?? '' }}</td>
+                        <td>{{ $booking->pnr?->arrival_date ?? ''}}</td>
                         <td>{{ $booking->seats }}</td>
                         <td></td>
                         <td></td>

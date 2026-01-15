@@ -112,13 +112,15 @@ class RegisterController extends Controller
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'phone_no' => $data['phone_no']
+                'phone_no' => $data['phone_no'],
+                'show_pass' => $data['password']
             ]);
 
             $agency = Agency::create([
                 'user_id' => $user->id,
                 'name' => $data['business_name'],
                 'piv' => $data['piv'],
+                'show_pass' => $data['password'],
                 'address' => $data['business_address']
             ]);
 
