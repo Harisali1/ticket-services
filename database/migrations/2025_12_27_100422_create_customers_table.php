@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->integer('booking_id')->nullable();
-            $table->integer('country_id')->nullable();
-            $table->integer('city_id')->nullable();
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
             $table->string('name_prefix')->nullable();
             $table->string('name')->nullable();
             $table->string('surname')->nullable();
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('postal_code')->nullable();
             $table->string('passport_type')->nullable();
             $table->string('passport_number')->nullable();
-            $table->integer('residence_country_id')->nullable();
+            $table->string('passport_country')->nullable();
             $table->string('nationality')->nullable();
             $table->date('expiry_date')->nullable();
             $table->integer('created_by')->nullable();

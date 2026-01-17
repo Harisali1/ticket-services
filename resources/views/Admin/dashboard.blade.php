@@ -113,30 +113,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($todayReservation as $reservation)
                                 <tr>
                                     <td>1</td>
-                                    <td>ABC123</td>
+                                    <td>{{ $reservation->pnr->pnr_no }}</td>
                                     <td>KHI → DXB</td>
                                     <td>
                                         <span class="badge bg-success">Confirmed</span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>XYZ456</td>
-                                    <td>LHE → JED</td>
-                                    <td>
-                                        <span class="badge bg-warning text-dark">Pending</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>LMN789</td>
-                                    <td>ISB → DOH</td>
-                                    <td>
-                                        <span class="badge bg-danger">Cancelled</span>
-                                    </td>
-                                </tr>
+                                @endforeach
+ 
                             </tbody>
                         </table>
                     </div>

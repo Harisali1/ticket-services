@@ -290,7 +290,7 @@
                                                             <div class="my-1">
                                                                 <span class="badge rounded-pill bg-light text-dark border px-3 py-1"
                                                                     style="font-size:12px;">
-                                                                    {{ $pnr->rest_time }}
+                                                                    {{ $pnr->break_time }}
                                                                 </span>
                                                             </div>
 

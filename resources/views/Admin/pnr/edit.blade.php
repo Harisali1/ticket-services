@@ -56,28 +56,26 @@
                     <label class="form-label text-muted">Aircraft</label>
                     <input type="text" name="air_craft" id="air_craft" class="form-control" value="{{ old('air_craft', $pnr->air_craft ?? '') }}">
                 </div>
-
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Class</label>
-                    <select class="form-select" name="class" id="class">
-                        <option value="Y" {{ (old('class', $pnr->class ?? 'Y') == 'Y') ? 'selected' : '' }}>Y</option>
-                    </select>
-                </div>
+                
             </div>
 
             <!-- Route & Airline -->
             <hr>
             <h5 class="mb-3">Route & Airline</h5>
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label text-muted">Departure</label>
                     <select class="form-select select2" id="departure_id" name="departure_id"></select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Middle Arrival</label>
+                    <select class="form-select select2" id="middle_arrival_id" name="middle_arrival_id"></select>
+                </div>
+                <div class="col-md-3">
                     <label class="form-label text-muted">Arrival</label>
                     <select class="form-select select2" id="arrival_id" name="arrival_id"></select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label text-muted">Airline</label>
                     <select class="form-select select2" id="airline_id" name="airline_id"></select>
                 </div>
@@ -85,15 +83,19 @@
 
             <!-- Return Fields -->
             <div class="row g-3 return-fields mt-2 {{ (old('pnr_type', $pnr->pnr_type ?? '') == 'return' || old('pnr_type', $pnr->pnr_type ?? '') == 'open_jaw') ? '' : 'd-none' }}">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="return_departure_id" class="form-label text-muted">Return Departure</label>
                     <select class="form-select select2 return-select" id="return_departure_id" name="return_departure_id"></select>
                 </div>
-                <div class="col-md-4">
+                 <div class="col-md-3">
+                    <label class="form-label text-muted">Return Middle Arrival</label>
+                    <select class="form-select select2" id="return_middle_arrival_id" name="return_middle_arrival_id"></select>
+                </div>
+                <div class="col-md-3">
                     <label for="return_arrival_id" class="form-label text-muted">Return Arrival</label>
                     <select class="form-select select2 return-select" id="return_arrival_id" name="return_arrival_id"></select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="return_airline_id" class="form-label text-muted">Return Airline</label>
                     <select class="form-select select2 return-select" id="return_airline_id" name="return_airline_id"></select>
                 </div>
@@ -103,11 +105,11 @@
             <hr>
             <h5 class="mb-3">Dates & Times</h5>
             <div class="row g-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Departure Date *</label>
                     <input type="date" id="departure_date" name="departure_date" class="form-control" value="{{ old('departure_date', $pnr->departure_date ?? '') }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Departure Time</label>
                     <div class="d-flex align-items-center gap-2">
                         <input type="number" min="0" max="23" id="departure_time_hour" name="departure_time_hour" class="form-control" placeholder="HH"
@@ -116,11 +118,29 @@
                                value="{{ old('departure_time_minute', $pnr->departure_time_minute ?? '') }}">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Middle Arrival Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number" min="0" max="23" id="middle_arrival_time_hour" name="middle_arrival_time_hour" class="form-control" placeholder="HH"
+                               value="{{ old('middle_arrival_time_hour', $pnr->middle_arrival_time_hour ?? '') }}">
+                        <input type="number" min="0" max="59" id="middle_arrival_time_minute" name="middle_arrival_time_minute" class="form-control" placeholder="MM"
+                               value="{{ old('middle_arrival_time_minute', $pnr->middle_arrival_time_minute ?? '') }}">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label text-muted">Middle Dept Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number" min="0" max="23" id="middle_departure_time_hour" name="middle_departure_time_hour" class="form-control" placeholder="HH"
+                               value="{{ old('middle_departure_time_hour', $pnr->middle_departure_time_hour ?? '') }}">
+                        <input type="number" min="0" max="59" id="middle_departure_time_minute" name="middle_departure_time_minute" class="form-control" placeholder="MM"
+                               value="{{ old('middle_departure_time_minute', $pnr->middle_departure_time_minute ?? '') }}">
+                    </div>
+                </div>
+                <div class="col-md-2">
                     <label class="form-label text-muted">Arrival Date *</label>
                     <input type="date" id="arrival_date" name="arrival_date" class="form-control" value="{{ old('arrival_date', $pnr->arrival_date ?? '') }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label text-muted">Arrival Time *</label>
                     <div class="d-flex align-items-center gap-2">
                         <input type="number" min="0" max="23" id="arrival_time_hour" name="arrival_time_hour" class="form-control" placeholder="HH"
@@ -131,12 +151,12 @@
                 </div>
 
                 <!-- Return Dates & Times -->
-                <div class="col-md-3 return-fields d-none">
+                <div class="col-md-2 return-fields d-none">
                     <label class="form-label text-muted">Return Departure Date</label>
                     <input type="date" id="return_departure_date" name="return_departure_date" class="form-control"
                            value="{{ old('return_departure_date', $pnr->return_departure_date ?? '') }}">
                 </div>
-                <div class="col-md-3 return-fields d-none">
+                <div class="col-md-2 return-fields d-none">
                     <label class="form-label text-muted">Return Departure Time</label>
                     <div class="d-flex align-items-center gap-2">
                         <input type="number" min="0" max="23" id="return_departure_time_hour" name="return_departure_time_hour" class="form-control" placeholder="HH"
@@ -145,12 +165,30 @@
                                value="{{ old('return_departure_time_minute', $pnr->return_departure_time_minute ?? '') }}">
                     </div>
                 </div>
-                <div class="col-md-3 return-fields d-none">
+                <div class="col-md-2 return-fields d-none">
+                    <label class="form-label text-muted">Middle Arrival Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number" min="0" max="23" id="middle_return_arrival_time_hour" name="middle_return_arrival_time_hour" class="form-control" placeholder="HH"
+                               value="{{ old('middle_return_arrival_time_hour', $pnr->middle_return_arrival_time_hour ?? '') }}">
+                        <input type="number" min="0" max="59" id="middle_return_arrival_time_minute" name="middle_return_arrival_time_minute" class="form-control" placeholder="MM"
+                               value="{{ old('middle_return_arrival_time_minute', $pnr->middle_return_arrival_time_minute ?? '') }}">
+                    </div>
+                </div>
+                <div class="col-md-2 return-fields d-none">
+                    <label class="form-label text-muted">Middle Departure Time</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number" min="0" max="23" id="middle_return_departure_time_hour" name="middle_return_departure_time_hour" class="form-control" placeholder="HH"
+                               value="{{ old('middle_return_departure_time_hour', $pnr->middle_return_departure_time_hour ?? '') }}">
+                        <input type="number" min="0" max="59" id="middle_return_departure_time_minute" name="middle_return_departure_time_minute" class="form-control" placeholder="MM"
+                               value="{{ old('middle_return_departure_time_minute', $pnr->middle_return_departure_time_minute ?? '') }}">
+                    </div>
+                </div>
+                <div class="col-md-2 return-fields d-none">
                     <label class="form-label text-muted">Return Arrival Date</label>
                     <input type="date" id="return_arrival_date" name="return_arrival_date" class="form-control"
                            value="{{ old('return_arrival_date', $pnr->return_arrival_date ?? '') }}">
                 </div>
-                <div class="col-md-3 return-fields d-none">
+                <div class="col-md-2 return-fields d-none">
                     <label class="form-label text-muted">Return Arrival Time</label>
                     <div class="d-flex align-items-center gap-2">
                         <input type="number" min="0" max="23" id="return_arrival_time_hour" name="return_arrival_time_hour" class="form-control" placeholder="HH"
@@ -313,20 +351,24 @@
 
         // Init Select2
         initSelect2('#departure_id', "{{ route('search.airport') }}");
+        initSelect2('#middle_arrival_id', "{{ route('search.airport') }}");
         initSelect2('#arrival_id', "{{ route('search.airport') }}");
         initSelect2('#airline_id', "{{ route('search.airline') }}");
         initSelect2('#return_departure_id', "{{ route('search.airport') }}");
+        initSelect2('#return_middle_arrival_id', "{{ route('search.airport') }}");
         initSelect2('#return_arrival_id', "{{ route('search.airport') }}");
         initSelect2('#return_airline_id', "{{ route('search.airline') }}");
 
         @if(isset($pnr))
             setSelect2AjaxValue($('#departure_id'), '{{ $pnr->departure_id }}', '{{ $pnr->departure->name ?? '' }}');
+            setSelect2AjaxValue($('#middle_arrival_id'), '{{ $pnr->middle_arrival_id }}', '{{ $pnr->middle_arrival->name ?? '' }}');
             setSelect2AjaxValue($('#arrival_id'), '{{ $pnr->arrival_id }}', '{{ $pnr->arrival->name ?? '' }}');
             setSelect2AjaxValue($('#airline_id'), '{{ $pnr->airline_id }}', '{{ $pnr->airline->name ?? '' }}');
 
             @if(in_array($pnr->pnr_type, ['return', 'open_jaw']))
                 $('.return-fields').removeClass('d-none');
                 setSelect2AjaxValue($('#return_departure_id'), '{{ $pnr->return_departure_id }}', '{{ $pnr->return_departure->name ?? '' }}');
+                setSelect2AjaxValue($('#return_middle_arrival_id'), '{{ $pnr->return_middle_arrival_id }}', '{{ $pnr->middle_return_arrival->name ?? '' }}');
                 setSelect2AjaxValue($('#return_arrival_id'), '{{ $pnr->return_arrival_id }}', '{{ $pnr->return_arrival->name ?? '' }}');
                 setSelect2AjaxValue($('#return_airline_id'), '{{ $pnr->return_airline_id }}', '{{ $pnr->return_airline->name ?? '' }}');
             @endif

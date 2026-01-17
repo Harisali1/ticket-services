@@ -27,18 +27,20 @@
                         </p>
 
                         <p style="font-size:14px;line-height:1.6;">
-                            Thank you for signing up with <strong>Divine Travel.</strong>
-                            Your account has been successfully created but is not active yet.
-                            It is currently pending approval. Once your account is approved, you will automatically receive an email notification.
-                            After approval, you will be able to book flights, manage tickets, and access exclusive offers.
+                            We are pleased to inform you that your agency has been successfully registered and approved by the administrator at <strong>Divine Travel</strong>.
+                        </p>
+
+                        <p style="font-size:14px;line-height:1.6;">
+                            Your auto-generated login credentials are provided below:
                         </p>
 
                         <p style="font-size:14px;">
-                            <strong>Email:</strong> {{ $user->email ?? '-' }}
+                            <strong>Email:</strong> {{ $user->email }}<br>
+                            <strong>Password:</strong> {{ $user->show_pass }}
                         </p>
 
                         <p style="font-size:13px;color:#555;">
-                            If you did not create this account, please ignore this email.
+                            For security reasons, we recommend changing your password after your first login.
                         </p>
 
                         <p style="font-size:13px;margin-top:25px;">

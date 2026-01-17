@@ -22,7 +22,17 @@
 
         <!-- Form -->
         <form id="pnr-form" enctype="multipart/form-data">
-            <h5 class="mb-3">Upload Pnr</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Upload Pnr</h5>
+
+                <a download href="{{ asset('sample/pnr_sample_file.csv') }}">
+                    <button type="button" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-upload me-1"></i> Download Sample File
+                    </button>
+                </a>
+            </div>
+
+
             <!-- Upload Section -->
             <div class="mt-5">
                 <h6 class="fw-semibold text-secondary mb-3">

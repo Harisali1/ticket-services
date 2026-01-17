@@ -31,7 +31,7 @@
             <h5 class="mb-3">PNR & Flight Info</h5>
             <div class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label text-muted">PNR Type</label>
+                    <label class="form-label text-muted">PNR Type *</label>
                     <select class="form-select select2" id="pnr_type" name="pnr_type">
                         <option value="">Please Select Type</option>
                         <option value="one_way">One Way</option>
@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Flight No</label>
+                    <label class="form-label text-muted">Flight No *</label>
                     <input type="text" name="flight_no" id="flight_no" class="form-control">
                 </div>
 
@@ -55,16 +55,6 @@
                     <input type="text" name="air_craft" id="air_craft" class="form-control">
                 </div>
 
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Class</label>
-                    <select class="form-select" name="class" id="class">
-                        <option value="Y" selected>Y</option>
-                    </select>
-                </div>
-                <!-- <div class="col-md-3">
-                    <label class="form-label text-muted">Connected Flight</label>
-                    <input type="checkbox" id="connected_flight" name="connected_flight">
-                </div> -->
             </div>
 
             <hr>
@@ -72,7 +62,7 @@
             <!-- Outbound -->
             <div class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Departure</label>
+                    <label class="form-label text-muted">Departure *</label>
                     <select class="form-select select2" id="departure_id" name="departure_id"></select>
                 </div>
 
@@ -82,12 +72,12 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Arrival</label>
+                    <label class="form-label text-muted">Arrival *</label>
                     <select class="form-select select2" id="arrival_id" name="arrival_id"></select>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Airline</label>
+                    <label class="form-label text-muted">Airline *</label>
                     <select class="form-select select2" id="airline_id" name="airline_id"></select>
                 </div>
             </div>
@@ -123,7 +113,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label class="form-label text-muted">Departure Time</label>
+                    <label class="form-label text-muted">Departure Time *</label>
                     <div class="d-flex align-items-center gap-2">
                         <input
                             type="number"
@@ -176,7 +166,7 @@
                 </div>
                 <!-- Arrival Time -->
                 <div class="col-md-2">
-                    <label class="form-label text-muted">Rest Time *</label>
+                    <label class="form-label text-muted">Middle Dept Time</label>
                     <!-- <input type="time" id="time" name="time"> -->
                     <div class="d-flex align-items-center gap-2">
                         <input
@@ -295,7 +285,7 @@
                 </div>
                 <!-- Arrival Time -->
                 <div class="col-md-2 return-fields d-none">
-                    <label class="form-label text-muted">Rest Time *</label>
+                    <label class="form-label text-muted">Middle Dept Time*</label>
                     <!-- <input type="time" id="time" name="time"> -->
                     <div class="d-flex align-items-center gap-2">
                         <input

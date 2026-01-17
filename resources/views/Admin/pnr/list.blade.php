@@ -2,15 +2,34 @@
 
 @section('styles')
     <style>
-        .table {
-            min-width: 1300px; /* ensures space */
-        }
+    /* Force table to fit container */
+    .pnr-table {
+        table-layout: fixed;
+        width: 100%;
+        font-size: 12px;
+    }
 
-        .table thead th {
-            white-space: nowrap;
-            vertical-align: middle;
-        }
-    </style>
+    .pnr-table th,
+    .pnr-table td {
+        white-space: normal;
+        word-wrap: break-word;
+        padding: 6px;
+        vertical-align: middle;
+    }
+
+    .pnr-table th {
+        text-align: center;
+    }
+
+    .pnr-table td {
+        text-align: center;
+    }
+
+
+
+</style>
+
+
 @endsection
 
 @section('content')

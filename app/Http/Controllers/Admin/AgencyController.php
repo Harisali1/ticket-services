@@ -10,6 +10,7 @@ use App\Models\Admin\Agency;
 use App\Models\User;
 use DB;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\AgencyCreationMail;
 
 class AgencyController extends Controller
 {
@@ -46,7 +47,7 @@ class AgencyController extends Controller
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
                 'password'  => bcrypt($validated['password']),
-                'show_pass' => $data['password'],
+                'show_pass' => $request->password,
                 'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);
@@ -56,11 +57,13 @@ class AgencyController extends Controller
                 'user_id'   => $user->id,
                 'name'      => $validated['agency_name'],
                 'piv'       => $validated['piv'],
-                'show_pass' => $data['password'],
+                'show_pass' => $request->password,
                 'address'   => $validated['agency_address'],
                 'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);
+
+            Mail::to($user->email)->send(new AgencyCreationMail($user, $agency));
 
             DB::commit();
 
@@ -71,6 +74,7 @@ class AgencyController extends Controller
 
         } catch (\Exception $e) {
 
+            dd($e);
             DB::rollBack();
 
             return response()->json([

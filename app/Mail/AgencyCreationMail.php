@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SignupMail extends Mailable
+class AgencyCreationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -46,7 +46,7 @@ class SignupMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'Admin.email_template.signup', // ✅ Blade email view
+            view: 'Admin.email_template.agency_creation', // ✅ Blade email view
             with: [
                 'user' => $this->user,
                 'agency' => $this->agency,

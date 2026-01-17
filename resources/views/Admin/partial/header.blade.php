@@ -7,7 +7,7 @@
             </form>
 
             @if(Auth::user()->user_type_id == '2')
-                <p class="mt-2">Remaining Balance: <span>0</span></p>
+                <p class="mt-2">Remaining Balance: <span>{{ Auth::user()->remaining_balance }}</span></p>
             @endif
             <div class="dropdown ms-auto">
                 <a href="#" class="d-flex align-items-center text-dark text-decoration-none" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">

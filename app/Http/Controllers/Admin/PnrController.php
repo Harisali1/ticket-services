@@ -71,7 +71,7 @@ class PnrController extends Controller
                 'flight_no' => $request->flight_no,
                 'ref_no' => $request->ref_no,
                 'air_craft' => $request->air_craft,
-                'class' => $request->class,
+                'class' => 'Y',
                 'baggage' => $request->baggage,
                 'departure_id' => $request->departure_id,
                 'arrival_id' => $request->arrival_id,
@@ -234,25 +234,28 @@ class PnrController extends Controller
             DATA ARRAY
             ====================== */
             $data = [
-                'pnr_type'        => $request->pnr_type,
-                'flight_no'       => $request->flight_no,
-                'ref_no'          => $request->ref_no,
-                'air_craft'       => $request->air_craft,
-                'class'           => $request->class,
-                'baggage'         => $request->baggage,
-                'departure_id'    => $request->departure_id,
-                'arrival_id'      => $request->arrival_id,
-                'airline_id'      => $request->airline_id,
-                'duration'        => $duration,
-                'base_price'      => $request->base_price,
-                'tax'             => $request->tax,
-                'total'           => $request->total,
-                'departure_date'  => $request->departure_date,
-                'departure_time'  => $request->departure_time_hour . ':' . $request->departure_time_minute,
-                'arrival_date'    => $request->arrival_date,
-                'arrival_time'    => $request->arrival_time_hour . ':' . $request->arrival_time_minute,
-                'seats'           => $request->seats,
-                'updated_by'      => auth()->id(),
+                'pnr_type'              => $request->pnr_type,
+                'flight_no'             => $request->flight_no,
+                'ref_no'                => $request->ref_no,
+                'air_craft'             => $request->air_craft,
+                'class'                 => $request->class,
+                'baggage'               => $request->baggage,
+                'departure_id'          => $request->departure_id,
+                'middle_arrival_id'     => (isset($request->middle_arrival_id)) ? $request->middle_arrival_id : null,
+                'arrival_id'            => $request->arrival_id,
+                'airline_id'            => $request->airline_id,
+                'duration'              => $duration,
+                'base_price'            => $request->base_price,
+                'tax'                   => $request->tax,
+                'total'                 => $request->total,
+                'departure_date'        => $request->departure_date,
+                'departure_time'        => $request->departure_time_hour . ':' . $request->departure_time_minute,
+                'middle_arrival_time'   => (isset($request->middle_arrival_time_hour) && isset($request->middle_arrival_time_minute)) ? $request->middle_arrival_time_hour . ':' . $request->middle_arrival_time_minute : null,
+                'rest_time'             => (isset($request->middle_departure_time_hour) && isset($request->middle_departure_time_minute)) ? $request->middle_departure_time_hour . ':' . $request->middle_departure_time_minute : null,
+                'arrival_date'          => $request->arrival_date,
+                'arrival_time'          => $request->arrival_time_hour . ':' . $request->arrival_time_minute,
+                'seats'                 => $request->seats,
+                'updated_by'            => auth()->id(),
             ];
 
             /* ======================
@@ -260,17 +263,20 @@ class PnrController extends Controller
             ====================== */
             if ($request->pnr_type === 'return') {
                 $data += [
-                    'return_duration'        => $returnDuration,
-                    'return_departure_id'    => $request->return_departure_id,
-                    'return_arrival_id'      => $request->return_arrival_id,
-                    'return_airline_id'      => $request->return_airline_id,
-                    'return_departure_date'  => $request->return_departure_date,
-                    'return_arrival_date'    => $request->return_arrival_date,
-                    'return_departure_time'  => $request->return_departure_time_hour . ':' . $request->return_departure_time_minute,
-                    'return_arrival_time'    => $request->return_arrival_time_hour . ':' . $request->return_arrival_time_minute,
-                    'return_base_price'      => $request->return_base_price,
-                    'return_tax'             => $request->return_tax,
-                    'return_total'           => $request->return_total,
+                    'return_duration'               => $returnDuration,
+                    'return_departure_id'           => $request->return_departure_id,
+                    'return_arrival_id'             => $request->return_arrival_id,
+                    'return_arrival_id'             => (isset($request->return_arrival_id)) ? $request->return_arrival_id : null,
+                    'return_airline_id'             => $request->return_airline_id,
+                    'return_departure_date'         => $request->return_departure_date,
+                    'return_arrival_date'           => $request->return_arrival_date,
+                    'return_departure_time'         => $request->return_departure_time_hour . ':' . $request->return_departure_time_minute,
+                    'middle_return_arrival_time'    => (isset($request->middle_return_arrival_time_hour) && isset($request->middle_return_arrival_time_minute)) ? $request->middle_return_arrival_time_hour . ':' . $request->middle_return_arrival_time_minute : null,
+                    'return_rest_time'              => (isset($request->middle_return_departure_time_hour) && isset($request->middle_return_departure_time_minute)) ? $request->middle_return_departure_time_hour . ':' . $request->middle_return_departure_time_minute : null,
+                    'return_arrival_time'           => $request->return_arrival_time_hour . ':' . $request->return_arrival_time_minute,
+                    'return_base_price'             => $request->return_base_price,
+                    'return_tax'                    => $request->return_tax,
+                    'return_total'                  => $request->return_total,
                 ];
             } else {
                 // Clear return data if changed to one-way
@@ -364,83 +370,161 @@ class PnrController extends Controller
         }
     }
 
-
     public function uploadPnr(){
         return view('Admin.pnr.upload-pnr');
     }
 
-    public function uploadPnrSubmit(Request $request){
+    public function uploadPnrSubmit(Request $request)
+    {
         $request->validate([
-            'pnr_file' => 'required|file|mimes:csv,txt|max:5120', // 5MB
+            'pnr_file' => 'required|file|mimes:csv,txt|max:5120',
         ]);
 
         try {
-            // 1️ Get file
-            $file = $request->file('pnr_file');
 
-            // 2️ Generate unique filename
-            $fileName = 'pnr_' . time() . '_' . Str::random(6) . '.csv';
+            $rows = array_map('str_getcsv', file($request->file('pnr_file')->getRealPath()));
+            array_shift($rows); // remove header
 
-            // 3️ Store file
-            $path = $file->storeAs('uploads/pnr', $fileName, 'public');
+            $created = 0;
+            $skipped = 0;
 
-            // 4️ Read CSV
-            $fullPath = storage_path('app/public/' . $path);
-            $rows = array_map('str_getcsv', file($fullPath));
+            foreach ($rows as $row) {
 
-            if (count($rows) <= 1) {
-                return response()->json([
-                    'code' => 2,
-                    'message' => 'CSV file is empty'
-                ], 422);
-            }
+                /* =====================
+                | LOOKUPS
+                ===================== */
+                $departure = Airport::where('code', trim($row[5]))->first();
+                $middleArr = !empty($row[6]) ? Airport::where('code', trim($row[6]))->first() : null;
+                $arrival   = Airport::where('code', trim($row[7]))->first();
+                $airline   = AirLine::where('code', trim($row[8]))->first();
 
-            // 5️ Remove header row
-            $header = array_shift($rows);
-
-            $insertData = [];
-
-            foreach ($rows as $index => $row) {
-                if (count($row) < count($header)) {
-                    continue; // skip invalid rows
+                if (!$departure || !$arrival || !$airline) {
+                    $skipped++;
+                    continue;
                 }
-                $departure = Airport::where('code', $row[0])->first();
-                $arrival = Airport::where('code', $row[1])->first();
-                $airline = AirLine::where('code', $row[2])->first();
-                // Example mapping (adjust columns as needed)
-                $insertData[] = [
-                    'departure_id'   => $departure->id ?? null,
-                    'arrival_id'    => $arrival->id ?? null,
-                    'airline_id'      => $airline->id ?? null,
-                    'seats'  => $row[3] ?? null,
-                    'departure_date'  => $row[4] ?? null,
-                    'departure_time'  => $row[5] ?? null,
-                    'arrival_date'  => $row[6] ?? null,
-                    'arrival_time'  => $row[7] ?? null,
-                    'created_at'   => now(),
-                    'updated_at'   => now(),
-                ];
-            }
 
-            // 6️ Insert into DB (optional)
-            if (!empty($insertData)) {
-                DB::table('pnrs')->insert($insertData);
+                /* =====================
+                | REQUEST LIKE DATA
+                ===================== */
+                $data = [
+                    'pnr_type'      => $row[0],
+                    'ref_no'        => $row[1],
+                    'flight_no'     => $row[2],
+                    'air_craft'     => $row[3],
+                    'class'         => $row[4] ?? 'Y',
+
+                    'departure_id'  => $departure->id,
+                    'arrival_id'    => $arrival->id,
+                    'airline_id'    => $airline->id,
+
+                    'departure_date'=> $row[9],
+                    'departure_time'=> $row[10],
+                    'arrival_date'  => $row[13],
+                    'arrival_time'  => $row[14],
+
+                    'baggage'       => $row[21],
+                    'seats'         => (int) $row[22],
+
+                    'base_price'    => $row[24],
+                    'tax'           => $row[25],
+                    'total'         => $row[26],
+                ];
+
+                /* =====================
+                | MIDDLE ARRIVAL
+                ===================== */
+                if ($middleArr) {
+                    $data['middle_arrival_id'] = $middleArr->id;
+                    $data['middle_arrival_time'] = $row[11] ?? null;
+                    $data['rest_time'] = $row[12] ?? null;
+                }
+
+                /* =====================
+                | RETURN PNR
+                ===================== */
+                if ($row[0] === 'return') {
+
+                    $returnDeparture = Airport::where('code', trim($row[7]))->first();
+                    $returnArrival   = Airport::where('code', trim($row[5]))->first();
+
+                    $data['return_departure_id'] = $returnDeparture?->id;
+                    $data['return_arrival_id']   = $returnArrival?->id;
+                    $data['return_airline_id']   = $airline->id;
+
+                    $data['return_departure_date'] = $row[15];
+                    $data['return_departure_time'] = $row[16];
+                    $data['return_arrival_date']   = $row[19];
+                    $data['return_arrival_time']   = $row[20];
+
+                    $data['return_base_price'] = $row[27];
+                    $data['return_tax']        = $row[28];
+                    $data['return_total']      = $row[29];
+
+                    if (!empty($row[17])) {
+                        $data['middle_return_arrival_time'] = $row[17];
+                    }
+                    if (!empty($row[18])) {
+                        $data['return_rest_time'] = $row[18];
+                    }
+                }
+
+                /* =====================
+                | CREATE PNR
+                ===================== */
+
+                $pnr = $this->createPnrFromArray($data);
+
+                /* =====================
+                | PASSENGER PRICES
+                ===================== */
+                $passengers = [
+                    1 => $row[30] ?? 0, // Adult
+                    2 => $row[31] ?? 0, // Child
+                    3 => $row[32] ?? 0, // Infant
+                ];
+
+                foreach ($passengers as $type => $price) {
+                    if ($price > 0) {
+                        PnrPassenger::create([
+                            'pnr_id' => $pnr->id,
+                            'passenger_type_id' => $type,
+                            'price' => $price,
+                        ]);
+                    }
+                }
+
+                /* =====================
+                | PUT ON SALE
+                ===================== */
+                if (!empty($row[23]) && $row[23] == 1) {
+                    Seat::where('pnr_id', $pnr->id)
+                        ->where('is_available', 1)
+                        ->limit($data['seats'])
+                        ->update([
+                            'is_sale' => 1,
+                            'is_available' => 0,
+                        ]);
+                }
+
+                $created++;
             }
 
             return response()->json([
-                'code' => 1,
-                'message' => 'PNR CSV uploaded successfully',
-                'total_rows' => count($insertData)
+                'success' => true,
+                'created' => $created,
+                'skipped' => $skipped,
+                'message' => 'PNR CSV uploaded successfully'
             ]);
 
         } catch (\Exception $e) {
-
             return response()->json([
-                'code' => 2,
-                'message' => 'Upload failed: ' . $e->getMessage()
+                'success' => false,
+                'message' => 'CSV upload failed',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }
+
 
     public function putOnSaleAndCancel(Request $request){
 
@@ -473,4 +557,60 @@ class PnrController extends Controller
             'message' => 'Action completed successfully'
         ]);
     }
+
+    private function createPnrFromArray(array $data)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            /* =====================
+            | DURATION CALCULATION
+            ===================== */
+            $departureDT = $data['departure_date'].' '.$data['departure_time'];
+            $arrivalDT   = $data['arrival_date'].' '.$data['arrival_time'];
+
+            $start = Carbon::createFromFormat('Y-m-d H:i', $departureDT);
+            $end   = Carbon::createFromFormat('Y-m-d H:i', $arrivalDT);
+            $diff  = $start->diff($end);
+
+            $data['duration'] = $diff->d > 0
+                ? $diff->d.'d '.$diff->h.'h '.$diff->i.'m'
+                : $diff->h.'h '.$diff->i.'m';
+
+            /* =====================
+            | PNR NO GENERATION
+            ===================== */
+            $airline   = AirLine::find($data['airline_id']);
+            $departure = Airport::find($data['departure_id']);
+            $arrival   = Airport::find($data['arrival_id']);
+
+            $lastId = Pnr::max('id') ?? 0;
+            $data['pnr_no'] = $airline->code.$departure->code.$arrival->code.($lastId + 1);
+            $data['created_by'] = auth()->user()->id;
+
+            /* =====================
+            | CREATE PNR
+            ===================== */
+            $pnr = Pnr::create($data);
+
+            /* =====================
+            | CREATE SEATS
+            ===================== */
+            foreach (range(1, (int) $data['seats']) as $i) {
+                $pnr->seats()->create([
+                    'is_available' => 1,
+                    'price' => 0
+                ]);
+            }
+
+            DB::commit();
+            return $pnr;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
 }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Enums\UserStatus;
+use App\Models\Admin\Booking;
 
 class User extends Authenticatable
 {
@@ -26,6 +27,7 @@ class User extends Authenticatable
         'password',
         'status',
         'created_by',
+        'show_pass'
     ];
 
     /**
@@ -51,6 +53,11 @@ class User extends Authenticatable
 
     public function agency(){
         return $this->hasOne(User::Class);
+    }
+
+    public function getRemainingBalanceAttribute(){
+        $balance = Booking::where('created_by', auth()->user()->id)->sum('total_amount');
+        return $balance;
     }
 
 }

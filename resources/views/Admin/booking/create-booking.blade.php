@@ -135,7 +135,7 @@
 
     <h5 class="fw-semibold">
         Total Tickets Price :
-        <span id="totalPrice">PKR {{ $data['totalAmount'] }}/-</span>
+        <span id="totalPrice">EUR {{ $data['totalAmount'] }}/-</span>
     </h5>
   </div>
 
@@ -497,11 +497,7 @@
 
                 <div class="col-md-3">
                     <label class="form-label small">Nationality</label>
-                    <select class="form-select" id="customer_nationality[]" name="customer_nationality[]" required>
-                        <option value="">Select</option>
-                        <option value="pak">Pakistan</option>
-                        <option value="sau">Saudi Arabia</option>
-                    </select>
+                    <input type="text" class="form-control" id="customer_nationality[]" name="customer_nationality[]" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
                 

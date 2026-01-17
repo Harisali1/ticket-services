@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Welcome to Divine Travel</title>
+    <title>Reset Your Password - Divine Travel</title>
 </head>
 <body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Arial, Helvetica, sans-serif;">
 
@@ -15,7 +15,7 @@
                 <!-- Header -->
                 <tr>
                     <td style="background:#0d6efd;color:#ffffff;padding:20px;text-align:center;">
-                        <h2 style="margin:0;">Welcome to Divine Travel ✈️</h2>
+                        <h2 style="margin:0;">Password Reset Request 🔐</h2>
                     </td>
                 </tr>
 
@@ -27,18 +27,29 @@
                         </p>
 
                         <p style="font-size:14px;line-height:1.6;">
-                            Thank you for signing up with <strong>Divine Travel.</strong>
-                            Your account has been successfully created but is not active yet.
-                            It is currently pending approval. Once your account is approved, you will automatically receive an email notification.
-                            After approval, you will be able to book flights, manage tickets, and access exclusive offers.
+                            We received a request to reset your password for your <strong>Divine Travel</strong> account.
                         </p>
 
-                        <p style="font-size:14px;">
-                            <strong>Email:</strong> {{ $user->email ?? '-' }}
+                        <p style="font-size:14px;line-height:1.6;">
+                            Click the button below to reset your password:
                         </p>
 
-                        <p style="font-size:13px;color:#555;">
-                            If you did not create this account, please ignore this email.
+                        <!-- Button -->
+                        <p style="text-align:center;margin:30px 0;">
+                            <a href="{{ $resetUrl }}"
+                               style="background:#0d6efd;color:#ffffff;text-decoration:none;
+                                      padding:12px 25px;border-radius:4px;
+                                      font-size:14px;display:inline-block;">
+                                Reset Password
+                            </a>
+                        </p>
+
+                        <p style="font-size:13px;color:#555;line-height:1.6;">
+                            This password reset link will expire in <strong>60 minutes</strong>.
+                        </p>
+
+                        <p style="font-size:13px;color:#555;line-height:1.6;">
+                            If you did not request a password reset, no further action is required.
                         </p>
 
                         <p style="font-size:13px;margin-top:25px;">
