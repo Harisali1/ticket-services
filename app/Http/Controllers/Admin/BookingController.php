@@ -12,6 +12,8 @@ use App\Models\Admin\Seat;
 use App\Models\Admin\PassengerType;
 use App\Models\Admin\BookingPassenger;
 use App\Models\Admin\FareRule;
+use App\Models\Admin\Agency;
+use App\Models\Admin\Payment;
 use DB;
 use PDF;
 use Illuminate\Support\Facades\Mail;
@@ -119,9 +121,9 @@ class BookingController extends Controller
         $data['totalAmount'] = $totalAmount;
         $data['totalBaseFareAmount'] = $totalBaseFareAmount;
         $data['totalTax'] = $totalTax;
+        $agency = Agency::where('user_id', auth()->user()->id)->first();
 
-        
-        return view('Admin.booking.create-booking', compact('pnrBookings', 'data', 'fareDetails', 'seatSum'));
+        return view('Admin.booking.create-booking', compact('pnrBookings', 'data', 'fareDetails', 'seatSum', 'agency'));
     }
 
     public function checkSeatsAvailability(Request $request){
@@ -158,13 +160,21 @@ class BookingController extends Controller
 
         DB::beginTransaction();
         try {
+            $bookingSeats = $request->booking_seats;
+
+            foreach ($request->fareDetails as $type) {
+                if ((int)$type['type_id'] === 3) {
+                    $bookingSeats--;
+                    break; // sirf 1 infant pe 1 seat kam
+                }
+            }
 
             $pnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->pnr_id);
             
             $seatIds = $pnrBookings->seats()
                         ->where('is_sale', 1)
                         ->orderBy('id') // important
-                        ->limit((int)$request->booking_seats)
+                        ->limit($bookingSeats)
                         ->pluck('id');
 
             Seat::whereIn('id', $seatIds)->update([
@@ -176,7 +186,7 @@ class BookingController extends Controller
             $bookingData = [
                 'pnr_id' => $request->pnr_id,
                 'booking_no' => 'BK-0000'.$bookingId,
-                'seats' => $request->booking_seats,
+                'seats' => $bookingSeats,
                 'price' => $request->total_fare,
                 'tax' => $request->total_tax,
                 'total_amount' => $request->total_amount,
@@ -211,13 +221,21 @@ class BookingController extends Controller
                 Customer::create($customerData);
             }
 
+            Payment::create([
+                'booking_id' => $booking->id,
+                'amount' => $request->total_amount,
+                'created_by' => auth()->user()->id,
+            ]);
+
             foreach($request->fareDetails as $type){
-                BookingPassenger::create([
-                    'pnr_id' => $request->pnr_id,
-                    'booking_id' => $booking->id,
-                    'passenger_type_id' => $type['type_id'],
-                    'seat' => $type['seat'],
-                ]);
+                if($type['type_id'] != 3){
+                    BookingPassenger::create([
+                        'pnr_id' => $request->pnr_id,
+                        'booking_id' => $booking->id,
+                        'passenger_type_id' => $type['type_id'],
+                        'seat' => $type['seat'],
+                    ]);
+                }
             }
             
             DB::commit();

@@ -125,6 +125,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/update', [App\Http\Controllers\Admin\PaymentController::class, 'update'])->name('admin.payment.update');
         });
 
+        Route::prefix('notification')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('admin.notification.index');
+            Route::get('/add', [App\Http\Controllers\Admin\NotificationController::class, 'create'])->name('admin.notification.create');
+            Route::post('/store', [App\Http\Controllers\Admin\NotificationController::class, 'store'])->name('admin.notification.store');
+            Route::get('/edit/{notification}', [App\Http\Controllers\Admin\NotificationController::class, 'edit'])->name('admin.notification.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\NotificationController::class, 'update'])->name('admin.notification.update');
+        });
+
     });
 });
 

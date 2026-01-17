@@ -58,6 +58,14 @@
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">Bank Details</span>
                 </a>
+                <a href="{{ route('admin.payment.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                    <i class="fa fa-money me-3"></i>
+                    <span class="menu-text">Payments</span>
+                </a>
+                <a href="{{ route('admin.notification.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                    <i class="fa fa-money me-3"></i>
+                    <span class="menu-text">Notification</span>
+                </a>
             </nav>
         @endif
         @if(Auth::user()->user_type_id == '2')
@@ -78,8 +86,7 @@
                     <i class="fa fa-cog me-3"></i>
                     <span class="menu-text">Sub Agencies</span>
                 </a>
-
-                <a href="{{ route('admin.bank.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <a href="{{ route('admin.payment.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">Payments</span>
                 </a>

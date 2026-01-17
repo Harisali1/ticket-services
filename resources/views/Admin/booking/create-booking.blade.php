@@ -114,7 +114,7 @@
         color: #fff;
     }
     .pnr-detail{
-        background: #0061A5;
+        background: #000000ff;
         padding: 10px;
         color: white;
         font-size: 17px;
@@ -147,7 +147,7 @@
     <h3 class="fw-semibold mb-3 pnr-detail">PNR Details:</h3>
 
     <div class="mb-4">
-        <h6 class="text-primary fw-bold mb-3">OUTBOUND</h6>
+        <h6 class="fw-bold mb-3">OUTBOUND</h6>
         <div class="card border-0 shadow-sm">
             <div class="card-body">
                 <div class="row align-items-center">
@@ -169,7 +169,7 @@
                         </p>
                         <p class="mb-0">
                             <small class="text-muted">To:</small><br>
-                            <strong>{{ $pnrBookings->arrival_date_time }}</strong>
+                            <strong>{{ $pnrBookings->middle_arrival_date_time }}</strong>
                         </p>
                     </div>
 
@@ -178,12 +178,12 @@
                         {{ $pnrBookings->departure->code}}
                     </div>
                      <div class="col-md-1 text-center fw-bold fs-5">
-                        {{ $pnrBookings->arrival->code}}
+                        {{ $pnrBookings->middle_arrival->code}}
                     </div>
 
                     <div class="col-md-2 text-center">
                         <small class="text-muted">Duration</small><br>
-                        <strong>{{ $pnrBookings->duration }}</strong>
+                        <strong>{{ $pnrBookings->first_duration }}</strong>
                     </div>
 
                    
@@ -210,6 +210,71 @@
 
             </div>
         </div>
+        @if($pnrBookings->middle_arrival_id != null && $pnrBookings->middle_arrival_time != null && $pnrBookings->rest_time != null)
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <!-- Airline -->
+                    <div class="col-md-1 text-center">
+                       <img src="{{ $pnrBookings->airline->logo 
+                                        ? asset('storage/'.$pnrBookings->airline->logo) 
+                                        : asset('images/logo-placeholder.png') }}"
+                                        alt="logo"
+                                        class="rounded-circle border"
+                                        style="width:25px;height:25px;object-fit:contain;">
+                    </div>
+
+                    <!-- From / To -->
+                    <div class="col-md-3">
+                        <p class="mb-1">
+                            <small class="text-muted">From:</small><br>
+                            <strong>{{ $pnrBookings->middle_departure_date_time }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">To:</small><br>
+                            <strong>{{ $pnrBookings->arrival_date_time }}</strong>
+                        </p>
+                    </div>
+
+                    <!-- Airports -->
+                    <div class="col-md-1 text-center fw-bold fs-5">
+                        {{ $pnrBookings->middle_arrival->code}}
+                    </div>
+                     <div class="col-md-1 text-center fw-bold fs-5">
+                        {{ $pnrBookings->arrival->code}}
+                    </div>
+
+                    <div class="col-md-2 text-center">
+                        <small class="text-muted">Duration</small><br>
+                        <strong>{{ $pnrBookings->second_duration }}</strong>
+                    </div>
+
+                   
+
+                    <!-- Aircraft -->
+                    <div class="col-md-2 text-center">
+                        <small class="text-muted">Airplane</small><br>
+                        <strong>{{ $pnrBookings->air_craft }}</strong>
+                    </div>
+
+                    <!-- Flight Info -->
+                    <div class="col-md-2">
+                        <p class="mb-1">
+                            <small class="text-muted">Num.:</small>
+                            <strong>{{ $pnrBookings->flight_no }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">Class:</small>
+                            <strong>{{ $pnrBookings->class }}</strong>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        @endif
+
     </div>
 
     @if($pnrBookings->pnr_type == 'return')
@@ -295,17 +360,17 @@
     <div class="row">
         <div class="col-md-4">
             <label class="form-label small">Agency Name</label>
-            <input type="text" class="form-control" id="agency_name" name="agency_name" readonly value="{{ $pnrBookings->user->name }}">
+            <input type="text" class="form-control" id="agency_name" name="agency_name" readonly value="{{ $agency->name }}">
         </div>
         
         <div class="col-md-4">
             <label class="form-label small">Email</label>
-            <input type="text" class="form-control" id="agency_email" name="agency_email" readonly value="{{ $pnrBookings->user->email }}">
+            <input type="text" class="form-control" id="agency_email" name="agency_email" readonly value="{{ auth()->user()->email }}">
         </div>
 
         <div class="col-md-4">
             <label class="form-label small">Phone No</label>
-            <input type="text" class="form-control" id="phone_no" name="phone_no" readonly value="{{ $pnrBookings->user->phone_no }}">
+            <input type="text" class="form-control" id="phone_no" name="phone_no" readonly value="{{ auth()->user()->phone_no }}">
         </div>
     </div>
 
@@ -434,7 +499,7 @@
                 <div class="col-md-3">
                     <label class="form-label small">D.O.B*</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="customer_dob[]" name="customer_dob[]" required>
+                        <input type="date" class="form-control" id="customer_dob[]" name="customer_dob[]" required>
                         <div class="invalid-feedback">This field is required</div>
                     </div>
                 </div>

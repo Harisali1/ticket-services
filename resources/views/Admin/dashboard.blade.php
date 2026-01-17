@@ -117,9 +117,9 @@
                                 <tr>
                                     <td>1</td>
                                     <td>{{ $reservation->pnr->pnr_no }}</td>
-                                    <td>KHI → DXB</td>
+                                    <td>{{ $reservation->pnr->departure->code }} → {{ $reservation->pnr->arrival->code }}</td>
                                     <td>
-                                        <span class="badge bg-success">Confirmed</span>
+                                        <span class="badge bg-success {{ $reservation->status->color() }}">{{ $reservation->status->label() }}</span>
                                     </td>
                                 </tr>
                                 @endforeach
