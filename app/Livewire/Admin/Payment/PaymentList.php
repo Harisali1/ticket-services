@@ -44,8 +44,13 @@ class PaymentList extends Component
 
     public function render()
     {
-        $payments = Payment::where('status', 1)
-            ->when($this->filters['status'] !== '', fn ($q) =>
+        $payments = Payment::where('status', 1);
+
+        if(auth()->user()->user_type_id != 1){
+            $payments = $payments->where('created_by', auth()->user()->id);
+        }
+
+            $payments = $payments->when($this->filters['status'] !== '', fn ($q) =>
                 $q->where('status', $this->filters['status'])
             )
             ->when($this->filters['from'], fn ($q) =>
