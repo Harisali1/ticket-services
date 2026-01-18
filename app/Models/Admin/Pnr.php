@@ -86,6 +86,13 @@ class Pnr extends Model
             ->where('is_sold', 1)
             ->count();
     }
+    
+    public function getSeatIsReservedAttribute()
+    {
+        return $this->seats()
+            ->where('is_reserved', 1)
+            ->count();
+    }
 
     public function getDepartureDateTimeAttribute()
     {

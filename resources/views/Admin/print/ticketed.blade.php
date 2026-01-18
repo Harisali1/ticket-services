@@ -17,11 +17,11 @@
         }
 
         .title-bar {
-            background: #e9ecef;
+            background: #ccccccff;
             padding: 8px 10px;
             font-weight: bold;
             font-size: 14px;
-            border-left: 4px solid #0d6efd;
+            border-left: 4px solid #000000ff;
             margin-bottom: 8px;
         }
 
@@ -58,7 +58,6 @@
         }
 
         .flight-table td {
-            border: 1px solid #ccc;
             padding: 8px;
         }
 
@@ -78,6 +77,12 @@
             border: 1px dashed #999;
             padding: 8px;
         }
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            left: 14px;
+            right: 14px;
+        }
     </style>
 </head>
 
@@ -85,42 +90,60 @@
 
 <div class="container">
 
-    <!-- TRAVELER -->
-    <div class="title-bar">Traveler Information</div>
-    <table class="info-table">
-        <thead>
-            <th class="text-left">Passenger</th>
-            <th class="text-left">E-Ticket No</th>
-            <th class="text-left">Booking Ref</th>
-            <th class="text-left">Issue Date</th>
-        <thead>
+            <!-- HEADER -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom:10px;">
         <tr>
-            <td width="25%" class="text-center">
-                DIALLO, YORO
+            <td width="60%">
+                <img 
+                    src="{{ asset('images/logo.png') }}" 
+                    style="height:50px;"
+                    alt="Company Logo">
             </td>
-            <td width="25%">
-                @if($type == 'dept')
-                    <div class="value">{{ $booking['dept_ticket_no'] }}</div>
-                @else
-                    <div class="value">{{ $booking['arr_ticket_no'] }}</div>
-                @endif
-            </td>
-            <td width="25%">
-                <div class="value">{{ $booking['booking_no'] }}</div>
-            </td>
-            <td width="25%">
-                <div class="value">{{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y') }}</div>
+            <td width="40%" class="right">
+                <strong style="font-size:16px;">E-Ticket / Flight Itinerary</strong><br>
+                <span class="small">Generated on {{ now()->format('d F Y') }}</span>
             </td>
         </tr>
     </table>
 
+    <!-- TRAVELER -->
+    <div class="title-bar">Traveler Information</div>
+    <table class="info-table" width="100%" cellspacing="0" cellpadding="0">
+    <thead>
+        <tr>
+            <th width="25%" class="text-left">Passenger</th>
+            <th width="25%" class="text-left">E-Ticket No</th>
+            <th width="25%" class="text-left">Booking Ref</th>
+            <th width="25%" class="text-left">Issue Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="text-left">{{ $customers->pluck('name')->implode(', ') }}</td>
+
+            <td class="text-left">
+                {{ $type == 'dept' ? $booking['dept_ticket_no'] : $booking['arr_ticket_no'] }}
+            </td>
+
+            <td class="text-left">
+                {{ $booking['booking_no'] }}
+            </td>
+
+            <td class="text-left">
+                {{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y') }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
     <!-- AGENCY -->
     <div class="title-bar">Agency Details</div>
     <div class="small">
-        <strong>{{ $booking['user']['name'] }}</strong><br>
-        Corso G Mazzini 71, Santa Croce Sull Arno 56029, IT<br>
-        Phone: {{ $booking['user']['phone_no'] }}<br>
-        Email: {{ $booking['user']['email'] }}
+        <strong>{{ (isset($agency->name)) ? $agency->name : $booking['user']['name'] }}</strong><br>
+        Address: {{ (isset($agency->address)) ? $agency->address : '' }}<br>
+        Phone: {{ (isset($agency->user->phone_no)) ? $agency->user->phone_no : $booking['user']['phone_no'] }}<br>
+        Email: {{ (isset($agency->user->email)) ? $agency->user->email : '' }}
     </div>
 
     <!-- FLIGHT -->
@@ -135,10 +158,10 @@
                 <div class="label">Departure</div>
                 @if($type == 'dept')
                     {{ $booking['pnr']['departure']['name'] }} ({{ $booking['pnr']['departure']['code'] }}), {{ $booking['pnr']['departure']['country'] }}<br>
-                    <strong>{{ $booking['pnr']['departure_time'] }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($booking['pnr']['departure_time'])->format('H:i') }}</strong>
                 @else
                     {{ $booking['pnr']['return_departure']['name'] }} ({{ $booking['pnr']['return_departure']['code'] }}), {{ $booking['pnr']['return_departure']['country'] }}<br>
-                    <strong>{{ $booking['pnr']['return_departure_time'] }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($booking['pnr']['return_departure_time'])->format('H:i') }}</strong>
                 @endif
             </td>
 
@@ -150,10 +173,10 @@
                 <div class="label">Arrival</div>
                  @if($type == 'dept')
                     {{ $booking['pnr']['arrival']['name'] }} ({{ $booking['pnr']['arrival']['code'] }}), {{ $booking['pnr']['arrival']['country'] }}<br>
-                    <strong>{{ $booking['pnr']['arrival_time'] }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($booking['pnr']['arrival_time'])->format('H:i') }}</strong>
                 @else
                     {{ $booking['pnr']['return_arrival']['name'] }} ({{ $booking['pnr']['return_arrival']['code'] }}), {{ $booking['pnr']['return_arrival']['country'] }}<br>
-                    <strong>{{ $booking['pnr']['return_arrival_time'] }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($booking['pnr']['return_arrival_time'])->format('H:i') }}</strong>
                 @endif
             </td>
         </tr>
@@ -164,7 +187,7 @@
         <tr>
             <td width="40%">
                 <div class="label">Confirmation No</div>
-                -
+                {{ $booking['pnr']['ref_no'] }}
             </td>
             <td width="20%">
                 <div class="label">Class</div>
@@ -178,11 +201,7 @@
         <tr>
             <td>
                 <div class="label">Base Fare</div>
-                
-            </td>
-            <td colspan="2">
-                <div class="label">Validity</div>
-                Not valid before / after
+                {{ $booking['total_amount'] }}
             </td>
         </tr>
     </table>
@@ -193,6 +212,19 @@
         <strong>Checked Baggage:</strong> {{ $booking['pnr']['baggage'] }}<br>
         <strong>Hand Carry:</strong> 8 KG
     </div>
+    <!-- FOOTER -->
+    <hr style="margin-top:20px;">
+
+    <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="small">
+                This is a system generated ticket and does not require a signature.
+            </td>
+            <td class="small right">
+                © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            </td>
+        </tr>
+    </table>
 
 </div>
 

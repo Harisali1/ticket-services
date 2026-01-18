@@ -25,25 +25,25 @@
         <div class="row g-3">
             <div class="col-md-3">
                 <div class="card card-stat">
-                    <h3>100</h3>
+                    <h3>{{ $bookingCounts->total }}</h3>
+                    <p>Total</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-stat">
+                    <h3>{{ $bookingCounts->created }}</h3>
                     <p>Reserved</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card card-stat">
-                    <h3>40</h3>
-                    <p>Reserved</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-stat">
-                    <h3>30</h3>
+                    <h3>{{ $bookingCounts->ticketed }}</h3>
                     <p>Ticketed</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card card-stat">
-                    <h3>30</h3>
+                    <h3>{{ $bookingCounts->cancelled }}</h3>
                     <p>Abandoned</p>
                 </div>
             </div>
@@ -80,22 +80,21 @@
 
             <div class="col-md-4">
                 <div class="card p-3 h-100">
-                    <h5 class="text-center mb-3">Notification</h5>
+                    <h5 class="text-center mb-3">Notifications</h5>
+
                     <div style="max-height:200px; overflow-y:auto;">
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
-                        <p>Privacy Notice on the Processing of Personal Data...</p>
+                        @forelse($notifications as $notify)
+                            <div class="mb-3 border-bottom pb-2">
+                                <strong class="d-block">{{ $notify->title }}</strong>
+                                <p class="mb-0 text-muted">{{ $notify->description }}</p>
+                            </div>
+                        @empty
+                            <p class="text-center text-muted">No notifications found</p>
+                        @endforelse
                     </div>
                 </div>
             </div>
+
 
             
             <div class="col-md-4">

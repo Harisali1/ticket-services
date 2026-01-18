@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-    @livewire('admin.airport.airport-list')
+    @livewire('admin.notification.notification-list')
 @endsection
 
 @section('scripts')

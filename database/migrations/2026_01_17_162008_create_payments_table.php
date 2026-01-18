@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('status')->default(1);
             $table->integer('paid_by')->nullable();
             $table->integer('created_by')->nullable();
+            $table->integer('approved_by')->nullable();
             $table->date('paid_at')->nullable();
             $table->timestamps();
         });

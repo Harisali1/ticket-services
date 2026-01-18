@@ -179,7 +179,7 @@ class BookingController extends Controller
 
             Seat::whereIn('id', $seatIds)->update([
                 'is_sale' => 0,
-                'is_sold' => 1
+                'is_reserved' => 1
             ]);
 
             $bookingId = DB::table('bookings')->orderBy('id', 'desc')->value('id');
@@ -321,6 +321,17 @@ class BookingController extends Controller
         }
 
         Booking::where('id', $request->id)->update($updateData);
+
+        $seatIds = $pnr->seats()
+                        ->where('is_reserved', 1)
+                        ->orderBy('id') // important
+                        ->limit((int)$booking->seats)
+                        ->pluck('id');
+
+        Seat::whereIn('id', $seatIds)->update([
+            'is_reserved' => 0,
+            'is_sold' => 1
+        ]);
         
         return view('Admin.booking.detail-booking', compact('booking', 'pnr', 'fareRules', 'customers'));
 
@@ -333,6 +344,7 @@ class BookingController extends Controller
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
         ->get(['customers.name', 'customers.phone_no', 'customers.dob']);
         $response['type'] = $type;
+        $response['agency'] = Agency::with('user')->where('user_id', $bookingData->created_by)->first();
 
         $pdf = PDF::loadView('Admin/print/ticketed', $response);
         $pdf->setPaper('A4', 'portrait');

@@ -437,20 +437,33 @@
 
                         <div class="border p-3 bg-light small"
                             style="max-height: 260px; overflow-y: auto; white-space: pre-line;">
-                                - Si ricorda che i 30Kg compresi DEVONO essere in 1 Bagaglio
-                                - Tutti i passeggeri hanno l'obbligo di riconfermare l'orario 3 GIORNI PRIMA DELLA PARTENZA
+                               🔄 Modifiche e cancellazioni (chiaro e trasparente)
 
-                                - Cambio data a 7gg prima della partenza GRATUITO, da pagare solo differenza tariffaria
-                                - Cambio data entro 6gg dalla partenza fino a 24ore prima del volo: 100euro + differenza tariffaria
-                                - Penale di cancellazione 7gg prima della partenza: 100euro a tratta
-                                - Penale di cancellazione entro i 6gg dalla partenza fino a 24ore prima del volo: 200euro a tratta
-                                - In caso di No-Show non sono previsti rimborsi (entro le 24ore dal volo il biglietto è da considerarsi No-show)
-                                - Cambio data in caso di No-Show penale 200euro + differenza tariffaria
-                                - Bagaglio a mano Adulto e Child 10kg
-                                - Secondo Bagaglio Extra da 23Kg: 70euro a tratta
-                                - Secondo Bagaglio Extra da 30Kg: 100euro a tratta
-                                - Terzo Bagaglio o superiore da 23Kg: 100euro a tratta
-                                - Terzo Bagaglio o superiore da 30Kg: 120euro a tratta
+                                ✅ Cambio data fino a 10 giorni prima della partenza
+                                Gratuito – si paga solo l’eventuale differenza tariffaria.
+
+                                ⚠️ Cambio data da 9 a 3 giorni prima della partenza
+                                Penale di 100 € + differenza tariffaria.
+
+                                ❌ Cancellazione fino a 10 giorni prima della partenza
+                                Penale di 100 € a tratta.
+
+                                ❌ Cancellazione da 7 a 3 giorni prima della partenza
+                                Penale di 200 € a tratta.
+
+                                🚫 No-Show (mancata presentazione al volo)
+                                Nessun rimborso previsto.
+                                Il biglietto è considerato No-Show se la richiesta avviene entro 3 giorni dalla partenza.
+
+                                🔁 Cambio data in caso di No-Show
+                                Penale di 200 € + differenza tariffaria.
+
+                                🎒 Bagaglio a mano
+
+                                👨‍🦰 Adulti e bambini (Child): 8 kg
+                                👶 Neonati (Infant): 10 kg
+
+                                Vi ricordiamo gentilmente di confermare l’orario del vostro volo 3 giorni prima della partenza
                         </div>
                     </div>
                 </div>

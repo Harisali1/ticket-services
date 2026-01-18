@@ -360,7 +360,7 @@
     <div class="row">
         <div class="col-md-4">
             <label class="form-label small">Agency Name</label>
-            <input type="text" class="form-control" id="agency_name" name="agency_name" readonly value="{{ $agency->name }}">
+            <input type="text" class="form-control" id="agency_name" name="agency_name" readonly value="{{ (isset($agency->name)) ? $agency->name : auth()->user()->name }}">
         </div>
         
         <div class="col-md-4">

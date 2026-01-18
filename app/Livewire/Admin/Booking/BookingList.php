@@ -118,12 +118,18 @@ class BookingList extends Component
             ->latest()
             ->paginate($this->perPage);
 
+        $query = Booking::query();
+
+        if (auth()->user()->user_type_id != 1) {
+            $query->where('created_by', auth()->user()->id);
+        }
+
         $stats = [
-            'all'       => Booking::count(),
-            'reserved'  => Booking::where('status', 1)->count(),
-            'ticketed'  => Booking::where('status', 2)->count(),
-            'paid'      => Booking::where('status', 3)->count(),
-            'abandoned' => Booking::where('status', 4)->count(),
+            'all'       => (clone $query)->count(),
+            'reserved'  => (clone $query)->where('status', 1)->count(),
+            'ticketed'  => (clone $query)->where('status', 2)->count(),
+            'paid'      => (clone $query)->where('status', 3)->count(),
+            'abandoned' => (clone $query)->where('status', 4)->count(),
         ];
 
         return view('livewire.admin.booking.booking-list', compact('bookings', 'stats'));

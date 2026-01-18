@@ -6,8 +6,8 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('admin.airport.index') }}" class="text-decoration-none">&larr;</a>
-            <h1 class="h4 mb-0">Add Airport</h1>
+            <a href="{{ route('admin.notification.index') }}" class="text-decoration-none">&larr;</a>
+            <h1 class="h4 mb-0">Add Notification</h1>
         </div>
     </div>
 
@@ -18,25 +18,25 @@
         <form id="airport-form" enctype="multipart/form-data">
             
             <!-- airport Details -->
-            <h5 class="mb-3">Airport Details</h5>
+            <h5 class="mb-3">Notification Details</h5>
 
             <div class="row g-3 mb-4">
                 <!-- Name -->
                 <div class="col-md-4">
-                    <label for="name" class="form-label">Name *</label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}"
-                           placeholder="Enter airport Name" class="form-control">
-                    @error('name')
+                    <label for="title" class="form-label">Title *</label>
+                    <input type="text" name="title" id="title" value="{{ old('title') }}"
+                           placeholder="Enter Notification Title" class="form-control">
+                    @error('title')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <!-- Code -->
                 <div class="col-md-4">
-                    <label for="code" class="form-label">Code *</label>
-                    <input type="text" name="code" id="code" value="{{ old('code') }}"
-                           placeholder="airport Code" class="form-control">
-                    @error('code')
+                    <label for="description" class="form-label">Description *</label>
+                    <textarea type="text" name="description" id="description" value="{{ old('description') }}"
+                           placeholder="Description" class="form-control"></textarea>
+                    @error('description')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                 </div>
@@ -53,7 +53,7 @@
 
             <!-- Actions -->
             <div class="d-flex justify-content-end gap-2">
-                <a href="{{ route('admin.airport.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                <a href="{{ route('admin.notification.index') }}" class="btn btn-outline-secondary">Cancel</a>
                 <button type="submit" class="btn btn-dark">Save</button>
             </div>
 
@@ -79,13 +79,12 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         };
 
-        const name   = document.getElementById("name").value.trim();
-        const code   = document.getElementById("code").value.trim();
+        const title   = document.getElementById("title").value.trim();
+        const description   = document.getElementById("description").value.trim();
         const status = document.getElementById("status").value;
 
-        if (!name) { showError("airport name is required"); return; }
-        if (!code) { showError("airport code is required"); return; }
-        if (code.length < 2) { showError("airport code must be at least 2 characters"); return; }
+        if (!title) { showError("title is required"); return; }
+        if (!description) { showError("description is required"); return; }
         if (!status) { showError("Status is required"); return; }
 
         Swal.fire({
@@ -98,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = new FormData(form);
 
         $.ajax({
-            url: "{{ route('admin.airport.store') }}",
+            url: "{{ route('admin.notification.store') }}",
             type: "POST",
             data: formData,
             processData: false,
@@ -117,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     confirmButtonText: "OK"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = "{{ route('admin.airport.index') }}"; 
+                        window.location.href = "{{ route('admin.notification.index') }}"; 
                     }
                 });
             },

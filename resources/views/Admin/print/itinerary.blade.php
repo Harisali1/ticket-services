@@ -114,7 +114,7 @@
         <div class="reservation-box">
             <strong>Reservation Number:</strong> {{ $booking['booking_no'] }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
-            <strong>Reservation Date:</strong> {{ $booking['created_at'] }}
+            <strong>Reservation Date:</strong> {{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y H:i') }}
         </div>
     </div>
 
@@ -167,13 +167,13 @@
             <tr>
                 <td colspan="2">
                     <strong>Departure:</strong><br>
-                    {{ $booking['pnr']['departure_time'] }} – {{ $booking['pnr']['departure']['name'] }} ({{ $booking['pnr']['departure']['code'] }}) – {{ $booking['pnr']['departure']['country'] }}
+                    {{ \Carbon\Carbon::parse($booking['pnr']['departure_time'])->format('H:i') }} – {{ $booking['pnr']['departure']['name'] }} ({{ $booking['pnr']['departure']['code'] }}) – {{ $booking['pnr']['departure']['country'] }}
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
                     <strong>Arrival:</strong><br>
-                    {{ $booking['pnr']['arrival_time'] }} – {{ $booking['pnr']['arrival']['name'] }} ({{ $booking['pnr']['arrival']['code'] }}) – {{ $booking['pnr']['arrival']['country'] }}
+                    {{ \Carbon\Carbon::parse($booking['pnr']['arrival_time'])->format('H:i') }} – {{ $booking['pnr']['arrival']['name'] }} ({{ $booking['pnr']['arrival']['code'] }}) – {{ $booking['pnr']['arrival']['country'] }}
                 </td>
             </tr>
         </table>
