@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bank_details', function (Blueprint $table) {
+        Schema::create('payment_uploads', function (Blueprint $table) {
             $table->id();
-            $table->string('bank_name')->nullable();
-            $table->string('ac_title')->nullable();
-            $table->string('swift_code')->nullable();
-            $table->string('iban')->nullable();
-            $table->boolean('status')->default(1);
+            $table->string('amount')->nullable();
+            $table->string('image')->nullable();
             $table->integer('created_by')->nullable();
+            $table->integer('approved_by')->nullable();
+            $table->datetime('paid_at');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bank_details');
+        Schema::dropIfExists('payment_uploads');
     }
 };

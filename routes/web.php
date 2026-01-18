@@ -43,6 +43,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/edit/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'edit'])->name('admin.agency.edit');
             Route::get('/show/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'show'])->name('admin.agency.show');
             Route::post('/update', [App\Http\Controllers\Admin\AgencyController::class, 'update'])->name('admin.agency.update');
+            Route::prefix('payment')->group(function () {
+                Route::get('/list', [App\Http\Controllers\Admin\AgencyController::class, 'PaymentList'])->name('admin.agency.payment.list');
+            });
         });
 
         Route::prefix('airline')->group(function () {
@@ -96,7 +99,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/ticketed', [App\Http\Controllers\Admin\BookingController::class, 'ticketedBooking'])->name('admin.booking.ticketed');
             Route::get('/print/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'printTicketed'])->name('admin.booking.print.ticketed');
             Route::get('/sendemail/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'sendEmailTicketed'])->name('admin.booking.send.email.ticketed');
-            
+            Route::get('/check/payment', [App\Http\Controllers\Admin\BookingController::class, 'checkPayment'])->name('admin.booking.check.payment');
             // Route::get('/edit/{user}', [App\Http\Controllers\Admin\BookingController::class, 'edit'])->name('admin.booking.edit');
             // Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');
         });

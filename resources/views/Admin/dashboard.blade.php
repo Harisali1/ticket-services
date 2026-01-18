@@ -59,9 +59,10 @@
 
                             @foreach($bankDetails as $bank)
                                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                    <p><strong>Account No:</strong> {{ $bank->ac_no }}</p>
                                     <p><strong>Bank Name:</strong> {{ $bank->bank_name }}</p>
                                     <p><strong>Account Title:</strong>{{ $bank->ac_title }}</p>
+                                    <p><strong>Swift Code:</strong> {{ $bank->swift_code }}</p>
+                                    <p><strong>IBAN:</strong> {{ $bank->iban }}</p>
                                 </div>
                             @endforeach
 

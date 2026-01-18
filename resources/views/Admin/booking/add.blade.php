@@ -191,6 +191,16 @@
 
 @section('scripts')
 <script>
+    function showError(message) {
+        Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: "error",
+            title: message,
+            showConfirmButton: false,
+            timer: 2500
+        });
+    }
     $(document).ready(function () {
 
         function toggleReturnFields() {
@@ -279,9 +289,38 @@
     });
 
     function selectPNRBooking(id){
-        let modal = new bootstrap.Modal(document.getElementById('searchPnrSeatModal'));
-        document.getElementById('pnr_id').value = id;
-        modal.show();
+        
+        $.ajax({
+            url: "{{ route('admin.booking.check.payment') }}",
+            method: "GET",
+            dataType: 'json',
+            success: function (data) {
+                Swal.close();
+
+                if (data.code === 2) {
+                    
+                    Swal.fire({
+                        title: 'Clear Payment',
+                        icon: "warning",
+                        text: data.message,
+                        showConfirmButton: false,
+                    });
+                    return;
+                }
+
+                if (data.code === 1) {
+                    let modal = new bootstrap.Modal(document.getElementById('searchPnrSeatModal'));
+                    document.getElementById('pnr_id').value = id;
+                    modal.show();
+                }
+            },
+            error: function (xhr) {
+                Swal.close();
+                showError(xhr.responseJSON?.message || 'Something went wrong');
+            }
+        });
+
+        
     }
 
     
@@ -305,16 +344,7 @@
             form.addEventListener("submit", function (e) {
                 e.preventDefault();
 
-                function showError(message) {
-                    Swal.fire({
-                        toast: true,
-                        position: "top-end",
-                        icon: "error",
-                        title: message,
-                        showConfirmButton: false,
-                        timer: 2500
-                    });
-                }
+                
 
                 const seat = document.getElementById("seat")?.value.trim();
 

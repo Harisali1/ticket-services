@@ -46,31 +46,37 @@ class UserList extends Component
 
     public function render()
     {
-        $users = User::query()
-            ->when($this->filters['name'], function ($q) {
-                $q->where('name', 'like', '%' . $this->filters['name'] . '%');
-            })
-            ->when($this->filters['email'], function ($q) {
-                $q->where('email', $this->filters['email']);
-            })
-            ->when($this->filters['status'], function ($q) {
-                $q->where('status', $this->filters['status']);
-            })
-            ->when($this->filters['from'], function ($q) {
-                $q->whereDate('created_at', '>=', $this->filters['from']);
-            })
-            ->when($this->filters['to'], function ($q) {
-                $q->whereDate('created_at', '<=', $this->filters['to']);
-            })
-            ->latest()
-            ->paginate($this->perPage);
+        $users = User::query()->where('user_type_id', '!=', 1);
+
+        if(auth()->user()->user_type_id != 1){
+            $users = $users->where('created_by', auth()->user()->id);
+        }
 
         $stats = [
-            'all'       => User::count(),
-            'pending'   => User::where('status', 0)->count(),
-            'approved'  => User::where('status', 1)->count(),
-            'suspended' => User::where('status', 2)->count(),
+            'all'       => (clone $users)->count(),
+            'pending'   => (clone $users)->where('status', 0)->count(),
+            'approved'  => (clone $users)->where('status', 1)->count(),
+            'suspended' => (clone $users)->where('status', 2)->count(),
         ];
+
+        $users = $users->when($this->filters['name'], function ($q) {
+            $q->where('name', 'like', '%' . $this->filters['name'] . '%');
+        })
+        ->when($this->filters['email'], function ($q) {
+            $q->where('email', $this->filters['email']);
+        })
+        ->when($this->filters['status'], function ($q) {
+            $q->where('status', $this->filters['status']);
+        })
+        ->when($this->filters['from'], function ($q) {
+            $q->whereDate('created_at', '>=', $this->filters['from']);
+        })
+        ->when($this->filters['to'], function ($q) {
+            $q->whereDate('created_at', '<=', $this->filters['to']);
+        });
+
+        $users = $users->latest()
+            ->paginate($this->perPage);
 
         return view('livewire.admin.user.user-list', compact('users', 'stats'));
     }

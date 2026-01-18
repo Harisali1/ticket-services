@@ -87,6 +87,7 @@
             <thead class="table-light">
                 <tr>
                     <th>Agency Name</th>
+                    <th>Agency Email</th>
                     <th>P.IVA</th>
                     <th>Address</th>
                     <th>Created On</th>
@@ -98,6 +99,7 @@
                 @forelse($agencies as $agency)
                     <tr>
                         <td>{{ $agency->name }}</td>
+                        <td>{{ $agency->user->email }}</td>
                         <td>{{ $agency->piv }}</td>
                         <td>{{ $agency->address }}</td>
                         <td>{{ $agency->created_date }}</td>
@@ -113,6 +115,13 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{{ route('admin.agency.edit', $agency->id) }}">Edit</a></li>
+                                    @if(auth()->user()->user_type_id != 2)
+                                        <li>
+                                            <button class="dropdown-item" wire:click="openPasswordModal({{ $agency->id }})">
+                                                Show Pass
+                                            </button>
+                                        </li>
+                                    @endif
                                     <li><a class="dropdown-item" href="{{ route('admin.agency.show', $agency->id) }}">View Details</a></li>
                                 </ul>
                             </div>
@@ -133,5 +142,62 @@
     <div>
         {{ $agencies->links() }}
     </div>
+    <div wire:ignore.self class="modal fade" id="passwordModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Admin Authentication</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    @if(!$showPassword)
+                        <label class="form-label">Admin Password</label>
+                        <input 
+                            type="password"
+                            class="form-control"
+                            wire:model.defer="adminPassword"
+                        >
+
+                        @error('adminPassword')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    @endif
+
+                    @if($showPassword)
+                        <div class="alert alert-success text-center">
+                            <strong>Agency Password</strong><br>
+                            <span class="fs-4">{{ $agencyPassword }}</span>
+                        </div>
+                    @endif
+
+                </div>
+
+                <div class="modal-footer">
+                    <button 
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+
+                    @if(!$showPassword)
+                        <button 
+                            type="button"
+                            class="btn btn-dark"
+                            wire:click="verifyAdminPassword"
+                        >
+                            Verify
+                        </button>
+                    @endif
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </div>
 

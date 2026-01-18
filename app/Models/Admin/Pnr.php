@@ -102,16 +102,19 @@ class Pnr extends Model
     public function getMiddleArrivalDateTimeAttribute()
     {
 
-        $departure = \Carbon\Carbon::createFromFormat('d-M-y H:i',$this->getDepartureDateTimeAttribute());
+        if($this->middle_arrival_time != null){
+            $departure = \Carbon\Carbon::createFromFormat('d-M-y H:i',$this->getDepartureDateTimeAttribute());
 
-        $arrival = $departure->copy()->setTimeFromTimeString($this->middle_arrival_time);
+            $arrival = $departure->copy()->setTimeFromTimeString($this->middle_arrival_time);
 
-        // agar arrival time chhota hai departure se → next day
-        if ($arrival->lt($departure)) {
-            $arrival->addDay();
+            // agar arrival time chhota hai departure se → next day
+            if ($arrival->lt($departure)) {
+                $arrival->addDay();
+            }
+
+            return $arrival->format('d-M-y H:i');
         }
-
-        return $arrival->format('d-M-y H:i');
+        
     }
 
     public function getMiddleReturnArrivalDateTimeAttribute()

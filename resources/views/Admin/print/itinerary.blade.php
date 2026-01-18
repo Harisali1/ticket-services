@@ -33,7 +33,7 @@
         width: 100%;
         margin-top: 10px;
         border: 1px solid #000;
-        padding: 6px 10px;
+        padding: 6px 0px;
         font-size: 11px;
     }
 
@@ -94,6 +94,7 @@
     }
 
     .right {
+        text-align: right;
         float: right;
         font-size: 11px;
     }
@@ -104,7 +105,20 @@
 </style>
 
 <div class="container">
-
+    <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom:10px;">
+        <tr>
+            <td width="60%">
+                <img 
+                    src="{{ public_path('images/logo.jpg') }}" 
+                    style="height:50px;"
+                >
+            </td>
+            <td width="40%" class="right">
+                <strong style="font-size:16px;">E-Ticket / Flight Itinerary</strong><br>
+                <span class="small">Generated on {{ now()->format('d F Y') }}</span>
+            </td>
+        </tr>
+    </table>
     <!-- HEADER -->
     <div class="header">
         <div class="route">
@@ -212,5 +226,17 @@
         </table>
     </div>
     @endif
+    <div class="footer">
+        <table width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="small">
+                    This is a system generated ticket and does not require a signature.
+                </td>
+                <td class="small right">
+                    Generated on {{ now()->format('d F Y H:i') }}
+                </td>
+            </tr>
+        </table>
+    </div>
 
 </div>

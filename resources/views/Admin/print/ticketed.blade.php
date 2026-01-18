@@ -77,11 +77,16 @@
             border: 1px dashed #999;
             padding: 8px;
         }
+        @page {
+            margin: 20px 14px 60px 14px; /* bottom space for footer */
+        }
+
         .footer {
             position: fixed;
             bottom: 10px;
             left: 14px;
             right: 14px;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -95,9 +100,9 @@
         <tr>
             <td width="60%">
                 <img 
-                    src="{{ asset('images/logo.png') }}" 
+                    src="{{ public_path('images/logo.jpg') }}" 
                     style="height:50px;"
-                    alt="Company Logo">
+                >
             </td>
             <td width="40%" class="right">
                 <strong style="font-size:16px;">E-Ticket / Flight Itinerary</strong><br>
@@ -111,27 +116,18 @@
     <table class="info-table" width="100%" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
-            <th width="25%" class="text-left">Passenger</th>
-            <th width="25%" class="text-left">E-Ticket No</th>
-            <th width="25%" class="text-left">Booking Ref</th>
-            <th width="25%" class="text-left">Issue Date</th>
+            <th>Passenger</th>
+            <th>E-Ticket No</th>
+            <th>Booking Ref</th>
+            <th>Issue Date</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td class="text-left">{{ $customers->pluck('name')->implode(', ') }}</td>
-
-            <td class="text-left">
-                {{ $type == 'dept' ? $booking['dept_ticket_no'] : $booking['arr_ticket_no'] }}
-            </td>
-
-            <td class="text-left">
-                {{ $booking['booking_no'] }}
-            </td>
-
-            <td class="text-left">
-                {{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y') }}
-            </td>
+            <td>{{ $customers->pluck('name')->implode(', ') }}</td>
+            <td>{{ $type == 'dept' ? $booking['dept_ticket_no'] : $booking['arr_ticket_no'] }}</td>
+            <td>{{ $booking['booking_no'] }}</td>
+            <td>{{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y') }}</td>
         </tr>
     </tbody>
 </table>
@@ -213,18 +209,19 @@
         <strong>Hand Carry:</strong> 8 KG
     </div>
     <!-- FOOTER -->
-    <hr style="margin-top:20px;">
+    <div class="footer">
+        <table width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="small">
+                    This is a system generated ticket and does not require a signature.
+                </td>
+                <td class="small right">
+                    Generated on {{ now()->format('d F Y H:i') }}
+                </td>
+            </tr>
+        </table>
+    </div>
 
-    <table width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-            <td class="small">
-                This is a system generated ticket and does not require a signature.
-            </td>
-            <td class="small right">
-                © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
-            </td>
-        </tr>
-    </table>
 
 </div>
 

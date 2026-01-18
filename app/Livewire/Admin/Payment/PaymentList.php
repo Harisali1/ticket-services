@@ -1,41 +1,31 @@
 <?php
 
-namespace App\Livewire\Admin\Pnr;
+namespace App\Livewire\Admin\Payment;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Admin\Pnr;
-use App\Models\Admin\Seat;
-use DB;
+use App\Models\Admin\Payment;
 
-class PnrList extends Component
+class PaymentList extends Component
 {
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
 
-    public $perPage = 10;
-    // Modal data
-    public $selectedPnr;
-    public $selectedPnrId;
-    public $seats;
-    public $price;
-    public $comment;
-
     public $filters = [
-        'pnr_no' => '',
-        'airline' => '',
+        'title' => '',
         'status' => '',
         'from' => '',
         'to' => '',
     ];
+
+    public $perPage = 10;
 
     public function updatedPerPage()
     {
         $this->resetPage();
     }
 
-    // Reset page when filters change
     public function updatedFilters()
     {
         $this->resetPage();
@@ -54,10 +44,7 @@ class PnrList extends Component
 
     public function render()
     {
-        $pnrs = Pnr::with('seats', 'airline')
-            ->when($this->filters['pnr_no'], fn ($q) =>
-                $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
-            )
+        $payments = Payment::where('status', 1)
             ->when($this->filters['status'] !== '', fn ($q) =>
                 $q->where('status', $this->filters['status'])
             )
@@ -70,13 +57,6 @@ class PnrList extends Component
             ->latest()
             ->paginate($this->perPage);
 
-        $stats = [
-            'all'       => Pnr::count(),
-            'pending'   => Pnr::where('status', 1)->count(),
-            'approved'  => Pnr::where('status', 2)->count(),
-            'suspended' => Pnr::where('status', 3)->count(),
-        ];
-
-        return view('livewire.admin.pnr.pnr-list', compact('pnrs', 'stats'));
+        return view('livewire.admin.payment.payment-list', compact('payments'));
     }
 }

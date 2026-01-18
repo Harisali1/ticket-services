@@ -103,6 +103,14 @@ class BookingList extends Component
             $bookings = $bookings->where('created_by', auth()->user()->id);
         }
 
+        $stats = [
+            'all'       => (clone $bookings)->count(),
+            'reserved'  => (clone $bookings)->where('status', 1)->count(),
+            'ticketed'  => (clone $bookings)->where('status', 2)->count(),
+            'paid'      => (clone $bookings)->where('status', 3)->count(),
+            'abandoned' => (clone $bookings)->where('status', 4)->count(),
+        ];
+
         $bookings = $bookings->when($this->filters['pnr_no'], fn ($q) =>
                 $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
             )
@@ -117,20 +125,6 @@ class BookingList extends Component
             )
             ->latest()
             ->paginate($this->perPage);
-
-        $query = Booking::query();
-
-        if (auth()->user()->user_type_id != 1) {
-            $query->where('created_by', auth()->user()->id);
-        }
-
-        $stats = [
-            'all'       => (clone $query)->count(),
-            'reserved'  => (clone $query)->where('status', 1)->count(),
-            'ticketed'  => (clone $query)->where('status', 2)->count(),
-            'paid'      => (clone $query)->where('status', 3)->count(),
-            'abandoned' => (clone $query)->where('status', 4)->count(),
-        ];
 
         return view('livewire.admin.booking.booking-list', compact('bookings', 'stats'));
     }

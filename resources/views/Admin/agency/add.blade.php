@@ -78,6 +78,13 @@
           </button>
         </div>
 
+        @if(Auth::user()->user_type_id == '2')
+          <div class="col-md-6">
+            <label class="form-label">Mark Up</label>
+            <input type="text" name="mark_up" id="mark_up" placeholder="Enter Any Mark Up" class="form-control" value="{{ old('mark_up') }}">
+          </div>
+        @endif
+
         @if(Auth::user()->user_type_id == '1' || Auth::user()->user_type_id == '3')
           <div class="col-md-6">
             <label class="form-label">Status</label>

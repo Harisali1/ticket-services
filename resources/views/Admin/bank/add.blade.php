@@ -55,7 +55,7 @@
                     <tr>
                         <th>Swift Code *</th>
                         <td>
-                            <input type="text" name="ac_no" id="ac_no"
+                            <input type="text" name="swift_code" id="swift_code"
                                    class="form-control"
                                    placeholder="Enter Swift Code">
                         </td>
@@ -117,8 +117,7 @@ document.getElementById('bank-form').addEventListener('submit', function (e) {
     const data = {
         bank_name: bank_name.value.trim(),
         ac_title: ac_title.value.trim(),
-        ac_no: ac_no.value.trim(),
-        branch: branch.value.trim(),
+        swift_code: swift_code.value.trim(),
         iban: iban.value.trim(),
         status: status.value
     };
@@ -126,8 +125,7 @@ document.getElementById('bank-form').addEventListener('submit', function (e) {
     const rules = [
         ['bank_name', 'Bank name is required'],
         ['ac_title', 'Account title is required'],
-        ['ac_no', 'Account number is required'],
-        ['branch', 'Branch is required'],
+        ['swift_code', 'Swift Code is required'],
         ['iban', 'IBAN is required']
     ];
 
@@ -164,7 +162,7 @@ document.getElementById('bank-form').addEventListener('submit', function (e) {
                 title: res.message,
                 showConfirmButton: true
             }).then(() => {
-                window.location.href = "{{ route('admin.bank.index') }}";
+                window.location.href = "{{ route('admin.bank.create') }}";
             });
         },
         error: function (xhr) {

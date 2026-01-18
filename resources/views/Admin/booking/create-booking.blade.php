@@ -169,7 +169,7 @@
                         </p>
                         <p class="mb-0">
                             <small class="text-muted">To:</small><br>
-                            <strong>{{ $pnrBookings->middle_arrival_date_time }}</strong>
+                            <strong>{{ ($pnrBookings->middle_arrival_date_time) ? $pnrBookings->middle_arrival_date_time :  $pnrBookings->arrival_date_time }}</strong>
                         </p>
                     </div>
 
@@ -178,12 +178,12 @@
                         {{ $pnrBookings->departure->code}}
                     </div>
                      <div class="col-md-1 text-center fw-bold fs-5">
-                        {{ $pnrBookings->middle_arrival->code}}
+                        {{ (isset($pnrBookings->middle_arrival->code)) ? $pnrBookings->middle_arrival->code : $pnrBookings->arrival->code }}
                     </div>
 
                     <div class="col-md-2 text-center">
                         <small class="text-muted">Duration</small><br>
-                        <strong>{{ $pnrBookings->first_duration }}</strong>
+                        <strong>{{ ($pnrBookings->middle_arrival_date_time) ? $pnrBookings->first_duration : $pnrBookings->duration }}</strong>
                     </div>
 
                    
@@ -353,7 +353,6 @@
     <input type="hidden" id="booking_seats" name="booking_seats" value="{{ $seatSum }}">
     <input type="hidden" id="total_fare" name="total_fare" value="{{ $data['totalBaseFareAmount'] }}">
     <input type="hidden" id="total_tax" name="total_tax" value="{{ $data['totalTax'] }}">
-    <input type="hidden" id="total_amount" name="total_amount" value="{{ $data['totalAmount'] }}">
 
     <h3 class="fw-semibold mb-3 pnr-detail">Agency Details:</h3>
 
@@ -622,39 +621,72 @@
     <hr>
     <h3 class="fw-semibold mb-3 pnr-detail mt-2">Reservation Recap:</h3>
     <div class="container mt-4">
-        <div class="row justify-content-end">
-            <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-5 ms-auto"> <!-- RIGHT ALIGN -->
 
+            <div x-data="{
+                fare: {{ $fareAmount }},
+                tax: {{ $taxAmount }},
+                adminFee: 0,
+                showInput: false
+            }">
+
+                <!-- Fare -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-semibold">Fare Amount</span>
-                    <span class="fw-bold text-success">{{ $fareAmount }}.00 EUR</span>
+                    <span class="fw-bold text-success" x-text="fare.toFixed(2) + ' EUR'"></span>
                 </div>
 
+                <!-- Tax -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-semibold">Tax</span>
-                    <span class="fw-bold text-success">{{ $taxAmount }}.00 EUR</span>
+                    <span class="fw-bold text-success" x-text="tax.toFixed(2) + ' EUR'"></span>
                 </div>
 
+                <!-- Admin Fee -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-semibold">
                         Administrative Fee
-                        <!-- <button class="btn btn-sm btn-info ms-2">
-                            <i class="bi bi-pencil-square text-white"></i>
-                        </button> -->
+                        <button 
+                            type="button"
+                            class="btn btn-sm btn-info ms-2"
+                            @click="showInput = !showInput">
+                            <i class="fa fa-pencil-square text-white"></i>
+                        </button>
                     </span>
-                    <span class="fw-bold text-success">0.00 EUR</span>
+
+                    <template x-if="!showInput">
+                        <span class="fw-bold text-success" x-text="adminFee.toFixed(2) + ' EUR'"></span>
+                    </template>
+
+                    <template x-if="showInput">
+                        <input 
+                            type="number"
+                            class="form-control form-control-sm w-25"
+                            min="0"
+                            step="0.01"
+                            x-model.number="adminFee">
+                    </template>
                 </div>
 
                 <hr>
 
+                <!-- Total -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-bold">Total Amount</span>
-                    <span class="fw-bold fs-4 text-success">{{ $data['totalAmount'] }}.00 EUR</span>
+                    <span class="fw-bold fs-5">Total</span>
+                    <span class="fw-bold fs-5 text-primary"
+                        x-text="(fare + tax + adminFee).toFixed(2) + ' EUR'">
+                    </span>
                 </div>
 
+                <input type="hidden" name="admin_fee" :value="adminFee.toFixed(2)">
+                <input type="hidden" name="total_amount" :value="(fare + tax + adminFee).toFixed(2)">
             </div>
+
         </div>
     </div>
+</div>
+
 
 
     <!-- ================= BUTTONS ================= -->

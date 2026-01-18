@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Enums\UserStatus;
 use App\Models\Admin\Booking;
+use App\Models\Admin\Payment;
 
 class User extends Authenticatable
 {
@@ -56,8 +57,25 @@ class User extends Authenticatable
     }
 
     public function getRemainingBalanceAttribute(){
-        $balance = Booking::where('created_by', auth()->user()->id)->sum('total_amount');
+        $balance = Payment::where('created_by', auth()->user()->id)
+        ->where('is_approved', 0)
+        ->sum('amount');
         return $balance;
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'created_by');
+    }
+
+    public function getPaidBalanceAttribute()
+    {
+        return $this->payments()->where('status', 2)->sum('amount');
+    }
+
+    public function getRemainBalanceAttribute()
+    {
+        return $this->payments()->where('status', 1)->sum('amount');
     }
 
 }

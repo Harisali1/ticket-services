@@ -14,6 +14,7 @@ use App\Models\Admin\BookingPassenger;
 use App\Models\Admin\FareRule;
 use App\Models\Admin\Agency;
 use App\Models\Admin\Payment;
+use App\Models\Admin\PaymentUpload;
 use DB;
 use PDF;
 use Illuminate\Support\Facades\Mail;
@@ -189,6 +190,7 @@ class BookingController extends Controller
                 'seats' => $bookingSeats,
                 'price' => $request->total_fare,
                 'tax' => $request->total_tax,
+                'admin_fee' => $request->admin_fee,
                 'total_amount' => $request->total_amount,
                 'meal' => $request->meal,
                 'wheel_chair' => $request->wheel_chair,
@@ -369,5 +371,25 @@ class BookingController extends Controller
                 ->attachData($pdf->output(), 'ticket.pdf');
         });
         
+    }
+
+    public function checkPayment(){
+        $paymentAmount = Payment::where('created_by', auth()->user()->id)
+        ->where('is_approved', 0)
+        ->sum('amount');
+
+        $finalAmount = $paymentAmount - 1500;
+        if($paymentAmount > 1500){
+            return response()->json([
+                'code' => 2,
+                'message' => 'Payable Amount EUR '.$paymentAmount.'/= you clear at least EUR '.$finalAmount.'/= first.',
+            ], 201); 
+        }
+        else{
+            return response()->json([
+                'code' => 1,
+                'message' => 'success',
+            ], 201); 
+        }
     }
 }

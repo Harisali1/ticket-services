@@ -11,6 +11,7 @@ use App\Models\User;
 use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AgencyCreationMail;
+use App\Mail\AgencyApprovalMail;
 
 class AgencyController extends Controller
 {
@@ -59,6 +60,7 @@ class AgencyController extends Controller
                 'piv'       => $validated['piv'],
                 'show_pass' => $request->password,
                 'address'   => $validated['agency_address'],
+                'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : null,
                 'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);
@@ -104,12 +106,13 @@ class AgencyController extends Controller
         try {
 
             $agency = Agency::find($request->id);
+            $user = User::find($agency->user_id);
             $status = $agency->status;
             if(auth()->user()->user_type_id == 1 || auth()->user()->user_type_id == 3){
                 $status = $request->status;
             }
             // Update User
-            $user = User::find($agency->user_id)->update([
+            User::find($agency->user_id)->update([
                 'name'      => $request->name,
                 'email'     => $request->email,
                 'phone_no'  => $request->phone_no,
@@ -117,13 +120,18 @@ class AgencyController extends Controller
             ]);
             
             // Update Agency
-            $agency = Agency::find($request->id)->update([
+            Agency::find($request->id)->update([
                 'user_id'   => $agency->user_id,
                 'name'      => $request->agency_name,
                 'piv'       => $request->piv,
                 'address'   => $request->agency_address,
+                'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : null,
                 'status'    => $status,
             ]);
+
+            if($status == 2){
+                Mail::to($request->email)->send(new AgencyApprovalMail($user, $agency));
+            }
 
             DB::commit();
 
@@ -142,5 +150,9 @@ class AgencyController extends Controller
                 'error'   => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function PaymentList(){
+        return view('Admin.agency.payment_list');
     }
 }

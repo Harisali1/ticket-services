@@ -21,7 +21,7 @@ class Agency extends Model
         return $this->belongsTo(User::class);
     }
 
-     public function getCreatedDateAttribute()
+    public function getCreatedDateAttribute()
     {
         return \Carbon\Carbon::parse($this->created_at)->format('d-M-y H:i');
     }

@@ -58,7 +58,7 @@
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">Bank Details</span>
                 </a>
-                <a href="{{ route('admin.payment.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <a href="{{ route('admin.agency.payment.list') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">Payments</span>
                 </a>

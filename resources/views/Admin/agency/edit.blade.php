@@ -71,7 +71,13 @@
                  value="{{ $agency->user->phone_no }}" 
                  class="form-control">
         </div>
-
+        
+        @if(Auth::user()->user_type_id == '2')
+          <div class="col-md-6">
+            <label class="form-label">Mark Up</label>
+            <input type="text" name="mark_up" id="mark_up" placeholder="Enter Any Mark Up" class="form-control" value="{{ $agency->mark_up }}">
+          </div>
+        @endif
         <!-- Password -->
         <!-- <div class="col-md-6 position-relative">
           <label class="form-label">Password*</label>

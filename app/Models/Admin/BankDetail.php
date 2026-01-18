@@ -9,13 +9,5 @@ class BankDetail extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'bank_name',
-        'ac_title',
-        'ac_no',
-        'branch',
-        'iban',
-        'status',
-        'created_by'
-    ];
+    protected $guarded = [];
 }

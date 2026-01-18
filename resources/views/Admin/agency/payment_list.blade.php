@@ -4,16 +4,16 @@
 @endsection
 
 @section('content')
-    @livewire('admin.agency.agency-list')
+    @livewire('admin.agency.agency-payment-list')
 @endsection
 
 @section('scripts')
-<script>
+<!-- <script>
     document.addEventListener('open-password-modal', () => {
         const modal = new bootstrap.Modal(document.getElementById('passwordModal'));
         modal.show();
     });
-</script>
+</script> -->
 
 @endsection
 

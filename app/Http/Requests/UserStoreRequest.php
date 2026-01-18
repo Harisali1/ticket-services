@@ -16,7 +16,7 @@ class UserStoreRequest extends FormRequest
         return [
             'name'              => ['required', 'string', 'max:255'],
             'email'             => ['required', 'email', 'max:255'],
-            'phone_no'          => ['required', 'digits_between:10,15'],
+            'phone_no'          => ['required'],
             'password'          => ['required', 'string', 'min:6'],
             'confirm_password'  => ['required', 'same:password'],
             'status'            => ['required'],
@@ -30,7 +30,6 @@ class UserStoreRequest extends FormRequest
             'email.required'            => 'Email is required',
             'email.email'               => 'Invalid email format',
             'phone_no.required'         => 'Phone number is required',
-            'phone_no.digits_between'   => 'Phone must be at least 11 digits',
             'password.required'         => 'Password is required',
             'password.min'              => 'Password must be at least 6 characters',
             'confirm_password.required' => 'Confirm password is required',
