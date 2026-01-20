@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
+use App\Models\Admin\Customer;
 use DB;
 
 class UserController extends Controller
@@ -95,4 +96,23 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    public function customerUpdate(Request $request, $id){
+        $passenger = Customer::findOrFail($id);
+
+        $passenger->update([
+            'name'     => $request->name,
+            'surname'  => $request->surname,
+            'dob'      => $request->dob,
+            'gender'   => $request->gender,
+            'email'    => $request->email,
+            'phone_no' => $request->phone_no,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Passenger updated successfully'
+        ]);
+    }
+
 }

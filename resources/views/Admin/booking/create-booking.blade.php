@@ -135,7 +135,7 @@
 
     <h5 class="fw-semibold">
         Total Tickets Price :
-        <span id="totalPrice">EUR {{ $data['totalAmount'] }}/-</span>
+        <span id="totalPrice">EUR {{ number_format($data['totalAmount'],0) }}/-</span>
     </h5>
   </div>
 
@@ -382,11 +382,11 @@
             <tr>
                 <th>Passenger Type</th>
                 <th>Seat</th>
-                <th>Base Fare</th>
-                @if($pnrBookings->pnr_type == 'return' || $pnrBookings->pnr_type == 'open_jaw')
+                <th>Fare Amount</th>
+                <!-- @if($pnrBookings->pnr_type == 'return' || $pnrBookings->pnr_type == 'open_jaw')
                     <th>Return Base Fare</th>
-                @endif
-                <th>Total Fare Amount</th>
+                @endif -->
+                <!-- <th>Total Fare Amount</th> -->
                 <th>Tax</th>
                 <th>Grand Total</th>
             </tr>
@@ -408,22 +408,22 @@
                     <td>
                         {{ $fare['seat'] }}
                     </td>
-                    <td>
+                    <!-- <td>
                         {{ $fare['base_fare'] }}
                     </td>
                     @if($pnrBookings->pnr_type == 'return' || $pnrBookings->pnr_type == 'open_jaw')
                         <td>
                             {{ $fare['return_base_fare'] }}
                         </td>
-                    @endif
+                    @endif -->
                     <td>
-                        {{ $fare['total_fare_amount'] }}
+                        {{ number_format($fare['total_fare_amount'], 0) }}
                     </td>
                     <td>
                         {{ $fare['tax'] }}
                     </td>
                     <td>
-                        {{ $fare['row_total'] }}
+                        {{ number_format($fare['row_total'], 0) }}
                     </td>
                 </tr>
                 <input type="hidden" name="fareDetails[{{ $index }}][type_id]" value="{{ $fare['type_id'] }}">
@@ -624,23 +624,32 @@
     <div class="row">
         <div class="col-md-5 ms-auto"> <!-- RIGHT ALIGN -->
 
-            <div x-data="{
-                fare: {{ $fareAmount }},
-                tax: {{ $taxAmount }},
-                adminFee: 0,
-                showInput: false
-            }">
+            <div 
+                x-data="{
+                    fare: {{ $fareAmount }},
+                    tax: {{ $taxAmount }},
+                    adminFee: 0,
+                    showInput: false,
+
+                    format(amount) {
+                        return amount.toLocaleString('en-US', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        }) + ' EUR';
+                    }
+                }">
+
 
                 <!-- Fare -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-semibold">Fare Amount</span>
-                    <span class="fw-bold text-success" x-text="fare.toFixed(2) + ' EUR'"></span>
+                    <span class="fw-bold text-success" x-text="format(fare)"></span>
                 </div>
 
                 <!-- Tax -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-semibold">Tax</span>
-                    <span class="fw-bold text-success" x-text="tax.toFixed(2) + ' EUR'"></span>
+                    <span class="fw-bold text-success" x-text="format(tax)"></span>
                 </div>
 
                 <!-- Admin Fee -->
@@ -656,7 +665,7 @@
                     </span>
 
                     <template x-if="!showInput">
-                        <span class="fw-bold text-success" x-text="adminFee.toFixed(2) + ' EUR'"></span>
+                        <span class="fw-bold text-success" x-text="format(adminFee)"></span>
                     </template>
 
                     <template x-if="showInput">
@@ -675,7 +684,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="fw-bold fs-5">Total</span>
                     <span class="fw-bold fs-5 text-primary"
-                        x-text="(fare + tax + adminFee).toFixed(2) + ' EUR'">
+                        x-text="format(fare + tax + adminFee)">
                     </span>
                 </div>
 

@@ -115,8 +115,8 @@
                         <td>{{ $booking->pnr?->departure_date ?? '' }}</td>
                         <td>{{ $booking->pnr?->arrival_date ?? ''}}</td>
                         <td>{{ $booking->seats }}</td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ (isset($booking->payable)) ? $booking->payable->name : '' }}</td>
+                        <td>{{ $booking->paid_at }}</td>
                         <td>
                             <span class="{{ $booking->status->color() }}">
                                 {{ $booking->status->label() }}
@@ -131,14 +131,29 @@
                                 </a>
                             @elseif($booking->status->label() === 'Ticketed')
                                 <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}">
-                                    <button class="btn btn-sm btn-success" type="button">
+                                    <button class="btn btn-sm btn-secondary" type="button">
                                         TKT
                                     </button>
                                 </a>
-                            @else
+                            @elseif($booking->status->label() === 'Paid')
+                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}">
+                                    <button class="btn btn-sm btn-success" type="button">
+                                        Paid
+                                    </button>
+                                </a>
+                            @elseif($booking->status->label() === 'Cancel')
                                 <button class="btn btn-sm btn-danger" type="button">
                                     CN
                                 </button>
+                            @else
+                                <button class="btn btn-sm btn-warning" type="button">
+                                    Void
+                                </button>
+                            @endif
+                            @if(auth()->user()->user_type_id == 1)
+                            <button class="btn btn-sm btn-warning" type="button">
+                                    Void
+                            </button>
                             @endif
                         </td>
                     </tr>

@@ -108,10 +108,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom:10px;">
         <tr>
             <td width="60%">
-                <img 
-                    src="{{ public_path('images/logo.jpg') }}" 
-                    style="height:50px;"
-                >
+                <img src="{{ auth()->user()->logo ? public_path('storage/' . auth()->user()->logo) : public_path('images/logo-placeholder.png') }}" style="height:50px;">
             </td>
             <td width="40%" class="right">
                 <strong style="font-size:16px;">E-Ticket / Flight Itinerary</strong><br>
@@ -230,10 +227,7 @@
         <table width="100%" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="small">
-                    This is a system generated ticket and does not require a signature.
-                </td>
-                <td class="small right">
-                    Generated on {{ now()->format('d F Y H:i') }}
+                    We appreciate your business and wish you safe travels.
                 </td>
             </tr>
         </table>

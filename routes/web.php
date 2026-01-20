@@ -126,6 +126,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', [App\Http\Controllers\Admin\PaymentController::class, 'store'])->name('admin.payment.store');
             Route::get('/edit/{payment}', [App\Http\Controllers\Admin\PaymentController::class, 'edit'])->name('admin.payment.edit');
             Route::post('/update', [App\Http\Controllers\Admin\PaymentController::class, 'update'])->name('admin.payment.update');
+            Route::get('/approved/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'approvedPayment'])->name('admin.payment.approved');
         });
 
         Route::prefix('notification')->group(function () {
@@ -135,6 +136,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/edit/{notification}', [App\Http\Controllers\Admin\NotificationController::class, 'edit'])->name('admin.notification.edit');
             Route::post('/update', [App\Http\Controllers\Admin\NotificationController::class, 'update'])->name('admin.notification.update');
         });
+
+        Route::prefix('setting')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.setting.index');
+            Route::post('/store', [App\Http\Controllers\Admin\SettingController::class, 'store'])->name('admin.setting.store');
+
+        });
+
+        Route::post('/passengers/{id}', [App\Http\Controllers\Admin\UserController::class, 'customerUpdate']);
+        Route::post('/bookings/{id}/special-request', [App\Http\Controllers\Admin\BookingController::class, 'updateSpecialRequest']);
 
     });
 });

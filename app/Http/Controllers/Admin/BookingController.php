@@ -287,6 +287,7 @@ class BookingController extends Controller
         $customers = Customer::where('booking_id', $request->id)->get();
         $pnr = Pnr::find($booking->pnr_id);
         $fareRules = FareRule::all();
+        $status=0;
 
         $updateData = [];
         $airlinePrefix=0;
@@ -299,6 +300,7 @@ class BookingController extends Controller
             $arrivalTicketNumber = $arrivalAirlinePrefix . mt_rand(1000000000, 9999999999);
 
             if($request->status == 'ticket'){
+                $status=2;
                 $updateData = [
                     'status' => 2,
                     'dept_ticket_no' =>  $departureTicketNumber,
@@ -309,6 +311,7 @@ class BookingController extends Controller
             $departureAirlinePrefix = $booking->pnr->airline->awb_prefix;
             $departureTicketNumber = $departureAirlinePrefix . mt_rand(1000000000, 9999999999);
             if($request->status == 'ticket'){
+                $status=2;
                 $updateData = [
                     'status' => 2,
                     'dept_ticket_no' =>  $departureTicketNumber,
@@ -317,12 +320,16 @@ class BookingController extends Controller
         }
 
         if($request->status == 'cancel'){
+            $status=5;
             $updateData = [
                 'status' => 5
             ]; 
         }
 
         Booking::where('id', $request->id)->update($updateData);
+        Payment::where('booking_id', $request->id)->update([
+            'status' => $status,
+        ]);
 
         $seatIds = $pnr->seats()
                         ->where('is_reserved', 1)
@@ -344,7 +351,7 @@ class BookingController extends Controller
         $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
-        ->get(['customers.name', 'customers.phone_no', 'customers.dob']);
+        ->get(['customers.name', 'customers.phone_no', 'customers.dob', 'customers.surname']);
         $response['type'] = $type;
         $response['agency'] = Agency::with('user')->where('user_id', $bookingData->created_by)->first();
 
@@ -365,8 +372,8 @@ class BookingController extends Controller
         $pdf = PDF::loadView('Admin/print/ticketed', $response);
         $pdf->setPaper('A4', 'portrait');
 
-        Mail::send('Admin.email_template.check', ['data' => 6871007], function ($message) use ($pdf) {
-            $message->to('noreply@agency.divinetravel.it')
+        Mail::send('Admin.email_template.ticket_attachment', ['user'=>auth()->user()], function ($message) use ($pdf) {
+            $message->to('harismusharaf9001@gmail.com')
                 ->subject('Notice of Delivery - Order# 6871007')
                 ->attachData($pdf->output(), 'ticket.pdf');
         });
@@ -378,18 +385,46 @@ class BookingController extends Controller
         ->where('is_approved', 0)
         ->sum('amount');
 
-        $finalAmount = $paymentAmount - 1500;
-        if($paymentAmount > 1500){
-            return response()->json([
-                'code' => 2,
-                'message' => 'Payable Amount EUR '.$paymentAmount.'/= you clear at least EUR '.$finalAmount.'/= first.',
-            ], 201); 
-        }
-        else{
+        $agency = Agency::where('user_id', auth()->user()->id)->first();
+
+        
+        if(auth()->user()->user_type_id != 1){
+            if($paymentAmount > $agency->limit){
+                return response()->json([
+                    'code' => 2,
+                    'message' => 'Your payable amount is exceed your limit',
+                ], 201); 
+            }else{
+                return response()->json([
+                    'code' => 1,
+                    'message' => 'success',
+                ], 201); 
+            }
+        }else{
             return response()->json([
                 'code' => 1,
                 'message' => 'success',
             ], 201); 
         }
     }
+
+    public function updateSpecialRequest(Request $request, $id){
+        $booking = Booking::findOrFail($id);
+
+        $request->validate([
+            'meal'        => 'nullable|string|max:255',
+            'wheel_chair' => 'nullable|string|max:255',
+        ]);
+
+        $booking->update([
+            'meal'        => $request->meal,
+            'wheel_chair' => $request->wheel_chair,
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Special request updated successfully'
+        ]);
+    }
+
 }

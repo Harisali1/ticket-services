@@ -137,7 +137,8 @@
                                     Total Seats = {{ $pnr->seats }}<br>
                                     Available Seats = {{ $pnr->seat_available }}<br>
                                     Sale Seats = {{ $pnr->seat_is_sale }}<br>
-                                    Sold Seats = {{ $pnr->seat_is_sold }}
+                                    Reserve Seats = {{ $pnr->seat_is_reserved }}<br>
+                                    Sold Seats = {{ $pnr->seat_is_sold }}<br>
                                 </td>
 
                             

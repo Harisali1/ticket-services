@@ -7,15 +7,24 @@
             </form>
 
             @if(Auth::user()->user_type_id == '2')
-                <p class="mt-2">Remaining Balance: <span>{{ Auth::user()->remaining_balance }}</span></p>
+                <div class="d-flex align-items-center mt-2">
+                    <span class="fw-semibold text-muted me-2">
+                        Remaining Balance
+                    </span>
+
+                    <span class="badge bg-success-subtle text-success px-3 py-2 fs-6">
+                        {{ number_format(Auth::user()->remaining_balance) }}
+                    </span>
+                </div>
             @endif
+
             <div class="dropdown ms-auto">
                 <a href="#" class="d-flex align-items-center text-dark text-decoration-none" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width:35px;height:35px;">JD</div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="{{ route('admin.setting.index') }}">Settings</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
                         <a class="dropdown-item text-danger" href="{{ route('logout') }}" 

@@ -5,7 +5,7 @@
         
         <!-- Title -->
         <div class="mb-4">
-            <h1 class="h5 mb-0">Airline</h1>
+            <h1 class="h5 mb-0">DIVINE TRAVEL</h1>
         </div>
 
         <!-- Toggle Button -->

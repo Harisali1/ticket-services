@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Admin\BankDetail;
 use App\Models\Admin\Booking;
 use App\Models\Admin\Notification;
+use App\Models\User;
+use App\Models\Admin\Agency;
 
 class HomeController extends Controller
 {

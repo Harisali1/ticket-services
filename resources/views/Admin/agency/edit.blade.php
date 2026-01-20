@@ -5,8 +5,6 @@
 
 @section('content')
 <div class="container py-4">
-
-  <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <div class="d-flex align-items-center gap-2">
       <a href="{{ route('admin.agency.index') }}" class="text-decoration-none text-secondary">
@@ -21,7 +19,6 @@
   <!-- Form Container -->
   <div class="card p-4">
     <form id="agency-form">
-
       <!-- Agency Details -->
       <h5 class="mb-3">Agency Details</h5>
       <div class="row g-3">
@@ -78,39 +75,26 @@
             <input type="text" name="mark_up" id="mark_up" placeholder="Enter Any Mark Up" class="form-control" value="{{ $agency->mark_up }}">
           </div>
         @endif
-        <!-- Password -->
-        <!-- <div class="col-md-6 position-relative">
-          <label class="form-label">Password*</label>
-          <input type="password" name="password" id="password" 
-                 placeholder="*******" class="form-control pr-5">
-          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2 password-hide-show" 
-                  onclick="togglePassword('password', this)">
-            <i class="fa fa-eye"></i>
-          </button>
-        </div>
-
-        <div class="col-md-6 position-relative">
-          <label class="form-label">Confirm Password*</label>
-          <input type="password" name="confirm_password" id="confirm_password" 
-                 placeholder="*******" class="form-control pr-5">
-          <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2 password-hide-show" 
-                  onclick="togglePassword('confirm_password', this)">
-            <i class="fa fa-eye"></i>
-          </button>
-        </div> -->
-      @if(Auth::user()->user_type_id == '1' || Auth::user()->user_type_id == '3')
-        <div class="col-md-6">
-          <label class="form-label">Status</label>
-          <select name="status" id="status" class="form-select">
-            @foreach(\App\Enums\AgencyStatus::cases() as $status)
-              <option value="{{ $status->value }}" @selected($agency->status === $status)>
-                {{ $status->label() }}
-              </option>
-            @endforeach
-          </select>
-        </div>
+      
+        @if(Auth::user()->user_type_id == '1' || Auth::user()->user_type_id == '3')
+          <div class="col-md-6">
+            <label class="form-label">Status</label>
+            <select name="status" id="status" class="form-select">
+              @foreach(\App\Enums\AgencyStatus::cases() as $status)
+                <option value="{{ $status->value }}" @selected($agency->status === $status)>
+                  {{ $status->label() }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+        @endif
+        @if(Auth::user()->user_type_id == '1')
+          <div class="col-md-6">
+            <label class="form-label">Limit Amount For Booking</label>
+            <input type="text" name="limit" id="limit" placeholder="EUR 100/=" class="form-control" value="{{ $agency->limit }}">
+          </div>
+        @endif
       </div>
-      @endif
 
       <!-- Form Actions -->
       <div class="d-flex justify-content-end gap-2 mt-4">

@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id();
             $table->integer('booking_id')->nullable();
             $table->string('amount')->nullable();
-            $table->string('image')->nullable();
             $table->boolean('status')->default(1);
             $table->integer('paid_by')->nullable();
             $table->integer('created_by')->nullable();
             $table->date('paid_at')->nullable();
-            $table->integer('approved_by')->nullable();
+            $table->datetime('approved_at')->nullable();
             $table->integer('is_approved')->default(0);
             $table->timestamps();
         });

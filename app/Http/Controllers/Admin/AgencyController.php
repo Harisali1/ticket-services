@@ -61,6 +61,7 @@ class AgencyController extends Controller
                 'show_pass' => $request->password,
                 'address'   => $validated['agency_address'],
                 'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : null,
+                'limit'     => (isset($request->limit)) ? $request->limit : null,
                 'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);
@@ -126,10 +127,11 @@ class AgencyController extends Controller
                 'piv'       => $request->piv,
                 'address'   => $request->agency_address,
                 'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : null,
+                'limit'     => (isset($request->limit)) ? $request->limit : null,
                 'status'    => $status,
             ]);
 
-            if($status == 2){
+            if($agency->status == 1 && $request->status == 2){
                 Mail::to($request->email)->send(new AgencyApprovalMail($user, $agency));
             }
 

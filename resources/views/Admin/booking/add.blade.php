@@ -98,6 +98,7 @@
                            class="form-control"
                            name="departure_date"
                            id="departure_date"
+                           min="{{ date('Y-m-d') }}"
                            value="{{ old('departure_date', request('departure_date')) }}"
                            required>
                 </div>

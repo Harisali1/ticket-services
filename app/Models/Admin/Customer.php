@@ -13,4 +13,8 @@ class Customer extends Model
     public function booking(){
         return $this->belongsTo(Booking::class);
     }
+
+    public function getFullNameAttribute(){
+        return trim($this->name.' '.$this->surname);
+    }
 }

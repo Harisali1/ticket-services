@@ -144,7 +144,7 @@
                     icon: "error",
                     title: message,
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 9000
                 });
             };
 
@@ -154,8 +154,8 @@
             if (!amount) { showError("Please select at least one booking"); return; }
             if (!image) { showError("image is required"); return; }
 
-            const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-            if (!allowedTypes.includes(image.type)) { showError("image must be JPG or PNG"); return; }
+            const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "application/pdf"];
+            if (!allowedTypes.includes(image.type)) { showError("File must be JPG, PNG, or PDF"); return; }
             if (image.size > 2097152) { showError("image size must be less than 2MB"); return; }
 
             Swal.fire({

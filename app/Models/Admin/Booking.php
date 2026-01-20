@@ -29,6 +29,10 @@ class Booking extends Model
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
+    public function payable(){
+        return $this->belongsTo(User::class, 'paid_by', 'id');
+    }
+
     public function getBookingDateAttribute()
     {
         return \Carbon\Carbon::parse($this->created_at)->format('d-M-y H:i');
@@ -38,4 +42,6 @@ class Booking extends Model
     {
         return \Carbon\Carbon::parse($this->created_at->addDay())->format('d-M-y H:i');
     }
+
+    // public function 
 }

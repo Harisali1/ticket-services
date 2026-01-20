@@ -109,7 +109,7 @@
             <div class="row g-3">
                 <div class="col-md-2">
                     <label class="form-label text-muted">Departure Date *</label>
-                    <input type="date" id="departure_date" name="departure_date" class="form-control">
+                    <input type="date" id="departure_date" name="departure_date" min="{{ date('Y-m-d') }}" class="form-control">
                 </div>
 
                 <div class="col-md-2">
@@ -195,7 +195,7 @@
                 <!-- Arrival Date -->
                 <div class="col-md-2">
                     <label class="form-label text-muted">Arrival Date *</label>
-                    <input type="date" id="arrival_date" name="arrival_date" class="form-control">
+                    <input type="date" id="arrival_date" name="arrival_date" min="{{ date('Y-m-d') }}" class="form-control">
                 </div>
 
                 <!-- Arrival Time -->

@@ -97,12 +97,17 @@
             <hr>
 
             <div class="row align-items-center">
-                <div class="col-md-3">Base: <strong>{{ $booking->price }}.00 EUR</strong></div>
-                <div class="col-md-3">Tax: <strong>{{ $booking->tax}}.00 EUR</strong></div>
-                <div class="col-md-3 text-success fw-bold fs-5">Total: {{ $booking->total_amount }}.00 EUR</div>
-                <div class="col-md-3 text-end">
-                    <button class="btn btn-success btn-sm">Requote</button>
-                </div>
+                <div class="col-md-3">Base: <strong>{{ number_format($booking->price, 2) }} EUR</strong></div>
+                <div class="col-md-3">Tax: <strong>{{ number_format($booking->tax, 2) }} EUR</strong></div>
+                <div class="col-md-3">Administrator Fee: <strong>{{ number_format($booking->admin_fee, 2) }} EUR</strong></div>
+                <div class="col-md-3 text-success fw-bold fs-5">Total: {{ number_format($booking->total_amount, 2) }} EUR </div>
+                
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-3"></div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3 text-success fw-bold fs-5"><button class="btn btn-success btn-sm">Requote</button></div>                
             </div>
 
             @if($booking->status->label() === 'Ticketed')
@@ -309,115 +314,123 @@
     </div>
 
     <!-- Passenger -->
-     @foreach($customers as $index => $customer)
-<form class="passenger-form mb-4">
-    <div class="card mx-4">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            Passenger {{ $index + 1 }} (ADT)
+    @foreach($customers as $index => $customer)
+        <form class="passenger-form mb-4" data-id="{{ $customer->id }}">
+            @csrf
 
-            <button type="button"
-                class="btn btn-success btn-sm edit-btn"
-                data-target="passenger-{{ $index }}">
-                Edit Passenger Data
-            </button>
-        </div>
+            <div class="card mx-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    Passenger {{ $index + 1 }} (ADT)
 
-        <div class="card-body passenger-{{ $index }}">
-            <div class="row">
-                <div class="col-md-4">
-                    Name:
-                    <input type="text"
-                           class="form-control readonly-input"
-                           name="name[]"
-                           value="{{ $customer->name }}"
-                           disabled>
+                    <button type="button"
+                        class="btn btn-success btn-sm edit-btn"
+                        data-target="passenger-{{ $index }}">
+                        Edit Passenger Data
+                    </button>
                 </div>
 
-                <div class="col-md-4">
-                    DOB:
-                    <input type="date"
-                           class="form-control readonly-input"
-                           name="dob[]"
-                           value="{{ $customer->dob }}"
-                           disabled>
-                </div>
+                <div class="card-body passenger-{{ $index }}">
+                    <div class="row">
+                        <div class="col-md-4">
+                            Name:
+                            <input type="text" class="form-control readonly-input" name="name"
+                                value="{{ $customer->name }}" disabled>
+                        </div>
 
-                <div class="col-md-4">
-                    Gender:
-                    <input type="text"
-                           class="form-control readonly-input"
-                           name="gender[]"
-                           value="{{ $customer->gender }}"
-                           disabled>
-                </div>
-            </div>
+                        <div class="col-md-4">
+                            Sur Name:
+                            <input type="text" class="form-control readonly-input" name="surname"
+                                value="{{ $customer->surname }}" disabled>
+                        </div>
 
-            <div class="row mt-2">
-                <div class="col-md-4">
-                    Email:
-                    <input type="email"
-                           class="form-control readonly-input"
-                           name="email[]"
-                           value="{{ $customer->email }}"
-                           disabled>
-                </div>
+                        <div class="col-md-4">
+                            DOB:
+                            <input type="date" class="form-control readonly-input" name="dob"
+                                value="{{ $customer->dob }}" disabled>
+                        </div>
 
-                <div class="col-md-4">
-                    Phone:
-                    <input type="text"
-                           class="form-control readonly-input"
-                           name="phone[]"
-                           value="{{ $customer->phone_no }}"
-                           disabled>
+                        <div class="col-md-4">
+                            Gender:
+                            <input type="text" class="form-control readonly-input" name="gender"
+                                value="{{ $customer->gender }}" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            Email:
+                            <input type="email" class="form-control readonly-input" name="email"
+                                value="{{ $customer->email }}" disabled>
+                        </div>
+
+                        <div class="col-md-4">
+                            Phone:
+                            <input type="text" class="form-control readonly-input" name="phone_no"
+                                value="{{ $customer->phone_no }}" disabled>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</form>
-@endforeach
+        </form>
+    @endforeach
 
 
-    <div class="card mx-4 mb-4">
-        <div class="card-header bg-primary text-white">Special Request:</div>
-        <div class="card-body row">
-            <div class="col-md-3">
-            <label class="form-label small">Meal</label>
-            <select class="form-select" id="meal" name="meal" required>
-                <option value="">Select</option>
-                <option value="Hindu Meal">Hindu Meal</option>
-                <option value="Sea Food Meal">Sea Food Meal</option>
-                <option value="Kosher Meal">Kosher Meal</option>
-                <option value="Vegetarian Oriental Meal">Vegetarian Oriental Meal</option>
-                <option value="Vegetarian Vegan Meal">Vegetarian Vegan Meal</option>
-                <option value="Low Salt Meal">Low Salt Meal</option>
-                <option value="Low Calorie Meal">Low Calorie Meal</option>
-                <option value="Bland Meal">Bland Meal</option>
-                <option value="Vegetarian Jain Meal">Vegetarian Jain Meal</option>
-                <option value="Diabetic Meal">Diabetic Meal</option>
-                <option value="Vegetarian Hindu Meal">Vegetarian Hindu Meal</option>
-                <option value="Special Meal">Special Meal</option>
-                <option value="Gluten Intollerant Meal" {{ $booking->meal == 'Gluten Intollerant Meal' ? 'selected' : '' }}>Gluten Intollerant Meal</option>
-                <option value="Low Fat Meal">Low Fat Meal</option>
-                <option value="Baby Meal">Baby Meal</option>
-                <option value="Vegetarian Raw Meal">Vegetarian Raw Meal</option>
-                <option value="Fruit Platter Meal">Fruit Platter Meal</option>
-                <option value="Child Meal">Child Meal</option>
-                <option value="Moslem Meal">Moslem Meal</option>
-                <option value="Low Lactose Meal">Low Lactose Meal</option>
-                <option value="Vegetarian Lacto-ovo Meal">Vegetarian Lacto-ovo Meal</option>
-            </select>
+
+    <form class="booking-form" data-booking-id="{{ $booking->id }}">
+        @csrf
+
+        <div class="card mx-4 mb-4">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                Special Request
+
+                <button type="button" class="btn btn-success btn-sm booking-edit-btn">
+                    Edit Special Request
+                </button>
+            </div>
+
+            <div class="card-body row booking-fields">
+                <div class="col-md-3">
+                    <label class="form-label small">Meal</label>
+                    <select class="form-select booking-input" name="meal" disabled>
+                        <option value="">Select</option>
+                        @php
+                            $meals = [
+                                'Hindu Meal','Sea Food Meal','Kosher Meal','Vegetarian Oriental Meal',
+                                'Vegetarian Vegan Meal','Low Salt Meal','Low Calorie Meal','Bland Meal',
+                                'Vegetarian Jain Meal','Diabetic Meal','Vegetarian Hindu Meal','Special Meal',
+                                'Gluten Intollerant Meal','Low Fat Meal','Baby Meal','Vegetarian Raw Meal',
+                                'Fruit Platter Meal','Child Meal','Moslem Meal','Low Lactose Meal',
+                                'Vegetarian Lacto-ovo Meal'
+                            ];
+                        @endphp
+
+                        @foreach($meals as $meal)
+                            <option value="{{ $meal }}" {{ $booking->meal === $meal ? 'selected' : '' }}>
+                                {{ $meal }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small">Wheel Chair</label>
+                    <select class="form-select booking-input" name="wheel_chair" disabled>
+                        <option value="">Select</option>
+                        <option value="WHEELCHAIR (CAN CLIMB STAIRS)" {{ $booking->wheel_chair === 'WHEELCHAIR (CAN CLIMB STAIRS)' ? 'selected' : '' }}>
+                            WHEELCHAIR (CAN CLIMB STAIRS)
+                        </option>
+                        <option value="WHEELCHAIR (CAN NOT CLIMB STAIRS)" {{ $booking->wheel_chair === 'WHEELCHAIR (CAN NOT CLIMB STAIRS)' ? 'selected' : '' }}>
+                            WHEELCHAIR (CAN NOT CLIMB STAIRS)
+                        </option>
+                        <option value="WHEELCHAIR (ALL THE WAY TO SEAT)" {{ $booking->wheel_chair === 'WHEELCHAIR (ALL THE WAY TO SEAT)' ? 'selected' : '' }}>
+                            WHEELCHAIR (ALL THE WAY TO SEAT)
+                        </option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-            <label class="form-label small">Wheel Chair</label>
-            <select class="form-select" id="wheel_chair" name="wheel_chair" required>
-                <option value="">Select</option>
-                <option value="WHEELCHAIR (CAN CLIMB STAIRS)">WHEELCHAIR (CAN CLIMB STAIRS)</option>
-                <option value="WHEELCHAIR (CAN NOT CLIMB STAIRS)">WHEELCHAIR (CAN NOT CLIMB STAIRS)</option>
-                <option value="WHEELCHAIR (ALL THE WAY TO SEAT)">WHEELCHAIR (ALL THE WAY TO SEAT)</option>
-            </select>
-        </div>
-        </div>
-    </div>
+    </form>
+
 
     <div class="card mx-4 mb-4">
 
@@ -503,9 +516,10 @@
     <div class="card mx-4 mb-5">
         <div class="card-header bg-success text-white">Reservation Recap</div>
         <div class="card-body text-end">
-            <p>Fare Amount: <strong>{{  $booking->price }}.00 EUR</strong></p>
-            <p>Tax: <strong>{{ $booking->tax }}.00 EUR</strong></p>
-            <h4 class="text-success">Total: {{ $booking->total_amount }}.00 EUR</h4>
+            <p>Fare Amount: <strong>{{ number_format($booking->price, 2) }} EUR</strong></p>
+            <p>Tax: <strong>{{ number_format($booking->tax, 2) }} EUR</strong></p>
+            <p>Administrator Fee: <strong>{{ number_format($booking->admin_fee, 2) }} EUR</strong></p>
+            <h4 class="text-success">Total: {{ number_format($booking->total_amount, 2) }} EUR</h4>
         </div>
     </div>
 
@@ -516,28 +530,116 @@
 @section('scripts')
 <script>
     document.addEventListener('click', function (e) {
-        if (e.target.classList.contains('edit-btn')) {
 
-            const targetClass = e.target.dataset.target;
-            const container = document.querySelector('.' + targetClass);
-            const inputs = container.querySelectorAll('.readonly-input');
+        if (!e.target.classList.contains('edit-btn')) return;
 
-            const isReadonly = inputs[0].hasAttribute('disabled');
+        const btn = e.target;
+        const form = btn.closest('.passenger-form');
+        const container = form.querySelector('.' + btn.dataset.target);
+        const inputs = container.querySelectorAll('.readonly-input');
+        const passengerId = form.dataset.id;
 
-            inputs.forEach(input => {
-                if (isReadonly) {
-                    input.removeAttribute('disabled');
-                } else {
-                    input.setAttribute('disabled', true);
-                }
-            });
+        const isReadonly = inputs[0].hasAttribute('disabled');
 
-            // Toggle button text
-            e.target.innerText = isReadonly ? 'Save Passenger Data' : 'Edit Passenger Data';
-            e.target.classList.toggle('btn-success');
-            e.target.classList.toggle('btn-warning');
+        // EDIT MODE
+        if (isReadonly) {
+            inputs.forEach(i => i.removeAttribute('disabled'));
+            btn.innerText = 'Save Passenger Data';
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-warning');
+            return;
         }
+
+        // SAVE MODE (AJAX)
+        const formData = new FormData(form);
+
+        Swal.fire({
+            title: "Processing...",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        fetch(`/admin/passengers/${passengerId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(resp => {
+            if (resp.status) {
+
+                // lock fields again
+                inputs.forEach(i => i.setAttribute('disabled', true));
+
+                btn.innerText = 'Edit Passenger Data';
+                btn.classList.remove('btn-warning');
+                btn.classList.add('btn-success');
+
+                // optional success highlight
+                form.classList.add('border-success');
+                setTimeout(() => form.classList.remove('border-success'), 1000);
+            } else {
+                alert(resp.message);
+            }
+        })
+        .catch(() => alert('Update failed'));
     });
+
+    document.addEventListener('click', function (e) {
+
+        if (!e.target.classList.contains('booking-edit-btn')) return;
+
+        const btn = e.target;
+        const form = btn.closest('.booking-form');
+        const inputs = form.querySelectorAll('.booking-input');
+        const bookingId = form.dataset.bookingId;
+
+        const isReadonly = inputs[0].hasAttribute('disabled');
+
+        // EDIT MODE
+        if (isReadonly) {
+            inputs.forEach(i => i.removeAttribute('disabled'));
+            btn.innerText = 'Save Special Request';
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-warning');
+            return;
+        }
+
+        // SAVE MODE
+        const formData = new FormData(form);
+
+        fetch(`/admin/bookings/${bookingId}/special-request`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(resp => {
+            if (resp.status) {
+
+                inputs.forEach(i => i.setAttribute('disabled', true));
+
+                btn.innerText = 'Edit Special Request';
+                btn.classList.remove('btn-warning');
+                btn.classList.add('btn-success');
+
+                form.classList.add('border-success');
+                setTimeout(() => form.classList.remove('border-success'), 1000);
+            } else {
+                alert(resp.message);
+            }
+        })
+        .catch(() => alert('Update failed'));
+    });
+
 
     function ticketedBooking(id, status, message){
         Swal.fire({

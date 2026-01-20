@@ -70,12 +70,12 @@ class User extends Authenticatable
 
     public function getPaidBalanceAttribute()
     {
-        return $this->payments()->where('status', 2)->sum('amount');
+        return $this->payments()->where('status', 3)->sum('amount');
     }
 
     public function getRemainBalanceAttribute()
     {
-        return $this->payments()->where('status', 1)->sum('amount');
+        return $this->payments()->where('is_approved', 0)->sum('amount');
     }
 
 }

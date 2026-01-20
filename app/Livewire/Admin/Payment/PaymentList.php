@@ -44,7 +44,7 @@ class PaymentList extends Component
 
     public function render()
     {
-        $payments = Payment::where('status', 1);
+        $payments = Payment::where('status', 2);
 
         if(auth()->user()->user_type_id != 1){
             $payments = $payments->where('created_by', auth()->user()->id);
