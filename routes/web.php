@@ -100,8 +100,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/print/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'printTicketed'])->name('admin.booking.print.ticketed');
             Route::get('/sendemail/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'sendEmailTicketed'])->name('admin.booking.send.email.ticketed');
             Route::get('/check/payment', [App\Http\Controllers\Admin\BookingController::class, 'checkPayment'])->name('admin.booking.check.payment');
-            // Route::get('/edit/{user}', [App\Http\Controllers\Admin\BookingController::class, 'edit'])->name('admin.booking.edit');
-            // Route::post('/update', [App\Http\Controllers\Admin\BookingController::class, 'update'])->name('admin.booking.update');
+            Route::get('/void/{id}', [App\Http\Controllers\Admin\BookingController::class, 'voidBooking'])->name('admin.booking.void');
         });
 
         Route::prefix('bank')->group(function () {

@@ -326,6 +326,24 @@ class BookingController extends Controller
             ]; 
         }
 
+        if($status == 2){
+            $paymentAmount = Payment::where('created_by', auth()->user()->id)
+            ->where('is_approved', 0)
+            ->sum('amount');
+
+            $agency = Agency::where('user_id', auth()->user()->id)->first();
+
+            
+            if(auth()->user()->user_type_id != 1){
+                if($paymentAmount > $agency->limit){
+                    return response()->json([
+                        'code' => 2,
+                        'message' => 'Your payable amount is exceed your limit',
+                    ], 201); 
+                }
+            }
+        }
+
         Booking::where('id', $request->id)->update($updateData);
         Payment::where('booking_id', $request->id)->update([
             'status' => $status,
@@ -366,18 +384,22 @@ class BookingController extends Controller
         $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
-        ->get(['customers.name', 'customers.phone_no', 'customers.dob']);
+        ->get(['customers.name', 'customers.phone_no', 'customers.dob', 'customers.email']);
         $response['type'] = $type;
 
         $pdf = PDF::loadView('Admin/print/ticketed', $response);
         $pdf->setPaper('A4', 'portrait');
 
-        Mail::send('Admin.email_template.ticket_attachment', ['user'=>auth()->user()], function ($message) use ($pdf) {
-            $message->to('harismusharaf9001@gmail.com')
-                ->subject('Notice of Delivery - Order# 6871007')
+        Mail::send('Admin.email_template.ticket_attachment', ['user'=>auth()->user()], function ($message) use ($pdf, $response, $bookingData) {
+            $message->to($response['customers'][0]->email)
+                ->subject('Ticket - Order#'. $bookingData->booking_no)
                 ->attachData($pdf->output(), 'ticket.pdf');
         });
-        
+
+        return redirect()->route('admin.booking.details',[
+                'booking' => $bookingData->id,
+                'pnr' => $bookingData->pnr_id
+            ])->with('success', 'email send successfully.');        
     }
 
     public function checkPayment(){
@@ -427,4 +449,13 @@ class BookingController extends Controller
         ]);
     }
 
+    public function voidBooking($id){
+        Booking::find($id)->update([
+            'status' => 5
+        ]);
+        return response()->json([
+            'status'  => true,
+            'message' => 'successfully void this booking'
+        ]);
+    }
 }

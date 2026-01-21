@@ -16,9 +16,12 @@
                 <!-- page content -->   
                     @yield('content')
                 <!-- /page content -->
-            </main>
+            </div>
             <!-- Main Content -->
         </div>
+        
+        
+
         @include('Admin.partial.footer')
     </body>
     @include('Admin.partial.script')

@@ -56,5 +56,15 @@
       border: none !important;
     }
 
+    .page-footer {
+        position: sticky;
+        margin-top: auto;
+        background: #f8f9fa;
+        border-top: 1px solid #ddd;
+        padding: 12px 0;
+        font-size: 14px;
+    }
+
+
 </style>
 </head>

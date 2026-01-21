@@ -63,6 +63,7 @@
         <table class="table table-striped table-bordered align-middle">
             <thead class="table-light">
                 <tr>
+                    <th scope="col">Image</th>
                     <th scope="col">Title</th>
                     <th scope="col">Description</th>
                     <th scope="col">Status</th>
@@ -73,6 +74,14 @@
             <tbody>
                 @forelse($notifications as $notification)
                     <tr>
+                        <td>
+                             <img src="{{ $notification->image 
+                                ? asset('storage/'.$notification->image) 
+                                : asset('images/logo-placeholder.png') }}"
+                                alt="logo"
+                                class="rounded-circle border"
+                                style="width:45px;height:45px;object-fit:contain;">
+                        </td>
                         <td>{{ $notification->title }}</td>
                         <td>{{ $notification->description }}</td>
                         <td>

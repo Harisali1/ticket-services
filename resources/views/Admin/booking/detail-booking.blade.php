@@ -185,14 +185,14 @@
                     </div>
 
                     <!-- From / To -->
-                    <div class="col-md-2">
+                     <div class="col-md-2">
                         <p class="mb-1">
                             <small class="text-muted">From:</small><br>
                             <strong>{{ $booking->pnr->departure_date_time }}</strong>
                         </p>
                         <p class="mb-0">
                             <small class="text-muted">To:</small><br>
-                            <strong>{{ $booking->pnr->arrival_date_time }}</strong>
+                            <strong>{{ ($booking->pnr->middle_arrival_date_time) ? $booking->pnr->middle_arrival_date_time :  $booking->pnr->arrival_date_time }}</strong>
                         </p>
                     </div>
 
@@ -201,13 +201,14 @@
                         {{ $booking->pnr->departure->code}}
                     </div>
                      <div class="col-md-1 text-center fw-bold fs-5">
-                        {{ $booking->pnr->arrival->code}}
+                        {{ (isset($booking->pnr->middle_arrival->code)) ? $booking->pnr->middle_arrival->code : $booking->pnr->arrival->code }}
                     </div>
 
                     <div class="col-md-2 text-center">
                         <small class="text-muted">Duration</small><br>
-                        <strong>{{ $booking->pnr->duration }}</strong>
+                        <strong>{{ ($booking->pnr->middle_arrival_date_time) ? $booking->pnr->first_duration : $booking->pnr->duration }}</strong>
                     </div>
+
 
                    
 
@@ -237,6 +238,76 @@
 
             </div>
         </div>
+
+        @if($booking->pnr->middle_arrival_id != null && $booking->pnr->middle_arrival_time != null && $booking->pnr->rest_time != null)
+            <div class="card border-0">
+                <div class="card-body p-0">
+                    <div class="row align-items-center">
+                        <!-- Airline -->
+                        <div class="col-md-1 text-center">
+                        <img src="{{ $booking->pnr->airline->logo 
+                                ? asset('storage/'.$booking->pnr->airline->logo) 
+                                    : asset('images/logo-placeholder.png') }}"
+                                    alt="logo"
+                                    class="rounded-circle border"
+                                    style="width:45px;height:45px;object-fit:contain;">
+                        </div>
+
+                        <!-- From / To -->
+                        <div class="col-md-2">
+                            <p class="mb-1">
+                                <small class="text-muted">From:</small><br>
+                                <strong>{{ $booking->pnr->middle_departure_date_time }}</strong>
+                            </p>
+                            <p class="mb-0">
+                                <small class="text-muted">To:</small><br>
+                                <strong>{{ $booking->pnr->arrival_date_time }}</strong>
+                            </p>
+                        </div>
+
+                        <!-- Airports -->
+                        <div class="col-md-1 text-center fw-bold fs-5">
+                            {{ $booking->pnr->middle_arrival->code}}
+                        </div>
+                        <div class="col-md-1 text-center fw-bold fs-5">
+                            {{ $booking->pnr->arrival->code}}
+                        </div>
+
+                        <div class="col-md-2 text-center">
+                            <small class="text-muted">Duration</small><br>
+                            <strong>{{ $booking->pnr->second_duration }}</strong>
+                        </div>
+
+                    
+
+                        <!-- Aircraft -->
+                        <div class="col-md-2 text-center">
+                            <small class="text-muted">Airplane</small><br>
+                            <strong>{{ $booking->pnr->air_craft }}</strong>
+                        </div>
+
+                        <!-- Flight Info -->
+                        <div class="col-md-2">
+                            <p class="mb-1">
+                                <small class="text-muted">Num.:</small>
+                                <strong>{{ $booking->pnr->flight_no }}</strong>
+                            </p>
+                            <p class="mb-0">
+                                <small class="text-muted">Class:</small>
+                                <strong>{{ $booking->pnr->class }}</strong>
+                            </p>
+                        </div>
+
+                        <div class="col-md-1">
+                            <button class="btn btn-success btn-sm">HK</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        @endif
+
     </div>
 
     @if($booking->pnr->pnr_type == 'return')
@@ -572,7 +643,6 @@
         .then(res => res.json())
         .then(resp => {
             if (resp.status) {
-
                 // lock fields again
                 inputs.forEach(i => i.setAttribute('disabled', true));
 
@@ -583,6 +653,8 @@
                 // optional success highlight
                 form.classList.add('border-success');
                 setTimeout(() => form.classList.remove('border-success'), 1000);
+                Swal.close();
+                Swal.fire("Success", resp.message, "success");
             } else {
                 alert(resp.message);
             }
@@ -610,6 +682,13 @@
             return;
         }
 
+        Swal.fire({
+            title: "Processing...",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
         // SAVE MODE
         const formData = new FormData(form);
 
@@ -624,7 +703,7 @@
         .then(res => res.json())
         .then(resp => {
             if (resp.status) {
-
+                
                 inputs.forEach(i => i.setAttribute('disabled', true));
 
                 btn.innerText = 'Edit Special Request';
@@ -633,6 +712,9 @@
 
                 form.classList.add('border-success');
                 setTimeout(() => form.classList.remove('border-success'), 1000);
+
+                Swal.close();
+                Swal.fire("Success", resp.message, "success");
             } else {
                 alert(resp.message);
             }
@@ -667,10 +749,19 @@
                     type: "GET",
                     data: {id: id, status: status},
                     success: function (res) {
-                        Swal.fire("Success", res.message, "success")
+                        if(res.code == 2){
+                            Swal.fire(
+                                "Warning",
+                                res.message,
+                                "error"
+                            );
+                        }else{
+                            Swal.fire("Success", res.message, "success")
                             .then(() => {
                                 window.location.href = "{{ route('admin.booking.index') }}";
                             });
+                        }
+                        
                     },
                     error: function (xhr) {
                         Swal.fire(

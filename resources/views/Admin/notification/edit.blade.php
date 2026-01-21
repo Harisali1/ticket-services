@@ -1,136 +1,147 @@
 @extends('Admin.layouts.main')
 
-@section('styles')
-@endsection
-
 @section('content')
-<div class="container-fluid bg-light min-vh-100 py-4">
+<div class="container py-4">
 
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('admin.airport.index') }}"
-               class="text-secondary text-decoration-none fs-5">
-                ←
-            </a>
-            <h4 class="mb-0 fw-semibold">Edit Airport</h4>
+            <a href="{{ route('admin.notification.index') }}" class="text-decoration-none">&larr;</a>
+            <h1 class="h4 mb-0">Edit Notification</h1>
         </div>
     </div>
 
     <hr>
 
-    <!-- Form Container -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-4">
+    <!-- Form -->
+    <div class="card p-4">
+        <form id="notification-form" enctype="multipart/form-data">
 
-            <form id="airport-form-update" enctype="multipart/form-data">
-                <!-- AirLine Details -->
-                <div class="mb-5">
-                    <h5 class="fw-semibold mb-4">AirPort Details</h5>
+            <h5 class="mb-3">Notification Details</h5>
 
-                    <div class="row g-4">
+            <div class="row g-3 mb-4">
+                <input type="hidden" id="id" name="id" value="{{ $notification->id }}">
+                <!-- Title -->
+                <div class="col-md-6">
+                    <label class="form-label">Title *</label>
+                    <input type="text" name="title" id="title"
+                           value="{{ old('title', $notification->title) }}"
+                           class="form-control"
+                           placeholder="Enter Notification Title">
+                </div>
 
-                        <!-- Name -->
-                        <div class="col-md-4"> 
-                          <input type="hidden"
-                              name="id"
-                              id="id"
-                              value="{{ $airport->id }}"
-                              class="form-control bg-light">
-                            <label class="form-label text-muted">Name *</label>
-                            <input type="text"
-                                   name="name"
-                                   id="name"
-                                   value="{{ old('name', $airport->name) }}"
-                                   class="form-control bg-light"
-                                   required>
+                <!-- Status -->
+                <div class="col-md-6">
+                    <label class="form-label">Status</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="1" {{ $notification->status == 1 ? 'selected' : '' }}>Active</option>
+                        <option value="2" {{ $notification->status == 2 ? 'selected' : '' }}>DeActive</option>
+                    </select>
+                </div>
+
+                <!-- Image -->
+                <div class="col-md-3">
+                    <label class="form-label">Notification Image</label>
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="border rounded bg-light d-flex align-items-center justify-content-center overflow-hidden"
+                             style="width:96px; height:96px;">
+                            <img id="logoPreview"
+                                 src="{{ $notification->image ? asset('storage/'.$notification->image) : asset('images/logo-placeholder.png') }}"
+                                 class="img-fluid">
                         </div>
 
-                        <!-- Code -->
-                        <div class="col-md-4">
-                            <label class="form-label text-muted">Code *</label>
-                            <input type="text"
-                                   name="code"
-                                   id="code"
-                                   value="{{ old('code', $airport->code) }}"
-                                   class="form-control bg-light"
-                                   required>
-                        </div>
-
-                        <!-- Status -->
-                        <div class="col-md-4">
-                            <label for="status1" class="form-label">Status</label>
-                            <select name="status1" id="status1" class="form-select">
-                                @foreach(\App\Enums\AirportStatus::cases() as $status)
-                                    <option value="{{ $status->value }}"
-                                        @selected(old('status', $airport->status->value) == $status->value)>
-                                        {{ $status->label() }}
-                                    </option>
-                                @endforeach
-                            </select>
+                        <div>
+                            <input type="file" name="image" id="image" accept="image/*"
+                                   class="d-none" onchange="previewLogo(this)">
+                            <label for="image" class="btn btn-outline-secondary">
+                                Change Image
+                            </label>
+                            <div class="small text-muted mt-1">JPG / PNG • Max 2MB</div>
                         </div>
 
                     </div>
                 </div>
 
-                <!-- Actions -->
-                <div class="d-flex justify-content-end gap-3">
-                    <a href="{{ route('admin.airport.index') }}"
-                       class="btn btn-outline-secondary px-4">
-                        Cancel
-                    </a>
-
-                    <button type="submit"
-                            class="btn btn-dark px-4">
-                        Update
-                    </button>
+                <!-- Description -->
+                <div class="col-md-9">
+                    <label class="form-label">Description *</label>
+                    <textarea name="description" id="description"
+                              class="form-control"
+                              placeholder="Description"
+                              rows="5">{{ old('description', $notification->description) }}</textarea>
                 </div>
 
-            </form>
+            </div>
 
-        </div>
+            <!-- Actions -->
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{{ route('admin.notification.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                <button type="submit" class="btn btn-dark">Update</button>
+            </div>
+
+        </form>
     </div>
-
 </div>
 @endsection
 
 @section('scripts')
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("airport-form-update");
+function previewLogo(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => document.getElementById('logoPreview').src = e.target.result;
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("notification-form");
+
     form.addEventListener("submit", function (e) {
         e.preventDefault();
-        const showError = (message) => {
+
+        const showError = (msg) => {
             Swal.fire({
                 toast: true,
                 position: "top-end",
                 icon: "error",
-                title: message,
+                title: msg,
                 showConfirmButton: false,
                 timer: 2500
             });
         };
 
-        const name   = document.getElementById("name").value.trim();
-        const code   = document.getElementById("code").value.trim();
-        const status = document.getElementById("status1").value;
+        const title = titleInput = document.getElementById("title").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const status = document.getElementById("status").value;
+        const image = document.getElementById("image").files[0] ?? null;
 
-        if (!name) { showError("Airport name is required"); return; }
-        if (!code) { showError("Airport code is required"); return; }
-        if (code.length < 2) { showError("Airport code must be at least 2 characters"); return; }
-        if (!status) { showError("Status is required"); return; }
+        if (!title) return showError("Title is required");
+        if (!description) return showError("Description is required");
+
+        if (image) {
+            const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+            if (!allowedTypes.includes(image.type)) {
+                return showError("Image must be JPG or PNG");
+            }
+            if (image.size > 2097152) {
+                return showError("Image size must be less than 2MB");
+            }
+        }
 
         Swal.fire({
-            title: "Processing...",
+            title: "Updating...",
             text: "Please wait",
-            didOpen: () => Swal.showLoading(),
-            allowOutsideClick: false
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
         });
 
         const formData = new FormData(form);
 
         $.ajax({
-            url: "{{ route('admin.airport.update') }}",
+            url: "{{ route('admin.notification.update') }}",
             type: "POST",
             data: formData,
             processData: false,
@@ -138,30 +149,27 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: function (data) { 
-                Swal.close(); 
+            success: function (res) {
+                Swal.close();
                 Swal.fire({
                     toast: true,
                     position: "top-end",
                     icon: "success",
-                    title: data.message,
-                    showConfirmButton: true,
-                    confirmButtonText: "OK"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "{{ route('admin.airport.index') }}";  
-                    }
+                    title: res.message,
+                    showConfirmButton: true
+                }).then(() => {
+                    window.location.href = "{{ route('admin.notification.index') }}";
                 });
             },
             error: function (xhr) {
                 Swal.close();
-                let message = "Something went wrong";
+                let msg = "Something went wrong";
                 if (xhr.responseJSON?.errors) {
-                    message = Object.values(xhr.responseJSON.errors)[0][0];
+                    msg = Object.values(xhr.responseJSON.errors)[0][0];
                 } else if (xhr.responseJSON?.message) {
-                    message = xhr.responseJSON.message;
+                    msg = xhr.responseJSON.message;
                 }
-                showError(message);
+                showError(msg);
             }
         });
     });

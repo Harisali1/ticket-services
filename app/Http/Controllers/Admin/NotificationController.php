@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class NotificationController extends Controller
 {
@@ -20,12 +21,20 @@ class NotificationController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
+            'image' => 'required', 'file', 'mimes:png,jpg,jpeg', 'max:5120'
         ]);
+
+         $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('notification', 'public');
+        }
 
         Notification::create([
             'title' => $request->title,
             'description' => $request->description,
             'status' => $request->status,
+            'image' => $imagePath
         ]);
 
          return response()->json([
@@ -38,18 +47,39 @@ class NotificationController extends Controller
         return view('Admin.notification.edit', compact('notification'));
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'status' => 'required|in:1,2',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $notificaiton = Notification::find($request->id);
+
+        if ($request->hasFile('image')) {
+            // Delete old logo if exists
+            if ($notificaiton->image && Storage::disk('public')->exists($notificaiton->image)) {
+                Storage::disk('public')->delete($notificaiton->image);
+            }
+            // Store new logo
+            $imagePath = $request->file('image')->store('notification', 'public');
+        }else{
+            $imagePath = $notificaiton->image;
+        }
 
         Notification::find($request->id)->update([
             'title' => $request->title,
             'description' => $request->description,
             'status' => $request->status,
+            'image' => $imagePath
         ]);
-
-         return response()->json([
-                'success' => true,
-                'message' => 'Notification updated successfully',
-            ], 201);
+        
+        return response()->json([
+            'message' => 'Notification updated successfully'
+        ]);
     }
+
 
 }
