@@ -23,7 +23,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid p-0">
+<div class="container-fluid p-0" id="main-content">
 
     <!-- Top Bar -->
     <div class="bg-primary text-white px-4 py-3 d-flex justify-content-between align-items-center">
@@ -68,7 +68,11 @@
                     @if($booking->status->label() === 'Created')
                         <span class="badge bg-info">PNR CREATED </span>
                     @elseif($booking->status->label() === 'Ticketed')
-                        <span class="badge bg-success">PNR TICKETED </span>
+                        <span class="badge bg-secondary">PNR TICKETED </span>
+                    @elseif($booking->status->label() === 'Paid')
+                        <span class="badge bg-success">PNR PAID </span>
+                    @elseif($booking->status->label() === 'Cancel')
+                        <span class="badge bg-danger">PNR CANCELED </span>
                     @else
                         <span class="badge bg-info">PNR CREATED </span>                
                     @endif
@@ -107,10 +111,10 @@
                 <div class="col-md-3"></div>
                 <div class="col-md-3"></div>
                 <div class="col-md-3"></div>
-                <div class="col-md-3 text-success fw-bold fs-5"><button class="btn btn-success btn-sm">Requote</button></div>                
+                <div class="col-md-3 text-success fw-bold fs-5"><button class="btn btn-success btn-sm" onclick="reQuotePrice({{ $booking->id }})">Requote</button></div> 
             </div>
 
-            @if($booking->status->label() === 'Ticketed')
+            @if($booking->status->label() === 'Ticketed' || $booking->status->label() === 'Paid')
             <hr>
 
             <div class="container mt-4">
@@ -523,24 +527,17 @@
                             style="max-height: 260px; overflow-y: auto; white-space: pre-line;">
                                🔄 Modifiche e cancellazioni (chiaro e trasparente)
 
-                                ✅ Cambio data fino a 10 giorni prima della partenza
-                                Gratuito – si paga solo l’eventuale differenza tariffaria.
+                                ✅ Cambio data fino a 10 giorni prima della partenza Gratuito – si paga solo l’eventuale differenza tariffaria.
 
-                                ⚠️ Cambio data da 9 a 3 giorni prima della partenza
-                                Penale di 100 € + differenza tariffaria.
+                                ⚠️ Cambio data da 9 a 3 giorni prima della partenza Penale di 100 € + differenza tariffaria.
 
-                                ❌ Cancellazione fino a 10 giorni prima della partenza
-                                Penale di 100 € a tratta.
+                                ❌ Cancellazione fino a 10 giorni prima della partenza Penale di 100 € a tratta.
 
-                                ❌ Cancellazione da 7 a 3 giorni prima della partenza
-                                Penale di 200 € a tratta.
+                                ❌ Cancellazione da 7 a 3 giorni prima della partenza Penale di 200 € a tratta.
 
-                                🚫 No-Show (mancata presentazione al volo)
-                                Nessun rimborso previsto.
-                                Il biglietto è considerato No-Show se la richiesta avviene entro 3 giorni dalla partenza.
+                                🚫 No-Show (mancata presentazione al volo) Nessun rimborso previsto. Il biglietto è considerato No-Show se la richiesta avviene entro 3 giorni dalla partenza.
 
-                                🔁 Cambio data in caso di No-Show
-                                Penale di 200 € + differenza tariffaria.
+                                🔁 Cambio data in caso di No-Show Penale di 200 € + differenza tariffaria.
 
                                 🎒 Bagaglio a mano
 
@@ -776,6 +773,74 @@
 
         });
 
+    }
+
+    function reQuotePrice(id){
+        let url = "{{ route('admin.booking.requote', ':id') }}";
+        url = url.replace(':id', id);   
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to requote price this booking!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: 'Processing...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        Swal.close();
+
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            icon: "success",
+                            title: data.message,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $("#main-content").load(location.href + " #main-content > *");
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.close();
+
+                        let message = "Something went wrong";
+                        if (xhr.responseJSON?.errors) {
+                            message = Object.values(xhr.responseJSON.errors)[0][0];
+                        } else if (xhr.responseJSON?.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: message
+                        });
+                    }
+                });
+            }
+        });  
     }
 </script>
 

@@ -57,25 +57,26 @@ class User extends Authenticatable
     }
 
     public function getRemainingBalanceAttribute(){
-        $balance = Payment::where('created_by', auth()->user()->id)
+        $balance = Booking::where('created_by', auth()->user()->id)
         ->where('is_approved', 0)
-        ->sum('amount');
+        ->whereIn('status', [2,3])
+        ->sum('total_amount');
         return $balance;
     }
 
     public function payments()
     {
-        return $this->hasMany(Payment::class, 'created_by');
+        return $this->hasMany(Booking::class, 'created_by');
     }
 
     public function getPaidBalanceAttribute()
     {
-        return $this->payments()->where('status', 3)->sum('amount');
+        return $this->payments()->where('is_approved', 1)->sum('total_amount');
     }
 
     public function getRemainBalanceAttribute()
     {
-        return $this->payments()->where('is_approved', 0)->sum('amount');
+        return $this->payments()->where('is_approved', 0)->sum('total_amount');
     }
 
 }

@@ -15,6 +15,17 @@
 .carousel-control-next-icon {
     filter: invert(1);
 }
+.image-popup img {
+    max-height: 80vh;
+    object-fit: contain;
+}
+.notification-img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;   /* 👈 arrow → hand cursor */
+}
 
 </style>
 @endsection
@@ -85,9 +96,22 @@
 
                     <div style="max-height:200px; overflow-y:auto;">
                         @forelse($notifications as $notify)
-                            <div class="mb-3 border-bottom pb-2">
-                                <strong class="d-block">{{ $notify->title }}</strong>
-                                <p class="mb-0 text-muted">{{ $notify->description }}</p>
+                            <div class="mb-3 border-bottom pb-2 d-flex gap-2">
+
+                                @if(!empty($notify->image))
+                                    <img class="notification-img"
+                                        src="{{ $notify->image ? asset('storage/'.$notify->image) : asset('images/logo-placeholder.png') }}"
+                                        alt="notification image" onclick="showImage(this.src)"
+                                        style="width:45px; height:45px; object-fit:cover; border-radius:6px;">
+                                @endif
+
+                                <div>
+                                    <strong class="d-block">{{ $notify->title }}</strong>
+                                    <p class="mb-0 text-muted small">
+                                        {{ $notify->description }}
+                                    </p>
+                                </div>
+
                             </div>
                         @empty
                             <p class="text-center text-muted">No notifications found</p>
@@ -138,4 +162,19 @@
 @endsection
 
 @section('scripts')
+<script>
+     function showImage(src) {
+        Swal.fire({
+            imageUrl: src,
+            imageAlt: 'Notification Image',
+            showCloseButton: true,
+            showConfirmButton: false,
+            background: '#000',
+            imageWidth: '100%',
+            customClass: {
+                popup: 'image-popup'
+            }
+        });
+    }
+</script>
 @endsection

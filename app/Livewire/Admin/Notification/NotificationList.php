@@ -44,7 +44,7 @@ class NotificationList extends Component
 
     public function render()
     {
-        $notifications = Notification::query()
+        $notifications = Notification::where('is_deleted', 0)
             ->when($this->filters['title'], fn ($q) =>
                 $q->where('title', 'like', '%' . $this->filters['title'] . '%')
             )

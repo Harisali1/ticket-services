@@ -38,12 +38,12 @@
                     <td>
                         <input type="checkbox"
                                class="row-check"
-                               value="{{ $payment->booking_id }}"
-                               data-amount="{{ $payment->amount }}">
+                               value="{{ $payment->id }}"
+                               data-amount="{{ $payment->total_amount }}">
                     </td>
 
-                    <td>{{ $payment->booking->booking_no }}</td>
-                    <td>{{ $payment->amount }}</td>
+                    <td>{{ $payment->booking_no }}</td>
+                    <td>{{ $payment->total_amount }}</td>
 
                     <td>
                         {{ $payment->paid_by }}

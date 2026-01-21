@@ -28,12 +28,6 @@ class PaymentController extends Controller
                 $imagePath = $request->file('image')->store('payments', 'public');
             }
 
-            $payments = Payment::whereIn('booking_id', $bookingIds)->update([
-                'status'    => 3,
-                'paid_by'   => auth()->user()->id,
-                'paid_at'   => date('Y-m-d H:i:s'),
-            ]);
-
             PaymentUpload::create([
                 'booking_ids' => $request->booking_ids,
                 'amount'    => $request->amount, 
@@ -44,6 +38,7 @@ class PaymentController extends Controller
 
             Booking::whereIn('id', $bookingIds)->update([
                 'status' => 3,
+                'payment_status'    => 3,
                 'paid_by'   => auth()->user()->id,
                 'paid_at'   => date('Y-m-d H:i:s'),
             ]);
@@ -68,19 +63,7 @@ class PaymentController extends Controller
     }
 
     public function approvedPayment($id){
-        // $paymentUploads = PaymentUpload::where('id', $id)->first();
-        // $bookingIds = json_decode($paymentUploads->booking_ids);
-
-        // PaymentUpload::find($id)->update([
-        //     'approved_by' => auth()->user()->id
-        // ]);
-        
-        // $payments = Payment::whereIn('booking_id', $bookingIds)->update([
-        //     'approved_at' => date('Y-m-d H:i:s'),
-        //     'is_approved' => 1,
-        // ]);
-
-
+       
         DB::beginTransaction();
 
         try {
@@ -99,7 +82,7 @@ class PaymentController extends Controller
             ]);
 
             // Update payments
-            $payments = Payment::whereIn('booking_id', $bookingIds)->update([
+            $payments = Booking::whereIn('id', $bookingIds)->update([
                 'approved_at' => now(),
                 'is_approved' => 1,
             ]);
@@ -115,11 +98,6 @@ class PaymentController extends Controller
         } catch (\Throwable $e) {
 
             DB::rollBack();
-
-            Log::error('Payment approval failed', [
-                'payment_upload_id' => $id,
-                'error' => $e->getMessage()
-            ]);
 
             return response()->json([
                 'status'  => false,

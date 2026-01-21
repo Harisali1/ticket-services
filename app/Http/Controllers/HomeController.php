@@ -46,7 +46,7 @@ class HomeController extends Controller
         $todayReservation = $todayReservation->whereBetween('created_at', [$startDate,$endDate])->get();
         $bookingCounts = $bookingCounts->first();
         $bankDetails = BankDetail::where('status', 1)->get();
-        $notifications = Notification::where('status', 1)->get();
+        $notifications = Notification::where('status', 1)->where('is_deleted', 0)->get();
         return view('Admin.dashboard', compact('bankDetails', 'todayReservation', 'notifications', 'bookingCounts'));
     }
 }

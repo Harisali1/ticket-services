@@ -81,5 +81,13 @@ class NotificationController extends Controller
         ]);
     }
 
+    public function delete($id){
+       Notification::find($id)->update([
+            'is_deleted' => 1
+       ]);
+       return response()->json([
+            'message' => 'Notification updated successfully'
+        ]);
+    }
 
 }

@@ -101,6 +101,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/sendemail/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'sendEmailTicketed'])->name('admin.booking.send.email.ticketed');
             Route::get('/check/payment', [App\Http\Controllers\Admin\BookingController::class, 'checkPayment'])->name('admin.booking.check.payment');
             Route::get('/void/{id}', [App\Http\Controllers\Admin\BookingController::class, 'voidBooking'])->name('admin.booking.void');
+            Route::get('/requote/{id}', [App\Http\Controllers\Admin\BookingController::class, 'reQuoteBooking'])->name('admin.booking.requote');
         });
 
         Route::prefix('bank')->group(function () {
@@ -134,6 +135,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', [App\Http\Controllers\Admin\NotificationController::class, 'store'])->name('admin.notification.store');
             Route::get('/edit/{notification}', [App\Http\Controllers\Admin\NotificationController::class, 'edit'])->name('admin.notification.edit');
             Route::post('/update', [App\Http\Controllers\Admin\NotificationController::class, 'update'])->name('admin.notification.update');
+            Route::get('/delete/{id}', [App\Http\Controllers\Admin\NotificationController::class, 'delete'])->name('admin.notification.delete');
         });
 
         Route::prefix('setting')->group(function () {

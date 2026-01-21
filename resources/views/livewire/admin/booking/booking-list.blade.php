@@ -147,7 +147,7 @@
                                     CN
                                 </button>
                             @endif
-                            @if($booking->status->label() === 'Created')
+                            @if($booking->status->label() === 'Ticketed')
                                 @if(($bookingDate == $today && $now->hour >= 0))
                                     <button class="btn btn-sm btn-warning" type="button" onclick="voidBooking({{ $booking->id }})">
                                         Void

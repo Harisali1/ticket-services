@@ -105,6 +105,7 @@
                 left: 14px;
                 right: 14px;
                 font-size: 11px;
+                text-align: right;
             }
 
         </style>
@@ -152,6 +153,7 @@
             <div class="title-bar">Agency Details</div>
             <div class="small">
                 <strong>{{ $agency->name ?? $booking['user']['name'] }}</strong><br>
+                Business Address: {{ $agency->address ?? '' }}<br>
                 Phone: {{ $agency->user->phone_no ?? $booking['user']['phone_no'] }}<br>
                 Email: {{ $agency->user->email ?? '' }}
             </div>
@@ -211,19 +213,12 @@
                 <tr>
                     <td style="font-size:9px; line-height:1.15; padding:4px; white-space:pre-line;">
                         <b> -> </b>Modifiche e cancellazioni (chiaro e trasparente)
-                        <b> -> </b>Cambio data fino a 10 giorni prima della partenza
-                        <b> -> </b>Gratuito – si paga solo l’eventuale differenza tariffaria.
-                        <b> -> </b>Cambio data da 9 a 3 giorni prima della partenza
-                        <b> -> </b>Penale di 100 € + differenza tariffaria.
-                        <b> -> </b>Cancellazione fino a 10 giorni prima della partenza
-                        <b> -> </b>Penale di 100 € a tratta.
-                        <b> -> </b>Cancellazione da 7 a 3 giorni prima della partenza
-                        <b> -> </b>Penale di 200 € a tratta.
-                        <b> -> </b>No-Show (mancata presentazione al volo)
-                        <b> -> </b>Nessun rimborso previsto.
-                        <b> -> </b>Il biglietto è considerato No-Show se la richiesta avviene entro 3 giorni dalla partenza.
-                        <b> -> </b>Cambio data in caso di No-Show
-                        <b> -> </b>Penale di 200 € + differenza tariffaria.
+                        <b> -> </b>Cambio data fino a 10 giorni prima della partenza Gratuito – si paga solo l’eventuale differenza tariffaria.
+                        <b> -> </b>Cambio data da 9 a 3 giorni prima della partenza Penale di 100 € + differenza tariffaria.
+                        <b> -> </b>Cancellazione fino a 10 giorni prima della partenza Penale di 100 € a tratta.
+                        <b> -> </b>Cancellazione da 7 a 3 giorni prima della partenza Penale di 200 € a tratta.
+                        <b> -> </b>No-Show (mancata presentazione al volo) Nessun rimborso previsto. Il biglietto è considerato No-Show se la richiesta avviene entro 3 giorni dalla partenza.
+                        <b> -> </b>Cambio data in caso di No-Show Penale di 200 € + differenza tariffaria.
                         <b> -> </b>Bagaglio a mano
                         <b> -> </b>Adulti e bambini (Child): 8 kg
                         <b> -> </b>Neonati (Infant): 10 kg

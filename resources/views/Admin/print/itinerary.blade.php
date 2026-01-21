@@ -102,6 +102,9 @@
     .clearfix {
         clear: both;
     }
+    .small{
+        text-align:right;
+    }
 </style>
 
 <div class="container">
@@ -132,9 +135,10 @@
     <!-- AGENCY -->
     <div class="section-title">Agency Details</div>
     <div class="small-text">
-        <strong>{{ $booking['user']['name'] }}</strong><br>
-        <strong>Phone:</strong> {{ $booking['user']['phone_no'] }}<br>
-        <strong>Email:</strong> {{ $booking['user']['email'] }}
+        <strong>{{ $agency->name ?? $booking['user']['name'] }}</strong><br>
+        Business Address: {{ $agency->address ?? '' }}<br>
+        Phone: {{ $agency->user->phone_no ?? $booking['user']['phone_no'] }}<br>
+        Email: {{ $agency->user->email ?? '' }}
     </div>
 
     <!-- TRAVELERS -->

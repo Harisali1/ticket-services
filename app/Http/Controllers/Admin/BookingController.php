@@ -223,12 +223,6 @@ class BookingController extends Controller
                 Customer::create($customerData);
             }
 
-            Payment::create([
-                'booking_id' => $booking->id,
-                'amount' => $request->total_amount,
-                'created_by' => auth()->user()->id,
-            ]);
-
             foreach($request->fareDetails as $type){
                 if($type['type_id'] != 3){
                     BookingPassenger::create([
@@ -265,8 +259,8 @@ class BookingController extends Controller
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
         ->get(['customers.name', 'customers.phone_no', 'customers.dob']);
+        $response['agency'] = Agency::with('user')->where('user_id', $bookingData->created_by)->first();
 
-        // dd($response);
         $pdf = PDF::loadView('Admin/print/itinerary', $response);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('my-pdf.pdf');
@@ -327,9 +321,10 @@ class BookingController extends Controller
         }
 
         if($status == 2){
-            $paymentAmount = Payment::where('created_by', auth()->user()->id)
+            $paymentAmount = Booking::where('created_by', auth()->user()->id)
             ->where('is_approved', 0)
-            ->sum('amount');
+            ->whereIn('status', [2,3])
+            ->sum('total_amount');
 
             $agency = Agency::where('user_id', auth()->user()->id)->first();
 
@@ -345,10 +340,7 @@ class BookingController extends Controller
         }
 
         Booking::where('id', $request->id)->update($updateData);
-        Payment::where('booking_id', $request->id)->update([
-            'status' => $status,
-        ]);
-
+        
         $seatIds = $pnr->seats()
                         ->where('is_reserved', 1)
                         ->orderBy('id') // important
@@ -402,34 +394,6 @@ class BookingController extends Controller
             ])->with('success', 'email send successfully.');        
     }
 
-    public function checkPayment(){
-        $paymentAmount = Payment::where('created_by', auth()->user()->id)
-        ->where('is_approved', 0)
-        ->sum('amount');
-
-        $agency = Agency::where('user_id', auth()->user()->id)->first();
-
-        
-        if(auth()->user()->user_type_id != 1){
-            if($paymentAmount > $agency->limit){
-                return response()->json([
-                    'code' => 2,
-                    'message' => 'Your payable amount is exceed your limit',
-                ], 201); 
-            }else{
-                return response()->json([
-                    'code' => 1,
-                    'message' => 'success',
-                ], 201); 
-            }
-        }else{
-            return response()->json([
-                'code' => 1,
-                'message' => 'success',
-            ], 201); 
-        }
-    }
-
     public function updateSpecialRequest(Request $request, $id){
         $booking = Booking::findOrFail($id);
 
@@ -457,5 +421,22 @@ class BookingController extends Controller
             'status'  => true,
             'message' => 'successfully void this booking'
         ]);
+    }
+
+    public function reQuoteBooking($id){
+
+        $booking = Booking::find($id);
+        $pnr = Pnr::find($booking->pnr_id);
+        Booking::find($id)->update([
+            'price' => $pnr->base_price,
+            'tax' => $pnr->tax,
+            'total_amount' => $pnr->total,
+        ]);
+        
+        return response()->json([
+            'status'  => true,
+            'message' => 'successfully requote this booking.'
+        ]);
+
     }
 }

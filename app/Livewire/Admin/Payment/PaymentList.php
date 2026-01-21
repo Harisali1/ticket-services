@@ -4,7 +4,7 @@ namespace App\Livewire\Admin\Payment;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Admin\Payment;
+use App\Models\Admin\Booking;
 
 class PaymentList extends Component
 {
@@ -44,7 +44,7 @@ class PaymentList extends Component
 
     public function render()
     {
-        $payments = Payment::where('status', 2);
+        $payments = Booking::where('status', 2)->where('is_approved', 0);
 
         if(auth()->user()->user_type_id != 1){
             $payments = $payments->where('created_by', auth()->user()->id);

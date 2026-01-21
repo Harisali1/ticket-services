@@ -105,6 +105,8 @@
                                     <li>
                                         <a class="dropdown-item" href="{{ route('admin.notification.edit', $notification->id) }}">Edit</a>
                                     </li>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="deleteNotification({{ $notification->id }})">Delete</a>
+
                                 </ul>
                             </div>
                         </td>
@@ -123,3 +125,73 @@
     </div>
 
 </div>
+
+<script>
+    function deleteNotification(id){
+        let url = "{{ route('admin.notification.delete', ':id') }}";
+        url = url.replace(':id', id);   
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this notification!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: 'Processing...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        Swal.close();
+
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            icon: "success",
+                            title: data.message,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "{{ route('admin.notification.index') }}";
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.close();
+
+                        let message = "Something went wrong";
+                        if (xhr.responseJSON?.errors) {
+                            message = Object.values(xhr.responseJSON.errors)[0][0];
+                        } else if (xhr.responseJSON?.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: message
+                        });
+                    }
+                });
+            }
+        });  
+    }
+    </script>
