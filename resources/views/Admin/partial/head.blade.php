@@ -63,6 +63,18 @@
         font-size: 14px;
     }
 
+    .notification-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .notification-img:hover {
+        transform: scale(1.05);
+        transition: 0.2s;
+    }
 
 
 </style>

@@ -2,59 +2,7 @@
 
 @section('styles')
   <style>
-    /* ================= SEAT LEGEND ================= */
-    .seat-legend {
-        display: flex;
-        gap: 24px;
-        justify-content: center;
-        margin-bottom: 20px;
-        font-size: 14px;
-    }
-
-    .legend-box {
-        width: 22px;
-        height: 22px;
-        border-radius: 6px;
-        display: inline-flex;
-        margin-right: 6px;
-    }
-
-    /* ================= SEATS ================= */
-    .seat {
-        width: 38px;
-        height: 38px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        border: 2px solid transparent;
-    }
-
-    .seat i { font-size: 18px; }
-
-    .seat.economy {
-        border-color: #7db6ff;
-        background: #eef6ff;
-    }
-
-    .seat.business {
-        border-color: #c7a0ff;
-        background: #f6efff;
-    }
-
-    .seat.selected {
-        background: #4f46e5;
-        color: #fff;
-        border-color: #4f46e5;
-    }
-
-    .seat.occupied {
-        background: #d1d5db;
-        border-color: #9ca3af;
-        cursor: not-allowed;
-    }
-
+    
     .seat-row {
         display: flex;
         gap: 12px;
@@ -113,13 +61,32 @@
     .fare-card input:checked + .fare-box .fare-detail {
         color: #fff;
     }
-    .pnr-detail{
-        background: #000000ff;
-        padding: 10px;
-        color: white;
-        font-size: 17px;
-        font-family: inherit;
+    .pnr-detail {
+        background: linear-gradient(90deg, #002a6aff, #084298);
+        color: #fff;
+        padding: 10px 14px;
+        font-size: 16px;
+        border-radius: 6px;
+        margin-bottom: 15px;
     }
+    .flight-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #fff;
+        transition: all .2s ease;
+    }
+
+    .flight-card:hover {
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+    .airport-code {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #0d6efd;
+    }
+
+
   </style>
 @endsection
 
@@ -148,7 +115,8 @@
 
     <div class="mb-4">
         <h6 class="fw-bold mb-3">OUTBOUND</h6>
-        <div class="card border-0 shadow-sm">
+        <div class="card flight-card mb-3">
+
             <div class="card-body">
                 <div class="row align-items-center">
                     <!-- Airline -->
@@ -174,10 +142,10 @@
                     </div>
 
                     <!-- Airports -->
-                    <div class="col-md-1 text-center fw-bold fs-5">
+                    <div class="col-md-1 text-center fw-bold fs-5 airport-code">
                         {{ $pnrBookings->departure->code}}
                     </div>
-                     <div class="col-md-1 text-center fw-bold fs-5">
+                     <div class="col-md-1 text-center fw-bold fs-5 airport-code">
                         {{ (isset($pnrBookings->middle_arrival->code)) ? $pnrBookings->middle_arrival->code : $pnrBookings->arrival->code }}
                     </div>
 
@@ -211,7 +179,8 @@
             </div>
         </div>
         @if($pnrBookings->middle_arrival_id != null && $pnrBookings->middle_arrival_time != null && $pnrBookings->rest_time != null)
-        <div class="card border-0 shadow-sm">
+        <div class="card flight-card mb-3">
+
             <div class="card-body">
                 <div class="row align-items-center">
                     <!-- Airline -->
@@ -237,10 +206,10 @@
                     </div>
 
                     <!-- Airports -->
-                    <div class="col-md-1 text-center fw-bold fs-5">
+                    <div class="col-md-1 text-center fw-bold fs-5 airport-code">
                         {{ $pnrBookings->middle_arrival->code}}
                     </div>
-                     <div class="col-md-1 text-center fw-bold fs-5">
+                     <div class="col-md-1 text-center fw-bold fs-5 airport-code">
                         {{ $pnrBookings->arrival->code}}
                     </div>
 
@@ -282,7 +251,8 @@
         <div>
             <h6 class="text-primary fw-bold mb-3">INBOUND</h6>
 
-            <div class="card border-0 shadow-sm">
+            <div class="card flight-card mb-3">
+
                 <div class="card-body">
 
                     <div class="row align-items-center">
@@ -310,10 +280,10 @@
                         </div>
 
                         <!-- Airports -->
-                        <div class="col-md-1 text-center fw-bold fs-5">
+                        <div class="col-md-1 text-center fw-bold fs-5 airport-code">
                             {{ $pnrBookings->return_departure->code }}
                         </div>
-                        <div class="col-md-1 text-center fw-bold fs-5">
+                        <div class="col-md-1 text-center fw-bold fs-5 airport-code">
                             {{ $pnrBookings->return_arrival->code }}
                         </div>
 

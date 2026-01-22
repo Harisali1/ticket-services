@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('language/{lang}', function ($lang) {
+    if (in_array($lang, ['en', 'it', 'fr'])) {
+        session(['locale' => $lang]);
+    }
+    return redirect()->back();
+})->name('language.switch');
+
 
 Route::get('/', function () {
     return redirect()->route('login');
