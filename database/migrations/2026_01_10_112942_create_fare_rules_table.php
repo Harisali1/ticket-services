@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('fare_rules', function (Blueprint $table) {
             $table->id();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

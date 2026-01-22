@@ -144,11 +144,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     title: data.message,
                     showConfirmButton: true,
                     confirmButtonText: "OK"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "{{ route('admin.airline.index') }}"; 
-                    }
                 });
+                window.location.href = "{{ route('admin.airline.index') }}";
             },
             error: function (xhr) {
                 Swal.close();

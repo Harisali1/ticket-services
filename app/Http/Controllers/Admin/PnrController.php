@@ -28,7 +28,6 @@ class PnrController extends Controller
     public function create(){
         $airlines = AirLine::where('status', 1)->limit(10)->get();
         $airports = Airport::where('status', 1)->limit(10)->get();
-        $baggages = Baggage::where('status', 1)->limit(10)->get();
         $passengerTypes = PassengerType::all();
         return view('Admin.pnr.add', compact('airlines','airports','passengerTypes'));
     }
@@ -69,8 +68,10 @@ class PnrController extends Controller
             $data = [
                 'pnr_type' => $request->pnr_type,
                 'flight_no' => $request->flight_no,
+                'middle_flight_no' => (isset($request->middle_flight_no)) ? $request->middle_flight_no : NULL,
                 'ref_no' => $request->ref_no,
                 'air_craft' => $request->air_craft,
+                'middle_air_craft' => (isset($request->middle_air_craft)) ? $request->middle_air_craft : NULL,
                 'class' => 'Y',
                 'baggage' => $request->baggage,
                 'departure_id' => $request->departure_id,
@@ -88,6 +89,8 @@ class PnrController extends Controller
             ];
 
             if($request->pnr_type == 'return'){
+                $data['return_flight_no'] = (isset($request->return_flight_no)) ? $request->return_flight_no : NULL;
+                $data['return_air_craft'] = (isset($request->return_air_craft)) ? $request->return_air_craft : NULL;
                 $data['return_duration'] = $returnDuration;
                 $data['return_departure_id'] = $request->return_departure_id;
                 $data['return_arrival_id'] = $request->return_arrival_id;
@@ -127,6 +130,7 @@ class PnrController extends Controller
             $data['pnr_no'] = $airlineCode->code.$departureCode->code.$arrivalCode->code.$pnrId+1;
             $data['created_by'] = auth()->user()->id;
 
+            // dd($data);
             $pnr = Pnr::create($data);
 
             foreach (range(1, $data['seats']) as $key => $i) {

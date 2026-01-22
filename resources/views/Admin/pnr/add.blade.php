@@ -46,6 +46,16 @@
                 </div>
 
                 <div class="col-md-3">
+                    <label class="form-label text-muted">Middle Flight No *</label>
+                    <input type="text" name="middle_flight_no" id="middle_flight_no" class="form-control">
+                </div>
+
+                <div class="col-md-3 return-fields d-none">
+                    <label class="form-label text-muted">Return Flight No *</label>
+                    <input type="text" name="return_flight_no" id="return_flight_no" class="form-control">
+                </div>
+
+                <div class="col-md-3">
                     <label class="form-label text-muted">Reference PNR No #</label>
                     <input type="text" name="ref_no" id="ref_no" class="form-control">
                 </div>
@@ -600,6 +610,7 @@
         -------------------- */
         if (isReturn) {
             const returnFields = {
+                return_flight_no: {value: document.getElementById("return_flight_no").value,message: "Return flight no is required"},
                 return_departure_id: {value: document.getElementById("return_departure_id").value,message: "Return departure is required"},
                 return_arrival_id: {value: document.getElementById("return_arrival_id").value,message: "Return arrival is required"},
                 return_airline_id: {value: document.getElementById("return_airline_id").value,message: "Return airline is required"},
@@ -649,8 +660,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (res) {
-                Swal.fire("Success", res.message, "success")
-                    .then(() => window.location.href = "{{ route('admin.pnr.index') }}");
+                Swal.fire("Success", res.message, "success");
+                window.location.href = "{{ route('admin.pnr.index') }}";
             },
             error: function (xhr) {
                 showError(xhr.responseJSON?.message || "Something went wrong");

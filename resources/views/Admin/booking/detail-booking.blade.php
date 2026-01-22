@@ -28,7 +28,7 @@
     <!-- Top Bar -->
     <div class="bg-primary text-white px-4 py-3 d-flex justify-content-between align-items-center">
         <div>
-            <small>Home / Booking List / Booking Detail</small>
+            <small><a href="{{ route('admin.dashboard') }}">Home</a> / <a href="{{ route('admin.booking.index') }}">Booking List</a> / Booking Detail</small>
             <strong class="ms-2"></strong>
         </div>
         <div class="btn-group">
@@ -74,7 +74,7 @@
                     @elseif($booking->status->label() === 'Cancel')
                         <span class="badge bg-danger">PNR CANCELED </span>
                     @else
-                        <span class="badge bg-info">PNR CREATED </span>                
+                        <span class="badge bg-warning">PNR VOID </span>                
                     @endif
                     <span class="ml-4"> {{ $booking->booking_no }}<span>
                     
@@ -111,7 +111,9 @@
                 <div class="col-md-3"></div>
                 <div class="col-md-3"></div>
                 <div class="col-md-3"></div>
-                <div class="col-md-3 text-success fw-bold fs-5"><button class="btn btn-success btn-sm" onclick="reQuotePrice({{ $booking->id }})">Requote</button></div> 
+                @if($booking->status->label() === 'Ticketed')
+                    <div class="col-md-3 text-success fw-bold fs-5"><button class="btn btn-success btn-sm" onclick="reQuotePrice({{ $booking->id }})">Requote</button></div> 
+                @endif
             </div>
 
             @if($booking->status->label() === 'Ticketed' || $booking->status->label() === 'Paid')
@@ -287,14 +289,14 @@
                         <!-- Aircraft -->
                         <div class="col-md-2 text-center">
                             <small class="text-muted">Airplane</small><br>
-                            <strong>{{ $booking->pnr->air_craft }}</strong>
+                            <strong>{{ ($booking->pnr->middle_air_craft == null) ? $booking->pnr->air_craft : $booking->pnr->middle_air_craft }}</strong>
                         </div>
 
                         <!-- Flight Info -->
                         <div class="col-md-2">
                             <p class="mb-1">
                                 <small class="text-muted">Num.:</small>
-                                <strong>{{ $booking->pnr->flight_no }}</strong>
+                                <strong>{{ ($booking->pnr->middle_flight_no == null) ? $booking->pnr->flight_no : $booking->pnr->middle_flight_no }}</strong>
                             </p>
                             <p class="mb-0">
                                 <small class="text-muted">Class:</small>

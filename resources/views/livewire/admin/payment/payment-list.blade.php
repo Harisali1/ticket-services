@@ -3,18 +3,18 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h4 mb-0">Payment List</h1>
-
-        <!-- <div class="d-flex gap-2">
-            <a href="{{ route('admin.notification.create') }}" class="btn btn-dark">
-                + Create Notification
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('admin.payment.create') }}" class="btn btn-dark">
+                + Create Payment
             </a>
 
-            <button class="btn btn-outline-secondary" type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#filterSidebar">
-                Filter
+            <!-- Filter button triggers offcanvas -->
+            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
+                  <path d="M1.5 1.5a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .4.8L10 7.7v5.6a.5.5 0 0 1-.757.429L7 12.101l-2.243 1.628A.5.5 0 0 1 4 12.3V7.7L1.1 2.3a.5.5 0 0 1 .4-.8z"/>
+                </svg>
             </button>
-        </div> -->
+        </div>
     </div>
 
     <!-- TABLE -->
@@ -22,36 +22,30 @@
         <table class="table table-bordered align-middle">
             <thead class="table-light">
             <tr>
-                <th width="40">
-                    <input type="checkbox" id="checkAll">
-                </th>
                 <th>Booking No #</th>
-                <th>Amount</th>
+                <th>Booking Amount</th>
+                <th>Paid Amount</th>
+                <th>Partial Paid Amount</th>
                 <th>Paid By</th>
                 <th>Paid At</th>
+                <th>Approved By</th>
+                <th>Approved At</th>
             </tr>
             </thead>
 
             <tbody>
             @forelse($payments as $payment)
                 <tr>
-                    <td>
-                        <input type="checkbox"
-                               class="row-check"
-                               value="{{ $payment->id }}"
-                               data-amount="{{ $payment->total_amount }}">
-                    </td>
-
                     <td>{{ $payment->booking_no }}</td>
                     <td>{{ $payment->total_amount }}</td>
-
+                    <td>{{ ($payment->payment_status == 3) ? $payment->total_amount : 0}}</td>
+                    <td>{{ $payment->partial_pay_amount }}</td>
+                    <td>{{ (isset($payment->payable->name)) ? $payment->payable->name : '' }}</td>
+                    <td>{{ $payment->paid_at }}</td>
                     <td>
-                        {{ $payment->paid_by }}
+                        {{ (isset($payment->approve->name)) ? $payment->approve->name : 'Pending For Approval' }}
                     </td>
-
-                    <td>{{ $payment->created_at->format('m/d/Y h:i a') }}</td>
-
-                   
+                    <td>{{ $payment->approved_at }}</td>
                 </tr>
             @empty
                 <tr>
@@ -66,142 +60,5 @@
 
     {{ $payments->links() }}
 
-    <!-- FORM -->
-    <form id="payment-form" enctype="multipart/form-data">
-
-        <input type="hidden" name="booking_ids" id="booking_ids">
-
-        <div class="row g-3">
-            <div class="col-md-4">
-                <label class="form-label">Total Amount</label>
-                <input type="text"
-                       name="amount"
-                       id="totalAmount"
-                       class="form-control"
-                       readonly>
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">Upload Image</label>
-                <input type="file"
-                       name="image"
-                       id="image"
-                       class="form-control">
-            </div>
-
-            <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" class="btn btn-dark w-100">
-                    Submit
-                </button>
-            </div>
-        </div>
-    </form>
-
 </div>
 
-<!-- JS -->
-<script>
-    const checkAll = document.getElementById('checkAll');
-    const rowChecks = document.querySelectorAll('.row-check');
-    const totalAmount = document.getElementById('totalAmount');
-    const bookingIdsInput = document.getElementById('booking_ids');
-
-    function updateTotals() {
-        let total = 0;
-        let ids = [];
-
-        rowChecks.forEach(cb => {
-            if (cb.checked) {
-                total += parseFloat(cb.dataset.amount);
-                ids.push(cb.value);
-            }
-        });
-
-        totalAmount.value = total;
-        bookingIdsInput.value = JSON.stringify(ids);
-    }
-
-    checkAll.addEventListener('change', function () {
-        rowChecks.forEach(cb => cb.checked = this.checked);
-        updateTotals();
-    });
-
-    rowChecks.forEach(cb => {
-        cb.addEventListener('change', function () {
-            checkAll.checked = [...rowChecks].every(c => c.checked);
-            updateTotals();
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById("payment-form");
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            const showError = (message) => {
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "error",
-                    title: message,
-                    showConfirmButton: false,
-                    timer: 9000
-                });
-            };
-
-            const amount   = document.getElementById("totalAmount").value.trim();
-            const image   = document.getElementById("image").files[0] ?? null;
-
-            if (!amount) { showError("Please select at least one booking"); return; }
-            if (!image) { showError("image is required"); return; }
-
-            const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "application/pdf"];
-            if (!allowedTypes.includes(image.type)) { showError("File must be JPG, PNG, or PDF"); return; }
-            if (image.size > 2097152) { showError("image size must be less than 2MB"); return; }
-
-            Swal.fire({
-                title: "Processing...",
-                text: "Please wait",
-                didOpen: () => Swal.showLoading(),
-                allowOutsideClick: false
-            });
-
-            const formData = new FormData(form);
-
-            $.ajax({
-                url: "{{ route('admin.payment.store') }}",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (data) { 
-                    Swal.close(); 
-                    Swal.fire({
-                        toast: true,
-                        position: "top-end",
-                        icon: "success",
-                        title: data.message,
-                        showConfirmButton: true,
-                        confirmButtonText: "OK"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "{{ route('admin.payment.index') }}"; 
-                        }
-                    });
-                },
-                error: function (xhr) {
-                    Swal.close();
-                    let message = "Something went wrong";
-                    if (xhr.responseJSON?.errors) {
-                        message = Object.values(xhr.responseJSON.errors)[0][0];
-                    } else if (xhr.responseJSON?.message) {
-                        message = xhr.responseJSON.message;
-                    }
-                    showError(message);
-                }
-            });
-        });
-    });
-</script>

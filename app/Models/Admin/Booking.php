@@ -33,6 +33,10 @@ class Booking extends Model
         return $this->belongsTo(User::class, 'paid_by', 'id');
     }
 
+    public function approve(){
+        return $this->belongsTo(User::class, 'approved_by', 'id');
+    }
+
     public function getBookingDateAttribute()
     {
         return \Carbon\Carbon::parse($this->created_at)->format('d-M-y H:i');

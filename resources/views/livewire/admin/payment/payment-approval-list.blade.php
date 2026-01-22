@@ -1,19 +1,7 @@
 <div class="container py-4">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h4">Agencies Payment List</h1>
-
-        <!-- <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('admin.agency.create') }}" class="btn btn-dark">
-                + Create Agency
-            </a>
-
-            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
-                  <path d="M1.5 1.5a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .4.8L10 7.7v5.6a.5.5 0 0 1-.757.429L7 12.101l-2.243 1.628A.5.5 0 0 1 4 12.3V7.7L1.1 2.3a.5.5 0 0 1 .4-.8z"/>
-                </svg>
-            </button>
-        </div> -->
+        <h1 class="h4">Agencies Payment Approval List</h1>
     </div>
 
     <!-- Filter Sidebar (Bootstrap Offcanvas) -->
@@ -71,35 +59,38 @@
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Agency Name</th>
-                    <th>Agency Email</th>
-                    <th>Total</th>
-                    <th>Paid</th>
-                    <th>On Approval</th>
-                    <th>Remaining</th>
+                    <th>Slip Image</th>
+                    <th>Paid Amount</th>
+                    <th>Created BY</th>
+                    <th>Paid At</th>
                     <th>Created On</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($agencies as $payment)
+                @forelse($payments as $payment)
                     <tr>
+                        <td>
+                             <img src="{{ $payment->image 
+                                ? asset('storage/'.$payment->image) 
+                                : asset('images/logo-placeholder.png') }}"
+                                alt="image"
+                                class="rounded-circle border"
+                                style="width:45px;height:45px;object-fit:contain;">
+                        </td>
+                        <td>{{ $payment->amount }}</td>
                         <td>{{ $payment->user->name }}</td>
-                        <td>{{ $payment->user->email }}</td>
-                        <td>{{ $payment->user->total_amount }}</td>
-                        <td>{{ $payment->user->paid_balance + $payment->user->partial_balance }}</td>
-                        <td>{{ $payment->user->on_approval_balance-$payment->user->partial_balance  }}</td>
-                        <td>{{ $payment->user->total_remaining_balance - $payment->user->partial_balance }}</td>
+                        <td>{{ $payment->paid_at }}</td>
                         <td>{{ $payment->created_at }}</td>
                         <td>
-                            @if($payment->user->on_approval_balance > 0)
-                               <a href="{{ route('admin.agency.payment.approval', $payment->user->id) }}" class="b-action-btn btn btn-sm btn-warning">
-                                    Pending
-                                </a>
+                            @if($payment->approved_by != NULL)
+                                <button class="btn btn-sm btn-success" type="button">
+                                    Approved
+                                </button>
                             @else
-                                <a href="{{ route('admin.agency.payment.approval', $payment->user->id) }}" class="b-action-btn btn btn-sm btn-info">
-                                    Payment History
-                                </a>
+                                <button class="btn btn-sm btn-warning" type="button" onclick="approvedPayment({{ $payment->id }})">
+                                    Pending
+                                </button>
                             @endif
                         </td>
                         
@@ -117,7 +108,7 @@
 
     <!-- Pagination -->
     <div>
-        {{ $agencies->links() }}
+        {{ $payments->links() }}
     </div>
 </div>
  <script>

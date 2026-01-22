@@ -151,11 +151,8 @@ document.getElementById("user-form").addEventListener("submit", function(e) {
               title: data.message,
               showConfirmButton: true,
               confirmButtonText: "OK"
-          }).then((result) => {
-              if (result.isConfirmed) {
-                window.location.href = "{{ route('admin.user.index') }}";
-              }
           });
+          window.location.href = "{{ route('admin.user.index') }}";
         },
         error: function (xhr) {
             Swal.close();

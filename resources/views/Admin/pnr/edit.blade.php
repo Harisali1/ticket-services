@@ -461,8 +461,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (res) {
-                Swal.fire("Success", res.message, "success")
-                    .then(() => window.location.href = "{{ route('admin.pnr.index') }}");
+                Swal.fire("Success", res.message, "success");
+                window.location.href = "{{ route('admin.pnr.index') }}";
             },
             error: function (xhr) {
                 showError(xhr.responseJSON?.message || "Something went wrong");

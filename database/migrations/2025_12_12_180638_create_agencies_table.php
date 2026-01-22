@@ -16,7 +16,10 @@ return new class extends Migration
             $table->integer('user_id')->nullable();
             $table->string('name');
             $table->string('piv');
+            $table->string('show_pass')->nullable();
             $table->text('address');
+            $table->string('mark_up')->nullable();
+            $table->string('limit')->nullable();
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();
             $table->timestamps();

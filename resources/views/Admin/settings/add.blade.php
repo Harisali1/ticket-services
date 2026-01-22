@@ -113,9 +113,8 @@
                     icon: 'success',
                     title: res.message,
                     showConfirmButton: true
-                }).then(() => {
-                    window.location.href = "{{ route('admin.setting.index') }}";
                 });
+                window.location.href = "{{ route('admin.setting.index') }}";
             },
             error: function (xhr) {
                 Swal.close();

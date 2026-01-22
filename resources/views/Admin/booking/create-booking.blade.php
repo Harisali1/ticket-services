@@ -223,14 +223,14 @@
                     <!-- Aircraft -->
                     <div class="col-md-2 text-center">
                         <small class="text-muted">Airplane</small><br>
-                        <strong>{{ $pnrBookings->air_craft }}</strong>
+                        <strong>{{ ($pnrBookings->middle_air_craft == null) ? $pnrBookings->air_craft : $pnrBookings->middle_air_craft }}</strong>
                     </div>
 
                     <!-- Flight Info -->
                     <div class="col-md-2">
                         <p class="mb-1">
                             <small class="text-muted">Num.:</small>
-                            <strong>{{ $pnrBookings->flight_no }}</strong>
+                            <strong>{{ ($pnrBookings->middle_flight_no == null) ? $pnrBookings->flight_no : $pnrBookings->middle_flight_no }}</strong>
                         </p>
                         <p class="mb-0">
                             <small class="text-muted">Class:</small>

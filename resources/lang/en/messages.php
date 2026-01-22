@@ -4,4 +4,5 @@ return [
     'welcome' => 'Welcome',
     'login'   => 'Login',
     'logout'  => 'Logout',
+    'dashboard' => 'Dashboard',
 ];

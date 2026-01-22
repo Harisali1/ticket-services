@@ -358,7 +358,8 @@ class BookingController extends Controller
 
     public function printTicketed($bookingId,$type){
 
-        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
+        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.middle_arrival', 
+        'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
         ->get(['customers.name', 'customers.phone_no', 'customers.dob', 'customers.surname']);
@@ -414,13 +415,45 @@ class BookingController extends Controller
     }
 
     public function voidBooking($id){
-        Booking::find($id)->update([
-            'status' => 5
-        ]);
-        return response()->json([
-            'status'  => true,
-            'message' => 'successfully void this booking'
-        ]);
+        
+        DB::beginTransaction();
+
+        try{
+            $booking = Booking::find($id);
+            $seatLimit = $booking->seats;
+
+            Booking::find($id)->update([
+                'status' => 4
+            ]);
+            
+            $seats = Seat::where('pnr_id', $booking->pnr_id)
+                            ->where('is_sold', 1)
+                            ->orderBy('id', 'DESC')
+                            ->limit((int)$seatLimit)
+                            ->pluck('id');
+
+            Seat::whereIn('id', $seats)->update([
+                'is_sold' => 0,
+                'is_sale' => 1
+            ]);
+        
+        DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'successfully void this booking'
+            ]);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function reQuoteBooking($id){

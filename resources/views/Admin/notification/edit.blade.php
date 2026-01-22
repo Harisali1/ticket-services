@@ -157,9 +157,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     icon: "success",
                     title: res.message,
                     showConfirmButton: true
-                }).then(() => {
-                    window.location.href = "{{ route('admin.notification.index') }}";
                 });
+                window.location.href = "{{ route('admin.notification.index') }}";
             },
             error: function (xhr) {
                 Swal.close();

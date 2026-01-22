@@ -122,7 +122,9 @@
     <!-- HEADER -->
     <div class="header">
         <div class="route">
-            ({{ $booking['pnr']['departure']['code'] }}) → ({{ $booking['pnr']['arrival']['code'] }}) {{ (isset($booking['pnr']['return_arrival'])) ? '→ ('.$booking['pnr']['return_arrival']['code'].')' : ''}}
+            ({{ $booking['pnr']['departure']['code'] }}) → ({{ (isset($booking['pnr']['middle_arrival'])) ? $booking['pnr']['middle_arrival']['code'] : $booking['pnr']['arrival']['code']}}) 
+            
+            {{ (isset($booking['pnr']['return_arrival'])) ? '→ ('.$booking['pnr']['return_arrival']['code'].')' : ''}}
         </div>
 
         <div class="reservation-box">

@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
+            $table->string('image')->nullable();
             $table->boolean('status')->default(1);
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
     }

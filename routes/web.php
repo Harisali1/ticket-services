@@ -52,6 +52,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/update', [App\Http\Controllers\Admin\AgencyController::class, 'update'])->name('admin.agency.update');
             Route::prefix('payment')->group(function () {
                 Route::get('/list', [App\Http\Controllers\Admin\AgencyController::class, 'PaymentList'])->name('admin.agency.payment.list');
+                Route::get('/approval/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'agencyPaymentApproval'])->name('admin.agency.payment.approval');
+
             });
         });
 

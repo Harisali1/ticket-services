@@ -87,27 +87,52 @@ class SearchPnr extends Component
             $startReturnDepartureDate = Carbon::parse($this->return_departure_date)->subDays($this->return_day_minus)->format('Y-m-d');
         }
 
-        $pnrs = Pnr::withCount(['seats as seat_available' => function ($q) {
-                    $q->where('is_sale', 1);
-                }])
-            ->where('pnr_type', $this->trip_type)
-            ->where('departure_id', $this->departure_id)
-            ->where('arrival_id', $this->arrival_id)
-            ->whereBetween('departure_date', [$startDepartureDate, $endDepartureDate]);
+        // $pnrs = Pnr::withCount(['seats as seat_available' => function ($q) {
+        //             $q->where('is_sale', 1);
+        //         }])
+        //     // ->where('pnr_type', $this->trip_type)
+        //     ->where('departure_id', $this->departure_id)
+        //     ->where('arrival_id', $this->arrival_id)
+        //     ->whereBetween('departure_date', [$startDepartureDate, $endDepartureDate]);
 
-            if($this->trip_type == 'return'){
-                $pnrs = $pnrs->where('return_departure_id', $this->return_departure_id)
-                        ->where('return_arrival_id', $this->return_arrival_id)
-                        ->whereBetween('return_departure_date', [$startReturnDepartureDate, $endReturnDepartureDate]);
-            }
+        //     if($this->trip_type == 'return'){
+        //         $pnrs = $pnrs->where('return_departure_id', $this->return_departure_id)
+        //                 ->where('return_arrival_id', $this->return_arrival_id)
+        //                 ->whereBetween('return_departure_date', [$startReturnDepartureDate, $endReturnDepartureDate]);
+        //     }
  
-            $pnrs = $pnrs->with('airline', 'seats')
+        //     $pnrs = $pnrs->with('airline', 'seats')
+        //     ->paginate($this->perPage);
+
+        $departureIds = (array) $this->departure_id;
+        $arrivalIds   = (array) $this->arrival_id;
+
+        if ($this->trip_type === 'return') {
+            $departureIds[] = $this->return_departure_id;
+            $arrivalIds[]   = $this->return_arrival_id;
+        }
+
+        $pnrs = Pnr::withCount([
+                'seats as seat_available' => function ($q) {
+                    $q->where('is_sale', 1);
+                }
+            ])
+            ->whereIn('departure_id', $departureIds)
+            ->whereIn('arrival_id', $arrivalIds)
+            ->whereBetween('departure_date', [
+                $startDepartureDate,
+                $this->trip_type === 'return'
+                    ? $endReturnDepartureDate
+                    : $endDepartureDate
+            ])
+            ->with('airline', 'seats')
             ->paginate($this->perPage);
 
-        $passengerTypes = PassengerType::all();
 
+        $passengerTypes = PassengerType::all();
+        $type = $this->trip_type;
         
-        return view('livewire.admin.pnr.search-pnr', compact('pnrs','passengerTypes'));
+        return view('livewire.admin.pnr.search-pnr', compact('pnrs','passengerTypes','type'));
     }
 }
 

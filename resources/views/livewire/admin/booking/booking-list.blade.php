@@ -136,8 +136,13 @@
                                 </a>
                             @elseif($booking->status->label() === 'Ticketed')
                                 <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}" class="b-action-btn btn btn-sm btn-secondary">
-                                        TKT
+                                    TKT
                                 </a>
+                                @if(($bookingDate == $today && $now->hour >= 0))
+                                    <button class="btn btn-sm btn-warning" type="button" onclick="voidBooking({{ $booking->id }})">
+                                        Void
+                                    </button>
+                                @endif
                             @elseif($booking->status->label() === 'Paid')
                                 <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}" class="b-action-btn btn btn-sm btn-success">
                                         Paid
@@ -147,12 +152,10 @@
                                     CN
                                 </button>
                             @endif
-                            @if($booking->status->label() === 'Ticketed')
-                                @if(($bookingDate == $today && $now->hour >= 0))
-                                    <button class="btn btn-sm btn-warning" type="button" onclick="voidBooking({{ $booking->id }})">
-                                        Void
-                                    </button>
-                                @endif
+                            @if($booking->status->label() === 'Void')
+                                <button class="btn btn-sm btn-warning" type="button">
+                                    Voided
+                                </button>
                             @endif
                         </td>
                     </tr>

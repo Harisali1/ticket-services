@@ -207,12 +207,8 @@
             title: data.message,
             showConfirmButton: true,
             confirmButtonText: "OK"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "{{ route('admin.agency.index') }}";
-            }
         });
-
+        window.location.href = "{{ route('admin.agency.index') }}";
       },
       error: function (xhr) {
         Swal.close();

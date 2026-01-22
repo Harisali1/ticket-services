@@ -13,7 +13,12 @@
                     </span>
 
                     <span class="badge bg-success-subtle text-success px-3 py-2 fs-6">
-                        {{ number_format(Auth::user()->remaining_balance) }}
+                        @php
+                            $remainingBalance = Auth::user()->remaining_balance;
+                            $partialBalance = Auth::user()->partial_balance;
+                            $finalAmount = $remainingBalance-$partialBalance;
+                        @endphp
+                        {{ number_format($finalAmount) }}
                     </span>
                 </div>
             @endif

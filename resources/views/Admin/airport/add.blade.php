@@ -115,11 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     title: data.message,
                     showConfirmButton: true,
                     confirmButtonText: "OK"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "{{ route('admin.airport.index') }}"; 
-                    }
                 });
+                window.location.href = "{{ route('admin.airport.index') }}"; 
             },
             error: function (xhr) {
                 Swal.close();

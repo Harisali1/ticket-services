@@ -44,23 +44,21 @@ class PaymentList extends Component
 
     public function render()
     {
-        $payments = Booking::where('status', 2)->where('is_approved', 0);
+        $payments = Booking::whereIn('status', [2,3])
+            ->where('is_approved', 0)
+            ->where('created_by', auth()->user()->id);
 
-        if(auth()->user()->user_type_id != 1){
-            $payments = $payments->where('created_by', auth()->user()->id);
-        }
-
-            $payments = $payments->when($this->filters['status'] !== '', fn ($q) =>
-                $q->where('status', $this->filters['status'])
-            )
-            ->when($this->filters['from'], fn ($q) =>
-                $q->whereDate('created_at', '>=', $this->filters['from'])
-            )
-            ->when($this->filters['to'], fn ($q) =>
-                $q->whereDate('created_at', '<=', $this->filters['to'])
-            )
-            ->latest()
-            ->paginate($this->perPage);
+        $payments = $payments->when($this->filters['status'] !== '', fn ($q) =>
+            $q->where('status', $this->filters['status'])
+        )
+        ->when($this->filters['from'], fn ($q) =>
+            $q->whereDate('created_at', '>=', $this->filters['from'])
+        )
+        ->when($this->filters['to'], fn ($q) =>
+            $q->whereDate('created_at', '<=', $this->filters['to'])
+        )
+        ->latest()
+        ->paginate($this->perPage);
 
         return view('livewire.admin.payment.payment-list', compact('payments'));
     }

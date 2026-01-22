@@ -4,7 +4,7 @@ namespace App\Livewire\Admin\Agency;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Admin\PaymentUpload;
+use App\Models\Admin\Agency;
 
 class AgencyPaymentList extends Component
 {
@@ -44,9 +44,9 @@ class AgencyPaymentList extends Component
 
     public function render()
     {
-        $paymentUploads = PaymentUpload::with('user');
+        $agencies = Agency::with('user');
         
-        $paymentUploads = $paymentUploads->when($this->filters['agency_name'], fn ($q) =>
+        $agencies = $agencies->when($this->filters['agency_name'], fn ($q) =>
             $q->where('name', 'like', '%' . $this->filters['agency_name'] . '%')
         )
         ->when($this->filters['status'] !== '', fn ($q) =>
@@ -59,9 +59,9 @@ class AgencyPaymentList extends Component
             $q->whereDate('created_at', '<=', $this->filters['to'])
         );
 
-        $paymentUploads = $paymentUploads->latest()
+        $agencies = $agencies->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.agency.agency-payment-list', compact('paymentUploads'));
+        return view('livewire.admin.agency.agency-payment-list', compact('agencies'));
     }
 }

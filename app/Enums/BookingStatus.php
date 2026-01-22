@@ -7,7 +7,7 @@ enum BookingStatus: int
     case Created   = 1;
     case Ticketed  = 2;
     case Paid = 3;
-    case Abounded = 4;
+    case Void = 4;
     case Cancel = 5;
 
     public function label(): string
@@ -16,7 +16,7 @@ enum BookingStatus: int
             self::Created   => 'Created',
             self::Ticketed  => 'Ticketed',
             self::Paid => 'Paid',
-            self::Abounded => 'Abounded',
+            self::Void => 'Void',
             self::Cancel => 'Cancel',
         };
     }
@@ -27,7 +27,7 @@ enum BookingStatus: int
             self::Created   => 'text-yellow-600',
             self::Ticketed  => 'text-blue-600',
             self::Paid => 'text-green-600',
-            self::Abounded  => 'text-gray-600',
+            self::Void  => 'text-gray-600',
             self::Cancel => 'text-red-600',
         };
     }

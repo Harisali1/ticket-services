@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('payment_uploads', function (Blueprint $table) {
             $table->id();
+            $table->json('booking_ids')->nullable();
             $table->string('amount')->nullable();
             $table->string('image')->nullable();
             $table->integer('created_by')->nullable();

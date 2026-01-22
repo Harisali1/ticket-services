@@ -21,12 +21,19 @@ return new class extends Migration
             $table->string('price')->nullable();
             $table->string('tax')->nullable();
             $table->string('total_amount')->nullable();
+            $table->string('paid_amount')->nullable();
+            $table->string('partial_pay_amount')->nullable();
             $table->string('meal')->nullable();
             $table->string('wheel_chair')->nullable();
             $table->string('dept_ticket_no')->nullable();
             $table->string('arr_ticket_no')->nullable();
-            $table->boolean('status')->nullable();
+            $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();
+            $table->string('admin_fee')->nullable();
+            $table->boolean('payment_status')->default(1);
+            $table->integer('approved_by')->nullable();
+            $table->datetime('approved_at')->nullable();
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
         });
     }

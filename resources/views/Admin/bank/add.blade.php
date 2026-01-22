@@ -161,9 +161,8 @@ document.getElementById('bank-form').addEventListener('submit', function (e) {
                 icon: 'success',
                 title: res.message,
                 showConfirmButton: true
-            }).then(() => {
-                window.location.href = "{{ route('admin.bank.create') }}";
             });
+            window.location.href = "{{ route('admin.bank.create') }}";
         },
         error: function (xhr) {
             Swal.close();

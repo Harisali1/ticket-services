@@ -161,24 +161,58 @@
             <!-- FLIGHT -->
             <div class="title-bar">Flight Information</div>
             <div class="flight-header">
-                ✈ {{ $booking['pnr']['airline']['name'] }} ({{ $booking['pnr']['airline']['code'] }}) – Flight {{ $booking['pnr']['flight_no'] }} – {{ \Carbon\Carbon::parse($booking['pnr']['departure_date'])->format('d F Y') }}
+                @if($type == 'dept')
+                    ✈ {{ $booking['pnr']['airline']['name'] }} ({{ $booking['pnr']['airline']['code'] }}) – 
+                    Flight {{ $booking['pnr']['flight_no'] }} – {{ \Carbon\Carbon::parse($booking['pnr']['departure_date'])->format('d F Y') }}
+                @else
+                    ✈ {{ $booking['pnr']['return_airline']['name'] }} ({{ $booking['pnr']['return_airline']['code'] }}) – 
+                    Flight {{ $booking['pnr']['return_flight_no'] }} – {{ \Carbon\Carbon::parse($booking['pnr']['return_departure_date'])->format('d F Y') }}
+                @endif
             </div>
 
 
             <table class="flight-table">
                 <tr>
                     <td width="45%">
-                        <div class="label">Departure</div>
-                        {{ $booking['pnr']['departure']['name'] }}<br>
-                        <strong>{{ \Carbon\Carbon::parse($booking['pnr']['departure_time'])->format('H:i') }}</strong>
+                        @if($type == 'dept')
+                            <div class="label">Departure</div>
+                            {{ $booking['pnr']['departure']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['departure_time'])->format('H:i') }}</strong>
+                        @else
+                            <div class="label">Departure</div>
+                            {{ $booking['pnr']['return_departure']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['return_departure_time'])->format('H:i') }}</strong>
+                        @endif
                     </td>
 
                     <td width="10%" class="center">➜</td>
+                    @if($booking['pnr']['middle_arrival_id'] != null && $booking['pnr']['middle_arrival_time'] != null && $booking['pnr']['rest_time'] != null)
+                        <td width="45%">
+                            <div class="label">Middle Arrival</div>
+                            {{ $booking['pnr']['middle_arrival']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['middle_arrival_time'])->format('H:i') }}</strong>
+                        </td>
 
+                        <td width="10%" class="center">➜</td>
+
+                        <td width="45%">
+                            <div class="label">Middle Departure</div>
+                            {{ $booking['pnr']['middle_arrival']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['rest_time'])->format('H:i') }}</strong>
+                        </td>
+
+                        <td width="10%" class="center">➜</td>
+                    @endif
                     <td width="45%">
-                        <div class="label">Arrival</div>
-                        {{ $booking['pnr']['arrival']['name'] }}<br>
-                        <strong>{{ \Carbon\Carbon::parse($booking['pnr']['arrival_time'])->format('H:i') }}</strong>
+                        @if($type == 'dept')
+                            <div class="label">Arrival</div>
+                            {{ $booking['pnr']['arrival']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['arrival_time'])->format('H:i') }}</strong>
+                        @else
+                            <div class="label">Arrival</div>
+                            {{ $booking['pnr']['return_arrival']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['return_arrival_time'])->format('H:i') }}</strong>
+                        @endif
                     </td>
                 </tr>
             </table>
@@ -204,6 +238,13 @@
             <div class="baggage-box">
                 <strong>Checked:</strong> {{ $booking['pnr']['baggage'] }} |
                 <strong>Hand:</strong> 8 KG
+            </div>
+
+            <!-- SPECIAL REQUEST -->
+            <div class="title-bar">Special Service Request</div>
+            <div class="baggage-box">
+                <strong>Meal:</strong> {{ $booking['meal'] }} |
+                <strong>Wheel Chair:</strong> {{ $booking['wheel_chair'] }}
             </div>
 
             <!-- FARE RULES -->
