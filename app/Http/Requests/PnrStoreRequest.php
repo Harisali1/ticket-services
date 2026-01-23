@@ -14,7 +14,7 @@ class PnrStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pnr_type'       => ['required'],
+            // 'pnr_type'       => ['required'],
             'departure_id'   => ['required', 'integer', 'exists:airports,id'],
             'arrival_id'     => ['required', 'integer', 'exists:airports,id'],
             'airline_id'     => ['required', 'integer', 'exists:air_lines,id'],
@@ -29,7 +29,7 @@ class PnrStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'pnr_type.required'         => 'PNR Type is required.',
+            // 'pnr_type.required'         => 'PNR Type is required.',
             'flight_no.required'        => 'Flight No is required',
 
             'departure_id.required'     => 'Please select an departure.',

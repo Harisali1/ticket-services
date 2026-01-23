@@ -46,18 +46,18 @@ class PnrController extends Controller
             $end   = Carbon::createFromFormat('Y-m-d H:i', $arrival);
             $diff = $start->diff($end);
 
-            if($request->pnr_type == 'return'){
-                $return_departure = $request->return_departure_date .' '. $request->return_departure_time_hour.':'.$request->return_departure_time_minute;
-                $return_arrival = $request->return_arrival_date .' '. $request->return_arrival_time_hour.':'.$request->return_arrival_time_minute;
-                $start = Carbon::createFromFormat('Y-m-d H:i', $return_departure);
-                $end   = Carbon::createFromFormat('Y-m-d H:i', $return_arrival);
-                $returnDiff = $start->diff($end);
-                if($returnDiff->d != 0){
-                    $returnDuration = $returnDiff->d.'d '.$returnDiff->h.'h '.$returnDiff->i.'m';
-                }else{
-                    $returnDuration = $returnDiff->h.'h '.$returnDiff->i.'m';
-                }
-            }
+            // if($request->pnr_type == 'return'){
+            //     $return_departure = $request->return_departure_date .' '. $request->return_departure_time_hour.':'.$request->return_departure_time_minute;
+            //     $return_arrival = $request->return_arrival_date .' '. $request->return_arrival_time_hour.':'.$request->return_arrival_time_minute;
+            //     $start = Carbon::createFromFormat('Y-m-d H:i', $return_departure);
+            //     $end   = Carbon::createFromFormat('Y-m-d H:i', $return_arrival);
+            //     $returnDiff = $start->diff($end);
+            //     if($returnDiff->d != 0){
+            //         $returnDuration = $returnDiff->d.'d '.$returnDiff->h.'h '.$returnDiff->i.'m';
+            //     }else{
+            //         $returnDuration = $returnDiff->h.'h '.$returnDiff->i.'m';
+            //     }
+            // }
 
             if($diff->d != 0){
                 $duration = $diff->d.'d '.$diff->h.'h '.$diff->i.'m';
@@ -66,7 +66,7 @@ class PnrController extends Controller
             }
 
             $data = [
-                'pnr_type' => $request->pnr_type,
+                // 'pnr_type' => $request->pnr_type,
                 'flight_no' => $request->flight_no,
                 'middle_flight_no' => (isset($request->middle_flight_no)) ? $request->middle_flight_no : NULL,
                 'ref_no' => $request->ref_no,
@@ -88,30 +88,30 @@ class PnrController extends Controller
                 'seats' => $request->seats,
             ];
 
-            if($request->pnr_type == 'return'){
-                $data['return_flight_no'] = (isset($request->return_flight_no)) ? $request->return_flight_no : NULL;
-                $data['return_air_craft'] = (isset($request->return_air_craft)) ? $request->return_air_craft : NULL;
-                $data['return_duration'] = $returnDuration;
-                $data['return_departure_id'] = $request->return_departure_id;
-                $data['return_arrival_id'] = $request->return_arrival_id;
-                $data['return_airline_id'] = $request->return_airline_id;
-                $data['return_departure_date'] = $request->return_departure_date;
-                $data['return_arrival_date'] = $request->return_arrival_date;
-                $data['return_departure_time'] = $request->return_departure_time_hour.':'.$request->return_departure_time_minute;
-                $data['return_arrival_time'] = $request->return_arrival_time_hour.':'.$request->return_arrival_time_minute;
-                $data['return_base_price'] = $request->return_base_price;
-                $data['return_tax'] = $request->return_tax;
-                $data['return_total'] = $request->return_total;
-                if($request->return_middle_arrival_id != null){
-                    $data['return_middle_arrival_id'] = $request->return_middle_arrival_id;
-                }
-                if($request->return_rest_time_hour != null && $request->return_rest_time_minute != null){
-                    $data['return_rest_time'] = $request->return_rest_time_hour.':'.$request->return_rest_time_minute;
-                }
-                if($request->middle_return_arrival_time_hour != null && $request->middle_return_arrival_time_minute != null){
-                    $data['middle_return_arrival_time'] = $request->middle_return_arrival_time_hour.':'.$request->middle_return_arrival_time_minute;
-                }
-            }
+            // if($request->pnr_type == 'return'){
+            //     $data['return_flight_no'] = (isset($request->return_flight_no)) ? $request->return_flight_no : NULL;
+            //     $data['return_air_craft'] = (isset($request->return_air_craft)) ? $request->return_air_craft : NULL;
+            //     $data['return_duration'] = $returnDuration;
+            //     $data['return_departure_id'] = $request->return_departure_id;
+            //     $data['return_arrival_id'] = $request->return_arrival_id;
+            //     $data['return_airline_id'] = $request->return_airline_id;
+            //     $data['return_departure_date'] = $request->return_departure_date;
+            //     $data['return_arrival_date'] = $request->return_arrival_date;
+            //     $data['return_departure_time'] = $request->return_departure_time_hour.':'.$request->return_departure_time_minute;
+            //     $data['return_arrival_time'] = $request->return_arrival_time_hour.':'.$request->return_arrival_time_minute;
+            //     $data['return_base_price'] = $request->return_base_price;
+            //     $data['return_tax'] = $request->return_tax;
+            //     $data['return_total'] = $request->return_total;
+            //     if($request->return_middle_arrival_id != null){
+            //         $data['return_middle_arrival_id'] = $request->return_middle_arrival_id;
+            //     }
+            //     if($request->return_rest_time_hour != null && $request->return_rest_time_minute != null){
+            //         $data['return_rest_time'] = $request->return_rest_time_hour.':'.$request->return_rest_time_minute;
+            //     }
+            //     if($request->middle_return_arrival_time_hour != null && $request->middle_return_arrival_time_minute != null){
+            //         $data['middle_return_arrival_time'] = $request->middle_return_arrival_time_hour.':'.$request->middle_return_arrival_time_minute;
+            //     }
+            // }
 
             if($request->middle_arrival_id != null){
                 $data['middle_arrival_id'] = $request->middle_arrival_id;

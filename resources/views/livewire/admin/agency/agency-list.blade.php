@@ -121,6 +121,11 @@
                                                 Show Pass
                                             </button>
                                         </li>
+                                         <li>
+                                            <a class="dropdown-item" href="{{ route('admin.role.permission.create', $agency->user_id) }}">
+                                                Assign Permission
+                                            </a>
+                                        </li>
                                     @endif
                                     <li><a class="dropdown-item" href="{{ route('admin.agency.show', $agency->id) }}">View Details</a></li>
                                 </ul>

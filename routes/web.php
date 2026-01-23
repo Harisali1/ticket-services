@@ -147,6 +147,18 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/delete/{id}', [App\Http\Controllers\Admin\NotificationController::class, 'delete'])->name('admin.notification.delete');
         });
 
+        Route::prefix('role')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\RoleController::class, 'index'])->name('admin.role.index');
+            Route::get('/add', [App\Http\Controllers\Admin\RoleController::class, 'create'])->name('admin.role.create');
+            Route::post('/store', [App\Http\Controllers\Admin\RoleController::class, 'store'])->name('admin.role.store');
+            Route::get('/edit/{role}', [App\Http\Controllers\Admin\RoleController::class, 'edit'])->name('admin.role.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\RoleController::class, 'update'])->name('admin.role.update');
+            Route::prefix('permission')->group(function () {
+                Route::get('/{id}', [App\Http\Controllers\Admin\RoleController::class, 'rolePermission'])->name('admin.role.permission.create');
+                Route::post('/store', [App\Http\Controllers\Admin\RoleController::class, 'rolePermissionStore'])->name('admin.role.permission.store');
+            });
+        });
+
         Route::prefix('setting')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.setting.index');
             Route::post('/store', [App\Http\Controllers\Admin\SettingController::class, 'store'])->name('admin.setting.store');

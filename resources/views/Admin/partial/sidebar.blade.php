@@ -66,6 +66,10 @@
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">Notification</span>
                 </a>
+                <a href="{{ route('admin.role.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                    <i class="fa fa-money me-3"></i>
+                    <span class="menu-text">Role</span>
+                </a>
             </nav>
         @endif
         @if(Auth::user()->user_type_id == '2')
@@ -74,22 +78,30 @@
                     <i class="fa fa-tachometer me-3"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
+                @if(Auth::user()->can('search_flight'))
                 <a href="{{ route('admin.booking.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-plane me-3"></i>
                     <span class="menu-text">Search Flight</span>
                 </a>
+                @endif
+                @if(Auth::user()->can('manage_booking'))
                 <a href="{{ route('admin.booking.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-calendar me-3"></i>
                     <span class="menu-text">Manage Bookings</span>
                 </a>
+                @endif
+                @if(Auth::user()->can('manage_agencies'))
                 <a href="{{ route('admin.agency.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-cog me-3"></i>
                     <span class="menu-text">Sub Agencies</span>
                 </a>
+                @endif
+                @if(Auth::user()->can('payment'))
                 <a href="{{ route('admin.payment.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">Payments</span>
                 </a>
+                @endif
             </nav>
         @endif
     </aside>
