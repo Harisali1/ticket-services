@@ -34,112 +34,174 @@
                 </thead>
 
                 <tbody>
-                    @foreach($pnrs as $pnr)
-                        @if($pnr->seat_is_sale != 0)
-                            @if($pnr->middle_arrival_id != null && $pnr->rest_time != null && $pnr->middle_arrival_time != null)
-                                <tr>
-                                    <td colspan="11" class="p-2 shoadow-master">
-                                        <div class="pnr-shadow-box">
-                                            <table class="w-100">
-                                                <tr>
-                                                    <td>
-                                                        <img src="{{ $pnr->airline->logo 
-                                                            ? asset('storage/'.$pnr->airline->logo) 
-                                                            : asset('images/logo-placeholder.png') }}"
-                                                            class="rounded-circle border"
-                                                            style="width:25px;height:25px;object-fit:contain;">
-                                                        <hr>
-                                                        <img src="{{ $pnr->airline->logo 
-                                                            ? asset('storage/'.$pnr->airline->logo) 
-                                                            : asset('images/logo-placeholder.png') }}"
-                                                            class="rounded-circle border"
-                                                            style="width:25px;height:25px;object-fit:contain;">
-                                                    </td>
+                    @if($type != 'return')
+                        @foreach($pnrs as $pnr)
+                            @if($pnr->seat_is_sale != 0)
+                                @if($pnr->middle_arrival_id != null && $pnr->rest_time != null && $pnr->middle_arrival_time != null)
+                                    <tr>
+                                        <td colspan="11" class="p-2 shoadow-master">
+                                            <div class="pnr-shadow-box">
+                                                <table class="w-100">
+                                                    <tr>
+                                                        <td>
+                                                            <img src="{{ $pnr->airline->logo 
+                                                                ? asset('storage/'.$pnr->airline->logo) 
+                                                                : asset('images/logo-placeholder.png') }}"
+                                                                class="rounded-circle border"
+                                                                style="width:25px;height:25px;object-fit:contain;">
+                                                            <hr>
+                                                            <img src="{{ $pnr->airline->logo 
+                                                                ? asset('storage/'.$pnr->airline->logo) 
+                                                                : asset('images/logo-placeholder.png') }}"
+                                                                class="rounded-circle border"
+                                                                style="width:25px;height:25px;object-fit:contain;">
+                                                        </td>
 
-                                                    <td>{{ $pnr->flight_no }}<hr>{{ $pnr->flight_no }}</td>
-                                                    <td>{{ $pnr->air_craft }}<hr>{{ $pnr->air_craft }}</td>
-                                                    <td>{{ $pnr->class }}<hr>{{ $pnr->class }}</td>
-                                                    <td>{{ $pnr->baggage }}<hr>{{ $pnr->baggage }}</td>
-                                                    <td>{{ $pnr->departure->code }}<hr>{{ $pnr->middle_arrival->code }}</td>
-                                                    <td>{{ $pnr->middle_arrival->code }}<hr>{{ $pnr->arrival->code }}</td>
-                                                    <td>{{ $pnr->departure_date_time }}<hr>{{ $pnr->middle_departure_date_time }}</td>
-                                                    <td>{{ $pnr->middle_arrival_date_time }}<hr>{{ $pnr->arrival_date_time }}</td>
-                                                    <td class="text-center align-middle">
-                                                        <!-- First Duration -->
-                                                        <div class="fw-semibold">
-                                                            {{ $pnr->first_duration }}
-                                                        </div>
+                                                        <td>{{ $pnr->flight_no }}<hr>{{ $pnr->flight_no }}</td>
+                                                        <td>{{ $pnr->air_craft }}<hr>{{ $pnr->air_craft }}</td>
+                                                        <td>{{ $pnr->class }}<hr>{{ $pnr->class }}</td>
+                                                        <td>{{ $pnr->baggage }}<hr>{{ $pnr->baggage }}</td>
+                                                        <td>{{ $pnr->departure->code }}<hr>{{ $pnr->middle_arrival->code }}</td>
+                                                        <td>{{ $pnr->middle_arrival->code }}<hr>{{ $pnr->arrival->code }}</td>
+                                                        <td>{{ $pnr->departure_date_time }}<hr>{{ $pnr->middle_departure_date_time }}</td>
+                                                        <td>{{ $pnr->middle_arrival_date_time }}<hr>{{ $pnr->arrival_date_time }}</td>
+                                                        <td class="text-center align-middle">
+                                                            <!-- First Duration -->
+                                                            <div class="fw-semibold">
+                                                                {{ $pnr->first_duration }}
+                                                            </div>
 
-                                                        <!-- Rest Time (Badge / Pill) -->
-                                                        <div class="my-1">
-                                                            <span class="badge rounded-pill bg-light text-dark border px-3 py-1"
-                                                                style="font-size:12px;">
-                                                                {{ $pnr->break_time }}
-                                                            </span>
-                                                        </div>
+                                                            <!-- Rest Time (Badge / Pill) -->
+                                                            <div class="my-1">
+                                                                <span class="badge rounded-pill bg-light text-dark border px-3 py-1"
+                                                                    style="font-size:12px;">
+                                                                    {{ $pnr->break_time }}
+                                                                </span>
+                                                            </div>
 
-                                                        <!-- Second Duration -->
-                                                        <div class="fw-semibold">
-                                                            {{ $pnr->second_duration }}
-                                                        </div>
-                                                    </td>
+                                                            <!-- Second Duration -->
+                                                            <div class="fw-semibold">
+                                                                {{ $pnr->second_duration }}
+                                                            </div>
+                                                        </td>
 
-                                                    <td>
-                                                        <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
-                                                        <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
-                                                            {{ $pnr->total + $pnr->return_total }} EUR
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @else
-                                <tr>
-                                    <td colspan="11" class="p-2 shoadow-master">
-                                        <div class="pnr-shadow-box">
-                                            <table class="w-100">
-                                                <tr>
-                                                    <td>
-                                                        <img src="{{ $pnr->airline->logo 
-                                                            ? asset('storage/'.$pnr->airline->logo) 
-                                                            : asset('images/logo-placeholder.png') }}"
-                                                            class="rounded-circle border"
-                                                            style="width:25px;height:25px;object-fit:contain;">
-                                                    </td>
+                                                        <td>
+                                                            <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
+                                                            <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
+                                                                {{ $pnr->base_price }} EUR
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td colspan="11" class="p-2 shoadow-master">
+                                            <div class="pnr-shadow-box">
+                                                <table class="w-100">
+                                                    <tr>
+                                                        <td>
+                                                            <img src="{{ $pnr->airline->logo 
+                                                                ? asset('storage/'.$pnr->airline->logo) 
+                                                                : asset('images/logo-placeholder.png') }}"
+                                                                class="rounded-circle border"
+                                                                style="width:25px;height:25px;object-fit:contain;">
+                                                        </td>
 
-                                                    <td>{{ $pnr->flight_no }}</td>
-                                                    <td>{{ $pnr->air_craft }}</td>
-                                                    <td>{{ $pnr->class }}</td>
-                                                    <td>{{ $pnr->baggage }}</td>
-                                                    <td>{{ $pnr->departure->code }}</td>
-                                                    <td>{{ $pnr->arrival->code }}</td>
-                                                    <td>{{ $pnr->departure_date_time }}</td>
-                                                    <td>{{ $pnr->arrival_date_time }}</td>
-                                                    <td>{{ $pnr->duration }}</td>
+                                                        <td>{{ $pnr->flight_no }}</td>
+                                                        <td>{{ $pnr->air_craft }}</td>
+                                                        <td>{{ $pnr->class }}</td>
+                                                        <td>{{ $pnr->baggage }}</td>
+                                                        <td>{{ $pnr->departure->code }}</td>
+                                                        <td>{{ $pnr->arrival->code }}</td>
+                                                        <td>{{ $pnr->departure_date_time }}</td>
+                                                        <td>{{ $pnr->arrival_date_time }}</td>
+                                                        <td>{{ $pnr->duration }}</td>
 
-                                                    <td>
-                                                        <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
-                                                        <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
-                                                            {{ $pnr->total + $pnr->return_total }} EUR
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </td>
-                                </tr>
+                                                        <td>
+                                                            <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
+                                                            <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
+                                                                {{ $pnr->base_price }} EUR
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endif
-                        @endif
-                    @endforeach
+                        @endforeach
+                    @else
+                        @foreach($pnrs as $pair)
+                        @php
+                            $out = $pair['outbound'];
+                            $ret = $pair['return'];
+                        @endphp
+                            <tr>
+                                <td colspan="11" class="p-2 shoadow-master">
+                                    <div class="pnr-shadow-box">
+                                        <table class="w-100">
+                                            <tr>
+                                                <td>
+                                                    <img src="{{ $out->airline->logo 
+                                                        ? asset('storage/'.$out->airline->logo) 
+                                                        : asset('images/logo-placeholder.png') }}"
+                                                        class="rounded-circle border"
+                                                        style="width:25px;height:25px;object-fit:contain;">
+                                                    <hr>
+                                                    <img src="{{ $ret->airline->logo 
+                                                        ? asset('storage/'.$ret->airline->logo) 
+                                                        : asset('images/logo-placeholder.png') }}"
+                                                        class="rounded-circle border"
+                                                        style="width:25px;height:25px;object-fit:contain;">
+                                                </td>
+
+                                                <td>{{ $out->flight_no }}<hr>{{ $ret->flight_no }}</td>
+                                                <td>{{ $out->air_craft }}<hr>{{ $ret->air_craft }}</td>
+                                                <td>{{ $out->class }}<hr>{{ $ret->class }}</td>
+                                                <td>{{ $out->baggage }}<hr>{{ $ret->baggage }}</td>
+                                                <td>{{ $out->departure->code }}<hr>{{ $out->arrival->code }}</td>
+                                                <td>{{ $ret->departure->code }}<hr>{{ $ret->arrival->code }}</td>
+                                                <td>{{ $out->departure_date_time }}<hr>{{ $ret->departure_date_time }}</td>
+                                                <td>{{ $out->arrival_date_time }}<hr>{{ $ret->arrival_date_time }}</td>
+                                                <td class="text-center align-middle">
+                                                    <div class="fw-semibold">
+                                                        {{ $out->duration }}
+                                                    </div>
+                                                    <div class="fw-semibold">
+                                                        {{ $ret->duration }}
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    @php
+                                                        $availableSeats = min($out->seat_is_sale, $ret->seat_is_sale);
+                                                    @endphp
+
+                                                    <p class="mb-1">
+                                                        {{ $availableSeats }} seat available
+                                                    </p>
+                                                    <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $out->id }}, {{ $ret->id }})">
+                                                        {{ $out->base_price + $ret->base_price }} EUR
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+
+                    @endif
                     
                 </tbody>
             </table>
         </div>
 
         <!-- Footer / Pagination -->
-        {{ $pnrs->links() }}
         <!-- modal -->
         <div class="modal fade" id="searchPnrSeatModal" data-bs-backdrop="static" 
             data-bs-keyboard="false" tabindex="-1">
@@ -160,6 +222,7 @@
                             <p class="text-muted mb-4">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                                 <input type="hidden" readonly id="pnr_id" name="pnr_id">
+                                <input type="hidden" readonly id="return_pnr_id" name="return_pnr_id">
 
                             </p>
                             <div class="table-responsive">

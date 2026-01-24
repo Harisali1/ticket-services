@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->integer('pnr_id')->nullable();
+            $table->integer('return_pnr_id')->nullable();
             $table->string('booking_no')->nullable();
             $table->integer('paid_by')->nullable();
             $table->datetime('paid_at')->nullable();

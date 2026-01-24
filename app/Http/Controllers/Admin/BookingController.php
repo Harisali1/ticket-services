@@ -72,9 +72,12 @@ class BookingController extends Controller
 
     public function getPnrInfo(Request $request){
 
+        // dd($request->all());
         $seatSum = array_sum($request->seat);
         $fareDetails = [];
         $pnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->pnr_id);
+        $returnPnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->return_pnr_id);
+       
         $baseFare=0;
         $returnBaseFare=0;
         $taxes=0;
@@ -82,21 +85,30 @@ class BookingController extends Controller
         $totalAmount = 0;
         $totalBaseFareAmount=0;
         $totalTax=0;
+       
         foreach($request->passenger_type as $index => $typeId){
             $seatCount = (int) $request->seat[$index];
             $passenger = PassengerType::join('pnr_passengers', 'pnr_passengers.passenger_type_id', '=', 'passenger_types.id')
-            ->where('passenger_type_id', $typeId)->first();
+            ->where('passenger_type_id', $typeId)
+            ->where('pnr_id',$request->pnr_id)
+            ->first();
+
+            $returnPassenger = PassengerType::join('pnr_passengers', 'pnr_passengers.passenger_type_id', '=', 'passenger_types.id')
+            ->where('passenger_type_id', $typeId)
+            ->where('pnr_id',$request->return_pnr_id)
+            ->first();
 
             if (!$passenger) {
                 continue;
             }
 
             $baseFare = ($passenger->passenger_type_id == 1) ? $pnrBookings->base_price : $passenger->price;
-            $taxes = ($pnrBookings->pnr_type != 'one_way') ? 200 : 100;
+            $taxes = ($request->return_pnr_id != null) ? 200 : 100;
 
-            if($pnrBookings->pnr_type == 'return' || $pnrBookings->pnr_type == 'open_jaw'){
-                $rowTotal = ($baseFare + $pnrBookings->return_base_price) * $seatCount + $taxes;
-                $totalFareAmount = ($baseFare+$pnrBookings->return_base_price) * $seatCount;
+            if($request->return_pnr_id != null){
+                $returnBaseFare = ($returnPassenger->passenger_type_id == 1) ? $returnPnrBookings->base_price : $returnPassenger->price;
+                $rowTotal = ($baseFare + $returnBaseFare) * $seatCount + $taxes;
+                $totalFareAmount = ($baseFare+$returnBaseFare) * $seatCount;
             }else{
                 $rowTotal = $baseFare * $seatCount + $taxes;  
                 $totalFareAmount = $baseFare * $seatCount;
@@ -106,7 +118,7 @@ class BookingController extends Controller
                 'type_id'           => $passenger->passenger_type_id,
                 'title'             => $passenger->title,
                 'base_fare'         => $baseFare,
-                'return_base_fare'  => $pnrBookings->return_base_price, 
+                'return_base_fare'  => $pnrBookings->base_price, 
                 'tax'               => $taxes,
                 'seat'              => $seatCount,
                 'total_fare_amount' => $totalFareAmount,
@@ -124,11 +136,12 @@ class BookingController extends Controller
         $data['totalTax'] = $totalTax;
         $agency = Agency::where('user_id', auth()->user()->id)->first();
 
-        return view('Admin.booking.create-booking', compact('pnrBookings', 'data', 'fareDetails', 'seatSum', 'agency'));
+        return view('Admin.booking.create-booking', compact('pnrBookings', 'data', 'fareDetails', 'seatSum', 'agency','returnPnrBookings'));
     }
 
     public function checkSeatsAvailability(Request $request){
 
+        
         $seats = array_sum($request->seat);
         if($seats == 0){
             return response()->json([
@@ -139,6 +152,13 @@ class BookingController extends Controller
 
         $pnr = Pnr::find($request->pnr_id);
         $availableSeats = $pnr->seats()->where('is_sale', 1)->count();
+
+        if($request->return_pnr_id != null){
+            $returnPnr = Pnr::find($request->return_pnr_id);
+            $returnAvailableSeats = $returnPnr->seats()->where('is_sale', 1)->count();
+            $availableSeats = min($availableSeats, $returnAvailableSeats);
+        }
+
         if($availableSeats == 0){
             return response()->json([
                 'code' => 2,
@@ -161,16 +181,14 @@ class BookingController extends Controller
 
         DB::beginTransaction();
         try {
-            $bookingSeats = $request->booking_seats;
+            $bookingSeats = 0;
 
             foreach ($request->fareDetails as $type) {
-                if ((int)$type['type_id'] === 3) {
-                    $bookingSeats--;
-                    break; // sirf 1 infant pe 1 seat kam
-                }
+                $bookingSeats += $type['seat'];
             }
 
             $pnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->pnr_id);
+            $returnPnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->return_pnr_id);
             
             $seatIds = $pnrBookings->seats()
                         ->where('is_sale', 1)
@@ -183,9 +201,23 @@ class BookingController extends Controller
                 'is_reserved' => 1
             ]);
 
+            if($request->return_pnr_id != null){
+                $seatIds = $returnPnrBookings->seats()
+                            ->where('is_sale', 1)
+                            ->orderBy('id') // important
+                            ->limit($bookingSeats)
+                            ->pluck('id');
+
+                Seat::whereIn('id', $seatIds)->update([
+                    'is_sale' => 0,
+                    'is_reserved' => 1
+                ]);
+            }
+
             $bookingId = DB::table('bookings')->orderBy('id', 'desc')->value('id');
             $bookingData = [
                 'pnr_id' => $request->pnr_id,
+                'return_pnr_id' => ($request->return_pnr_id != null) ? $request->return_pnr_id : null, 
                 'booking_no' => 'BK-0000'.$bookingId,
                 'seats' => $bookingSeats,
                 'price' => $request->total_fare,
@@ -224,14 +256,13 @@ class BookingController extends Controller
             }
 
             foreach($request->fareDetails as $type){
-                if($type['type_id'] != 3){
-                    BookingPassenger::create([
-                        'pnr_id' => $request->pnr_id,
-                        'booking_id' => $booking->id,
-                        'passenger_type_id' => $type['type_id'],
-                        'seat' => $type['seat'],
-                    ]);
-                }
+                BookingPassenger::create([
+                    'pnr_id' => $request->pnr_id,
+                    'return_pnr_id' => $request->return_pnr_id,
+                    'booking_id' => $booking->id,
+                    'passenger_type_id' => $type['type_id'],
+                    'seat' => $type['seat'],
+                ]);
             }
             
             DB::commit();

@@ -246,7 +246,7 @@
 
     </div>
 
-    @if($pnrBookings->pnr_type == 'return')
+    @if($returnPnrBookings != null)
         <!-- INBOUND -->
         <div>
             <h6 class="text-primary fw-bold mb-3">INBOUND</h6>
@@ -259,8 +259,8 @@
 
                         <!-- Airline -->
                         <div class="col-md-1 text-center">
-                            <img src="{{ $pnrBookings->airline->logo 
-                                            ? asset('storage/'.$pnrBookings->airline->logo) 
+                            <img src="{{ $returnPnrBookings->airline->logo 
+                                            ? asset('storage/'.$returnPnrBookings->airline->logo) 
                                             : asset('images/logo-placeholder.png') }}"
                                             alt="logo"
                                             class="rounded-circle border"
@@ -271,25 +271,25 @@
                         <div class="col-md-3">
                             <p class="mb-1">
                                 <small class="text-muted">From:</small><br>
-                                <strong>{{ $pnrBookings->return_departure_date_time }}</strong>
+                                <strong>{{ $returnPnrBookings->departure_date_time }}</strong>
                             </p>
                             <p class="mb-0">
                                 <small class="text-muted">To:</small><br>
-                                <strong>{{ $pnrBookings->return_arrival_date_time }}</strong>
+                                <strong>{{ $returnPnrBookings->arrival_date_time }}</strong>
                             </p>
                         </div>
 
                         <!-- Airports -->
                         <div class="col-md-1 text-center fw-bold fs-5 airport-code">
-                            {{ $pnrBookings->return_departure->code }}
+                            {{ $returnPnrBookings->departure->code }}
                         </div>
                         <div class="col-md-1 text-center fw-bold fs-5 airport-code">
-                            {{ $pnrBookings->return_arrival->code }}
+                            {{ $returnPnrBookings->arrival->code }}
                         </div>
 
                         <div class="col-md-2 text-center">
                             <small class="text-muted">Duration</small><br>
-                            <strong>{{ $pnrBookings->return_duration }}</strong>
+                            <strong>{{ $returnPnrBookings->duration }}</strong>
                         </div>
 
                         
@@ -297,18 +297,18 @@
                         <!-- Aircraft -->
                         <div class="col-md-2 text-center">
                             <small class="text-muted">Airplane</small><br>
-                            <strong>{{ $pnrBookings->air_craft }}</strong>
+                            <strong>{{ $returnPnrBookings->air_craft }}</strong>
                         </div>
 
                         <!-- Flight Info -->
                         <div class="col-md-2">
                             <p class="mb-1">
                                 <small class="text-muted">Num.:</small>
-                                <strong>{{ $pnrBookings->flight_no }}</strong>
+                                <strong>{{ $returnPnrBookings->flight_no }}</strong>
                             </p>
                             <p class="mb-0">
                                 <small class="text-muted">Class:</small>
-                                <strong>{{ $pnrBookings->class }}</strong>
+                                <strong>{{ $returnPnrBookings->class }}</strong>
                             </p>
                         </div>
 
@@ -320,6 +320,7 @@
     @endif
 
     <input type="hidden" id="pnr_id" name="pnr_id" value="{{ $data['pnr_id'] }}">
+    <input type="hidden" id="return_pnr_id" name="return_pnr_id" value="{{ $data['return_pnr_id'] }}">
     <input type="hidden" id="booking_seats" name="booking_seats" value="{{ $seatSum }}">
     <input type="hidden" id="total_fare" name="total_fare" value="{{ $data['totalBaseFareAmount'] }}">
     <input type="hidden" id="total_tax" name="total_tax" value="{{ $data['totalTax'] }}">
@@ -396,8 +397,11 @@
                         {{ number_format($fare['row_total'], 0) }}
                     </td>
                 </tr>
+@if($fare['type_id'] != 3)
                 <input type="hidden" name="fareDetails[{{ $index }}][type_id]" value="{{ $fare['type_id'] }}">
+                
                 <input type="hidden" name="fareDetails[{{ $index }}][seat]" value="{{ $fare['seat'] }}">
+                @endif
             @endforeach
         </tbody>
     </table>

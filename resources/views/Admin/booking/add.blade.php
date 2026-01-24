@@ -67,8 +67,8 @@
                 </label>
 
                 <label class="type-style">
-                    <input type="radio" name="trip_type" value="open_jaw"
-                        {{ request('trip_type') === 'open_jaw' ? 'checked' : '' }}>
+                    <input type="radio" name="trip_type" value="return"
+                        {{ request('trip_type') === 'return' ? 'checked' : '' }}>
                     Open Jaw
                 </label>
             </div>
@@ -147,6 +147,7 @@
                            class="form-control"
                            name="return_departure_date"
                            id="return_departure_date"
+                           min="{{ date('Y-m-d') }}"
                            value="{{ old('return_departure_date', request('return_departure_date')) }}">
                 </div>
 
@@ -207,7 +208,7 @@
         function toggleReturnFields() {
             const tripType = $('input[name="trip_type"]:checked').val();
 
-            if (tripType === 'return' || tripType === 'open_jaw') {
+            if (tripType === 'return') {
                 $('#return-fields').removeClass('d-none');
             } else {
                 $('#return-fields').addClass('d-none');
@@ -289,9 +290,12 @@
         });
     });
 
-    function selectPNRBooking(id){
+    function selectPNRBooking(id, returnId= null){
+        // alert(id);
+        // alert(returnId)
         let modal = new bootstrap.Modal(document.getElementById('searchPnrSeatModal'));
         document.getElementById('pnr_id').value = id;
+        document.getElementById('return_pnr_id').value = returnId;
         modal.show();
     }
 
