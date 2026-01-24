@@ -165,8 +165,8 @@
                     ✈ {{ $booking['pnr']['airline']['name'] }} ({{ $booking['pnr']['airline']['code'] }}) – 
                     Flight {{ $booking['pnr']['flight_no'] }} – {{ \Carbon\Carbon::parse($booking['pnr']['departure_date'])->format('d F Y') }}
                 @else
-                    ✈ {{ $booking['pnr']['return_airline']['name'] }} ({{ $booking['pnr']['return_airline']['code'] }}) – 
-                    Flight {{ $booking['pnr']['return_flight_no'] }} – {{ \Carbon\Carbon::parse($booking['pnr']['return_departure_date'])->format('d F Y') }}
+                    ✈ {{ $booking['return_pnr']['airline']['name'] }} ({{ $booking['return_pnr']['airline']['code'] }}) – 
+                    Flight {{ $booking['return_pnr']['flight_no'] }} – {{ \Carbon\Carbon::parse($booking['return_pnr']['departure_date'])->format('d F Y') }}
                 @endif
             </div>
 
@@ -180,8 +180,8 @@
                             <strong>{{ \Carbon\Carbon::parse($booking['pnr']['departure_time'])->format('H:i') }}</strong>
                         @else
                             <div class="label">Departure</div>
-                            {{ $booking['pnr']['return_departure']['name'] }}<br>
-                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['return_departure_time'])->format('H:i') }}</strong>
+                            {{ $booking['return_pnr']['departure']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['return_pnr']['departure_time'])->format('H:i') }}</strong>
                         @endif
                     </td>
 
@@ -210,8 +210,8 @@
                             <strong>{{ \Carbon\Carbon::parse($booking['pnr']['arrival_time'])->format('H:i') }}</strong>
                         @else
                             <div class="label">Arrival</div>
-                            {{ $booking['pnr']['return_arrival']['name'] }}<br>
-                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['return_arrival_time'])->format('H:i') }}</strong>
+                            {{ $booking['return_pnr']['arrival']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['return_pnr']['arrival_time'])->format('H:i') }}</strong>
                         @endif
                     </td>
                 </tr>

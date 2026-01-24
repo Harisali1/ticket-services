@@ -1,4 +1,4 @@
-<div class="container my-4">
+<div class="container my-5">
     <h5 class="mb-3 fw-semibold">Available PNR’s</h5>
 
     <div class="card">

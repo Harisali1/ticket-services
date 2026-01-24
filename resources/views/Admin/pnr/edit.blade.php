@@ -18,7 +18,7 @@
 @endsection
 
 @section('content')
-<div class="container">
+<div class="container py-5">
     <!-- Top Bar -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center gap-2">
@@ -32,7 +32,7 @@
             <!-- PNR & Flight Info -->
             <h5 class="mb-3">PNR & Flight Info</h5>
             <div class="row g-3">
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <label class="form-label text-muted">PNR Type</label>
                     <select class="form-select select2" id="pnr_type" name="pnr_type">
                         <option value="">Please Select Type</option>
@@ -40,7 +40,7 @@
                         <option value="return" {{ (old('pnr_type', $pnr->pnr_type ?? '') == 'return') ? 'selected' : '' }}>Return</option>
                         <option value="open_jaw" {{ (old('pnr_type', $pnr->pnr_type ?? '') == 'open_jaw') ? 'selected' : '' }}>Open Jaw</option>
                     </select>
-                </div>
+                </div> -->
 
                 <div class="col-md-3">
                     <label class="form-label text-muted">Flight No</label>
@@ -378,9 +378,8 @@
     document.getElementById("pnr-edit-form").addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const isReturn = document.getElementById("pnr_type").value === 'return';
+        // const isReturn = document.getElementById("pnr_type").value === 'return';
         const fields = {
-            pnr_type: {value: document.getElementById("pnr_type").value, message: "PNR Type is required"},
             flight_no: {value: document.getElementById("flight_no").value, message: "Flight number is required"},
             departure_id: {value: document.getElementById("departure_id").value, message: "Please select departure"},
             arrival_id: {value: document.getElementById("arrival_id").value, message: "Please select arrival"},
@@ -409,26 +408,26 @@
         /* --------------------
         RETURN PNR VALIDATION
         -------------------- */
-        if (isReturn) {
-            const returnFields = {
-                return_departure_id: {value: document.getElementById("return_departure_id").value,message: "Return departure is required"},
-                return_arrival_id: {value: document.getElementById("return_arrival_id").value,message: "Return arrival is required"},
-                return_airline_id: {value: document.getElementById("return_airline_id").value,message: "Return airline is required"},
-                return_departure_date: {value: document.querySelector('[name="return_departure_date"]').value,message: "Return departure date is required"},
-                return_departure_time_hour: {value: document.querySelector('[name="return_departure_time_hour"]').value,message: "Return departure time is required"},
-                return_departure_time_minute: {value: document.querySelector('[name="return_departure_time_minute"]').value,message: "Return departure time is required"},
-                return_arrival_date: {value: document.querySelector('[name="return_arrival_date"]').value,message: "Return arrival date is required"},
-                return_arrival_time_hour: {value: document.querySelector('[name="return_arrival_time_hour"]').value,message: "Return arrival time is required"},
-                return_arrival_time_minute: {value: document.querySelector('[name="return_arrival_time_minute"]').value,message: "Return arrival time is required"}
-            };
+        // if (isReturn) {
+        //     const returnFields = {
+        //         return_departure_id: {value: document.getElementById("return_departure_id").value,message: "Return departure is required"},
+        //         return_arrival_id: {value: document.getElementById("return_arrival_id").value,message: "Return arrival is required"},
+        //         return_airline_id: {value: document.getElementById("return_airline_id").value,message: "Return airline is required"},
+        //         return_departure_date: {value: document.querySelector('[name="return_departure_date"]').value,message: "Return departure date is required"},
+        //         return_departure_time_hour: {value: document.querySelector('[name="return_departure_time_hour"]').value,message: "Return departure time is required"},
+        //         return_departure_time_minute: {value: document.querySelector('[name="return_departure_time_minute"]').value,message: "Return departure time is required"},
+        //         return_arrival_date: {value: document.querySelector('[name="return_arrival_date"]').value,message: "Return arrival date is required"},
+        //         return_arrival_time_hour: {value: document.querySelector('[name="return_arrival_time_hour"]').value,message: "Return arrival time is required"},
+        //         return_arrival_time_minute: {value: document.querySelector('[name="return_arrival_time_minute"]').value,message: "Return arrival time is required"}
+        //     };
 
-            for (const key in returnFields) {
-                if (!returnFields[key].value) {
-                    showError(returnFields[key].message);
-                    return;
-                }
-            }
-        }
+        //     for (const key in returnFields) {
+        //         if (!returnFields[key].value) {
+        //             showError(returnFields[key].message);
+        //             return;
+        //         }
+        //     }
+        // }
 
         const passengerPrices = document.querySelectorAll('.passenger-price');
 

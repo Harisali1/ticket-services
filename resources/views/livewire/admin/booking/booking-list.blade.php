@@ -1,4 +1,4 @@
-<div class="container py-4">
+<div class="container py-5">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h4">Booking List</h1>
@@ -131,11 +131,11 @@
                         <td>
                             
                             @if($booking->status->label() === 'Created')
-                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}" class="b-action-btn btn btn-sm btn-info">
+                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-info">
                                     PNR
                                 </a>
                             @elseif($booking->status->label() === 'Ticketed')
-                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}" class="b-action-btn btn btn-sm btn-secondary">
+                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-secondary">
                                     TKT
                                 </a>
                                 @if(($bookingDate == $today && $now->hour >= 0))
@@ -144,7 +144,7 @@
                                     </button>
                                 @endif
                             @elseif($booking->status->label() === 'Paid')
-                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id]) }}" class="b-action-btn btn btn-sm btn-success">
+                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-success">
                                         Paid
                                 </a>
                             @elseif($booking->status->label() === 'Cancel')

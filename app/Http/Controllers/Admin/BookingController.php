@@ -269,7 +269,8 @@ class BookingController extends Controller
 
             return redirect()->route('admin.booking.details',[
                 'booking' => $booking->id,
-                'pnr' => $request->pnr_id
+                'pnr' => $request->pnr_id,
+                'id' => $booking->return_pnr_id ?? 0
             ])->with('success', 'Booking created successfully.');
 
         } catch (\Exception $e) {
@@ -286,7 +287,7 @@ class BookingController extends Controller
 
     public function itineraryPrint($bookingId){
         
-        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
+        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.airline', 'return_pnr.departure', 'return_pnr.arrival',  'return_pnr.airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
         ->get(['customers.name', 'customers.phone_no', 'customers.dob']);
@@ -297,9 +298,9 @@ class BookingController extends Controller
         return $pdf->stream('my-pdf.pdf');
     }
 
-    public function bookingDetails($bookingId, $pnrId){
+    public function bookingDetails($bookingId, $pnrId, $returnPnrId){
 
-        $booking = Booking::with('pnr', 'pnr.airline')->find($bookingId);
+        $booking = Booking::with('pnr', 'pnr.airline', 'return_pnr', 'return_pnr.airline')->find($bookingId);
         $customers = Customer::where('booking_id', $bookingId)->get();
         $pnr = Pnr::find($pnrId);
         $fareRules = FareRule::all();
@@ -307,90 +308,114 @@ class BookingController extends Controller
     }
 
     public function ticketedBooking(Request $request){
+        $user = auth()->user();
 
-        $booking = Booking::with('pnr', 'pnr.airline', 'pnr.return_airline')->find($request->id);
-        $customers = Customer::where('booking_id', $request->id)->get();
-        $pnr = Pnr::find($booking->pnr_id);
-        $fareRules = FareRule::all();
-        $status=0;
+        // 🔹 Limit check (only on ticket)
+        if ($request->status === 'ticket') {
 
-        $updateData = [];
-        $airlinePrefix=0;
-        
-        if($booking->pnr->pnr_type != 'one_way'){
-            $departureAirlinePrefix = $booking->pnr->airline->awb_prefix;
-            $arrivalAirlinePrefix = $booking->pnr->return_airline->awb_prefix;
+            $paymentAmount = Booking::where('created_by', $user->id)
+                ->where('is_approved', 0)
+                ->whereIn('status', [2, 3])
+                ->sum('total_amount');
 
-            $departureTicketNumber = $departureAirlinePrefix . mt_rand(1000000000, 9999999999);
-            $arrivalTicketNumber = $arrivalAirlinePrefix . mt_rand(1000000000, 9999999999);
+            if ($user->user_type_id != 1) {
+                $agency = Agency::where('user_id', $user->id)->first();
 
-            if($request->status == 'ticket'){
-                $status=2;
-                $updateData = [
-                    'status' => 2,
-                    'dept_ticket_no' =>  $departureTicketNumber,
-                    'arr_ticket_no' => $arrivalTicketNumber,
-                ];
-            }
-        }else{
-            $departureAirlinePrefix = $booking->pnr->airline->awb_prefix;
-            $departureTicketNumber = $departureAirlinePrefix . mt_rand(1000000000, 9999999999);
-            if($request->status == 'ticket'){
-                $status=2;
-                $updateData = [
-                    'status' => 2,
-                    'dept_ticket_no' =>  $departureTicketNumber,
-                ];
-            }
-        }
-
-        if($request->status == 'cancel'){
-            $status=5;
-            $updateData = [
-                'status' => 5
-            ]; 
-        }
-
-        if($status == 2){
-            $paymentAmount = Booking::where('created_by', auth()->user()->id)
-            ->where('is_approved', 0)
-            ->whereIn('status', [2,3])
-            ->sum('total_amount');
-
-            $agency = Agency::where('user_id', auth()->user()->id)->first();
-
-            
-            if(auth()->user()->user_type_id != 1){
-                if($paymentAmount > $agency->limit){
+                if ($paymentAmount > $agency->limit) {
                     return response()->json([
                         'code' => 2,
-                        'message' => 'Your payable amount is exceed your limit',
-                    ], 201); 
+                        'message' => 'Your payable amount exceeds your limit',
+                    ], 201);
                 }
             }
         }
 
-        Booking::where('id', $request->id)->update($updateData);
-        
+        DB::beginTransaction();
+
+        try {
+
+            $booking = Booking::with('pnr', 'pnr.airline', 'return_pnr', 'return_pnr.airline')
+                ->findOrFail($request->id);
+
+            $customers  = Customer::where('booking_id', $booking->id)->get();
+            $fareRules  = FareRule::all();
+
+            $updateData = [];
+
+            // 🔹 Handle Ticket / Cancel
+            if (in_array($request->status, ['ticket', 'cancel'])) {
+
+                $statusValue = $request->status === 'ticket' ? 2 : 5;
+
+                $updateData['status'] = $statusValue;
+
+                // 🔹 Departure PNR
+                $this->updateSeats(
+                    $booking->pnr,
+                    $booking->seats,
+                    $request->status
+                );
+
+                if ($request->status === 'ticket') {
+                    $updateData['dept_ticket_no'] = '055' . mt_rand(1000000000, 9999999999);
+                }
+
+                // 🔹 Return PNR (if exists)
+                if ($booking->return_pnr_id) {
+
+                    $this->updateSeats(
+                        $booking->return_pnr,
+                        $booking->seats,
+                        $request->status
+                    );
+
+                    if ($request->status === 'ticket') {
+                        $updateData['arr_ticket_no'] = '055' . mt_rand(1000000000, 9999999999);
+                    }
+                }
+            }
+
+            Booking::where('id', $booking->id)->update($updateData);
+
+            DB::commit();
+
+            return view('Admin.booking.detail-booking', compact(
+                'booking',
+                'fareRules',
+                'customers'
+            ));
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function updateSeats($pnr, $seatCount, $action){
         $seatIds = $pnr->seats()
-                        ->where('is_reserved', 1)
-                        ->orderBy('id') // important
-                        ->limit((int)$booking->seats)
-                        ->pluck('id');
+            ->where('is_reserved', 1)
+            ->orderBy('id')
+            ->limit((int) $seatCount)
+            ->pluck('id');
 
-        Seat::whereIn('id', $seatIds)->update([
-            'is_reserved' => 0,
-            'is_sold' => 1
-        ]);
-        
-        return view('Admin.booking.detail-booking', compact('booking', 'pnr', 'fareRules', 'customers'));
+        $data = match ($action) {
+            'ticket' => ['is_reserved' => 0, 'is_sold' => 1],
+            'cancel' => ['is_reserved' => 0, 'is_sale' => 1],
+        };
 
+        Seat::whereIn('id', $seatIds)->update($data);
     }
 
     public function printTicketed($bookingId,$type){
 
         $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.middle_arrival', 
-        'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
+        'return_pnr.departure', 'return_pnr.arrival', 'pnr.airline', 'return_pnr.airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
         ->get(['customers.name', 'customers.phone_no', 'customers.dob', 'customers.surname']);
@@ -405,11 +430,13 @@ class BookingController extends Controller
 
     public function sendEmailTicketed($bookingId,$type){
 
-        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.return_departure', 'pnr.return_arrival', 'pnr.airline', 'pnr.return_airline', 'user')->find($bookingId);
+        $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.middle_arrival', 
+        'return_pnr.departure', 'return_pnr.arrival', 'pnr.airline', 'return_pnr.airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
-        ->get(['customers.name', 'customers.phone_no', 'customers.dob', 'customers.email']);
+        ->get(['customers.name', 'customers.phone_no', 'customers.dob', 'customers.email', 'customers.surname']);
         $response['type'] = $type;
+        $response['agency'] = Agency::with('user')->where('user_id', $bookingData->created_by)->first();
 
         $pdf = PDF::loadView('Admin/print/ticketed', $response);
         $pdf->setPaper('A4', 'portrait');
@@ -422,7 +449,8 @@ class BookingController extends Controller
 
         return redirect()->route('admin.booking.details',[
                 'booking' => $bookingData->id,
-                'pnr' => $bookingData->pnr_id
+                'pnr' => $bookingData->pnr_id,
+                'id' => $bookingData->return_pnr_id
             ])->with('success', 'email send successfully.');        
     }
 
@@ -457,6 +485,19 @@ class BookingController extends Controller
                 'status' => 4
             ]);
             
+            if($booking->return_pnr_id != null){
+                $seats = Seat::where('pnr_id', $booking->return_pnr_id)
+                                ->where('is_sold', 1)
+                                ->orderBy('id', 'DESC')
+                                ->limit((int)$seatLimit)
+                                ->pluck('id');
+
+                Seat::whereIn('id', $seats)->update([
+                    'is_sold' => 0,
+                    'is_sale' => 1
+                ]);
+            }
+
             $seats = Seat::where('pnr_id', $booking->pnr_id)
                             ->where('is_sold', 1)
                             ->orderBy('id', 'DESC')
@@ -491,10 +532,22 @@ class BookingController extends Controller
 
         $booking = Booking::find($id);
         $pnr = Pnr::find($booking->pnr_id);
+
+        $baseFare=$pnr->base_price;
+        $tax=$pnr->tax;
+        $total=$pnr->total;
+
+        if($booking->return_pnr_id != null){
+            $returnPnr = Pnr::find($booking->return_pnr_id);
+            $baseFare+=$returnPnr->base_price;
+            $tax+=$returnPnr->tax;
+            $total+=$returnPnr->total;
+        }
+
         Booking::find($id)->update([
-            'price' => $pnr->base_price,
-            'tax' => $pnr->tax,
-            'total_amount' => $pnr->total,
+            'price' => $baseFare,
+            'tax' => $tax,
+            'total_amount' => $total,
         ]);
         
         return response()->json([

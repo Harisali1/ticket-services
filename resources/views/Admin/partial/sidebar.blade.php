@@ -1,4 +1,4 @@
-<div class="d-flex">
+<div class="d-flex sidebar-position">
 
     <!-- Sidebar -->
     <aside id="sidebar" class="bg-dark text-white expanded d-flex flex-column p-3">
@@ -23,17 +23,17 @@
 
                 <a href="{{ route('admin.agency.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-building me-3"></i>
-                    <span class="menu-text">Manage Agencies</span>
+                    <span class="menu-text">{{ __('messages.manage_agencies') }}</span>
                 </a>
 
                 <a href="{{ route('admin.airline.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-plane me-3"></i>
-                    <span class="menu-text">Manage Airline</span>
+                    <span class="menu-text">{{ __('messages.manage_airline') }}</span>
                 </a>
 
                 <a href="{{ route('admin.airport.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-plane me-3"></i>
-                    <span class="menu-text">Manage Airport</span>
+                    <span class="menu-text">{{ __('messages.manage_airport') }}</span>
                 </a>
 
 
@@ -65,10 +65,6 @@
                 <a href="{{ route('admin.notification.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">Notification</span>
-                </a>
-                <a href="{{ route('admin.role.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
-                    <i class="fa fa-money me-3"></i>
-                    <span class="menu-text">Role</span>
                 </a>
             </nav>
         @endif

@@ -21,6 +21,10 @@ class Booking extends Model
         return $this->belongsTo(Pnr::class);
     }
 
+    public function return_pnr(){
+        return $this->belongsTo(Pnr::class, 'return_pnr_id', 'id');
+    }
+
     public function customers(){
         return $this->hasMany(Customer::class);
     }

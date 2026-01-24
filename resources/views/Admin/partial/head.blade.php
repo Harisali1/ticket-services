@@ -56,11 +56,19 @@
       border: none !important;
     }
 
-    .page-footer {
-        background: #f8f9fa;
+    .fixed-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;        /* footer background */
+        padding: 10px 0;
         border-top: 1px solid #ddd;
-        padding: 12px 0;
-        font-size: 14px;
+        z-index: 999;
+    }
+
+    .sidebar-position{
+        z-index: 9999;
     }
 
     .notification-img {
@@ -75,6 +83,14 @@
         transform: scale(1.05);
         transition: 0.2s;
     }
+    .navbar .dropdown-menu {
+        border-radius: 12px;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
 
 
 </style>

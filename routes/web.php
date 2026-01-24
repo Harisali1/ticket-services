@@ -103,7 +103,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/create', [App\Http\Controllers\Admin\BookingController::class, 'getPnrInfo'])->name('admin.booking.pnr.info');
             Route::post('/check_seats_availablity', [App\Http\Controllers\Admin\BookingController::class, 'checkSeatsAvailability'])->name('admin.booking.seats.availability');
             Route::post('/booking_submit', [App\Http\Controllers\Admin\BookingController::class, 'bookingSubmit'])->name('admin.booking.submit');
-            Route::get('/details/{booking}/pnr/{pnr}',[App\Http\Controllers\Admin\BookingController::class, 'bookingDetails'])->name('admin.booking.details');
+            Route::get('/details/{booking}/pnr/{pnr}/return_pnr/{id}',[App\Http\Controllers\Admin\BookingController::class, 'bookingDetails'])->name('admin.booking.details');
             Route::get('/print/itinerary/booking/{booking}/', [App\Http\Controllers\Admin\BookingController::class, 'itineraryPrint'])->name('admin.booking.print.itinerary');
             Route::get('/ticketed', [App\Http\Controllers\Admin\BookingController::class, 'ticketedBooking'])->name('admin.booking.ticketed');
             Route::get('/print/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'printTicketed'])->name('admin.booking.print.ticketed');

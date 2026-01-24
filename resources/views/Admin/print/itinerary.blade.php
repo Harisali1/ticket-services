@@ -123,15 +123,20 @@
     <div class="header">
         <div class="route">
             ({{ $booking['pnr']['departure']['code'] }}) → ({{ (isset($booking['pnr']['middle_arrival'])) ? $booking['pnr']['middle_arrival']['code'] : $booking['pnr']['arrival']['code']}}) 
+            @if(isset($booking['return_pnr']['arrival']))
+                → ({{ $booking['return_pnr']['arrival']['code'] }})
+            @endif
             
             {{ (isset($booking['pnr']['return_arrival'])) ? '→ ('.$booking['pnr']['return_arrival']['code'].')' : ''}}
         </div>
 
-        <div class="reservation-box">
+        <div class="reservation-box pl-2">
             <strong>Reservation Number:</strong> {{ $booking['booking_no'] }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
-            <strong>Reservation Date:</strong> {{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y H:i') }}
+            <strong>Reservation Date:</strong> {{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y H:i') }}<br>
+            <strong>Electronic Ticket No #</strong> {{ $booking['dept_ticket_no'] }} &nbsp;&nbsp;|&nbsp;&nbsp; {{ $booking['arr_ticket_no'] }}
         </div>
+        
     </div>
 
     <!-- AGENCY -->
@@ -197,11 +202,11 @@
     </div>
 
     <!-- RETURN -->
-     @if($booking['pnr']['pnr_type'] == 'return')
-    <div class="section-title">Flight Details – {{ \Illuminate\Support\Str::camel($booking['pnr']['pnr_type']) }}</div>
+     @if($booking['return_pnr_id'] != null)
+    <div class="section-title">Flight Details – Return </div>
     <div class="flight-box">
         <div class="flight-header">
-            {{ $booking['pnr']['return_airline']['name'] }} ({{ $booking['pnr']['return_airline']['code'] }}) – Flight {{ $booking['pnr']['flight_no'] }} – {{ \Carbon\Carbon::parse($booking['pnr']['return_departure_date'])->format('d F Y') }}
+            {{ $booking['return_pnr']['airline']['name'] }} ({{ $booking['return_pnr']['airline']['code'] }}) – Flight {{ $booking['return_pnr']['flight_no'] }} – {{ \Carbon\Carbon::parse($booking['return_pnr']['departure_date'])->format('d F Y') }}
             <!-- <span class="right">Operated by ITA</span> -->
         </div>
         <div class="clearfix"></div>
@@ -209,21 +214,21 @@
         <table class="small-text">
             <tr>
                 <td><strong>Class:</strong> Economy</td>
-                <td><strong>Fare Class:</strong> {{ $booking['pnr']['class'] }}</td>
+                <td><strong>Fare Class:</strong> {{ $booking['return_pnr']['class'] }}</td>
             </tr>
             <tr>
-                <td colspan="2"><strong>Baggage:</strong> ADT – {{ $booking['pnr']['baggage'] }}</td>
+                <td colspan="2"><strong>Baggage:</strong> {{ $booking['return_pnr']['baggage'] }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     <strong>Departure:</strong><br>
-                    {{ $booking['pnr']['return_departure_time'] }} – {{ $booking['pnr']['return_departure']['name'] }} ({{ $booking['pnr']['return_departure']['code'] }}) – {{ $booking['pnr']['return_departure']['country'] }}
+                    {{ $booking['return_pnr']['departure_time'] }} – {{ $booking['return_pnr']['departure']['name'] }} ({{ $booking['return_pnr']['departure']['code'] }}) – {{ $booking['return_pnr']['departure']['country'] }}
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
                     <strong>Arrival:</strong><br>
-                    {{ $booking['pnr']['return_arrival_time'] }} – {{ $booking['pnr']['return_arrival']['name'] }} ({{ $booking['pnr']['return_arrival']['code'] }}) – {{ $booking['pnr']['return_arrival']['country'] }}
+                    {{ $booking['return_pnr']['arrival_time'] }} – {{ $booking['return_pnr']['arrival']['name'] }} ({{ $booking['return_pnr']['arrival']['code'] }}) – {{ $booking['return_pnr']['arrival']['country'] }}
                 </td>
             </tr>
         </table>

@@ -111,8 +111,10 @@
                 <div class="col-md-3"></div>
                 <div class="col-md-3"></div>
                 <div class="col-md-3"></div>
-                @if($booking->status->label() === 'Ticketed')
-                    <div class="col-md-3 text-success fw-bold fs-5"><button class="btn btn-success btn-sm" onclick="reQuotePrice({{ $booking->id }})">Requote</button></div> 
+                @if(Auth::user()->can('requote'))
+                    @if($booking->status->label() === 'Created')
+                        <div class="col-md-3 text-success fw-bold fs-5"><button class="btn btn-success btn-sm" onclick="reQuotePrice({{ $booking->id }})">Requote</button></div> 
+                    @endif
                 @endif
             </div>
 
@@ -141,7 +143,7 @@
                     
                 </div>
                 
-                @if($booking->pnr->pnr_type != 'one_way')
+                @if($booking->return_pnr_id != null)
                     <!-- Row 2 -->
                     <div class="row align-items-center mb-3">
                         <div class="col-md-6">
@@ -316,7 +318,7 @@
 
     </div>
 
-    @if($booking->pnr->pnr_type == 'return')
+    @if($booking->return_pnr_id != '')
         <!-- INBOUND -->
         <div class="p-4">
             <h6 class="text-primary fw-bold">INBOUND</h6>
@@ -325,8 +327,8 @@
                     <div class="row align-items-center">
                         <!-- Airline -->
                         <div class="col-md-1 text-center">
-                            <img src="{{ $booking->pnr->airline->logo 
-                            ? asset('storage/'.$booking->pnr->airline->logo) 
+                            <img src="{{ $booking->return_pnr->airline->logo 
+                            ? asset('storage/'.$booking->return_pnr->airline->logo) 
                                 : asset('images/logo-placeholder.png') }}"
                                 alt="logo"
                                 class="rounded-circle border"
@@ -337,25 +339,25 @@
                         <div class="col-md-2">
                             <p class="mb-1">
                                 <small class="text-muted">From:</small><br>
-                                <strong>{{ $booking->pnr->return_departure_date_time }}</strong>
+                                <strong>{{ $booking->return_pnr->departure_date_time }}</strong>
                             </p>
                             <p class="mb-0">
                                 <small class="text-muted">To:</small><br>
-                                <strong>{{ $booking->pnr->return_arrival_date_time }}</strong>
+                                <strong>{{ $booking->return_pnr->arrival_date_time }}</strong>
                             </p>
                         </div>
 
                         <!-- Airports -->
                         <div class="col-md-1 text-center fw-bold fs-5">
-                            FSS
+                             {{ $booking->return_pnr->departure->code}}
                         </div>
                         <div class="col-md-1 text-center fw-bold fs-5">
-                            DSS
+                             {{ $booking->return_pnr->arrival->code}}
                         </div>
 
                         <div class="col-md-2 text-center">
                             <small class="text-muted">Duration</small><br>
-                            <strong>{{ $booking->pnr->return_duration }}</strong>
+                            <strong>{{ $booking->return_pnr->duration }}</strong>
                         </div>
 
                         
@@ -363,18 +365,18 @@
                         <!-- Aircraft -->
                         <div class="col-md-2 text-center">
                             <small class="text-muted">Airplane</small><br>
-                            <strong>{{ $booking->pnr->air_craft }}</strong>
+                            <strong>{{ $booking->return_pnr->air_craft }}</strong>
                         </div>
 
                         <!-- Flight Info -->
                         <div class="col-md-2">
                             <p class="mb-1">
                                 <small class="text-muted">Num.:</small>
-                                <strong>{{ $booking->pnr->flight_no }}</strong>
+                                <strong>{{ $booking->return_pnr->flight_no }}</strong>
                             </p>
                             <p class="mb-0">
                                 <small class="text-muted">Class:</small>
-                                <strong>{{ $booking->pnr->class }}</strong>
+                                <strong>{{ $booking->return_pnr->class }}</strong>
                             </p>
                         </div>
 
@@ -399,11 +401,13 @@
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     Passenger {{ $index + 1 }} (ADT)
 
+                    @if(Auth::user()->can('edit_passengers'))
                     <button type="button"
                         class="btn btn-success btn-sm edit-btn"
                         data-target="passenger-{{ $index }}">
                         Edit Passenger Data
                     </button>
+                    @endif
                 </div>
 
                 <div class="card-body passenger-{{ $index }}">

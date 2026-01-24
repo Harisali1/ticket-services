@@ -92,7 +92,7 @@
 
 @section('content')
 
-<div class="container px-4 py-3">
+<div class="container px-4 py-5">
   <!-- ================= HEADER ================= -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <div class="d-flex align-items-center gap-2">
@@ -108,7 +108,7 @@
 
   <hr>
 
-  <form id="bookingForm" method="POST" action="{{ route('admin.booking.submit') }}">
+  <form id="bookingForm" method="POST" action="{{ route('admin.booking.submit') }}" class="py-5">
     <!-- PNR Details -->
      @csrf()
     <h3 class="fw-semibold mb-3 pnr-detail">PNR Details:</h3>
