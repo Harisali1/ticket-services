@@ -20,12 +20,7 @@
         <div class="d-flex align-items-center ms-3">
             <span class="text-muted small me-2">Balance</span>
             <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">
-                @php
-                    $remainingBalance = Auth::user()->remaining_balance;
-                    $partialBalance = Auth::user()->partial_balance;
-                    $finalAmount = $remainingBalance - $partialBalance;
-                @endphp
-                {{ number_format($finalAmount) }}
+                {{ number_format(auth()->user()->remaining_amount+auth()->user()->on_approval_amount) }}/= EUR
             </span>
         </div>
     @endif

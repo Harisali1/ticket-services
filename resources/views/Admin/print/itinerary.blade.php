@@ -161,7 +161,7 @@
         <tbody>
             @foreach($customers as $customer)
             <tr>
-                <td>{{ $customer->name }}</td>
+                <td>{{ $customer->name .' '. $customer->surname }}</td>
                 <td>{{ $customer->dob }}</td>
                 <td>{{ $customer->phone_no }}</td>
             </tr>

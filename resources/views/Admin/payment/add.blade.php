@@ -13,7 +13,7 @@
     </div>
 
     <div class="row mb-4">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card text-center shadow-sm">
             <div class="card-body">
                 <div class="text-muted small">Reserved Amount</div>
@@ -24,18 +24,29 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card text-center shadow-sm">
             <div class="card-body">
                 <div class="text-muted small">Ticketed Amount</div>
-                <div class="fw-bold fs-5 text-danger">
+                <div class="fw-bold fs-5 text-secondary">
                     {{ number_format(auth()->user()->ticketed_amount) }}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-2">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small">Remaining Amount</div>
+                <div class="fw-bold fs-5 text-danger">
+                    {{ number_format(auth()->user()->remaining_amount+auth()->user()->on_approval_amount) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
         <div class="card text-center shadow-sm">
             <div class="card-body">
                 <div class="text-muted small">Paid Balance</div>
@@ -46,12 +57,12 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card text-center shadow-sm">
             <div class="card-body">
                 <div class="text-muted small">On Approval</div>
                 <div class="fw-bold fs-5 text-warning">
-                    {{ number_format($onApprovalBal-$partialBalance) }}
+                    {{ number_format(auth()->user()->on_approval_amount) }}
                 </div>
             </div>
         </div>
@@ -68,7 +79,7 @@
                 <input type="text"
                        name="amount"
                        id="totalAmount"
-                       value="{{ auth()->user()->ticketed_amount }}"
+                       value="{{ auth()->user()->remaining_amount }}"
                        class="form-control">
             </div>
 

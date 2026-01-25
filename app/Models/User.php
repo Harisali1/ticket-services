@@ -35,7 +35,8 @@ class User extends Authenticatable
         'total_amount',
         'ticketed_amount',
         'paid_amount',
-        'remaining_amount'
+        'remaining_amount',
+        'on_approval_amount'
     ];
 
     /**
@@ -76,9 +77,9 @@ class User extends Authenticatable
         return $this->hasMany(PaymentUpload::class, 'created_by');
     }
 
-    public function getOnApprovalAmountAttribute(){
-        return $this->payments()->where('is_approved', 0)->sum('amount');
-    }
+    // public function getOnApprovalAmountAttribute(){
+    //     return $this->payments()->where('is_approved', 0)->sum('amount');
+    // }
 
     // public function getTotalAmountAttribute()
     // {

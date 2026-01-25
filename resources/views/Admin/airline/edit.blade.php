@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid bg-light min-vh-100 py-4">
+<div class="container-fluid bg-light min-vh-100 py-5">
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">

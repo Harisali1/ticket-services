@@ -126,8 +126,8 @@ class PaymentController extends Controller
 
             // 🔹 Update auth user wallet
             User::where('id', $user->id)->update([
-                'paid_amount'     => $user->paid_amount + $usedAmount,
-                'ticketed_amount' => max(0, $user->ticketed_amount - $usedAmount),
+                'on_approval_amount'     => $user->on_approval_amount + $usedAmount,
+                'remaining_amount' => max(0, $user->remaining_amount - $usedAmount),
             ]);
 
             // 🔹 Save payment history
@@ -195,8 +195,11 @@ class PaymentController extends Controller
             ]);
 
             $user = User::find($paymentUpload->created_by);
-            
-            Mail::to($user->email)->send(new PaymentApprovedMail($user, $paymentUpload->amount, $paymentUpload->amount, $user->ticketed_amount));
+            User::where('id', $user->id)->update([
+                'on_approval_amount'     => $user->on_approval_amount - $paymentUpload->amount,
+                'paid_amount' => $user->paid_amount + $paymentUpload->amount,
+            ]);
+            Mail::to($user->email)->send(new PaymentApprovedMail($user, $paymentUpload->amount, $paymentUpload->amount, $user->remaining_amount));
 
             DB::commit();
 

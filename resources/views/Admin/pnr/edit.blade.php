@@ -27,7 +27,7 @@
         </div>
     </div>
     <hr>
-    <div class="card p-4">
+    <div class="card p-5">
         <form id="pnr-edit-form" enctype="multipart/form-data">
             <!-- PNR & Flight Info -->
             <h5 class="mb-3">PNR & Flight Info</h5>

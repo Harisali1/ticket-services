@@ -89,7 +89,7 @@
                         <td>{{ $payment->user->total_amount }}</td>
                         <td>{{ $payment->user->paid_amount }}</td>
                         <td>{{ $payment->user->on_approval_amount }}</td>
-                        <td>{{ $payment->user->ticketed_amount }}</td>
+                        <td>{{ $payment->user->remaining_amount }}</td>
                         <td>{{ $payment->created_at }}</td>
                         <td>
                             @if($payment->user->on_approval_amount > 0)

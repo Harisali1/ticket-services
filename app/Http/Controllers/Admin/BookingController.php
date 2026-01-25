@@ -297,7 +297,7 @@ class BookingController extends Controller
         $bookingData = Booking::with('pnr', 'pnr.departure', 'pnr.arrival', 'pnr.airline', 'return_pnr.departure', 'return_pnr.arrival',  'return_pnr.airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
-        ->get(['customers.name', 'customers.phone_no', 'customers.dob']);
+        ->get(['customers.name', 'customers.phone_no', 'customers.dob', 'customers.surname', 'customers.email']);
         $response['agency'] = Agency::with('user')->where('user_id', $bookingData->created_by)->first();
 
         $pdf = PDF::loadView('Admin/print/itinerary', $response);
@@ -388,8 +388,10 @@ class BookingController extends Controller
                 $booking = Booking::find($booking->id);
                 $user = auth()->user();
                 $updatedTicketedAmount = $user->ticketed_amount+$booking->total_amount;
+                $updatedRemainingAmount = $user->remaining_amount+$booking->total_amount;
                 User::find($user->id)->update([
-                    'ticketed_amount' => $updatedTicketedAmount
+                    'ticketed_amount' => $updatedTicketedAmount,
+                    'remaining_amount' => $updatedRemainingAmount
                 ]);
             }
 
