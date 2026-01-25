@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('booking_passengers', function (Blueprint $table) {
             $table->id();
             $table->integer('pnr_id')->nullable();
+            $table->integer('return_pnr_id')->nullable();
             $table->integer('booking_id')->nullable();
             $table->integer('passenger_type_id')->nullable();
             $table->string('seat')->nullable();

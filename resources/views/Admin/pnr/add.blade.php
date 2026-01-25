@@ -17,7 +17,7 @@
     </style>
 @endsection
 @section('content')
-<div class="container">
+<div class="container py-5">
     <!-- Top Bar -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center gap-2">
