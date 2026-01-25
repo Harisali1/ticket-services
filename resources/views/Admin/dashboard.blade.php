@@ -32,30 +32,30 @@
 
 @section('content')
     <div class="container p-4 py-5">
-        <h5 class="mb-3">Quick Stats</h5>
+        <h5 class="mb-3">{{ __('messages.quick_stats') }}</h5>
         <div class="row g-3">
             <div class="col-md-3">
                 <div class="card card-stat">
                     <h3>{{ $bookingCounts->total }}</h3>
-                    <p>Total</p>
+                    <p>{{ __('messages.total_booking') }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card card-stat">
                     <h3>{{ $bookingCounts->created }}</h3>
-                    <p>Reserved</p>
+                    <p>{{ __('messages.reserved') }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card card-stat">
                     <h3>{{ $bookingCounts->ticketed }}</h3>
-                    <p>Ticketed</p>
+                    <p>{{ __('messages.ticketed') }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card card-stat">
                     <h3>{{ $bookingCounts->cancelled }}</h3>
-                    <p>Abandoned</p>
+                    <p>{{ __('messages.cancel') }}</p>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
         <div class="row g-3 mt-4 py-5">
            <div class="col-md-4">
                 <div class="card p-3 h-100 bg-gray">
-                    <h5 class="text-center mb-3">Account Details</h5>
+                    <h5 class="text-center mb-3">{{ __('messages.bank_details') }}</h5>
 
                     <div id="accountSlider" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
@@ -92,7 +92,7 @@
 
             <div class="col-md-4">
                 <div class="card p-3 h-100">
-                    <h5 class="text-center mb-3">Notifications</h5>
+                    <h5 class="text-center mb-3">{{ __('messages.notification') }}</h5>
 
                     <div style="max-height:200px; overflow-y:auto;">
                         @forelse($notifications as $notify)
@@ -124,7 +124,7 @@
             
             <div class="col-md-4">
                 <div class="card p-3 h-100">
-                    <h5 class="text-center mb-3">Today Reservations</h5>
+                    <h5 class="text-center mb-3">{{ __('messages.today_reservation') }}</h5>
 
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered align-middle mb-0">

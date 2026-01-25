@@ -25,8 +25,12 @@ return [
     'void' => 'Void',
     'cancel' => 'Cancelled',
 
-    'profile' => 'Profile',
-    'setting' => 'Settings',
+    'today_reservation' => 'Today Reservation',
+    'sub_agencies' => 'Sub Agencies',
+    'search' => 'Search',
+
+    'profile_setting' => 'Profile Settings',
+    'remaining_balance' => 'Remaining Balance',
 
     'agencies_list' => 'Agencies List',
     'create_agency' => 'Create Agency',
@@ -79,10 +83,9 @@ return [
     'upload_pnr' => 'Upload PNR',
 
     'one_way' => 'One Way',
-    'return' => 'Return',
+    'return' => 'Round Trip',
     'open_jaw' => 'Open Jaw',
 
-    'search' => 'Search',
     'paid' => 'Paid',
 
     'booking_no' => 'Booking Number',
@@ -98,8 +101,30 @@ return [
     'iban' => 'IBAN',
 
     'create_notification' => 'Create Notification',
-    'notification_list' => 'Notification List',
+    'notification_list' => 'Notifications List',
 
     'image' => 'Image',
     'description' => 'Description',
+    'booking_list' => 'Booking List',
+    'create_booking' => 'Create Booking',
+    'available_pnrs' => 'Available PNRs',
+
+    'flight'    => 'Flight',
+    'vector'    => 'Carrier',
+    'air_craft' => 'Aircraft',
+    'class'     => 'Class',
+    'fare'      => 'Fare',
+    'from'      => 'From',
+    'to'        => 'To',
+
+    'payment_list'        => 'Payment List',
+    'create_payment'      => 'Create Payment',
+    'reserved_amount'     => 'Reserved Amount',
+    'ticketed_amount'     => 'Ticketed Amount',
+    'paid_amount'         => 'Paid Amount',
+    'remaining_amount'    => 'Remaining Amount',
+    'on_approval_amount'  => 'On Approval Amount',
+    'slip_no'             => 'Slip No',
+    'approved_by'         => 'Approved By',
+    'approved_at'         => 'Approved At',
 ];

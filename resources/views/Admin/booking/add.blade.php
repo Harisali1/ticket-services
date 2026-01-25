@@ -49,27 +49,27 @@
         <form method="POST" action="{{ route('admin.booking.create') }}">
             @csrf
 
-            <h5 class="mb-3">Search Flight</h5>
+            <h5 class="mb-3">{{ __('messages.search_flight') }}</h5>
             <hr>
 
             <!-- Trip Type -->
-            <div class="col-md-4 mb-3">
+            <div class="col-md-5 mb-3">
                 <label class="me-3">
                     <input type="radio" name="trip_type" value="one_way"
                         {{ request('trip_type', 'one_way') === 'one_way' ? 'checked' : '' }}>
-                    One Way
+                    {{ __('messages.one_way') }}
                 </label>
 
                 <label class="type-style">
                     <input type="radio" name="trip_type" value="return"
                         {{ request('trip_type') === 'return' ? 'checked' : '' }}>
-                    Return
+                    {{ __('messages.return') }}
                 </label>
 
                 <label class="type-style">
                     <input type="radio" name="trip_type" value="return"
                         {{ request('trip_type') === 'return' ? 'checked' : '' }}>
-                    Open Jaw
+                    {{ __('messages.open_jaw') }}
                 </label>
             </div>
 
@@ -79,21 +79,21 @@
             <div class="row g-3">
 
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Departure</label>
+                    <label class="form-label text-muted">{{ __('messages.departure') }}</label>
                     <select class="form-select" name="departure_id" id="departure_id" required>
                         <option value="">Select Departure</option>
                     </select>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label text-muted">Arrival</label>
+                    <label class="form-label text-muted">{{ __('messages.arrival') }}</label>
                     <select class="form-select" name="arrival_id" id="arrival_id" required>
                         <option value="">Select Arrival</option>
                     </select>
                 </div>
 
                 <div class="col-md-2">
-                    <label class="form-label text-muted">Departure Date</label>
+                    <label class="form-label text-muted">{{ __('messages.departure_date') }}</label>
                     <input type="date"
                            class="form-control"
                            name="departure_date"
@@ -173,7 +173,7 @@
             <div class="row mt-2">
                 <div class="col-md-12 d-flex justify-content-end">
                     <button type="submit" class="btn btn-dark">
-                        Search
+                        {{ __('messages.search') }}
                     </button>
                 </div>
             </div>

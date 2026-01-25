@@ -1,11 +1,11 @@
 <div class="container py-5">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h4">Agencies List</h1>
+        <h1 class="h4">{{__('messages.agencies_list')}}</h1>
 
         <div class="d-flex align-items-center gap-2">
             <a href="{{ route('admin.agency.create') }}" class="btn btn-dark">
-                + Create Agency
+                + {{__('messages.create_agency')}}
             </a>
 
             <!-- Filter button triggers offcanvas -->
@@ -86,13 +86,13 @@
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Agency Name</th>
-                    <th>Agency Email</th>
-                    <th>P.IVA</th>
-                    <th>Address</th>
-                    <th>Created On</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>{{__('messages.agency_name')}}</th>
+                    <th>{{__('messages.agency_email')}}</th>
+                    <th>{{__('messages.piva')}}</th>
+                    <th>{{__('messages.address')}}</th>
+                    <th>{{__('messages.created_on')}}</th>
+                    <th>{{__('messages.status')}}</th>
+                    <th>{{__('messages.action')}}</th>
                 </tr>
             </thead>
             <tbody>

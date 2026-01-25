@@ -2,10 +2,10 @@
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 mb-0">Payment List</h1>
+        <h1 class="h4 mb-0">{{__('messages.payment_list')}}</h1>
         <div class="d-flex align-items-center gap-2">
             <a href="{{ route('admin.payment.create') }}" class="btn btn-dark">
-                + Create Payment
+                + {{__('messages.create_payment')}}
             </a>
 
             <!-- Filter button triggers offcanvas -->
@@ -20,7 +20,7 @@
         <div class="col-md-2">
             <div class="card text-center shadow-sm">
                 <div class="card-body">
-                    <div class="text-muted small">Reserved Amount</div>
+                    <div class="text-muted small">{{__('messages.reserved_amount')}}</div>
                     <div class="fw-bold fs-5 text-primary">
                         {{ number_format(auth()->user()->total_amount) }}
                     </div>
@@ -31,7 +31,7 @@
         <div class="col-md-2">
             <div class="card text-center shadow-sm">
                 <div class="card-body">
-                    <div class="text-muted small">Ticketed Amount</div>
+                    <div class="text-muted small">{{__('messages.ticketed_amount')}}</div>
                     <div class="fw-bold fs-5 text-secondary">
                         {{ number_format(auth()->user()->ticketed_amount) }}
                     </div>
@@ -42,7 +42,7 @@
         <div class="col-md-2">
             <div class="card text-center shadow-sm">
                 <div class="card-body">
-                    <div class="text-muted small">Remaining Amount</div>
+                    <div class="text-muted small">{{__('messages.remaining_amount')}}</div>
                     <div class="fw-bold fs-5 text-danger">
                         {{ number_format(auth()->user()->remaining_amount+auth()->user()->on_approval_amount) }}
                     </div>
@@ -53,7 +53,7 @@
         <div class="col-md-2">
             <div class="card text-center shadow-sm">
                 <div class="card-body">
-                    <div class="text-muted small">Paid Balance</div>
+                    <div class="text-muted small">{{__('messages.paid_amount')}}</div>
                     <div class="fw-bold fs-5 text-success">
                         {{ number_format(auth()->user()->paid_amount) }}
                     </div>
@@ -64,7 +64,7 @@
         <div class="col-md-2">
             <div class="card text-center shadow-sm">
                 <div class="card-body">
-                    <div class="text-muted small">On Approval</div>
+                    <div class="text-muted small">{{__('messages.on_approval_amount')}}</div>
                     <div class="fw-bold fs-5 text-warning">
                         {{ number_format(auth()->user()->on_approval_amount) }}
                     </div>
@@ -77,13 +77,13 @@
         <table class="table table-bordered align-middle">
             <thead class="table-light">
             <tr>
-                <th>Slip No #</th>
-                <th>Image</th>
-                <th>Paid Amount</th>
-                <th>Paid By</th>
-                <th>Paid At</th>
-                <th>Approved By</th>
-                <th>Approved At</th>
+                <th>{{__('messages.slip_no')}} #</th>
+                <th>{{__('messages.image')}}</th>
+                <th>{{__('messages.paid_amount')}}</th>
+                <th>{{__('messages.paid_by')}}</th>
+                <th>{{__('messages.paid_at')}}</th>
+                <th>{{__('messages.approved_by')}}</th>
+                <th>{{__('messages.approved_at')}}</th>
             </tr>
             </thead>
 
@@ -91,7 +91,14 @@
             @forelse($payments as $payment)
                 <tr>
                     <td>{{ $payment->slip_no }}</td>
-                    <td>{{ $payment->slip_no }}</td>
+                    <td>
+                         <img src="{{ $payment->image 
+                                ? asset('storage/'.$payment->image) 
+                                : asset('images/logo-placeholder.png') }}"
+                                alt="logo"
+                                class="rounded-circle border"
+                                style="width:45px;height:45px;object-fit:contain;">
+                    </td>
                     <td>{{ $payment->amount }}</td>
                     <td>{{ (isset($payment->user)) ? $payment->user->name : '' }}</td>
                     <td>{{ $payment->paid_at }}</td>

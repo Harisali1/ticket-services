@@ -132,6 +132,7 @@ class PaymentController extends Controller
 
             // 🔹 Save payment history
             PaymentUpload::create([
+                'slip_no'     => mt_rand(1000000000, 9999999999),
                 'booking_ids' => json_encode($paidBookings),
                 'amount'      => $usedAmount,
                 'image'       => $imagePath,
@@ -184,7 +185,8 @@ class PaymentController extends Controller
             // Update payment upload
             $paymentUpload->update([
                 'approved_by' => auth()->user()->id,
-                'is_approved' => 1
+                'is_approved' => 1,
+                'approved_at' => date('Y-m-d H:i:s')
             ]);
 
             // Update payments

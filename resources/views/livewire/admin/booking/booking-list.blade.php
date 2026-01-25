@@ -1,11 +1,11 @@
 <div class="container py-5">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h4">Booking List</h1>
+        <h1 class="h4">{{ __('messages.booking_list') }}</h1>
 
         <div class="d-flex align-items-center gap-2">
             <a href="{{ route('admin.booking.create') }}" class="btn btn-dark">
-                + Create Booking
+                + {{ __('messages.create_booking') }}
             </a>
 
             <!-- Filter button triggers offcanvas -->
@@ -96,15 +96,15 @@
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Booking No #</th>
-                    <th>PNR No #</th>
-                    <th>Departure Date/Time</th>
-                    <th>Arrival Date/Time</th>
-                    <th>Seats</th>
-                    <th>Paid By</th>
-                    <th>Paid At</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>{{__('messages.booking_no')}} #</th>
+                    <th>{{__('messages.pnr_no')}} #</th>
+                    <th>{{__('messages.departure_date_time')}}</th>
+                    <th>{{__('messages.arrival_date_time')}}</th>
+                    <th>{{__('messages.seats')}}</th>
+                    <th>{{__('messages.paid_by')}}</th>
+                    <th>{{__('messages.paid_at')}}</th>
+                    <th>{{__('messages.status')}}</th>
+                    <th>{{__('messages.action')}}</th>
                 </tr>
             </thead>
             <tbody>

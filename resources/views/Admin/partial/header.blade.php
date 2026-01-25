@@ -20,7 +20,7 @@
         <div class="d-flex align-items-center ms-3">
             
             <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">
-                <b class="text-muted me-2">Remaining Balance</b>
+                <b class="text-muted me-2 ">{{ __('messages.remaining_balance') }}</b>
                 {{ number_format(auth()->user()->remaining_amount+auth()->user()->on_approval_amount) }} EUR
             </span>
         </div>
@@ -81,7 +81,7 @@
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                <li><a class="dropdown-item" href="{{ route('admin.setting.index') }}">Profile Settings</a></li>
+                <li><a class="dropdown-item" href="{{ route('admin.setting.index') }}">{{ __('messages.profile_setting') }}</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                         <a class="dropdown-item text-danger" href="{{ route('logout') }}" 

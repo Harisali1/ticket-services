@@ -25,8 +25,12 @@ return [
     'void' => 'Annullato',
     'cancel' => 'Cancellato',
 
-    'profile' => 'Profilo',
-    'setting' => 'Impostazioni',
+    'today_reservation' => 'Prenotazione di oggi',
+    'sub_agencies' => 'Sub Agenzie',
+    'search' => 'Ricerca',
+
+    'profile_setting' => 'Profilo Impostazioni',
+    'remaining_balance' => 'Saldo rimanente',
 
     'agencies_list' => 'Elenco Agenzie',
     'create_agency' => 'Crea Agenzia',
@@ -82,7 +86,6 @@ return [
     'return' => 'Andata E Ritorno',
     'open_jaw' => 'Open Jaw',
 
-    'search' => 'Cerca',
     'paid' => 'Pagato',
 
     'booking_no' => 'Numero Prenotazione',
@@ -102,4 +105,27 @@ return [
 
     'image' => 'Immagine',
     'description' => 'Descrizione',
+    'booking_list' => 'Lista delle prenotazioni',
+    'create_booking' => 'Crea prenotazione',
+    'available_pnrs' => 'PNR disponibili',
+
+    'flight'    => 'Volo',
+    'vector'    => 'Vettore',
+    'air_craft' => 'Aeromobile',
+    'class'     => 'Classe',
+    'fare'      => 'Tariffa',
+    'from'      => 'Da',
+    'to'        => 'A',
+
+    'payment_list'        => 'Elenco Pagamenti',
+    'create_payment'      => 'Crea Pagamento',
+    'reserved_amount'     => 'Importo Riservato',
+    'ticketed_amount'     => 'Importo Bigliettato',
+    'paid_amount'         => 'Importo Pagato',
+    'remaining_amount'    => 'Importo Residuo',
+    'on_approval_amount'  => 'Importo in Approvazione',
+    'slip_no'             => 'Numero Ricevuta',
+    'approved_by'         => 'Approvato da',
+    'approved_at'         => 'Approvato il',
+
 ];

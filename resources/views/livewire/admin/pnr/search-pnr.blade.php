@@ -1,5 +1,5 @@
 <div class="container my-5">
-    <h5 class="mb-3 fw-semibold">Available PNR’s</h5>
+    <h5 class="mb-3 fw-semibold">{{ __('messages.available_pnrs') }}</h5>
 
     <div class="card">
         <div class="table-responsive">
@@ -19,17 +19,17 @@
                 </colgroup>
                 <thead class="table-light">
                     <tr>
-                        <th><i class="fa fa-ticket-perforated me-1"></i>Vector</th>
-                        <th><i class="fa fa-ticket-perforated me-1"></i>Flight</th>
-                        <th><i class="fa fa-ticket-perforated me-1"></i>Air Craft</th>
-                        <th><i class="fa fa-airplane me-1"></i> Class</th>
-                        <th><i class="fa fa-airplane me-1"></i> Fare</th>
-                        <th><i class="fa fa-airplane me-1"></i> From</th>
-                        <th><i class="fa fa-airplane me-1"></i> To</th>
-                        <th><i class="fa fa-airplane-engines me-1"></i> Departure </th>
-                        <th><i class="fa fa-airplane-fill me-1"></i> Arrival </th>
-                        <th><i class="fa fa-airplane-fill me-1"></i> Duration</th>
-                        <th>Action</th>
+                        <th><i class="fa fa-ticket-perforated me-1"></i>{{__('messages.vector')}}</th>
+                        <th><i class="fa fa-ticket-perforated me-1"></i>{{__('messages.flight')}}</th>
+                        <th><i class="fa fa-ticket-perforated me-1"></i>{{__('messages.air_craft')}}</th>
+                        <th><i class="fa fa-airplane me-1"></i> {{__('messages.class')}}</th>
+                        <th><i class="fa fa-airplane me-1"></i> {{__('messages.fare')}}</th>
+                        <th><i class="fa fa-airplane me-1"></i> {{__('messages.from')}}</th>
+                        <th><i class="fa fa-airplane me-1"></i> {{__('messages.to')}}</th>
+                        <th><i class="fa fa-airplane-engines me-1"></i> {{__('messages.departure')}} </th>
+                        <th><i class="fa fa-airplane-fill me-1"></i> {{__('messages.arrival')}} </th>
+                        <th><i class="fa fa-airplane-fill me-1"></i> {{__('messages.duration')}}</th>
+                        <th>{{__('messages.action')}}</th>
                     </tr>
                 </thead>
 
@@ -88,7 +88,7 @@
                                                         <td>
                                                             <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
                                                             <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
-                                                                {{ $pnr->total + auth()->user() }} EUR
+                                                                {{ $pnr->total }} EUR
                                                             </button>
                                                         </td>
                                                     </tr>
