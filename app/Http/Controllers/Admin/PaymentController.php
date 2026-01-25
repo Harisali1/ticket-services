@@ -9,6 +9,8 @@ use App\Models\Admin\PaymentUpload;
 use App\Models\Admin\Booking;
 use App\Models\User;
 use DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PaymentApprovedMail;
 
 class PaymentController extends Controller
 {
@@ -191,6 +193,10 @@ class PaymentController extends Controller
                 'approved_by' => auth()->user()->id,
                 'is_approved' => 1,
             ]);
+
+            $user = User::find($paymentUpload->created_by);
+            
+            Mail::to($user->email)->send(new PaymentApprovedMail($user, $paymentUpload->amount, $paymentUpload->amount, $user->ticketed_amount));
 
             DB::commit();
 
