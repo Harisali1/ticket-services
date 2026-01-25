@@ -135,13 +135,15 @@
                                     PNR
                                 </a>
                             @elseif($booking->status->label() === 'Ticketed')
-                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-secondary">
+                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-success">
                                     TKT
                                 </a>
+                                @if(Auth::user()->can('void'))
                                 @if(($bookingDate == $today && $now->hour >= 0))
                                     <button class="btn btn-sm btn-warning" type="button" onclick="voidBooking({{ $booking->id }})">
                                         Void
                                     </button>
+                                @endif
                                 @endif
                             @elseif($booking->status->label() === 'Paid')
                                 <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-success">

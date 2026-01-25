@@ -39,32 +39,32 @@
 
                 <a href="{{ route('admin.user.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-user me-3"></i>
-                    <span class="menu-text">Manage User</span>
+                    <span class="menu-text">{{ __('messages.manage_user') }}</span>
                 </a>
 
                 <a href="{{ route('admin.pnr.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-book me-3"></i>
-                    <span class="menu-text">Manage PNR</span>
+                    <span class="menu-text">{{ __('messages.manage_pnr') }}</span>
                 </a>
                  <a href="{{ route('admin.booking.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-plane me-3"></i>
-                    <span class="menu-text">Search Flight</span>
+                    <span class="menu-text">{{ __('messages.search_flight') }}</span>
                 </a>
                 <a href="{{ route('admin.booking.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-calendar me-3"></i>
-                    <span class="menu-text">Manage Bookings</span>
+                    <span class="menu-text">{{ __('messages.manage_booking') }}</span>
                 </a>
                 <a href="{{ route('admin.bank.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
-                    <span class="menu-text">Bank Details</span>
+                    <span class="menu-text">{{ __('messages.bank_details') }}</span>
                 </a>
                 <a href="{{ route('admin.agency.payment.list') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
-                    <span class="menu-text">Payments</span>
+                    <span class="menu-text">{{ __('messages.payment') }}</span>
                 </a>
                 <a href="{{ route('admin.notification.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
-                    <span class="menu-text">Notification</span>
+                    <span class="menu-text">{{ __('messages.notification') }}</span>
                 </a>
             </nav>
         @endif

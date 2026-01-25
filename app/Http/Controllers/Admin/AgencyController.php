@@ -31,6 +31,7 @@ class AgencyController extends Controller
 
     public function store(AgencyStoreRequest $request){
 
+        dd($request->all());
         $validated = $request->validated();
         $status = 1;
         DB::beginTransaction();

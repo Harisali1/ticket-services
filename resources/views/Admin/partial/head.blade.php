@@ -91,7 +91,17 @@
         font-size: 0.75rem;
     }
 
+    .language-flag img {
+        width: 22px;
+        height: 16px;
+        border-radius: 3px;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
 
+    .language-flag:hover img {
+        transform: scale(1.1);
+        box-shadow: 0 2px 6px rgba(0,0,0,.2);
+    }
 
 </style>
 </head>

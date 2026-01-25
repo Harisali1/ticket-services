@@ -38,17 +38,10 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         // // Roles
-        // $admin = Role::firstOrCreate(['name' => 'admin']);
-        // $agent = Role::firstOrCreate(['name' => 'agent']);
-        // $user  = Role::firstOrCreate(['name' => 'user']);
-
-        // // Assign permissions
-        // $admin->givePermissionTo(Permission::all());
-        // $agent->givePermissionTo(['view users', 'edit users']);
-        // $user->givePermissionTo(['view users']);
-
-        // $user = User::find(2);
-        // $user->assignRole('agent');
+        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $admin->givePermissionTo(Permission::all());
+        $user = User::find(1);
+        $user->assignRole('admin');
 
         // $user->assignRole('admin');
         // $user->removeRole('admin');

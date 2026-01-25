@@ -18,9 +18,10 @@
     <!-- Remaining Balance -->
     @if(Auth::user()->user_type_id == '2')
         <div class="d-flex align-items-center ms-3">
-            <span class="text-muted small me-2">Balance</span>
+            
             <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">
-                {{ number_format(auth()->user()->remaining_amount+auth()->user()->on_approval_amount) }}/= EUR
+                <b class="text-muted me-2">Remaining Balance</b>
+                {{ number_format(auth()->user()->remaining_amount+auth()->user()->on_approval_amount) }} EUR
             </span>
         </div>
     @endif
@@ -45,18 +46,30 @@
             </ul>
         </div>
 
-        <!-- Language -->
-        <div class="dropdown">
-            <a href="#" class="text-dark"
-               data-bs-toggle="dropdown">
-                <i class="fa fa-globe fs-5"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                <li><a class="dropdown-item" href="{{ route('language.switch', 'en') }}">🇬🇧 English</a></li>
-                <li><a class="dropdown-item" href="{{ route('language.switch', 'it') }}">🇮🇹 Italian</a></li>
-                <li><a class="dropdown-item" href="{{ route('language.switch', 'fr') }}">🇫🇷 French</a></li>
-            </ul>
-        </div>
+<!-- Language Flags -->
+<div class="d-flex align-items-center gap-2 ms-3">
+
+    <a href="{{ route('language.switch', 'en') }}"
+       class="language-flag"
+       title="English">
+        <img src="https://flagcdn.com/w20/gb.png" alt="English">
+    </a>
+
+    <a href="{{ route('language.switch', 'it') }}"
+       class="language-flag"
+       title="Italian">
+        <img src="https://flagcdn.com/w20/it.png" alt="Italian">
+    </a>
+
+    <a href="{{ route('language.switch', 'fr') }}"
+       class="language-flag"
+       title="French">
+        <img src="https://flagcdn.com/w20/fr.png" alt="French">
+    </a>
+
+</div>
+
+
 
         <!-- Profile -->
         <div class="dropdown">
@@ -68,8 +81,7 @@
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><a class="dropdown-item" href="{{ route('admin.setting.index') }}">Settings</a></li>
+                <li><a class="dropdown-item" href="{{ route('admin.setting.index') }}">Profile Settings</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                         <a class="dropdown-item text-danger" href="{{ route('logout') }}" 

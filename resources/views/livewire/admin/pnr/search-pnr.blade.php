@@ -88,7 +88,7 @@
                                                         <td>
                                                             <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
                                                             <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
-                                                                {{ $pnr->base_price }} EUR
+                                                                {{ $pnr->total + auth()->user() }} EUR
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -123,7 +123,7 @@
                                                         <td>
                                                             <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
                                                             <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
-                                                                {{ $pnr->base_price }} EUR
+                                                                {{ $pnr->total }} EUR
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -185,7 +185,7 @@
                                                         {{ $availableSeats }} seat available
                                                     </p>
                                                     <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $out->id }}, {{ $ret->id }})">
-                                                        {{ $out->base_price + $ret->base_price }} EUR
+                                                        {{ $out->total + $ret->total }} EUR
                                                     </button>
                                                 </td>
                                             </tr>

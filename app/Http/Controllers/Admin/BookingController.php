@@ -478,7 +478,7 @@ class BookingController extends Controller
         return redirect()->route('admin.booking.details',[
                 'booking' => $bookingData->id,
                 'pnr' => $bookingData->pnr_id,
-                'id' => $bookingData->return_pnr_id
+                'id' => ($bookingData->return_pnr_id != null) ? $bookingData->return_pnr_id : 0
             ])->with('success', 'email send successfully.');        
     }
 

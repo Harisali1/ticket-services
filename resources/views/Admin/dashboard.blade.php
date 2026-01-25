@@ -31,7 +31,7 @@
 @endsection
 
 @section('content')
-    <div class="container p-4">
+    <div class="container p-4 py-5">
         <h5 class="mb-3">Quick Stats</h5>
         <div class="row g-3">
             <div class="col-md-3">
@@ -60,7 +60,7 @@
             </div>
         </div>
         @if(Auth::user()->user_type_id == '2')
-        <div class="row g-3 mt-4">
+        <div class="row g-3 mt-4 py-5">
            <div class="col-md-4">
                 <div class="card p-3 h-100 bg-gray">
                     <h5 class="text-center mb-3">Account Details</h5>

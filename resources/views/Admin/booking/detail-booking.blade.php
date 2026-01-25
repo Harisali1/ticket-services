@@ -26,15 +26,19 @@
 <div class="container-fluid p-0" id="main-content">
 
     <!-- Top Bar -->
-    <div class="bg-primary text-white px-4 py-3 d-flex justify-content-between align-items-center">
+    <div class="bg-black text-white px-4 py-3 d-flex justify-content-between align-items-center">
         <div>
-            <small><a href="{{ route('admin.dashboard') }}">Home</a> / <a href="{{ route('admin.booking.index') }}">Booking List</a> / Booking Detail</small>
+            <small><a class="text-white" href="{{ route('admin.dashboard') }}">Home</a> / <a class="text-white" href="{{ route('admin.booking.index') }}">Manage Booking</a> / Booking Detail</small>
             <strong class="ms-2"></strong>
         </div>
         <div class="btn-group">
             @if($booking->status->label() === 'Created')
-                <button class="btn btn-danger btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'cancel', 'Do you want to Cancel this Booking?')">Cancel PNR</button>
-                <button class="btn btn-success btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'ticket', 'Do you want to Ticketed this Booking?')">Ticket</button>
+                @if(Auth::user()->can('cancel'))
+                    <button class="btn btn-danger btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'cancel', 'Do you want to Cancel this Booking?')">Cancel PNR</button>
+                @endif
+                @if(Auth::user()->can('pnr_ticketed'))
+                    <button class="btn btn-success btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'ticket', 'Do you want to Ticketed this Booking?')">Ticket</button>
+                @endif
             @endif
             <a href="{{ route('admin.booking.print.itinerary', $booking->id) }}"><button class="btn btn-secondary btn-sm">Print Itinerary</button></a>
         </div>
@@ -68,7 +72,7 @@
                     @if($booking->status->label() === 'Created')
                         <span class="badge bg-info">PNR CREATED </span>
                     @elseif($booking->status->label() === 'Ticketed')
-                        <span class="badge bg-secondary">PNR TICKETED </span>
+                        <span class="badge bg-success">PNR TICKETED </span>
                     @elseif($booking->status->label() === 'Paid')
                         <span class="badge bg-success">PNR PAID </span>
                     @elseif($booking->status->label() === 'Cancel')
@@ -463,10 +467,11 @@
         <div class="card mx-4 mb-4">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 Special Request
-
+                @if(Auth::user()->can('edit_special_request'))
                 <button type="button" class="btn btn-success btn-sm booking-edit-btn">
                     Edit Special Request
                 </button>
+                @endif
             </div>
 
             <div class="card-body row booking-fields">

@@ -16,7 +16,62 @@
             </button>
         </div>
     </div>
+<div class="row mb-4">
+        <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small">Reserved Amount</div>
+                    <div class="fw-bold fs-5 text-primary">
+                        {{ number_format(auth()->user()->total_amount) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small">Ticketed Amount</div>
+                    <div class="fw-bold fs-5 text-secondary">
+                        {{ number_format(auth()->user()->ticketed_amount) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small">Remaining Amount</div>
+                    <div class="fw-bold fs-5 text-danger">
+                        {{ number_format(auth()->user()->remaining_amount+auth()->user()->on_approval_amount) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small">Paid Balance</div>
+                    <div class="fw-bold fs-5 text-success">
+                        {{ number_format(auth()->user()->paid_amount) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small">On Approval</div>
+                    <div class="fw-bold fs-5 text-warning">
+                        {{ number_format(auth()->user()->on_approval_amount) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- TABLE -->
     <div class="table-responsive">
         <table class="table table-bordered align-middle">
