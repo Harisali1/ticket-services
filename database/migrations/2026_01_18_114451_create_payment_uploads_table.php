@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('payment_uploads', function (Blueprint $table) {
             $table->id();
             $table->json('booking_ids')->nullable();
+            $table->string('slip_no')->nullable();
             $table->string('amount')->nullable();
             $table->string('image')->nullable();
             $table->integer('created_by')->nullable();
+            $table->datetime('paid_at')->nullable();
             $table->integer('approved_by')->nullable();
-            $table->datetime('paid_at');
+            $table->boolean('is_approved')->default(0);
+            $table->datetime('approved_at')->nullable();
             $table->timestamps();
         });
     }

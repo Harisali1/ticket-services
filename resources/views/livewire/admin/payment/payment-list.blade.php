@@ -22,10 +22,9 @@
         <table class="table table-bordered align-middle">
             <thead class="table-light">
             <tr>
-                <th>Booking No #</th>
-                <th>Booking Amount</th>
+                <th>Slip No #</th>
+                <th>Image</th>
                 <th>Paid Amount</th>
-                <th>Partial Paid Amount</th>
                 <th>Paid By</th>
                 <th>Paid At</th>
                 <th>Approved By</th>
@@ -36,15 +35,12 @@
             <tbody>
             @forelse($payments as $payment)
                 <tr>
-                    <td>{{ $payment->booking_no }}</td>
-                    <td>{{ $payment->total_amount }}</td>
-                    <td>{{ ($payment->payment_status == 3) ? $payment->total_amount : 0}}</td>
-                    <td>{{ $payment->partial_pay_amount }}</td>
-                    <td>{{ (isset($payment->payable->name)) ? $payment->payable->name : '' }}</td>
+                    <td>{{ $payment->slip_no }}</td>
+                    <td>{{ $payment->slip_no }}</td>
+                    <td>{{ $payment->amount }}</td>
+                    <td>{{ (isset($payment->user)) ? $payment->user->name : '' }}</td>
                     <td>{{ $payment->paid_at }}</td>
-                    <td>
-                        {{ (isset($payment->approve->name)) ? $payment->approve->name : 'Pending For Approval' }}
-                    </td>
+                    <td>{{ (isset($payment->admin->name)) ? $payment->admin->name : '' }}</td>
                     <td>{{ $payment->approved_at }}</td>
                 </tr>
             @empty

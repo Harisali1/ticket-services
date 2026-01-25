@@ -13,58 +13,40 @@
     </div>
 
     <div class="row mb-4">
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="card text-center shadow-sm">
             <div class="card-body">
-                <div class="text-muted small">Total Remain</div>
+                <div class="text-muted small">Reserved Amount</div>
                 <div class="fw-bold fs-5 text-primary">
-                    {{ number_format($totalRemain - $partialBalance) }}
+                    {{ number_format(auth()->user()->total_amount) }}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="card text-center shadow-sm">
             <div class="card-body">
-                <div class="text-muted small">Remain Balance</div>
+                <div class="text-muted small">Ticketed Amount</div>
                 <div class="fw-bold fs-5 text-danger">
-                    @php
-                        if($remainBal > 0){
-                            $remainBal = $remainBal;    
-                        }else{
-                            $remainBal = $totalRemain - $partialBalance;
-                        }
-                    @endphp
-                    {{ number_format($remainBal) }}
-                </div>
-            </div>
-        </div>
-    </div>
-    
-     <div class="col-md-2">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <div class="text-muted small">Partial Balance</div>
-                <div class="fw-bold fs-5 text-secondry">
-                    {{ number_format($totalRemain-$partialBalance) }}
+                    {{ number_format(auth()->user()->ticketed_amount) }}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="card text-center shadow-sm">
             <div class="card-body">
                 <div class="text-muted small">Paid Balance</div>
                 <div class="fw-bold fs-5 text-success">
-                    {{ number_format($paidBal+$partialBalance) }}
+                    {{ number_format(auth()->user()->paid_amount) }}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="card text-center shadow-sm">
             <div class="card-body">
                 <div class="text-muted small">On Approval</div>
@@ -86,7 +68,7 @@
                 <input type="text"
                        name="amount"
                        id="totalAmount"
-                       value="{{ $remainBal }}"
+                       value="{{ auth()->user()->ticketed_amount }}"
                        class="form-control">
             </div>
 

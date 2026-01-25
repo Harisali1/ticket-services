@@ -22,6 +22,10 @@ return new class extends Migration
             $table->string('password');
             $table->string('show_pass')->nullable();
             $table->string('logo')->nullable();
+            $table->string('total_amount')->default(0);
+            $table->string('ticketed_amount')->default(0);
+            $table->string('paid_amount')->default(0);
+            $table->string('remaining_amount')->default(0);
             $table->rememberToken();
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();

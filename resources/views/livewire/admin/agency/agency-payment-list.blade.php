@@ -87,12 +87,12 @@
                         <td>{{ $payment->user->name }}</td>
                         <td>{{ $payment->user->email }}</td>
                         <td>{{ $payment->user->total_amount }}</td>
-                        <td>{{ $payment->user->paid_balance + $payment->user->partial_balance }}</td>
-                        <td>{{ $payment->user->on_approval_balance-$payment->user->partial_balance  }}</td>
-                        <td>{{ $payment->user->total_remaining_balance - $payment->user->partial_balance }}</td>
+                        <td>{{ $payment->user->paid_amount }}</td>
+                        <td>{{ $payment->user->on_approval_amount }}</td>
+                        <td>{{ $payment->user->ticketed_amount }}</td>
                         <td>{{ $payment->created_at }}</td>
                         <td>
-                            @if($payment->user->on_approval_balance > 0)
+                            @if($payment->user->on_approval_amount > 0)
                                <a href="{{ route('admin.agency.payment.approval', $payment->user->id) }}" class="b-action-btn btn btn-sm btn-warning">
                                     Pending
                                 </a>

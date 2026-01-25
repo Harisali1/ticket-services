@@ -11,6 +11,7 @@ use App\Enums\UserStatus;
 use App\Models\Admin\Booking;
 use App\Models\Admin\Payment;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Admin\PaymentUpload;
 
 class User extends Authenticatable
 {
@@ -29,7 +30,12 @@ class User extends Authenticatable
         'password',
         'status',
         'created_by',
-        'show_pass'
+        'show_pass',
+        'logo',
+        'total_amount',
+        'ticketed_amount',
+        'paid_amount',
+        'remaining_amount'
     ];
 
     /**
@@ -67,37 +73,41 @@ class User extends Authenticatable
 
     public function payments()
     {
-        return $this->hasMany(Booking::class, 'created_by');
+        return $this->hasMany(PaymentUpload::class, 'created_by');
     }
 
-    public function getTotalAmountAttribute()
-    {
-        return $this->payments()->whereIn('status', [2,3])->sum('total_amount');
+    public function getOnApprovalAmountAttribute(){
+        return $this->payments()->where('is_approved', 0)->sum('amount');
     }
 
-    public function getTotalRemainingBalanceAttribute()
-    {
-        return $this->payments()->whereIn('status', [2,3])->where('is_approved', 0)->sum('total_amount');
-    }
+    // public function getTotalAmountAttribute()
+    // {
+    //     return $this->payments()->whereIn('status', [2,3])->sum('total_amount');
+    // }
 
-    public function getPaidBalanceAttribute()
-    {
-        return $this->payments()->where('status', 3)->where('is_approved', 1)->sum('total_amount');
-    }
+    // public function getTotalRemainingBalanceAttribute()
+    // {
+    //     return $this->payments()->whereIn('status', [2,3])->where('is_approved', 0)->sum('total_amount');
+    // }
 
-    public function getOnApprovalBalanceAttribute()
-    {
-        return $this->payments()->where('status', 3)->where('payment_status', 3)->where('is_approved', 0)->sum('total_amount');
-    }
+    // public function getPaidBalanceAttribute()
+    // {
+    //     return $this->payments()->where('status', 3)->where('is_approved', 1)->sum('total_amount');
+    // }
 
-    public function getRemainBalanceAttribute()
-    {
-        return $this->payments()->where('status', 2)->where('is_approved', 0)->sum('total_amount');
-    }
+    // public function getOnApprovalBalanceAttribute()
+    // {
+    //     return $this->payments()->where('status', 3)->where('payment_status', 3)->where('is_approved', 0)->sum('total_amount');
+    // }
 
-    public function getPartialBalanceAttribute()
-    {
-        return $this->payments()->where('status', 3)->whereIn('payment_status', [2,3])->where('is_approved', 0)->sum('partial_pay_amount');
-    }
+    // public function getRemainBalanceAttribute()
+    // {
+    //     return $this->payments()->where('status', 2)->where('is_approved', 0)->sum('total_amount');
+    // }
+
+    // public function getPartialBalanceAttribute()
+    // {
+    //     return $this->payments()->where('status', 3)->whereIn('payment_status', [2,3])->where('is_approved', 0)->sum('partial_pay_amount');
+    // }
 
 }

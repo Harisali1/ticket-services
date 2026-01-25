@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Admin\Payment;
 use App\Models\Admin\PaymentUpload;
 use App\Models\Admin\Booking;
+use App\Models\User;
 use DB;
 
 class PaymentController extends Controller
@@ -35,17 +36,8 @@ class PaymentController extends Controller
 
     public function store(Request $request){
 
-        $totalRemain   = (int)auth()->user()->remaining_balance;
-        $remainBal     = (int)auth()->user()->remain_balance;
-        $paidBal       = (int)auth()->user()->paid_balance;
-        $onApprovalBal = (int)auth()->user()->on_approval_balance;
-        $partialBalance = (int)auth()->user()->partial_balance;
-
-        if($remainBal > 0){
-            $remainBal = $remainBal;    
-        }else{
-            $remainBal = $totalRemain - $partialBalance;
-        }
+        $totalRemain   = (int)auth()->user()->ticketed_amount;
+        
         if((int)$request->amount == 0){
             return response()->json([
                 'code'    => 2,
@@ -54,7 +46,7 @@ class PaymentController extends Controller
             ], 201);
         }
 
-        if($remainBal < (int)$request->amount){
+        if($totalRemain < (int)$request->amount){
             return response()->json([
                 'code'    => 2,
                 'success' => true,
@@ -62,71 +54,98 @@ class PaymentController extends Controller
             ], 201);
         }
 
+
         DB::beginTransaction();
 
         try {
 
-            $bookingIds = Booking::where('created_by', auth()->id())
-                        ->where('is_approved', 0)
-                        ->whereIn('status', [2, 3])
-                        ->get([DB::raw("CASE WHEN payment_status = 2 THEN partial_pay_amount ELSE total_amount END as partial_amount"),'id','total_amount'])
-                        ->toArray();
-            
-        
-            $paidAmount = (float) $request->amount;
+            $user = auth()->user();
+
+            $postedAmount = (int) $request->amount;
+            $remainingAmount = $postedAmount;
+
             $paidBookings = [];
 
-            $imagePath = null;
+            // 🔹 Get unpaid / partial bookings (FIFO)
+            $bookings = Booking::where('created_by', $user->id)
+                ->where('is_approved', 0)
+                ->whereIn('status', [2]) // ticketed / unpaid
+                ->orderBy('id', 'asc')
+                ->get();
 
+            // 🔹 Upload payment image
+            $imagePath = null;
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('payments', 'public');
             }
-                           
-            foreach ($bookingIds as $bookingId => $bookings) {
-                $bookingAmount = $bookings['total_amount'] - $bookings['partial_amount'];
-                // agar paisay khatam ho gaye
-                if ($paidAmount <= 0) {
+
+            foreach ($bookings as $booking) {
+
+                if ($remainingAmount <= 0) {
                     break;
                 }
-                // FULL PAYMENT CASE
-                if ($paidAmount >= $bookingAmount) {
-                    $paidBookings[$bookings['id']] =[];
-                    Booking::where('id', $bookings['id'])->update([
-                        'paid_amount'    => $bookingAmount,
-                        'payment_status'=> 3,
-                        'status' => 3,
-                        'paid_by'   => auth()->user()->id,
-                        'paid_at'   => date('Y-m-d H:i:s'),
+
+                // Remaining amount for this booking
+                $bookingRemaining = $booking->total_amount - $booking->partial_pay_amount;
+
+                // 🔹 FULL PAYMENT
+                if ($remainingAmount >= $bookingRemaining) {
+
+                    $booking->update([
+                        'paid_amount'        => $booking->total_amount,
+                        'partial_pay_amount' => 0,
+                        'payment_status'     => 3, // paid
+                        'status'             => 3, // fully paid
+                        'paid_by'            => $user->id,
+                        'paid_at'            => now(),
                     ]);
-                    $paidAmount -= $bookingAmount;
+
+                    $remainingAmount -= $bookingRemaining;
                 }
-                // PARTIAL PAYMENT CASE
+
+                // 🔹 PARTIAL PAYMENT
                 else {
-                    $paidBookings[$bookings['id']] =[];
-                    Booking::where('id', $bookings['id'])->update([
-                        'partial_pay_amount' => $paidAmount,
-                        'payment_status'=> 2,
-                        'paid_by'   => auth()->user()->id,
-                        'paid_at'   => date('Y-m-d H:i:s'),
+
+                    $booking->update([
+                        'partial_pay_amount' => $booking->partial_pay_amount + $remainingAmount,
+                        'payment_status'     => 3, // money received
+                        'paid_by'            => $user->id,
+                        'paid_at'            => now(),
                     ]);
-                    $paidAmount = 0;
+
+                    $remainingAmount = 0;
                 }
+
+                $paidBookings[] = $booking->id;
             }
 
+            // 🔹 ACTUAL amount used (important)
+            $usedAmount = $postedAmount - $remainingAmount;
+
+            // 🔹 Update auth user wallet
+            User::where('id', $user->id)->update([
+                'paid_amount'     => $user->paid_amount + $usedAmount,
+                'ticketed_amount' => max(0, $user->ticketed_amount - $usedAmount),
+            ]);
+
+            // 🔹 Save payment history
             PaymentUpload::create([
-                'booking_ids' => json_encode(array_keys($paidBookings)),
-                'amount'    => $request->amount, 
-                'image'     => $imagePath,
-                'created_by' => auth()->user()->id,
-                'paid_at'   => date('Y-m-d H:i:s'),
+                'booking_ids' => json_encode($paidBookings),
+                'amount'      => $usedAmount,
+                'image'       => $imagePath,
+                'created_by'  => $user->id,
+                'paid_at'     => now(),
             ]);
 
             DB::commit();
 
             return response()->json([
-                    'success' => true,
-                    'message' => 'Payment created successfully',
-                ], 201);
+                'success' => true,
+                'message' => 'Payment adjusted successfully',
+                'used_amount' => $usedAmount,
+                'remaining_amount' => $remainingAmount
+            ]);
+
         } catch (\Exception $e) {
 
             DB::rollBack();
@@ -134,9 +153,11 @@ class PaymentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong',
-                'error'   => $e->getMessage()
+                'error'   => $e->getMessage(),
             ], 500);
-        }  
+        }
+
+
 
     }
 
@@ -161,11 +182,13 @@ class PaymentController extends Controller
             // Update payment upload
             $paymentUpload->update([
                 'approved_by' => auth()->user()->id,
+                'is_approved' => 1
             ]);
 
             // Update payments
-            $payments = Booking::where('payment_status', 3)->whereIn('id', $bookingIds)->update([
+            $payments = Booking::where('status', 3)->whereIn('id', $bookingIds)->update([
                 'approved_at' => now(),
+                'approved_by' => auth()->user()->id,
                 'is_approved' => 1,
             ]);
 

@@ -15,6 +15,7 @@ use App\Models\Admin\FareRule;
 use App\Models\Admin\Agency;
 use App\Models\Admin\Payment;
 use App\Models\Admin\PaymentUpload;
+use App\Models\User;
 use DB;
 use PDF;
 use Illuminate\Support\Facades\Mail;
@@ -264,6 +265,12 @@ class BookingController extends Controller
                     'seat' => $type['seat'],
                 ]);
             }
+
+            $user = auth()->user();
+            $updatedTotalAmount = $user->total_amount+$request->total_amount;
+            User::find($user->id)->update([
+                'total_amount' => $updatedTotalAmount
+            ]);
             
             DB::commit();
 
@@ -377,6 +384,24 @@ class BookingController extends Controller
 
             Booking::where('id', $booking->id)->update($updateData);
 
+            if($request->status == 'ticket'){
+                $booking = Booking::find($booking->id);
+                $user = auth()->user();
+                $updatedTicketedAmount = $user->ticketed_amount+$booking->total_amount;
+                User::find($user->id)->update([
+                    'ticketed_amount' => $updatedTicketedAmount
+                ]);
+            }
+
+            if($request->status == 'cancel'){
+                $booking = Booking::find($booking->id);
+                $user = auth()->user();
+                $updatedTotalAmount = $user->total_amount-$booking->total_amount;
+                User::find($user->id)->update([
+                    'total_amount' => $updatedTotalAmount
+                ]);
+            }
+
             DB::commit();
 
             return view('Admin.booking.detail-booking', compact(
@@ -398,6 +423,7 @@ class BookingController extends Controller
     }
 
     private function updateSeats($pnr, $seatCount, $action){
+        
         $seatIds = $pnr->seats()
             ->where('is_reserved', 1)
             ->orderBy('id')

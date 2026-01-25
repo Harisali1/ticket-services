@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Payment;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Admin\Booking;
+use App\Models\Admin\PaymentUpload;
 
 class PaymentList extends Component
 {
@@ -44,12 +45,10 @@ class PaymentList extends Component
 
     public function render()
     {
-        $payments = Booking::whereIn('status', [2,3])
-            ->where('is_approved', 0)
-            ->where('created_by', auth()->user()->id);
+        $payments = PaymentUpload::where('created_by', auth()->user()->id);
 
         $payments = $payments->when($this->filters['status'] !== '', fn ($q) =>
-            $q->where('status', $this->filters['status'])
+            $q->where('is_approved', $this->filters['status'])
         )
         ->when($this->filters['from'], fn ($q) =>
             $q->whereDate('created_at', '>=', $this->filters['from'])
