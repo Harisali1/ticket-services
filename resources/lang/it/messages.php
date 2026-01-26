@@ -128,4 +128,6 @@ return [
     'approved_by'         => 'Approvato da',
     'approved_at'         => 'Approvato il',
 
+    'day' => 'Giorno',
+
 ];

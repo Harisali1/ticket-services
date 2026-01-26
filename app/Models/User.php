@@ -12,6 +12,7 @@ use App\Models\Admin\Booking;
 use App\Models\Admin\Payment;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Admin\PaymentUpload;
+use App\Models\Admin\Agency;
 
 class User extends Authenticatable
 {
@@ -60,8 +61,9 @@ class User extends Authenticatable
         'status' => UserStatus::class,
     ];
 
-    public function agency(){
-        return $this->hasOne(User::Class);
+    public function agency()
+    {
+        return $this->hasOne(Agency::class, 'user_id');
     }
 
     public function getRemainingBalanceAttribute(){

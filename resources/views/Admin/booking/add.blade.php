@@ -104,7 +104,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label class="form-label text-muted">Day -</label>
+                    <label class="form-label text-muted">{{ __('messages.day') }} -</label>
                     <select class="form-select select2" id="day_minus" name="day_minus">
                         <option value="1">-1</option>
                         <option value="2">-2</option>
@@ -113,7 +113,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label class="form-label text-muted">Day +</label>
+                    <label class="form-label text-muted">{{ __('messages.day') }} +</label>
                     <select class="form-select select2" id="day_plus" name="day_plus">
                         <option value="1">+1</option>
                         <option value="2">+2</option>

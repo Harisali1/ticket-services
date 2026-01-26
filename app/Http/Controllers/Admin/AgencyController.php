@@ -20,18 +20,11 @@ class AgencyController extends Controller
     }
 
     public function create(){
-        // Mail::send('Admin.email_template.check', ['data' => 6871007], function ($message) {
-        //     $message->from("harismusharaf9001@gmail.com")
-        //     ->to("noreply@agency.divinetravel.it")
-        //     ->subject('Notice of Delivery - Order# 6871007');
-        // });
-
         return view('Admin.agency.add');
     }
 
     public function store(AgencyStoreRequest $request){
 
-        dd($request->all());
         $validated = $request->validated();
         $status = 1;
         DB::beginTransaction();

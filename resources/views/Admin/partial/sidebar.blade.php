@@ -3,10 +3,19 @@
     <!-- Sidebar -->
     <aside id="sidebar" class="bg-dark text-white expanded d-flex flex-column p-3">
         
-        <!-- Title -->
-        <div class="mb-4">
-            <h1 class="h5 mb-0">DIVINE TRAVEL</h1>
-        </div>
+       <!-- Title with Logo -->
+<div class="mb-4 d-flex align-items-center gap-3">
+    <img 
+        src="{{ asset('images/logo.jpg') }}"
+        alt="Logo"
+        style="width:45px;height:45px;object-fit:contain"
+        class="rounded border"
+    >
+
+    <h1 class="h5 mb-0 fw-semibold">
+        DIVINE TRAVEL
+    </h1>
+</div>
 
         <!-- Toggle Button -->
         <!-- <button class="btn btn-outline-light mb-3" id="sidebarToggle">

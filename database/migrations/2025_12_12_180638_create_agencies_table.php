@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('piv');
             $table->string('show_pass')->nullable();
             $table->text('address');
-            $table->string('mark_up')->nullable();
+            $table->string('mark_up')->default(0);
             $table->string('limit')->nullable();
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();

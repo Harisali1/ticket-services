@@ -56,9 +56,19 @@
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Phone No*</label>
-          <input type="text" name="phone_no" id="phone_no" placeholder="Enter Phone No #" class="form-control" value="{{ old('phone_no') }}">
+            <label class="form-label">Phone No*</label>
+            <input 
+                type="text"
+                name="phone_no"
+                id="phone_no"
+                placeholder="Enter Phone No #"
+                class="form-control"
+                value="{{ old('phone_no') }}"
+                inputmode="numeric"
+                autocomplete="tel"
+            >
         </div>
+
 
         <!-- Password -->
         <div class="col-md-6 position-relative">
@@ -108,6 +118,10 @@
 
 @section('scripts')
 <script>
+  $('#phone_no').on('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
   const USER_TYPE = "{{ Auth::user()->user_type_id }}";
 
   function togglePassword(fieldId, btn) {

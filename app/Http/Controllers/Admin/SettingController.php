@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -13,36 +15,43 @@ class SettingController extends Controller
         return view('Admin.settings.add');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
+        $user = auth()->user();
 
-        DB::beginTransaction();
+        $request->validate([
+            'logo' => 'nullable|image|max:2048',
+            'current_password' => 'nullable|required_with:password',
+            'password' => 'nullable|confirmed|min:6',
+        ]);
 
-        try {
-            $logoPath = null;
-
-            if ($request->hasFile('logo')) {
-                $logoPath = $request->file('logo')->store('logo', 'public');
-                User::where('id', auth()->user()->id)
-                    ->update([
-                        'logo' => $logoPath,
-                    ]);
+        /* Update Logo */
+        if ($request->hasFile('logo')) {
+            if ($user->logo && Storage::exists($user->logo)) {
+                Storage::delete($user->logo);
             }
 
-            DB::commit();
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Payment created successfully',
-            ], 201);
-        } catch (\Exception $e) {
+            $path = $request->file('logo')->store('logo', 'public');
+            $user->logo = $path;
+        }
 
-            DB::rollBack();
+        /* Update Password */
+        if ($request->password) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Current password is incorrect'
+                ], 422);
+            }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong',
-                'error'   => $e->getMessage()
-            ], 500);
-        }  
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Settings updated successfully'
+        ]);
     }
 }
