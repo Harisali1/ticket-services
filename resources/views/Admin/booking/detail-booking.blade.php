@@ -18,15 +18,22 @@
             margin-left: 6px;
             font-size: 14px;
         }
+        .pnr-detail {
+            background: linear-gradient(90deg, #6c757d, #212529);
+            color: #fff;
+            padding: 10px 14px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
     </style>
 
 @endsection
 
 @section('content')
-<div class="container-fluid p-0" id="main-content">
+<div class="container p-0" id="main-content">
 
     <!-- Top Bar -->
-    <div class="bg-black text-white px-4 py-3 d-flex justify-content-between align-items-center">
+    <div class="bg-black text-white px-4 py-3 d-flex justify-content-between align-items-center pnr-detail">
         <div>
             <small><a class="text-white" href="{{ route('admin.dashboard') }}">Home</a> / <a class="text-white" href="{{ route('admin.booking.index') }}">Manage Booking</a> / Booking Detail</small>
             <strong class="ms-2"></strong>
@@ -400,9 +407,8 @@
     @foreach($customers as $index => $customer)
         <form class="passenger-form mb-4" data-id="{{ $customer->id }}">
             @csrf
-
             <div class="card mx-4">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center pnr-detail">
                     Passenger {{ $index + 1 }} (ADT)
 
                     @if(Auth::user()->can('edit_passengers'))
@@ -439,9 +445,6 @@
                             <input type="text" class="form-control readonly-input" name="gender"
                                 value="{{ $customer->gender }}" disabled>
                         </div>
-                    </div>
-
-                    <div class="row mt-2">
                         <div class="col-md-4">
                             Email:
                             <input type="email" class="form-control readonly-input" name="email"
@@ -453,6 +456,8 @@
                             <input type="text" class="form-control readonly-input" name="phone_no"
                                 value="{{ $customer->phone_no }}" disabled>
                         </div>
+                        <div class="card-header bg-primary text-white pnr-detail mt-4">Document</div>
+                        
                     </div>
                 </div>
             </div>
@@ -465,7 +470,7 @@
         @csrf
 
         <div class="card mx-4 mb-4">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center pnr-detail">
                 Special Request
                 @if(Auth::user()->can('edit_special_request'))
                 <button type="button" class="btn btn-success btn-sm booking-edit-btn">
@@ -521,7 +526,7 @@
     <div class="card mx-4 mb-4">
 
         <!-- Header -->
-        <div class="bg-primary text-white px-3 py-2" data-bs-toggle="collapse" data-bs-target="#fareRules">
+        <div class="bg-primary text-white px-3 py-2 pnr-detail" data-bs-toggle="collapse" data-bs-target="#fareRules">
             <strong>Fare Rules</strong> ▼
         </div>
 
@@ -565,16 +570,11 @@
     </div>
 
     <!-- Baggage -->
-    <div class="card mx-4 mb-4">
-        <div class="card-header bg-primary text-white">Document</div>
-        <div class="card-body">
-            
-        </div>
-    </div>
+    
 
     <!-- Baggage -->
     <div class="card mx-4 mb-4">
-        <div class="card-header bg-primary text-white">Baggage Included</div>
+        <div class="card-header bg-primary text-white pnr-detail">Baggage Included</div>
         <div class="card-body">
             <ul class="list-group">
                 <li class="list-group-item d-flex justify-content-between">
@@ -593,7 +593,7 @@
 
     <!-- Reservation Recap -->
     <div class="card mx-4 mb-5">
-        <div class="card-header bg-success text-white">Reservation Recap</div>
+        <div class="card-header bg-success text-white pnr-detail">Reservation Recap</div>
         <div class="card-body text-end">
             <p>Fare Amount: <strong>{{ number_format($booking->price, 2) }} EUR</strong></p>
             <p>Tax: <strong>{{ number_format($booking->tax, 2) }} EUR</strong></p>

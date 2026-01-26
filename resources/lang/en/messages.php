@@ -127,4 +127,70 @@ return [
     'slip_no'             => 'Slip No',
     'approved_by'         => 'Approved By',
     'approved_at'         => 'Approved At',
+
+    'day' => 'Day',
+
+    'agency_detail' => 'Agency Details',
+    'agency_address' => 'Agency Address',
+    'user_details' => 'User Details',
+    'phone_no' => 'Phone Number',
+    'password' => 'Password',
+    'confirm_password' => 'Confirm Password',
+    'save' => 'Save',
+    'update' => 'Update',
+
+    'select_number_of_seat' => 'Select Number of Seats',
+    'passenger_type' => 'Passenger Type',
+    'confirm_seat'  => 'Confirm Seat',
+    'total_ticket_price' => 'Total Ticket Price',
+
+    'pnr_detail' => 'PNR Details',
+    'out_bound' => 'Outbound',
+    'airplane' => 'Airplane',
+
+    'fare_details' => 'Fare Details',
+    'fare_amount' => 'Fare Amount',
+    'tax' => 'Tax',
+    'grand_total' => 'Grand Total',
+
+    'passenger_details' => 'Passenger Details',
+    'passenger_basic_details' => 'Passenger Basic Details',
+
+    'name_prefix' => 'Title',
+    'surname' => 'Surname',
+    'gender' => 'Gender',
+    'dob' => 'Date of Birth',
+    'country' => 'Country',
+    'city' => 'City',
+    'postal_code' => 'Postal Code',
+
+    'document_details' => 'Document Details',
+    'passport_country' => 'Passport Issuing Country',
+    'passport_number' => 'Passport Number',
+    'nationality' => 'Nationality',
+    'expiry_date' => 'Expiry Date',
+
+    'special_request' => 'Special Requests',
+    'meal' => 'Meal',
+    'wheel_chair' => 'Wheelchair',
+
+    'reservation_recap' => 'Reservation Summary',
+    'administrative_fee' => 'Administrative Fee',
+    'mark_up' => 'Markup',
+    'total' => 'Total',
+
+    'submit' => 'Submit',
+    'requote' => 'Requote',
+
+    'booking_date' => 'Booking Date',
+    'passenger' => 'Passenger',
+
+    'edit_passenger_data' => 'Edit Passenger Data',
+    'edit_special_request' => 'Edit Special Requests',
+
+    'fare_rules' => 'Fare Rules',
+    'document' => 'Document',
+    'baggage_included' => 'Baggage Included',
+
+    'limit_amount_for_booking' => 'Booking Limit Amount',
 ];

@@ -62,7 +62,7 @@
         color: #fff;
     }
     .pnr-detail {
-        background: linear-gradient(90deg, #002a6aff, #084298);
+        background: linear-gradient(90deg, #212529, #6c757d);
         color: #fff;
         padding: 10px 14px;
         font-size: 16px;
@@ -102,7 +102,13 @@
 
     <h5 class="fw-semibold">
         Total Tickets Price :
-        <span id="totalPrice">EUR {{ number_format($data['totalAmount'],0) }}/-</span>
+        @php
+            $markup = 0;
+            if(auth()->user()->user_type_id != 1){
+                $markup = auth()->user()->agency->mark_up;
+            }
+        @endphp
+        <span id="totalPrice">EUR {{ number_format($data['totalAmount']+$markup,0) }}/-</span>
     </h5>
   </div>
 
@@ -602,6 +608,7 @@
                 x-data="{
                     fare: {{ $fareAmount }},
                     tax: {{ $taxAmount }},
+                    markup: {{ $markup }},
                     adminFee: 0,
                     showInput: false,
 
@@ -652,18 +659,24 @@
                     </template>
                 </div>
 
+                @if(auth()->user()->user_type_id == 4)
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold">Mark Up</span>
+                    <span class="fw-bold text-success" x-text="format(markup)"></span>
+                </div>
+                @endif
                 <hr>
 
                 <!-- Total -->
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="fw-bold fs-5">Total</span>
                     <span class="fw-bold fs-5 text-primary"
-                        x-text="format(fare + tax + adminFee)">
+                        x-text="format(fare + tax + adminFee + markup)">
                     </span>
                 </div>
 
                 <input type="hidden" name="admin_fee" :value="adminFee.toFixed(2)">
-                <input type="hidden" name="total_amount" :value="(fare + tax + adminFee).toFixed(2)">
+                <input type="hidden" name="total_amount" :value="(fare + tax + adminFee + markup).toFixed(2)">
             </div>
 
         </div>

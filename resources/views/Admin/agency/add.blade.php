@@ -13,7 +13,7 @@
       <a href="{{ route('admin.agency.index') }}" class="text-decoration-none text-secondary">
         &larr;
       </a>
-      <h1 class="h4 mb-0">Create Agency</h1>
+      <h1 class="h4 mb-0">{{ __('messages.create_agency') }}</h1>
     </div>
   </div>
 
@@ -24,39 +24,39 @@
     <form id="agency-form">
 
       <!-- Agency Details -->
-      <h5 class="mb-3">Agency Details</h5>
+      <h5 class="mb-3">{{ __('messages.agency_details') }}</h5>
       <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label">Agency Name*</label>
+          <label class="form-label">{{ __('messages.agency_name') }}*</label>
           <input type="text" placeholder="Enter Agency Name" name="agency_name" id="agency_name" class="form-control" value="{{ old('agency_name') }}">
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">P.IVA*</label>
+          <label class="form-label">{{ __('messages.piva') }}*</label>
           <input type="text" name="piv" id="piv" placeholder="Enter Code" class="form-control" value="{{ old('piv') }}">
         </div>
       </div>
 
       <div class="mt-3">
-        <label class="form-label">Agency Address*</label>
+        <label class="form-label">{{ __('messages.agency_address') }}*</label>
         <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" class="form-control" value="{{ old('agency_address') }}">
       </div>
 
       <!-- User Details -->
-      <h5 class="mt-4 mb-3">User Details</h5>
+      <h5 class="mt-4 mb-3">{{ __('messages.user_details') }}</h5>
       <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label">Name*</label>
+          <label class="form-label">{{ __('messages.name') }}*</label>
           <input type="text" name="name" id="name" placeholder="Enter Name" class="form-control" value="{{ old('name') }}">
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Email*</label>
+          <label class="form-label">{{ __('messages.email') }}*</label>
           <input type="email" name="email" id="email" placeholder="Enter Email Address" class="form-control" value="{{ old('email') }}">
         </div>
 
         <div class="col-md-6">
-            <label class="form-label">Phone No*</label>
+            <label class="form-label">{{ __('messages.phone_no') }}*</label>
             <input 
                 type="text"
                 name="phone_no"
@@ -72,7 +72,7 @@
 
         <!-- Password -->
         <div class="col-md-6 position-relative">
-          <label class="form-label">Password*</label>
+          <label class="form-label">{{ __('messages.password') }}*</label>
           <input type="password" name="password" id="password" placeholder="*******" class="form-control pr-5">
           <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 me-2 password-hide-show" onclick="togglePassword('password', this)">
             <i class="fa fa-eye"></i>
@@ -81,7 +81,7 @@
 
         <!-- Confirm Password -->
         <div class="col-md-6 position-relative">
-          <label class="form-label">Confirm Password*</label>
+          <label class="form-label">{{ __('messages.confirm_password') }}*</label>
           <input type="password" name="confirm_password" id="confirm_password" placeholder="*******" class="form-control pr-5">
           <button type="button" class="btn btn-outline-secondary position-absolute top-0 end-0 me-2 password-hide-show" onclick="togglePassword('confirm_password', this)">
             <i class="fa fa-eye"></i>
@@ -90,14 +90,14 @@
 
         @if(Auth::user()->user_type_id == '2')
           <div class="col-md-6">
-            <label class="form-label">Mark Up</label>
+            <label class="form-label">{{ __('messages.mark_up') }}</label>
             <input type="text" name="mark_up" id="mark_up" placeholder="Enter Any Mark Up" class="form-control" value="{{ old('mark_up') }}">
           </div>
         @endif
 
         @if(Auth::user()->user_type_id == '1' || Auth::user()->user_type_id == '3')
           <div class="col-md-6">
-            <label class="form-label">Status</label>
+            <label class="form-label">{{ __('messages.status') }}</label>
             <select name="status" id="status" class="form-select">
               <option value="1">Pending</option>
               <option value="2">Approved</option>
@@ -108,8 +108,8 @@
       </div>
 
       <div class="d-flex justify-content-end gap-2 mt-4">
-        <a href="{{ route('admin.agency.index') }}" class="btn btn-outline-secondary">Cancel</a>
-        <button class="btn btn-dark">Save</button>
+        <a href="{{ route('admin.agency.index') }}" class="btn btn-outline-secondary">{{ __('messages.cancel') }}</a>
+        <button class="btn btn-dark">{{ __('messages.save') }}</button>
       </div>
     </form>
   </div>

@@ -127,7 +127,73 @@ return [
     'slip_no'             => 'Numero Ricevuta',
     'approved_by'         => 'Approvato da',
     'approved_at'         => 'Approvato il',
-
     'day' => 'Giorno',
 
+    'agency_detail' => 'Dettagli Agenzia',
+    'agency_address' => 'Indirizzo Agenzia',
+    'user_details' => 'Dettagli Utente',
+    'phone_no' => 'Numero di telefono',
+    'password' => 'Password',
+    'confirm_password' => 'Conferma Password',
+    'save' => 'Salva',
+    'update' => 'Aggiorna',
+
+    'select_number_of_seat' => 'Seleziona numero di posti',
+    'passenger_type' => 'Tipo di passeggero',
+    'confirm_seat'  => 'Conferma posto',
+    'total_ticket_price' => 'Prezzo totale del biglietto',
+
+    'pnr_detail' => 'Dettagli PNR',
+    'out_bound' => 'Tratta di andata',
+    'airplane' => 'Aereo',
+
+    'fare_details' => 'Dettagli tariffa',
+    'fare_amount' => 'Importo tariffa',
+    'tax' => 'Tasse',
+    'grand_total' => 'Totale complessivo',
+
+    'passenger_details' => 'Dettagli passeggero',
+    'passenger_basic_details' => 'Dati base del passeggero',
+
+    'name_prefix' => 'Titolo',
+    'surname' => 'Cognome',
+    'gender' => 'Genere',
+    'dob' => 'Data di nascita',
+    'country' => 'Paese',
+    'city' => 'Città',
+    'postal_code' => 'Codice postale',
+
+    'document_details' => 'Dettagli documento',
+    'passport_country' => 'Paese di rilascio del passaporto',
+    'passport_number' => 'Numero di passaporto',
+    'nationality' => 'Nazionalità',
+    'expiry_date' => 'Data di scadenza',
+
+    'special_request' => 'Richieste speciali',
+    'meal' => 'Pasto',
+    'wheel_chair' => 'Sedia a rotelle',
+
+    'reservation_recap' => 'Riepilogo prenotazione',
+    'administrative_fee' => 'Spese amministrative',
+    'mark_up' => 'Ricarico',
+    'total' => 'Totale',
+
+    'submit' => 'Invia',
+    'requote' => 'Ricalcola prezzo',
+
+    'booking_date' => 'Data di prenotazione',
+    'passenger' => 'Passeggero',
+
+    'edit_passenger_data' => 'Modifica dati passeggero',
+    'edit_special_request' => 'Modifica richieste speciali',
+
+    'fare_rules' => 'Regole tariffarie',
+    'document' => 'Documento',
+    'baggage_included' => 'Bagaglio incluso',
+
+    'limit_amount_for_booking' => '',
+    
+
+
 ];
+

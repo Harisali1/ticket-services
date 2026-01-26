@@ -37,7 +37,7 @@ class AgencyController extends Controller
 
             // Create User
             $user = User::create([
-                'user_type_id' => 2,
+                'user_type_id' => (auth()->user()->user_type_id == 2) ? 4 : 2,
                 'name'      => $validated['name'],
                 'email'     => $validated['email'],
                 'phone_no'  => $validated['phone_no'],
@@ -120,7 +120,7 @@ class AgencyController extends Controller
                 'name'      => $request->agency_name,
                 'piv'       => $request->piv,
                 'address'   => $request->agency_address,
-                'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : null,
+                'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : $agency->mark_up,
                 'limit'     => (isset($request->limit)) ? $request->limit : null,
                 'status'    => $status,
             ]);

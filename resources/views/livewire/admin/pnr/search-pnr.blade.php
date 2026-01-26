@@ -34,6 +34,12 @@
                 </thead>
 
                 <tbody>
+                    @php
+                        $markup=0;
+                        if(auth()->user()->user_type_id != 1){
+                            $markup = auth()->user()->agency->mark_up;
+                        }
+                    @endphp
                     @if($type != 'return')
                         @foreach($pnrs as $pnr)
                             @if($pnr->seat_is_sale != 0)
@@ -88,7 +94,7 @@
                                                         <td>
                                                             <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
                                                             <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
-                                                                {{ $pnr->total + auth()->user()->agency->mark_up }} EUR
+                                                                {{ $pnr->total + $markup }} EUR
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -123,7 +129,7 @@
                                                         <td>
                                                             <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
                                                             <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $pnr->id }})">
-                                                                {{ $pnr->total + auth()->user()->agency->mark_up }} EUR
+                                                                {{ $pnr->total + $markup }} EUR
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -185,7 +191,7 @@
                                                         {{ $availableSeats }} seat available
                                                     </p>
                                                     <button class="btn btn-primary btn-sm" onclick="selectPNRBooking({{ $out->id }}, {{ $ret->id }})">
-                                                        {{ $out->total + $ret->total + auth()->user()->agency->mark_up }} EUR
+                                                        {{ $out->total + $ret->total }} EUR
                                                     </button>
                                                 </td>
                                             </tr>

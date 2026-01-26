@@ -20,18 +20,18 @@
   <div class="card p-4">
     <form id="agency-form">
       <!-- Agency Details -->
-      <h5 class="mb-3">Agency Details</h5>
+      <h5 class="mb-3">{{ __('messages.agency_details') }}</h5>
       <div class="row g-3">
         <div class="col-md-6">
           <input type="hidden" value="{{ $agency->id }}" id="id" name="id">
-          <label class="form-label">Agency Name*</label>
+          <label class="form-label">{{ __('messages.agency_name') }}*</label>
           <input type="text" name="agency_name" id="agency_name" 
                  value="{{ $agency->name }}" 
                  class="form-control">
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">P.IVA*</label>
+          <label class="form-label">{{ __('messages.piva') }}*</label>
           <input type="text" name="piv" id="piv" 
                  value="{{ $agency->piv }}" 
                  class="form-control">
@@ -39,46 +39,53 @@
       </div>
 
       <div class="mt-3">
-        <label class="form-label">Agency Address*</label>
+        <label class="form-label">{{ __('messages.agency_address') }}*</label>
         <input type="text" name="agency_address" id="agency_address" 
                value="{{ $agency->address }}" 
                class="form-control">
       </div>
 
       <!-- User Details -->
-      <h5 class="mt-4 mb-3">User Details</h5>
+      <h5 class="mt-4 mb-3">{{ __('messages.user_details') }}</h5>
       <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label">Name*</label>
+          <label class="form-label">{{ __('messages.name') }}*</label>
           <input type="text" name="name" id="name" 
                  value="{{ $agency->user->name }}" 
                  class="form-control">
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Email*</label>
+          <label class="form-label">{{ __('messages.email') }}*</label>
           <input type="email" name="email" id="email" 
                  value="{{ $agency->user->email }}" 
                  class="form-control">
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Phone No*</label>
-          <input type="text" name="phone_no" id="phone_no" 
-                 value="{{ $agency->user->phone_no }}" 
-                 class="form-control">
+            <label class="form-label">{{ __('messages.phone_no') }}*</label>
+            <input 
+                type="text"
+                name="phone_no"
+                id="phone_no"
+                placeholder="Enter Phone No #"
+                class="form-control"
+                value="{{ $agency->user->phone_no }}"
+                inputmode="numeric"
+                autocomplete="tel"
+            >
         </div>
         
         @if(Auth::user()->user_type_id == '2')
           <div class="col-md-6">
-            <label class="form-label">Mark Up</label>
+            <label class="form-label">{{ __('messages.mark_up') }}</label>
             <input type="text" name="mark_up" id="mark_up" placeholder="Enter Any Mark Up" class="form-control" value="{{ $agency->mark_up }}">
           </div>
         @endif
       
         @if(Auth::user()->user_type_id == '1' || Auth::user()->user_type_id == '3')
           <div class="col-md-6">
-            <label class="form-label">Status</label>
+            <label class="form-label">{{ __('messages.status') }}</label>
             <select name="status" id="status" class="form-select">
               @foreach(\App\Enums\AgencyStatus::cases() as $status)
                 <option value="{{ $status->value }}" @selected($agency->status === $status)>
@@ -98,8 +105,8 @@
 
       <!-- Form Actions -->
       <div class="d-flex justify-content-end gap-2 mt-4">
-        <a href="{{ route('admin.agency.index') }}" class="btn btn-outline-secondary">Cancel</a>
-        <button class="btn btn-dark">Update</button>
+        <a href="{{ route('admin.agency.index') }}" class="btn btn-outline-secondary">{{ __('messages.cancel')}}</a>
+        <button class="btn btn-dark">{{__('messages.update')}}</button>
       </div>
 
     </form>
