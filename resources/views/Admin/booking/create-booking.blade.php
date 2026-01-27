@@ -120,7 +120,7 @@
     <h3 class="fw-semibold mb-3 pnr-detail">PNR Details:</h3>
 
     <div class="mb-4">
-        <h6 class="fw-bold mb-3">OUTBOUND</h6>
+        <h6 class="fw-bold mb-3 text-green">OUTBOUND</h6>
         <div class="card flight-card mb-3">
 
             <div class="card-body">
@@ -325,11 +325,7 @@
         </div>
     @endif
 
-    <input type="hidden" id="pnr_id" name="pnr_id" value="{{ $data['pnr_id'] }}">
-    <input type="hidden" id="return_pnr_id" name="return_pnr_id" value="{{ $data['return_pnr_id'] }}">
-    <input type="hidden" id="booking_seats" name="booking_seats" value="{{ $seatSum }}">
-    <input type="hidden" id="total_fare" name="total_fare" value="{{ $data['totalBaseFareAmount'] }}">
-    <input type="hidden" id="total_tax" name="total_tax" value="{{ $data['totalTax'] }}">
+    
 
     <h3 class="fw-semibold mb-3 pnr-detail">Agency Details:</h3>
 
@@ -350,6 +346,7 @@
         </div>
     </div>
 
+    @if(auth()->user()->user_type_id != 4)
     <hr>
 
     <h3 class="fw-semibold mb-3 pnr-detail">Fare Details:</h3>
@@ -403,7 +400,7 @@
                         {{ number_format($fare['row_total'], 0) }}
                     </td>
                 </tr>
-@if($fare['type_id'] != 3)
+            @if($fare['type_id'] != 3)
                 <input type="hidden" name="fareDetails[{{ $index }}][type_id]" value="{{ $fare['type_id'] }}">
                 
                 <input type="hidden" name="fareDetails[{{ $index }}][seat]" value="{{ $fare['seat'] }}">
@@ -411,6 +408,23 @@
             @endforeach
         </tbody>
     </table>
+    @else
+        @php
+            $fareAmount = $markup;
+            $taxAmount = 0;
+        @endphp
+        @foreach($fareDetails as $index => $fare)
+            @php 
+                $fareAmount += $fare['total_fare_amount'];
+                $taxAmount += $fare['tax'];
+            @endphp
+            
+            @if($fare['type_id'] != 3)
+                <input type="hidden" name="fareDetails[{{ $index }}][type_id]" value="{{ $fare['type_id'] }}">
+                <input type="hidden" name="fareDetails[{{ $index }}][seat]" value="{{ $fare['seat'] }}">
+            @endif
+        @endforeach
+    @endif
 
     <hr>
 
@@ -599,6 +613,11 @@
         </div>
     </div>
     <hr>
+    <input type="hidden" id="pnr_id" name="pnr_id" value="{{ $data['pnr_id'] }}">
+    <input type="hidden" id="return_pnr_id" name="return_pnr_id" value="{{ $data['return_pnr_id'] }}">
+    <input type="hidden" id="booking_seats" name="booking_seats" value="{{ $seatSum }}">
+    <input type="hidden" id="total_fare" name="total_fare" value="{{ $data['totalBaseFareAmount']+$markup }}">
+    <input type="hidden" id="total_tax" name="total_tax" value="{{ $data['totalTax'] }}">
     <h3 class="fw-semibold mb-3 pnr-detail mt-2">Reservation Recap:</h3>
     <div class="container mt-4">
     <div class="row">
@@ -608,7 +627,6 @@
                 x-data="{
                     fare: {{ $fareAmount }},
                     tax: {{ $taxAmount }},
-                    markup: {{ $markup }},
                     adminFee: 0,
                     showInput: false,
 
@@ -659,24 +677,19 @@
                     </template>
                 </div>
 
-                @if(auth()->user()->user_type_id == 4)
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="fw-semibold">Mark Up</span>
-                    <span class="fw-bold text-success" x-text="format(markup)"></span>
-                </div>
-                @endif
+                
                 <hr>
 
                 <!-- Total -->
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="fw-bold fs-5">Total</span>
                     <span class="fw-bold fs-5 text-primary"
-                        x-text="format(fare + tax + adminFee + markup)">
+                        x-text="format(fare + tax + adminFee)">
                     </span>
                 </div>
 
                 <input type="hidden" name="admin_fee" :value="adminFee.toFixed(2)">
-                <input type="hidden" name="total_amount" :value="(fare + tax + adminFee + markup).toFixed(2)">
+                <input type="hidden" name="total_amount" :value="(fare + tax + adminFee).toFixed(2)">
             </div>
 
         </div>

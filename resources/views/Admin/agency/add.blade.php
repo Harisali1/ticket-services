@@ -1,7 +1,13 @@
 @extends('Admin.layouts.main')
 
 @section('styles')
+<style>
+  .password-hide-show{
+      margin-top: 33px !important;
+      border: none !important;
+    }
 
+  </style>
 @endsection
 
 @section('content')

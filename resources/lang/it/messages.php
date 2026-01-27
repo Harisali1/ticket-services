@@ -70,7 +70,7 @@ return [
     'email' => 'E-mail',
 
     'pnr_list' => 'Elenco PNR',
-    'pnr_no' => 'Numero PNR',
+    'pnr_no' => 'PNR',
     'airline' => 'Compagnia Aerea',
     'departure' => 'Partenza',
     'arrival' => 'Arrivo',
@@ -194,5 +194,10 @@ return [
     'baggage_included' => 'Bagaglio incluso',
 
     'limit_amount_for_booking' => '',
+    'filters' => '',
+    'created_date' => '',
+    'export_excel' => '',
+
+
 ];
 

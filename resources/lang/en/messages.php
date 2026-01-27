@@ -4,7 +4,7 @@ return [
     'welcome' => 'Welcome',
     'login'   => 'Login',
     'logout'  => 'Logout',
-    'dashboard' => 'Dashboard',
+    'dashboard' => 'Home',
 
     'manage_agencies' => 'Manage Agencies',
     'manage_airline' => 'Manage Airline',
@@ -42,7 +42,7 @@ return [
 
     'agency_name' => 'Agency Name',
     'agency_email' => 'Agency Email',
-    'piva' => 'VAT Number',
+    'piva' => 'P.IVA',
     'address' => 'Address',
     'created_on' => 'Created On',
     'status' => 'Status',

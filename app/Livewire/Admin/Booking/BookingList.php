@@ -97,6 +97,12 @@ class BookingList extends Component
         $this->resetPage();
     }
 
+    public function filterStatus($status)
+    {
+        $this->filters['status'] = $status;
+    }
+
+
     public function exportExcel()
     {
         return Excel::download(

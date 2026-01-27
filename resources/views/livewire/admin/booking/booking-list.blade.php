@@ -20,7 +20,7 @@
     <!-- Filter Sidebar (Bootstrap Offcanvas) -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="filterSidebar">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title">Filters</h5>
+            <h5 class="offcanvas-title">{{ __('messages.filters')}}</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
@@ -59,8 +59,8 @@
             </div>
 
             <div class="d-flex gap-2">
-                <button wire:click="applyFilters" data-bs-dismiss="offcanvas" class="btn btn-dark flex-fill">Search</button>
-                <button wire:click="resetFilters" data-bs-dismiss="offcanvas" class="btn btn-outline-secondary flex-fill">Cancel</button>
+                <button wire:click="applyFilters" data-bs-dismiss="offcanvas" class="btn btn-dark flex-fill">{{__('message.search')}}</button>
+                <button wire:click="resetFilters" data-bs-dismiss="offcanvas" class="btn btn-outline-secondary flex-fill">{{ __('messages.Cancel') }}</button>
             </div>
         </div>
     </div>
@@ -84,7 +84,7 @@
         <!-- Reserved -->
         <div class="col-12 col-sm-6 col-lg-2">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-warning border-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(1)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.reserved') }}
                     </p>
@@ -171,10 +171,10 @@
     <!-- Table Card -->
     <div class="card border-0 shadow-lg">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover table-bordered align-middle mb-0">
 
                 <!-- Table Head -->
-                <thead class="bg-light">
+                <thead class="bg-light border-bottom">
                     <tr class="text-uppercase small text-muted">
                         <th>{{ __('messages.booking_no') }} #</th>
                         <th>{{ __('messages.pnr_no') }} #</th>
@@ -202,7 +202,7 @@
                         <td class="fw-semibold">{{ $booking->booking_no }}</td>
 
                         <td class="text-muted">
-                            {{ $booking->pnr?->pnr_no }}
+                            {{ $booking->pnr?->ref_no }}
                         </td>
 
                         <td>{{ $booking->pnr?->departure_date }}</td>
@@ -219,7 +219,7 @@
 
                         <!-- Status -->
                         <td>
-                            <span class="badge rounded-pill {{ $booking->status->color() }}">
+                            <span class="badge rounded-pill {{ $booking->status->color() }} text-black">
                                 {{ $booking->status->label() }}
                             </span>
                         </td>

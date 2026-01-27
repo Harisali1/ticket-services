@@ -97,7 +97,7 @@
         @endif
         @if(Auth::user()->user_type_id == '1')
           <div class="col-md-6">
-            <label class="form-label">Limit Amount For Booking</label>
+            <label class="form-label">{{ __('messages.limit_amount_for_booking') }}</label>
             <input type="text" name="limit" id="limit" placeholder="EUR 100/=" class="form-control" value="{{ $agency->limit }}">
           </div>
         @endif

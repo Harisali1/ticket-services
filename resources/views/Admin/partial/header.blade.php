@@ -1,44 +1,32 @@
 <nav class="navbar navbar-expand bg-white border-bottom px-4 py-2 shadow-sm">
 
-    <!-- Brand -->
-    <a class="navbar-brand fw-bold d-none d-md-block" href="#">
-        Airline
-    </a>
+    <!-- ===== BRAND ===== -->
 
-    <!-- Search -->
-    <form class="d-flex mx-auto w-50 position-relative">
-        <input class="form-control form-control-sm ps-4 rounded-pill"
-               type="search"
-               placeholder="Search flights, PNR..."
-               aria-label="Search">
-        <i class="fas fa-search position-absolute text-muted"
-           style="left:14px; top:50%; transform:translateY(-50%)"></i>
-    </form>
-
-    <!-- Remaining Balance -->
-    @if(Auth::user()->user_type_id == '2')
-        <div class="d-flex align-items-center ms-3">
-            
-            <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">
-                <b class="text-muted me-2 ">{{ __('messages.remaining_balance') }}</b>
-                {{ number_format(auth()->user()->remaining_amount+auth()->user()->on_approval_amount) }} EUR
-            </span>
-        </div>
+    <!-- ===== REMAINING BALANCE ===== -->
+    @if(Auth::user()->user_type_id == '2' || Auth::user()->user_type_id == '4')
+    <div class="ms-3 d-none d-lg-block">
+        <span class="badge bg-success-subtle text-success fw-semibold px-4 py-2 rounded-pill">
+            <i class="fas fa-wallet me-1"></i>
+            <span class="text-muted me-1">{{ __('messages.remaining_balance') }}</span>
+            {{ number_format(auth()->user()->remaining_amount + auth()->user()->on_approval_amount) }} EUR
+        </span>
+    </div>
     @endif
 
-    <!-- Right Icons -->
+    <!-- ===== RIGHT SIDE ===== -->
     <div class="d-flex align-items-center ms-auto gap-3">
 
-        <!-- Notifications -->
+        <!-- ===== NOTIFICATIONS ===== -->
         <div class="dropdown">
-            <a href="#" class="text-dark position-relative"
+            <a href="#" class="icon-btn position-relative"
                data-bs-toggle="dropdown">
-                <i class="fa fa-bell fs-5"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <i class="fa fa-bell"></i>
+                <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
                     3
                 </span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
                 <li class="dropdown-header fw-semibold">Notifications</li>
                 <li><a class="dropdown-item small" href="#">✈ New booking received</a></li>
                 <li><a class="dropdown-item small" href="#">💳 Balance updated</a></li>
@@ -46,52 +34,58 @@
             </ul>
         </div>
 
-<!-- Language Flags -->
-<div class="d-flex align-items-center gap-2 ms-3">
+        <!-- ===== LANGUAGE FLAGS ===== -->
+        <div class="d-flex align-items-center gap-2 ms-2">
 
-    <a href="{{ route('language.switch', 'en') }}"
-       class="language-flag"
-       title="English">
-        <img src="https://flagcdn.com/w20/gb.png" alt="English">
-    </a>
+            <a href="{{ route('language.switch', 'en') }}"
+               class="language-flag"
+               title="English">
+                <img src="https://flagcdn.com/w20/gb.png" alt="English">
+            </a>
 
-    <a href="{{ route('language.switch', 'it') }}"
-       class="language-flag"
-       title="Italian">
-        <img src="https://flagcdn.com/w20/it.png" alt="Italian">
-    </a>
+            <a href="{{ route('language.switch', 'it') }}"
+               class="language-flag"
+               title="Italian">
+                <img src="https://flagcdn.com/w20/it.png" alt="Italian">
+            </a>
 
-    <a href="{{ route('language.switch', 'fr') }}"
-       class="language-flag"
-       title="French">
-        <img src="https://flagcdn.com/w20/fr.png" alt="French">
-    </a>
+            <a href="{{ route('language.switch', 'fr') }}"
+               class="language-flag"
+               title="French">
+                <img src="https://flagcdn.com/w20/fr.png" alt="French">
+            </a>
+        </div>
 
-</div>
-
-
-
-        <!-- Profile -->
+        <!-- ===== PROFILE ===== -->
         <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-dark text-decoration-none"
+            <a href="#" class="d-flex align-items-center text-decoration-none"
                data-bs-toggle="dropdown">
-                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-semibold"
-                     style="width:36px;height:36px;">
+
+                <div class="profile-avatar">
                     {{ strtoupper(substr(Auth::user()->name,0,1)) }}
                 </div>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                <li><a class="dropdown-item" href="{{ route('admin.setting.index') }}">{{ __('messages.profile_setting') }}</a></li>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+                <li>
+                    <a class="dropdown-item" href="{{ route('admin.setting.index') }}">
+                        <i class="fas fa-user-cog me-2"></i>
+                        {{ __('messages.profile_setting') }}
+                    </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                        <a class="dropdown-item text-danger" href="{{ route('logout') }}" 
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            {{ __('messages.logout') }}
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
-                    </li>
+                    <a class="dropdown-item text-danger"
+                       href="{{ route('logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        {{ __('messages.logout') }}
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
             </ul>
         </div>
 

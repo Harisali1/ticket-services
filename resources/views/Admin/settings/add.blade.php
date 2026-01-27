@@ -70,11 +70,7 @@
                             <input type="text" class="form-control" value="{{ auth()->user()->phone_no }}" disabled>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Credit Limit</label>
-                            <input type="text" class="form-control"
-                                   value="{{ number_format(auth()->user()->limit) }}" disabled>
-                        </div>
+                      
                     </div>
 
                 </div>

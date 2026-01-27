@@ -35,73 +35,48 @@
         padding: auto;
     }
 
-    /* Quick Stats cards */
-    .card-stat {
-        text-align: center;
-        padding: 1rem;
+        /* Header icon button */
+    .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #212529;
+        transition: all .2s ease;
     }
 
-    .card-stat h3 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
+    .icon-btn:hover {
+        background: #e9ecef;
     }
 
-    .card-stat p {
-        margin: 0;
-        font-weight: 500;
-    }
-    
-    .password-hide-show{
-      margin-top: 33px !important;
-      border: none !important;
-    }
-
-    .fixed-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: #fff;        /* footer background */
-        padding: 10px 0;
-        border-top: 1px solid #ddd;
-        z-index: 999;
+    /* Profile avatar */
+    .profile-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: #fff;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .sidebar-position{
-        z-index: 9999;
-    }
-
-    .notification-img {
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
-    .notification-img:hover {
-        transform: scale(1.05);
-        transition: 0.2s;
-    }
-    .navbar .dropdown-menu {
-        border-radius: 12px;
-    }
-
-    .badge {
-        font-size: 0.75rem;
-    }
-
+    /* Language flags */
     .language-flag img {
-        width: 22px;
-        height: 16px;
-        border-radius: 3px;
-        transition: transform .2s ease, box-shadow .2s ease;
+        width: 20px;
+        height: 14px;
+        border-radius: 2px;
+        transition: transform .2s ease;
     }
 
     .language-flag:hover img {
         transform: scale(1.1);
-        box-shadow: 0 2px 6px rgba(0,0,0,.2);
     }
+
 
 </style>
 </head>
