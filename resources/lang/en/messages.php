@@ -83,7 +83,7 @@ return [
     'upload_pnr' => 'Upload PNR',
 
     'one_way' => 'One Way',
-    'return' => 'Round Trip',
+    'return' => 'Return',
     'open_jaw' => 'Open Jaw',
 
     'paid' => 'Paid',

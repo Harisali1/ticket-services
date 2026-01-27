@@ -67,7 +67,7 @@ return [
     'create_airport' => 'Crea Aeroporto',
 
     'create_user' => 'Crea Utente',
-    'email' => 'Email',
+    'email' => 'E-mail',
 
     'pnr_list' => 'Elenco PNR',
     'pnr_no' => 'Numero PNR',
@@ -137,6 +137,8 @@ return [
     'confirm_password' => 'Conferma Password',
     'save' => 'Salva',
     'update' => 'Aggiorna',
+    'update_agency' => 'Aggiorna Agenzia',
+    'view_agency_detail' => 'Visualizza i dettagli dell-agenzia',
 
     'select_number_of_seat' => 'Seleziona numero di posti',
     'passenger_type' => 'Tipo di passeggero',
@@ -192,8 +194,5 @@ return [
     'baggage_included' => 'Bagaglio incluso',
 
     'limit_amount_for_booking' => '',
-    
-
-
 ];
 

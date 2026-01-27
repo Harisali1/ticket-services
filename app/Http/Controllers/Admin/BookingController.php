@@ -536,6 +536,12 @@ class BookingController extends Controller
                 'is_sold' => 0,
                 'is_sale' => 1
             ]);
+
+            $user = auth()->user();
+            $updatedRemainingAmount = $user->remaining_amount-$booking->total_amount;
+            User::find($user->id)->update([
+                'remaining_amount' => $updatedRemainingAmount
+            ]);
         
         DB::commit();
 

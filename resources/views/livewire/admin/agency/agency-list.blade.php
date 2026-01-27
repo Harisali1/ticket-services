@@ -59,17 +59,64 @@
     </div>
 
     <!-- Stats -->
-    <div class="row mb-4">
-        @foreach($stats as $label => $count)
-            <div class="col-12 col-sm-6 col-lg-3 mb-3">
-                <div class="card border">
-                    <div class="card-body">
-                        <p class="text-muted mb-1">{{ ucfirst($label) }}</p>
-                        <h3 class="card-title">{{ $count }}</h3>
-                    </div>
+    <div class="row mb-4 g-3">
+
+    <!-- All -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.all') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-dark">
+                        {{ $all }}
+                    </h2>
                 </div>
             </div>
-        @endforeach
+        </div>
+
+        <!-- Reserved -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-warning border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.pending') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-warning">
+                        {{ $pending }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paid -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-success border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.approved') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-success">
+                        {{ $approved }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-danger border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.suspended') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-danger">
+                        {{ $suspended }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Per Page Selector -->

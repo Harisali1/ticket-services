@@ -12,7 +12,7 @@
       <a href="{{ route('admin.agency.index') }}" class="text-decoration-none text-secondary">
         &larr;
       </a>
-      <h1 class="h4 mb-0">View Agency Details</h1>
+      <h1 class="h4 mb-0">{{__('messages.view_agency_detail')}}</h1>
     </div>
   </div>
 
@@ -23,17 +23,17 @@
     <form id="agency-form">
 
       <!-- Agency Details -->
-      <h5 class="mb-3">Agency Details</h5>
+      <h5 class="mb-3">{{__('messages.agency_detail')}}</h5>
       <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label">Agency Name*</label>
+          <label class="form-label">{{__('messages.agency_name')}}*</label>
           <input type="text" name="agency_name" id="agency_name"
                  value="{{ $agency->name }}"
                  class="form-control" readonly>
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">P.IVA*</label>
+          <label class="form-label">{{__('messages.piva')}}*</label>
           <input type="text" name="piv" id="piv"
                  value="{{ $agency->piv }}"
                  class="form-control" readonly>
@@ -41,38 +41,38 @@
       </div>
 
       <div class="mt-3">
-        <label class="form-label">Agency Address*</label>
+        <label class="form-label">{{__('messages.agency_address')}}*</label>
         <input type="text" name="agency_address" id="agency_address"
                value="{{ $agency->address }}"
                class="form-control" readonly>
       </div>
 
       <!-- User Details -->
-      <h5 class="mt-4 mb-3">User Details</h5>
+      <h5 class="mt-4 mb-3">{{__('messages.user_detail')}}</h5>
       <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label">Name*</label>
+          <label class="form-label">{{__('messages.name')}}*</label>
           <input type="text" name="name" id="name"
                  value="{{ $agency->user->name }}"
                  class="form-control" readonly>
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Email*</label>
+          <label class="form-label">{{__('messages.email')}}*</label>
           <input type="email" name="email" id="email"
                  value="{{ $agency->user->email }}"
                  class="form-control" readonly>
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Phone No*</label>
+          <label class="form-label">{{__('messages.phone_no')}}*</label>
           <input type="text" name="phone_no" id="phone_no"
                  value="{{ $agency->user->phone_no }}"
                  class="form-control" readonly>
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Status</label>
+          <label class="form-label">{{__('messages.status')}}</label>
           <select name="status" id="status" class="form-select" disabled>
             @foreach(\App\Enums\AgencyStatus::cases() as $status)
               <option value="{{ $status->value }}" @selected($agency->status === $status)>

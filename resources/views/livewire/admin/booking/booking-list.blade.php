@@ -30,22 +30,19 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">AirLine</label>
-                <select wire:model.defer="filters.airline_id" class="form-select">
-                    <option value="">Select AirLine</option>
-                    <option value="1">Pending</option>
-                    <option value="2">Approved</option>
-                    <option value="3">Suspended</option>
-                </select>
+                <label class="form-label">Booking No</label>
+                <input type="text" wire:model.defer="filters.booking_no" class="form-control" placeholder="Booking No #">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Status</label>
                 <select wire:model.defer="filters.status" class="form-select">
                     <option value="">Select</option>
-                    <option value="1">Pending</option>
-                    <option value="2">Approved</option>
-                    <option value="3">Suspended</option>
+                    <option value="1">Created</option>
+                    <option value="2">Ticketed</option>
+                    <option value="3">Paid</option>
+                    <option value="4">Void</option>
+                    <option value="5">Cancel</option>
                 </select>
             </div>
 
@@ -69,113 +66,229 @@
     </div>
 
     <!-- Stats -->
-    <div class="row mb-4">
-        @foreach($stats as $label => $count)
-            <div class="col-12 col-sm-6 col-lg-3 mb-3">
-                <div class="card border">
-                    <div class="card-body">
-                        <p class="text-muted mb-1">{{ ucfirst($label) }}</p>
-                        <h3 class="card-title">{{ $count }}</h3>
-                    </div>
+    <div class="row mb-4 g-3">
+
+        <div class="col-12 col-sm-6 col-lg-2">
+            <div class="card shadow-sm border-0 h-100 stat-card">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.all') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-dark">
+                        {{ $allCounts }}
+                    </h2>
                 </div>
             </div>
-        @endforeach
+        </div>
+
+        <!-- Reserved -->
+        <div class="col-12 col-sm-6 col-lg-2">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-warning border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.reserved') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-warning">
+                        {{ $reservedCounts }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticketed -->
+        <div class="col-12 col-sm-6 col-lg-2">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-primary border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.ticketed') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-primary">
+                        {{ $ticketedCounts }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paid -->
+        <div class="col-12 col-sm-6 col-lg-2">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-success border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.paid') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-success">
+                        {{ $paidCounts }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Void -->
+        <div class="col-12 col-sm-6 col-lg-2">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-secondary border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.void') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-secondary">
+                        {{ $voidCounts }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel -->
+        <div class="col-12 col-sm-6 col-lg-2">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-danger border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.cancel') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-danger">
+                        {{ $cancelCounts }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Per Page Selector -->
-    <div class="mb-3">
-        <select wire:model.live="perPage" class="form-select w-auto">
-            <option value="2">2</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-        </select>
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div>
+            <select wire:model.live="perPage" class="form-select form-select-sm w-auto">
+                <option value="2">2</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+
+        <button wire:click="exportExcel" class="btn btn-sm btn-success">
+            <i class="fas fa-file-excel me-1"></i> Export Excel
+        </button>
     </div>
 
-    <!-- Table -->
-    <div class="table-responsive mb-4">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>{{__('messages.booking_no')}} #</th>
-                    <th>{{__('messages.pnr_no')}} #</th>
-                    <th>{{__('messages.departure_date_time')}}</th>
-                    <th>{{__('messages.arrival_date_time')}}</th>
-                    <th>{{__('messages.seats')}}</th>
-                    <th>{{__('messages.paid_by')}}</th>
-                    <th>{{__('messages.paid_at')}}</th>
-                    <th>{{__('messages.status')}}</th>
-                    <th>{{__('messages.action')}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($bookings as $booking)
-                @php
-                    $bookingDate = Carbon\Carbon::parse($booking->created_at)->toDateString();
-                    $today = Carbon\Carbon::today()->toDateString();
-                    $now = Carbon\Carbon::now();
-                @endphp
+    <!-- Table Card -->
+    <div class="card border-0 shadow-lg">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+
+                <!-- Table Head -->
+                <thead class="bg-light">
+                    <tr class="text-uppercase small text-muted">
+                        <th>{{ __('messages.booking_no') }} #</th>
+                        <th>{{ __('messages.pnr_no') }} #</th>
+                        <th>{{ __('messages.departure_date_time') }}</th>
+                        <th>{{ __('messages.arrival_date_time') }}</th>
+                        <th class="text-center">{{ __('messages.seats') }}</th>
+                        <th>{{ __('messages.paid_by') }}</th>
+                        <th>{{ __('messages.paid_at') }}</th>
+                        <th>{{ __('messages.status') }}</th>
+                        <th class="text-end">{{ __('messages.action') }}</th>
+                    </tr>
+                </thead>
+
+                <!-- Table Body -->
+                <tbody>
+                    @forelse($bookings as $booking)
+
+                    @php
+                        $bookingDate = \Carbon\Carbon::parse($booking->created_at)->toDateString();
+                        $today = \Carbon\Carbon::today()->toDateString();
+                        $now = \Carbon\Carbon::now();
+                    @endphp
 
                     <tr>
-                        <td>{{ $booking->booking_no }}</td>
-                        <td>{{ $booking->pnr?->pnr_no ?? '' }}</td>
-                        <td>{{ $booking->pnr?->departure_date ?? '' }}</td>
-                        <td>{{ $booking->pnr?->arrival_date ?? ''}}</td>
-                        <td>{{ $booking->seats }}</td>
-                        <td>{{ (isset($booking->payable)) ? $booking->payable->name : '' }}</td>
+                        <td class="fw-semibold">{{ $booking->booking_no }}</td>
+
+                        <td class="text-muted">
+                            {{ $booking->pnr?->pnr_no }}
+                        </td>
+
+                        <td>{{ $booking->pnr?->departure_date }}</td>
+                        <td>{{ $booking->pnr?->arrival_date }}</td>
+
+                        <td class="text-center">
+                            <span class="badge bg-secondary-subtle text-dark">
+                                {{ $booking->seats }}
+                            </span>
+                        </td>
+
+                        <td>{{ optional($booking->payable)->name }}</td>
                         <td>{{ $booking->paid_at }}</td>
+
+                        <!-- Status -->
                         <td>
-                            <span class="{{ $booking->status->color() }}">
+                            <span class="badge rounded-pill {{ $booking->status->color() }}">
                                 {{ $booking->status->label() }}
                             </span>
                         </td>
-                        <td>
-                            
-                            @if($booking->status->label() === 'Created')
-                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-info">
-                                    PNR
-                                </a>
-                            @elseif($booking->status->label() === 'Ticketed')
-                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-success">
-                                    TKT
-                                </a>
-                                @if(Auth::user()->can('void'))
-                                @if(($bookingDate == $today && $now->hour >= 0))
-                                    <button class="btn btn-sm btn-warning" type="button" onclick="voidBooking({{ $booking->id }})">
-                                        Void
-                                    </button>
-                                @endif
-                                @endif
-                            @elseif($booking->status->label() === 'Paid')
-                                <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, ($booking->return_pnr_id != null) ? $booking->return_pnr_id : 0]) }}" class="b-action-btn btn btn-sm btn-success">
+
+                        <!-- Actions -->
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
+
+                                @if($booking->status->label() === 'Created')
+                                    <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, $booking->return_pnr_id ?? 0]) }}"
+                                    class="btn btn-sm btn-outline-info">
+                                        PNR
+                                    </a>
+
+                                @elseif($booking->status->label() === 'Ticketed')
+                                    <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, $booking->return_pnr_id ?? 0]) }}"
+                                    class="btn btn-sm btn-outline-success">
+                                        TKT
+                                    </a>
+
+                                    @can('void')
+                                        @if($bookingDate == $today && $now->hour >= 0)
+                                            <button class="btn btn-sm btn-outline-warning"
+                                                    onclick="voidBooking({{ $booking->id }})">
+                                                Void
+                                            </button>
+                                        @endif
+                                    @endcan
+
+                                @elseif($booking->status->label() === 'Paid')
+                                    <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, $booking->return_pnr_id ?? 0]) }}"
+                                    class="btn btn-sm btn-outline-success">
                                         Paid
-                                </a>
-                            @elseif($booking->status->label() === 'Cancel')
-                                <button class="btn btn-sm btn-danger" type="button">
-                                    CN
-                                </button>
-                            @endif
-                            @if($booking->status->label() === 'Void')
-                                <button class="btn btn-sm btn-warning" type="button">
-                                    Voided
-                                </button>
-                            @endif
+                                    </a>
+
+                                @elseif($booking->status->label() === 'Cancel')
+                                    <span class="badge bg-danger-subtle text-danger">
+                                        Cancelled
+                                    </span>
+                                @endif
+
+                                @if($booking->status->label() === 'Void')
+                                    <span class="badge bg-warning-subtle text-warning">
+                                        Voided
+                                    </span>
+                                @endif
+
+                            </div>
                         </td>
                     </tr>
-                @empty
+
+                    @empty
                     <tr>
-                        <td colspan="10" class="text-center text-muted py-4">
-                            No Bookings found
+                        <td colspan="9" class="text-center text-muted py-4">
+                            No bookings found
                         </td>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
+                    @endforelse
+                </tbody>
+
+            </table>
+        </div>
     </div>
-    
+
     <!-- Pagination -->
-    <div>
+    <div class="mt-3">
         {{ $bookings->links() }}
     </div>
+
 
     <!-- put on sale modal -->
     <div wire:ignore.self class="modal fade" id="putOnSaleModal" data-bs-backdrop="static" 
@@ -330,6 +443,10 @@
     </div>
 </div>
 <script>
+
+    
+
+
     function voidBooking(id){
         let url = "{{ route('admin.booking.void', ':id') }}";
         url = url.replace(':id', id);   

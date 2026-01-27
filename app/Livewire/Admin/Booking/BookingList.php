@@ -5,6 +5,8 @@ namespace App\Livewire\Admin\Booking;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Admin\Booking;
+use App\Exports\BookingsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use DB;
 
 class BookingList extends Component
@@ -24,7 +26,7 @@ class BookingList extends Component
 
     public $filters = [
         'pnr_no' => '',
-        'airline' => '',
+        'booking_no' => '',
         'status' => '',
         'from' => '',
         'to' => '',
@@ -95,24 +97,37 @@ class BookingList extends Component
         $this->resetPage();
     }
 
+    public function exportExcel()
+    {
+        return Excel::download(
+            new BookingsExport($this->filters, auth()->user()),
+            'bookings_' . now()->format('Y-m-d_H-i') . '.xlsx'
+        );
+    }
+
     public function render()
     {
+        
         $bookings = Booking::query();
 
         if(auth()->user()->user_type_id != 1){
             $bookings = $bookings->where('created_by', auth()->user()->id);
         }
 
-        $stats = [
-            'all'       => (clone $bookings)->count(),
-            'reserved'  => (clone $bookings)->where('status', 1)->count(),
-            'ticketed'  => (clone $bookings)->where('status', 2)->count(),
-            'paid'      => (clone $bookings)->where('status', 3)->count(),
-            'abandoned' => (clone $bookings)->where('status', 4)->count(),
-        ];
+        $allCounts      = (clone $bookings)->count();
+        $reservedCounts = (clone $bookings)->where('status', 1)->count();
+        $ticketedCounts = (clone $bookings)->where('status', 2)->count();
+        $paidCounts     = (clone $bookings)->where('status', 3)->count();
+        $voidCounts     = (clone $bookings)->where('status', 4)->count();
+        $cancelCounts   = (clone $bookings)->where('status', 5)->count();
 
         $bookings = $bookings->when($this->filters['pnr_no'], fn ($q) =>
-                $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
+                $q->whereHas('pnr', fn ($pnr) =>
+                    $pnr->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
+                )
+            )
+            ->when($this->filters['booking_no'], fn ($q) =>
+                $q->where('booking_no', 'like', '%' . $this->filters['booking_no'] . '%')
             )
             ->when($this->filters['status'] !== '', fn ($q) =>
                 $q->where('status', $this->filters['status'])
@@ -126,6 +141,9 @@ class BookingList extends Component
             ->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.booking.booking-list', compact('bookings', 'stats'));
+        
+        
+        return view('livewire.admin.booking.booking-list', 
+        compact('bookings', 'allCounts','reservedCounts','ticketedCounts','paidCounts','cancelCounts','voidCounts'));
     }
 }

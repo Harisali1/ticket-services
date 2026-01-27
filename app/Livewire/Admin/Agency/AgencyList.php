@@ -85,12 +85,10 @@ class AgencyList extends Component
             $agencies = $agencies->where('created_by', auth()->user()->id);
         }
 
-        $stats = [
-            'all'       => (clone $agencies)->count(),
-            'pending'   => (clone $agencies)->where('status', 1)->count(),
-            'approved'  => (clone $agencies)->where('status', 2)->count(),
-            'suspended' => (clone $agencies)->where('status', 3)->count(),
-        ];
+        $all = (clone $agencies)->count();
+        $pending   = (clone $agencies)->where('status', 1)->count();
+        $approved  = (clone $agencies)->where('status', 2)->count();
+        $suspended = (clone $agencies)->where('status', 3)->count();
 
         $agencies = $agencies->when($this->filters['agency_name'], fn ($q) =>
             $q->where('name', 'like', '%' . $this->filters['agency_name'] . '%')
@@ -108,6 +106,6 @@ class AgencyList extends Component
         $agencies = $agencies->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.agency.agency-list', compact('agencies', 'stats'));
+        return view('livewire.admin.agency.agency-list', compact('agencies', 'all', 'pending', 'approved', 'suspended'));
     }
 }

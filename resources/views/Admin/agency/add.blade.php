@@ -24,7 +24,7 @@
     <form id="agency-form">
 
       <!-- Agency Details -->
-      <h5 class="mb-3">{{ __('messages.agency_details') }}</h5>
+      <h5 class="mb-3">{{ __('messages.agency_detail') }}</h5>
       <div class="row g-3">
         <div class="col-md-6">
           <label class="form-label">{{ __('messages.agency_name') }}*</label>

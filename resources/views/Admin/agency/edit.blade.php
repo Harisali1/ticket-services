@@ -10,7 +10,7 @@
       <a href="{{ route('admin.agency.index') }}" class="text-decoration-none text-secondary">
         &larr;
       </a>
-      <h1 class="h4 mb-0">Update Agency</h1>
+      <h1 class="h4 mb-0">{{__('messages.update_agency')}}</h1>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
   <div class="card p-4">
     <form id="agency-form">
       <!-- Agency Details -->
-      <h5 class="mb-3">{{ __('messages.agency_details') }}</h5>
+      <h5 class="mb-3">{{ __('messages.agency_detail') }}</h5>
       <div class="row g-3">
         <div class="col-md-6">
           <input type="hidden" value="{{ $agency->id }}" id="id" name="id">
