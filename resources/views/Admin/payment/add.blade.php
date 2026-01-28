@@ -9,18 +9,17 @@
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 mb-0">Create Payment</h1>
+        <h1 class="h4 mb-0">{{__('messages.create_payment')}}</h1>
     </div>
 
-    
-
+    @livewire('admin.payment.pending-payment-list')
 
     <!-- FORM -->
     <form id="payment-form" enctype="multipart/form-data">
 
         <div class="row g-3">
             <div class="col-md-4">
-                <label class="form-label">Total Amount</label>
+                <label class="form-label">{{__('messages.total_amount')}}</label>
                 <input type="text"
                        name="amount"
                        id="totalAmount"
@@ -29,7 +28,7 @@
             </div>
 
             <div class="col-md-4">
-                <label class="form-label">Upload Image</label>
+                <label class="form-label">{{__('messages.upload_image')}}</label>
                 <input type="file"
                        name="image"
                        id="image"
@@ -38,7 +37,7 @@
 
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-dark w-100">
-                    Submit
+                    {{__('messages.submit')}}
                 </button>
             </div>
         </div>

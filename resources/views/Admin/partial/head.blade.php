@@ -77,6 +77,20 @@
         transform: scale(1.1);
     }
 
+.fixed-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;        /* footer background */
+        padding: 10px 0;
+        border-top: 1px solid #ddd;
+        z-index: 999;
+    }
+
+    .sidebar-position{
+        z-index: 9999;
+    }
 
 </style>
 </head>

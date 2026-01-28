@@ -120,7 +120,7 @@
     <h3 class="fw-semibold mb-3 pnr-detail">PNR Details:</h3>
 
     <div class="mb-4">
-        <h6 class="fw-bold mb-3 text-green">OUTBOUND</h6>
+        <h6 class="fw-bold mb-3 text-success">OUTBOUND</h6>
         <div class="card flight-card mb-3">
 
             <div class="card-body">
@@ -255,7 +255,7 @@
     @if($returnPnrBookings != null)
         <!-- INBOUND -->
         <div>
-            <h6 class="text-primary fw-bold mb-3">INBOUND</h6>
+            <h6 class="text-danger fw-bold mb-3">INBOUND</h6>
 
             <div class="card flight-card mb-3">
 
@@ -281,7 +281,7 @@
                             </p>
                             <p class="mb-0">
                                 <small class="text-muted">To:</small><br>
-                                <strong>{{ $returnPnrBookings->arrival_date_time }}</strong>
+                            <strong>{{ ($returnPnrBookings->middle_arrival_date_time) ? $returnPnrBookings->middle_arrival_date_time :  $returnPnrBookings->arrival_date_time }}</strong>
                             </p>
                         </div>
 
@@ -290,12 +290,12 @@
                             {{ $returnPnrBookings->departure->code }}
                         </div>
                         <div class="col-md-1 text-center fw-bold fs-5 airport-code">
-                            {{ $returnPnrBookings->arrival->code }}
+                        {{ (isset($returnPnrBookings->middle_arrival->code)) ? $returnPnrBookings->middle_arrival->code : $returnPnrBookings->arrival->code }}
                         </div>
 
                         <div class="col-md-2 text-center">
                             <small class="text-muted">Duration</small><br>
-                            <strong>{{ $returnPnrBookings->duration }}</strong>
+                            <strong>{{ ($returnPnrBookings->middle_arrival_date_time) ? $returnPnrBookings->first_duration : $returnPnrBookings->duration }}</strong>
                         </div>
 
                         
@@ -322,6 +322,68 @@
 
                 </div>
             </div>
+            @if($returnPnrBookings->middle_arrival_id != null && $returnPnrBookings->middle_arrival_time != null && $returnPnrBookings->rest_time != null)
+                <div class="card flight-card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <!-- Airline -->
+                            <div class="col-md-1 text-center">
+                            <img src="{{ $returnPnrBookings->airline->logo 
+                                                ? asset('storage/'.$returnPnrBookings->airline->logo) 
+                                                : asset('images/logo-placeholder.png') }}"
+                                                alt="logo"
+                                                class="rounded-circle border"
+                                                style="width:25px;height:25px;object-fit:contain;">
+                            </div>
+
+                            <!-- From / To -->
+                            <div class="col-md-3">
+                                <p class="mb-1">
+                                    <small class="text-muted">From:</small><br>
+                                    <strong>{{ $returnPnrBookings->middle_departure_date_time }}</strong>
+                                </p>
+                                <p class="mb-0">
+                                    <small class="text-muted">To:</small><br>
+                                    <strong>{{ $returnPnrBookings->arrival_date_time }}</strong>
+                                </p>
+                            </div>
+
+                            <!-- Airports -->
+                            <div class="col-md-1 text-center fw-bold fs-5 airport-code">
+                                {{ $returnPnrBookings->middle_arrival->code}}
+                            </div>
+                            <div class="col-md-1 text-center fw-bold fs-5 airport-code">
+                                {{ $returnPnrBookings->arrival->code}}
+                            </div>
+
+                            <div class="col-md-2 text-center">
+                                <small class="text-muted">Duration</small><br>
+                                <strong>{{ $returnPnrBookings->second_duration }}</strong>
+                            </div>
+
+                        
+
+                            <!-- Aircraft -->
+                            <div class="col-md-2 text-center">
+                                <small class="text-muted">Airplane</small><br>
+                                <strong>{{ ($returnPnrBookings->middle_air_craft == null) ? $returnPnrBookings->air_craft : $returnPnrBookings->middle_air_craft }}</strong>
+                            </div>
+
+                            <!-- Flight Info -->
+                            <div class="col-md-2">
+                                <p class="mb-1">
+                                    <small class="text-muted">Num.:</small>
+                                    <strong>{{ ($returnPnrBookings->middle_flight_no == null) ? $returnPnrBookings->flight_no : $returnPnrBookings->middle_flight_no }}</strong>
+                                </p>
+                                <p class="mb-0">
+                                    <small class="text-muted">Class:</small>
+                                    <strong>{{ $returnPnrBookings->class }}</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     @endif
 

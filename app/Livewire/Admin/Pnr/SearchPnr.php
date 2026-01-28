@@ -73,53 +73,95 @@ class SearchPnr extends Component
 
     public function render()
     {
-        
-        if($this->day_plus){
-            $endDepartureDate = Carbon::parse($this->departure_date)->addDays($this->day_plus)->format('Y-m-d');
-        }
-        if($this->day_minus){
-            $startDepartureDate = Carbon::parse($this->departure_date)->subDays($this->day_minus)->format('Y-m-d');
-        }
-        if($this->return_day_plus){
-            $endReturnDepartureDate = Carbon::parse($this->return_departure_date)->addDays($this->return_day_plus)->format('Y-m-d');
-        }
-        if($this->return_day_minus){
-            $startReturnDepartureDate = Carbon::parse($this->return_departure_date)->subDays($this->return_day_minus)->format('Y-m-d');
+        $today = Carbon::today();
+
+        $departureDate = Carbon::parse($this->departure_date);
+
+        // Days difference from today
+        $daysDiff = $today->diffInDays($departureDate, false);
+
+        // Max allowed minus logic
+        $maxMinus = match (true) {
+            $daysDiff <= 0 => 0,   // today
+            $daysDiff === 1 => 1,  // tomorrow
+            $daysDiff === 2 => 2,  // day after tomorrow
+            default => 3,          // after that
+        };
+
+        // PLUS days (same as before)
+        $endDepartureDate = $departureDate
+            ->copy()
+            ->addDays($this->day_plus ?? 0)
+            ->format('Y-m-d');
+
+        // MINUS days (controlled)
+        $requestedMinus = $this->day_minus ?? 0;
+        $finalMinus = min($requestedMinus, $maxMinus);
+
+        $startDepartureDate = $departureDate
+            ->copy()
+            ->subDays($finalMinus)
+            ->format('Y-m-d');
+
+        /*
+        |--------------------------------------------------------------------------
+        | RETURN DATE RANGE (IF RETURN TRIP)
+        |--------------------------------------------------------------------------
+        */
+
+        if ($this->trip_type === 'return' && $this->return_departure_date) {
+
+            $returnDepartureDate = Carbon::parse($this->return_departure_date);
+
+            $returnDaysDiff = $today->diffInDays($returnDepartureDate, false);
+
+            $maxReturnMinus = match (true) {
+                $returnDaysDiff <= 0 => 0,
+                $returnDaysDiff === 1 => 1,
+                $returnDaysDiff === 2 => 2,
+                default => 3,
+            };
+
+            $endReturnDepartureDate = $returnDepartureDate
+                ->copy()
+                ->addDays($this->return_day_plus ?? 0)
+                ->format('Y-m-d');
+
+            $finalReturnMinus = min($this->return_day_minus ?? 0, $maxReturnMinus);
+
+            $startReturnDepartureDate = $returnDepartureDate
+                ->copy()
+                ->subDays($finalReturnMinus)
+                ->format('Y-m-d');
         }
 
-        if($this->trip_type == 'return'){
+        
+
+        if ($this->trip_type === 'return') {
             $outbounds = Pnr::withCount([
-                'seats as seat_available' => function ($q) {
-                    $q->where('is_sale', 1);
-                }
+                'seats as seat_available' => fn ($q) => $q->where('is_sale', 1)
             ])
-            // ->where('pnr_type', 'return')
             ->where('departure_id', $this->departure_id)
             ->where('arrival_id', $this->arrival_id)
             ->whereBetween('departure_date', [$startDepartureDate, $endDepartureDate])
             ->with('airline', 'seats')
             ->get();
 
-
             $returns = Pnr::withCount([
-                    'seats as seat_available' => function ($q) {
-                        $q->where('is_sale', 1);
-                    }
-                ])
-                // ->where('pnr_type', 'return')
-                ->where('departure_id', $this->return_departure_id)
-                ->where('arrival_id', $this->return_arrival_id)
-                ->whereBetween('departure_date', [$startReturnDepartureDate, $endReturnDepartureDate])
-                ->with('airline', 'seats')
-                ->get();
-
+                'seats as seat_available' => fn ($q) => $q->where('is_sale', 1)
+            ])
+            ->where('departure_id', $this->return_departure_id)
+            ->where('arrival_id', $this->return_arrival_id)
+            ->whereBetween('departure_date', [$startReturnDepartureDate, $endReturnDepartureDate])
+            ->with('airline', 'seats')
+            ->get();
 
             $pnrs = [];
 
             foreach ($outbounds as $outbound) {
                 foreach ($returns as $return) {
                     if (
-                        $outbound->arrival_id == $return->departure_id &&
+                        $outbound->arrival_id === $return->departure_id &&
                         $outbound->departure_date < $return->departure_date
                     ) {
                         $pnrs[] = [
@@ -129,13 +171,11 @@ class SearchPnr extends Component
                     }
                 }
             }
-        }
-        
-        else{
+
+        } else {
+
             $pnrs = Pnr::withCount([
-                'seats as seat_available' => function ($q) {
-                    $q->where('is_sale', 1);
-                }
+                'seats as seat_available' => fn ($q) => $q->where('is_sale', 1)
             ])
             ->where('departure_id', $this->departure_id)
             ->where('arrival_id', $this->arrival_id)
@@ -143,37 +183,16 @@ class SearchPnr extends Component
             ->with('airline', 'seats')
             ->paginate($this->perPage);
         }
-        
-
-        // $departureIds = (array) $this->departure_id;
-        // $arrivalIds   = (array) $this->arrival_id;
-
-        // if ($this->trip_type === 'return') {
-        //     $departureIds[] = $this->return_departure_id;
-        //     $arrivalIds[]   = $this->return_arrival_id;
-        // }
-
-        // $pnrs = Pnr::withCount([
-        //         'seats as seat_available' => function ($q) {
-        //             $q->where('is_sale', 1);
-        //         }
-        //     ])
-        //     ->whereIn('departure_id', $departureIds)
-        //     ->whereIn('arrival_id', $arrivalIds)
-        //     ->whereBetween('departure_date', [
-        //         $startDepartureDate,
-        //         $this->trip_type === 'return'
-        //             ? $endReturnDepartureDate
-        //             : $endDepartureDate
-        //     ])
-        //     ->with('airline', 'seats')
-        //     ->paginate($this->perPage);
-
 
         $passengerTypes = PassengerType::all();
         $type = $this->trip_type;
-        
-        return view('livewire.admin.pnr.search-pnr', compact('pnrs','passengerTypes','type'));
+
+        return view('livewire.admin.pnr.search-pnr', compact(
+            'pnrs',
+            'passengerTypes',
+            'type'
+        ));
+
     }
 }
 

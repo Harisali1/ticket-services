@@ -99,7 +99,8 @@ class BookingList extends Component
 
     public function filterStatus($status)
     {
-        $this->filters['status'] = $status;
+        
+        $this->filters['status'] = ($status == 0) ? '' : $status;
     }
 
 

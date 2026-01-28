@@ -27,7 +27,7 @@
             <nav class="nav flex-column gap-2">
                 <a href="{{ route('admin.dashboard') }}" class="nav-link text-white bg-secondary rounded d-flex align-items-center">
                     <i class="fa fa-tachometer me-3"></i>
-                    <span class="menu-text">{{ __('messages.dashboard') }}</span>
+                    <span class="menu-text">{{ __('messages.home') }}</span>
                 </a>
 
                 <a href="{{ route('admin.agency.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
@@ -81,7 +81,7 @@
             <nav class="nav flex-column gap-2">
                 <a href="{{ route('admin.dashboard') }}" class="nav-link text-white bg-secondary rounded d-flex align-items-center">
                     <i class="fa fa-tachometer me-3"></i>
-                    <span class="menu-text">{{ __('messages.dashboard') }}</span>
+                    <span class="menu-text">{{ __('messages.home') }}</span>
                 </a>
                 @if(Auth::user()->can('search_flight'))
                 <a href="{{ route('admin.booking.create') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">

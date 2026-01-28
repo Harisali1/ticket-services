@@ -25,17 +25,17 @@
         </div>
         <div class="offcanvas-body">
             <div class="mb-3">
-                <label class="form-label">Pnr No</label>
+                <label class="form-label">{{__('messages.pnr')}}</label>
                 <input type="text" wire:model.defer="filters.pnr_no" class="form-control" placeholder="Pnr No #">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Booking No</label>
+                <label class="form-label">{{__('messages.booking_no')}}</label>
                 <input type="text" wire:model.defer="filters.booking_no" class="form-control" placeholder="Booking No #">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Status</label>
+                <label class="form-label">{{__('messages.status')}}</label>
                 <select wire:model.defer="filters.status" class="form-select">
                     <option value="">Select</option>
                     <option value="1">Created</option>
@@ -47,7 +47,7 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Created Date</label>
+                <label class="form-label">{{__('messages.created_date')}}</label>
                 <div class="row g-2">
                     <div class="col">
                         <input type="date" wire:model.defer="filters.from" class="form-control">
@@ -59,8 +59,8 @@
             </div>
 
             <div class="d-flex gap-2">
-                <button wire:click="applyFilters" data-bs-dismiss="offcanvas" class="btn btn-dark flex-fill">{{__('message.search')}}</button>
-                <button wire:click="resetFilters" data-bs-dismiss="offcanvas" class="btn btn-outline-secondary flex-fill">{{ __('messages.Cancel') }}</button>
+                <button wire:click="applyFilters" data-bs-dismiss="offcanvas" class="btn btn-dark flex-fill">{{__('messages.search')}}</button>
+                <button wire:click="resetFilters" data-bs-dismiss="offcanvas" class="btn btn-outline-secondary flex-fill">{{ __('messages.cancel') }}</button>
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
 
         <div class="col-12 col-sm-6 col-lg-2">
             <div class="card shadow-sm border-0 h-100 stat-card">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(0)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.all') }}
                     </p>
@@ -98,7 +98,7 @@
         <!-- Ticketed -->
         <div class="col-12 col-sm-6 col-lg-2">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-primary border-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(2)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.ticketed') }}
                     </p>
@@ -112,7 +112,7 @@
         <!-- Paid -->
         <div class="col-12 col-sm-6 col-lg-2">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-success border-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(3)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.paid') }}
                     </p>
@@ -126,7 +126,7 @@
         <!-- Void -->
         <div class="col-12 col-sm-6 col-lg-2">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-secondary border-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(4)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.void') }}
                     </p>
@@ -140,7 +140,7 @@
         <!-- Cancel -->
         <div class="col-12 col-sm-6 col-lg-2">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-danger border-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(5)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.cancel') }}
                     </p>
@@ -162,10 +162,11 @@
                 <option value="50">50</option>
             </select>
         </div>
-
-        <button wire:click="exportExcel" class="btn btn-sm btn-success">
-            <i class="fas fa-file-excel me-1"></i> Export Excel
-        </button>
+        @if(auth()->user()->user_type_id == 1)
+            <button wire:click="exportExcel" class="btn btn-sm btn-success">
+                <i class="fas fa-file-excel me-1"></i> Export Excel
+            </button>
+        @endif
     </div>
 
     <!-- Table Card -->

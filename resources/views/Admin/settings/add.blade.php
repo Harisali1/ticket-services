@@ -14,7 +14,7 @@
 @section('content')
 <div class="container py-5">
 
-    <h1 class="h4">Personal Settings</h1>
+    <h1 class="h4">{{__('messages.personal_setting')}}</h1>
     <hr>
 
     <form id="setting-form" enctype="multipart/form-data" class="pb-5">
@@ -23,11 +23,11 @@
             <!-- LEFT: Agency Details -->
             <div class="col-md-6">
                 <div class="card p-4 h-100">
-                    <h5 class="mb-3">Agency Details</h5>
+                    <h5 class="mb-3">{{__('messages.agency_detail')}}</h5>
 
                     <!-- Logo (Editable) -->
                     <div class="mb-3">
-                        <label class="form-label">Agency Logo</label>
+                        <label class="form-label">{{__('messages.agency_logo')}}</label>
                         <input type="file" name="logo" id="logo" class="form-control">
 
                         <img id="logoPreview"
@@ -38,35 +38,35 @@
 
                     <!-- Read Only Fields -->
                     <div class="mb-3">
-                        <label class="form-label">Agency Name</label>
+                        <label class="form-label">{{__('messages.agency_name')}}</label>
                         <input type="text" class="form-control" value="{{ auth()->user()->agency->name }}" disabled>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">P.IVA</label>
+                        <label class="form-label">{{__('messages.piva')}}</label>
                         <input type="text" class="form-control" value="{{ auth()->user()->agency->piv }}" disabled>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Address</label>
+                        <label class="form-label">{{__('messages.address')}}</label>
                         <textarea class="form-control" rows="2" disabled>{{ auth()->user()->agency->address }}</textarea>
                     </div>
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Name</label>
+                            <label class="form-label">{{__('messages.name')}}</label>
                             <input type="text" class="form-control" value="{{ auth()->user()->name }}" disabled>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">{{__('messages.email')}}</label>
                             <input type="text" class="form-control" value="{{ auth()->user()->email }}" disabled>
                         </div>
                     </div>
 
                     <div class="row g-3 mt-1">
                         <div class="col-md-6">
-                            <label class="form-label">Phone No</label>
+                            <label class="form-label">{{__('messages.phone_no')}}</label>
                             <input type="text" class="form-control" value="{{ auth()->user()->phone_no }}" disabled>
                         </div>
 
@@ -79,20 +79,20 @@
             <!-- RIGHT: Change Password -->
             <div class="col-md-6">
                 <div class="card p-4 h-100">
-                    <h5 class="mb-3">Change Password</h5>
+                    <h5 class="mb-3">{{__('messages.change_password')}}</h5>
 
                     <div class="mb-3">
-                        <label class="form-label">Current Password</label>
+                        <label class="form-label">{{__('messages.current_password')}}</label>
                         <input type="password" name="current_password" class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">New Password</label>
+                        <label class="form-label">{{__('messages.new_password')}}</label>
                         <input type="password" name="password" class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Confirm New Password</label>
+                        <label class="form-label">{{__('messages.confirm_new_password')}}</label>
                         <input type="password" name="password_confirmation" class="form-control">
                     </div>
                 </div>
@@ -103,7 +103,7 @@
         <!-- Save Button -->
         <div class="d-flex justify-content-end mt-4">
             <button type="submit" class="btn btn-dark px-4">
-                Save Changes
+                {{__('messages.save')}}
             </button>
         </div>
     </form>

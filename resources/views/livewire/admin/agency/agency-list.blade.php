@@ -9,11 +9,11 @@
             </a>
 
             <!-- Filter button triggers offcanvas -->
-            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
+            <!-- <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
                   <path d="M1.5 1.5a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .4.8L10 7.7v5.6a.5.5 0 0 1-.757.429L7 12.101l-2.243 1.628A.5.5 0 0 1 4 12.3V7.7L1.1 2.3a.5.5 0 0 1 .4-.8z"/>
                 </svg>
-            </button>
+            </button> -->
         </div>
     </div>
 
@@ -64,7 +64,7 @@
     <!-- All -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card shadow-sm border-0 h-100 stat-card">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(0)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.all') }}
                     </p>
@@ -78,7 +78,7 @@
         <!-- Reserved -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-warning border-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(1)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.pending') }}
                     </p>
@@ -92,7 +92,7 @@
         <!-- Paid -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-success border-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(2)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.approved') }}
                     </p>
@@ -106,7 +106,7 @@
         <!-- Cancel -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-danger border-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center" wire:click="filterStatus(3)">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.suspended') }}
                     </p>

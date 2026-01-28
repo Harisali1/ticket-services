@@ -4,7 +4,7 @@ return [
     'welcome' => 'Welcome',
     'login'   => 'Login',
     'logout'  => 'Logout',
-    'dashboard' => 'Home',
+    'home' => 'Home',
 
     'manage_agencies' => 'Manage Agencies',
     'manage_airline' => 'Manage Airline',
@@ -25,7 +25,7 @@ return [
     'void' => 'Void',
     'cancel' => 'Cancelled',
 
-    'today_reservation' => 'Today Reservation',
+    'today_reservation' => 'Today’s Reservation',
     'sub_agencies' => 'Sub Agencies',
     'search' => 'Search',
 
@@ -42,7 +42,7 @@ return [
 
     'agency_name' => 'Agency Name',
     'agency_email' => 'Agency Email',
-    'piva' => 'P.IVA',
+    'piva' => 'VAT Number',
     'address' => 'Address',
     'created_on' => 'Created On',
     'status' => 'Status',
@@ -70,7 +70,7 @@ return [
     'email' => 'Email',
 
     'pnr_list' => 'PNR List',
-    'pnr_no' => 'PNR Number',
+    'pnr' => 'PNR',
     'airline' => 'Airline',
     'departure' => 'Departure',
     'arrival' => 'Arrival',
@@ -83,7 +83,7 @@ return [
     'upload_pnr' => 'Upload PNR',
 
     'one_way' => 'One Way',
-    'return' => 'Return',
+    'return' => 'Round Trip',
     'open_jaw' => 'Open Jaw',
 
     'paid' => 'Paid',
@@ -117,17 +117,16 @@ return [
     'from'      => 'From',
     'to'        => 'To',
 
-    'payment_list'        => 'Payment List',
+    'payment_list'        => 'Payments List',
     'create_payment'      => 'Create Payment',
     'reserved_amount'     => 'Reserved Amount',
     'ticketed_amount'     => 'Ticketed Amount',
     'paid_amount'         => 'Paid Amount',
     'remaining_amount'    => 'Remaining Amount',
-    'on_approval_amount'  => 'On Approval Amount',
-    'slip_no'             => 'Slip No',
+    'on_approval_amount'  => 'Amount Under Approval',
+    'slip_no'             => 'Slip Number',
     'approved_by'         => 'Approved By',
     'approved_at'         => 'Approved At',
-
     'day' => 'Day',
 
     'agency_detail' => 'Agency Details',
@@ -138,6 +137,8 @@ return [
     'confirm_password' => 'Confirm Password',
     'save' => 'Save',
     'update' => 'Update',
+    'update_agency' => 'Update Agency',
+    'view_agency_detail' => 'View Agency Details',
 
     'select_number_of_seat' => 'Select Number of Seats',
     'passenger_type' => 'Passenger Type',
@@ -193,4 +194,19 @@ return [
     'baggage_included' => 'Baggage Included',
 
     'limit_amount_for_booking' => 'Booking Limit Amount',
+    'filters' => 'Filters',
+    'created_date' => 'Created Date',
+    'export_excel' => 'Export Excel',
+
+    'total_amount' => 'Total Amount',
+    'partial_pay_amount' => 'Partial Paid Amount',
+    'payable_amount' => 'Payable Amount',
+    'upload_image' => 'Upload Image',
+
+    'personal_setting' => 'Personal Settings',
+    'agency_logo' => 'Agency Logo',
+    'change_password' => 'Change Password',
+    'current_password' => 'Current Password',
+    'new_password' => 'New Password',
+    'confirm_new_password' => 'Confirm New Password',
 ];

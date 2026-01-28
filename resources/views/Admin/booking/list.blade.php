@@ -14,6 +14,7 @@
     }
 
     .stat-card:hover {
+        cursor: pointer;
         transform: translateY(-3px);
         box-shadow: 0 0.5rem 1rem rgba(0,0,0,.08);
     }

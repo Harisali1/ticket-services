@@ -4,7 +4,7 @@ return [
     'welcome' => 'Benvenuto',
     'login'   => 'Accesso',
     'logout'  => 'Disconnetti',
-    'dashboard' => 'Pannello Di Controllo',
+    'home' => 'Casa',
 
     'manage_agencies' => 'Gestisci Agenzie',
     'manage_airline' => 'Gestisci Compagnia Aerea',
@@ -70,7 +70,7 @@ return [
     'email' => 'E-mail',
 
     'pnr_list' => 'Elenco PNR',
-    'pnr_no' => 'PNR',
+    'pnr' => 'PNR',
     'airline' => 'Compagnia Aerea',
     'departure' => 'Partenza',
     'arrival' => 'Arrivo',
@@ -193,10 +193,22 @@ return [
     'document' => 'Documento',
     'baggage_included' => 'Bagaglio incluso',
 
-    'limit_amount_for_booking' => '',
-    'filters' => '',
-    'created_date' => '',
-    'export_excel' => '',
+    'limit_amount_for_booking' => 'Importo limite per la prenotazione',
+    'filters' => 'Filtri',
+    'created_date' => 'Data di creazione',
+    'export_excel' => 'Esporta Excel',
+
+    'total_amount' => 'Importo totale',
+    'partial_pay_amount' => 'Importo parziale pagato',
+    'payable_amount' => 'Importo da pagare',
+    'upload_image' => '',
+
+    'personal_setting' => 'Impostazioni personali',
+    'agency_logo' => 'Logo dell’agenzia',
+    'change_password' => 'Cambia password',
+    'current_password' => 'Password attuale',
+    'new_password' => 'Nuova password',
+    'confirm_new_password' => 'Conferma nuova password',
 
 
 ];
