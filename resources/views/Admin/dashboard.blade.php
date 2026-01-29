@@ -83,30 +83,36 @@
 
     <div class="row g-4">
         <div class="col-md-3">
-            <div class="card-stat">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h3>{{ $bookingCounts->total }}</h3>
-                        <p>{{ __('messages.total_booking') }}</p>
+            <a href="{{ route('admin.booking.index') }}">
+                <div class="card-stat">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3>{{ $bookingCounts->total }}</h3>
+                            <p>{{ __('messages.total_booking') }}</p>
+                        </div>
+                        <i class="fa fa-dashboard fa-2x text-primary"></i>
                     </div>
-                    <i class="fa fa-dashboard fa-2x text-primary"></i>
                 </div>
-            </div>
+            </a>
+            
         </div>
 
         <div class="col-md-3">
-            <div class="card-stat">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h3>{{ $bookingCounts->created }}</h3>
-                        <p>{{ __('messages.reserved') }}</p>
+            <a href="{{ route('admin.booking.index', ['status' => 1]) }}">
+                <div class="card-stat">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3>{{ $bookingCounts->created }}</h3>
+                            <p>{{ __('messages.reserved') }}</p>
+                        </div>
+                        <i class="fa fa-calendar fa-2x text-warning"></i>
                     </div>
-                    <i class="fa fa-calendar fa-2x text-warning"></i>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="col-md-3">
+            <a href="{{ route('admin.booking.index', ['status' => 2]) }}">
             <div class="card-stat">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -116,9 +122,11 @@
                     <i class="fa fa-check-circle fa-2x text-success"></i>
                 </div>
             </div>
+            </a>
         </div>
 
         <div class="col-md-3">
+            <a href="{{ route('admin.booking.index', ['status' => 5]) }}">
             <div class="card-stat">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -128,6 +136,7 @@
                     <i class="fa fa-times-circle fa-2x text-danger"></i>
                 </div>
             </div>
+</a>
         </div>
     </div>
 

@@ -178,7 +178,7 @@
                 <thead class="bg-light border-bottom">
                     <tr class="text-uppercase small text-muted">
                         <th>{{ __('messages.booking_no') }} #</th>
-                        <th>{{ __('messages.pnr_no') }} #</th>
+                        <th>{{ __('messages.pnr') }} #</th>
                         <th>{{ __('messages.departure_date_time') }}</th>
                         <th>{{ __('messages.arrival_date_time') }}</th>
                         <th class="text-center">{{ __('messages.seats') }}</th>

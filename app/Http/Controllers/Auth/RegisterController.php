@@ -64,7 +64,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone_no' => ['required', 'integer', 'unique:users'],
+            'phone_no' => ['required', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'business_name' => ['required', 'string', 'max:255'],
             'piv' => ['required', 'string', 'max:255'],
@@ -113,7 +113,8 @@ class RegisterController extends Controller
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
                 'phone_no' => $data['phone_no'],
-                'show_pass' => $data['password']
+                'show_pass' => $data['password'],
+                'status' => 1,
             ]);
 
             $agency = Agency::create([
@@ -121,7 +122,8 @@ class RegisterController extends Controller
                 'name' => $data['business_name'],
                 'piv' => $data['piv'],
                 'show_pass' => $data['password'],
-                'address' => $data['business_address']
+                'address' => $data['business_address'],
+                'status' => 1,
             ]);
 
             Mail::to($user->email)->send(new SignupMail($user, $agency));

@@ -104,7 +104,7 @@ class BookingController extends Controller
             }
 
             $baseFare = ($passenger->passenger_type_id == 1) ? $pnrBookings->base_price : $passenger->price;
-            $taxes = ($request->return_pnr_id != null) ? 200 : 100;
+            $taxes = ($request->return_pnr_id != null) ? $seatCount*200 : $seatCount*100;
 
             if($request->return_pnr_id != null){
                 $returnBaseFare = ($returnPassenger->passenger_type_id == 1) ? $returnPnrBookings->base_price : $returnPassenger->price;

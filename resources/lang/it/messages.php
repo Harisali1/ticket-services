@@ -210,6 +210,22 @@ return [
     'new_password' => 'Nuova password',
     'confirm_new_password' => 'Conferma nuova password',
 
+    'created' => 'Creato',
+    'ticket' => 'Biglietto',
+    'print_itinerary' => 'Stampa itinerario',
+    'base' => 'Base',
+    'outbound' => 'Andata',
+    'inbound' => 'Ritorno',
+    'booking_detail' => 'Dettagli della prenotazione',
+
+    'create_account' => 'Crea account',
+    'sign_in' => 'Accedi',
+    'your_journey_start_here' => 'Il tuo viaggio inizia qui',
+    'i_agree_to' => 'Accetto i',
+    'terms_condition' => 'Termini e condizioni',
+    'business_name' => 'Nome dell’azienda',
+    'business_address' => 'Indirizzo dell’azienda',
+
 
 ];
 

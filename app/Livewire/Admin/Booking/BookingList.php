@@ -32,6 +32,17 @@ class BookingList extends Component
         'to' => '',
     ];
 
+    protected $queryString = [
+        'filters.status' => ['except' => '']
+    ];
+
+    public function mount()
+    {
+        if (request()->has('status')) {
+            $this->filters['status'] = request('status');
+        }
+    }
+
     public function openPutOnSale($pnrId)
     {
 

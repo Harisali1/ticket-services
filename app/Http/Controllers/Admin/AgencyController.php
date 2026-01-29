@@ -66,7 +66,7 @@ class AgencyController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Agency created successfully',
+                'message' => 'Agency created successfully and email send to agency.',
             ], 201);
 
         } catch (\Exception $e) {

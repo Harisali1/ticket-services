@@ -7,9 +7,9 @@ return [
     'home' => 'Home',
 
     'manage_agencies' => 'Manage Agencies',
-    'manage_airline' => 'Manage Airline',
-    'manage_airport' => 'Manage Airport',
-    'manage_user' => 'Manage User',
+    'manage_airline' => 'Manage Airlines',
+    'manage_airport' => 'Manage Airports',
+    'manage_user' => 'Manage Users',
     'manage_pnr' => 'Manage PNR',
     'manage_booking' => 'Manage Bookings',
     'search_flight' => 'Search Flights',
@@ -25,7 +25,7 @@ return [
     'void' => 'Void',
     'cancel' => 'Cancelled',
 
-    'today_reservation' => 'Today’s Reservation',
+    'today_reservation' => 'Today’s Reservations',
     'sub_agencies' => 'Sub Agencies',
     'search' => 'Search',
 
@@ -151,7 +151,7 @@ return [
 
     'fare_details' => 'Fare Details',
     'fare_amount' => 'Fare Amount',
-    'tax' => 'Tax',
+    'tax' => 'Taxes',
     'grand_total' => 'Grand Total',
 
     'passenger_details' => 'Passenger Details',
@@ -209,4 +209,20 @@ return [
     'current_password' => 'Current Password',
     'new_password' => 'New Password',
     'confirm_new_password' => 'Confirm New Password',
+
+    'created' => 'Created',
+    'ticket' => 'Ticket',
+    'print_itinerary' => 'Print Itinerary',
+    'base' => 'Base',
+    'outbound' => 'Outbound',
+    'inbound' => 'Inbound',
+    'booking_detail' => 'Booking Details',
+
+    'create_account' => 'Create Account',
+    'sign_in' => 'Sign In',
+    'your_journey_start_here' => 'Your journey starts here',
+    'i_agree_to' => 'I agree to the',
+    'terms_condition' => 'Terms and Conditions',
+    'business_name' => 'Business Name',
+    'business_address' => 'Business Address',
 ];

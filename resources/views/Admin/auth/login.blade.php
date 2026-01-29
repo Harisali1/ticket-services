@@ -14,64 +14,111 @@
 
 <body class="bg-gray-100 font-sans">
 
-    <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-    <div class="w-full max-w-md bg-white p-8 rounded-sm border-t-4 border-[#656565] shadow-md">
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg border-t-4 border-gray-600 relative">
 
-        <!-- Logo / Title -->
-        <div class="text-center mb-8">
-            <div class="inline-block bg-white px-8 py-3 rounded-xl shadow-md w-60">
-                <h2 class="text-lg font-semibold">Airline</h2>
-            </div>
+        <!-- Language Flags (top-right) -->
+        <div class="absolute top-4 right-4 flex gap-2">
+            <a href="{{ route('language.switch', 'en') }}" class="language-flag" title="English">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="English">
+                    </a>
+                    <a href="{{ route('language.switch', 'it') }}" class="language-flag" title="Italian">
+                        <img src="https://flagcdn.com/w20/it.png" alt="Italian">
+                    </a>
+                    <a href="{{ route('language.switch', 'fr') }}" class="language-flag" title="French">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="French">
+                    </a>
         </div>
 
-        <!-- Sign in title -->
-        <h1 class="text-center text-2xl font-semibold text-gray-700 mb-6">Sign in</h1>
+        <!-- Logo -->
+        <div class="flex justify-center mb-6">
+            <img 
+                src="{{ asset('images/logo.jpg') }}"
+                alt="Logo"
+                class="w-20 h-20 rounded-full border shadow-sm"
+            >
+        </div>
 
+        <!-- Heading -->
+        <div class="text-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-800">
+                Welcome back
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">
+                Sign in to your account
+            </p>
+        </div>
+
+        <!-- Form -->
         <form id="myform">
+
             <!-- Email -->
             <div class="mb-4">
-                <input type="email" id="email" name="email" placeholder="Email" class="w-full border border-gray-200 rounded-sm px-4 py-2 focus:outline-none focus:ring focus:ring-gray-100">
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="Email address"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                >
             </div>
 
             <!-- Password -->
             <div class="mb-4 relative">
-                <input type="password" id="password" name="password" placeholder="Password" class="w-full border border-gray-200 rounded-sm px-4 py-2 focus:outline-none focus:ring focus:ring-gray-100">
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Password"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                >
 
                 <!-- Eye Icon -->
-                <div class="absolute right-3 top-2.5 text-gray-600 cursor-pointer">
-                    <!-- Heroicon eye -->
+                <div class="absolute right-3 top-2.5 text-gray-500 cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
                         class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" 
+                        <path stroke-linecap="round" stroke-linejoin="round" 
                             d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 
                             7.36 4.5 12 4.5c4.638 0 8.573 3.007 
                             9.963 7.178.07.207.07.431 0 .639C20.577 
                             16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" 
+                        <path stroke-linecap="round" stroke-linejoin="round" 
                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </div>
             </div>
 
             <!-- Links -->
-            <div class="flex gap-3 justify-center mb-6 text-gray-600 text-sm">
-                <a href="{{ route('register') }}" class="text-gray-600 underline">Become an Agent</a>
-                <a href="#" class="text-gray-600 underline">Forgot Password?</a>
+            <div class="flex justify-between items-center mb-6 text-sm text-gray-600">
+                <a href="{{ route('register') }}" class="hover:underline">
+                    Become an Agent
+                </a>
+                <a href="{{ route('password.request') }}" class="hover:underline">
+                    Forgot Password?
+                </a>
             </div>
 
-            <!-- Sign In button -->
-            <button class="w-full bg-[#212121] text-white py-2 rounded-sm hover:bg-gray-500 transition">
+            <!-- Button -->
+            <button 
+                class="w-full bg-gray-900 text-white py-2.5 rounded-md text-sm font-medium hover:bg-gray-700 transition">
                 Sign In
             </button>
-        </form> 
-        <!-- Bottom help text -->
-        <p class="text-center text-sm text-gray-600 mt-6">
-            Need help? 
-            <a href="#" class="text-gray-600 underline">Contact admin</a>
+        </form>
+
+        <!-- Footer -->
+        <p class="text-center text-sm text-gray-500 mt-6">
+            Need help?
+            <a href="#" class="underline hover:text-gray-700">
+                Contact admin
+            </a>
         </p>
     </div>
 </div>
+
+</body>
+
+
 
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('vendors/sweet_alert/sweetalert2.all.min.js') }}" ></script>
@@ -170,5 +217,4 @@
     });
 
 </script>
-</body>
 </html>

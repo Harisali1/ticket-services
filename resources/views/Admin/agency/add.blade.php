@@ -221,14 +221,12 @@
       success: function (data) {
         Swal.close();
         Swal.fire({
-            toast: true,
-            position: "top-end",
             icon: "success",
-            title: data.message,
+            text: data.message,
             showConfirmButton: true,
-            confirmButtonText: "OK"
+            confirmButtonText: "OK",
+            timer: 9000,
         });
-        window.location.href = "{{ route('admin.agency.index') }}";
       },
       error: function (xhr) {
         Swal.close();

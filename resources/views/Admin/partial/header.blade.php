@@ -18,21 +18,26 @@
 
         <!-- ===== NOTIFICATIONS ===== -->
         <div class="dropdown">
-            <a href="#" class="icon-btn position-relative"
-               data-bs-toggle="dropdown">
+            <a href="#" class="icon-btn position-relative" data-bs-toggle="dropdown">
                 <i class="fa fa-bell"></i>
-                <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
+
+                <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle blink-badge">
                     3
                 </span>
             </a>
 
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
-                <li class="dropdown-header fw-semibold">Notifications</li>
-                <li><a class="dropdown-item small" href="#">✈ New booking received</a></li>
-                <li><a class="dropdown-item small" href="#">💳 Balance updated</a></li>
-                <li><a class="dropdown-item small" href="#">📄 PNR cancelled</a></li>
-            </ul>
-        </div>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 notification-dropdown">
+            <li class="dropdown-header fw-semibold">Notifications</li>
+
+            <li><a class="dropdown-item small" href="#">✈ New booking received</a></li>
+            <li><a class="dropdown-item small" href="#">💳 Balance updated</a></li>
+            <li><a class="dropdown-item small" href="#">📄 PNR cancelled</a></li>
+            <li><a class="dropdown-item small" href="#">✈ New booking received</a></li>
+            <li><a class="dropdown-item small" href="#">💳 Balance updated</a></li>
+            <li><a class="dropdown-item small" href="#">📄 PNR cancelled</a></li>
+        </ul>
+    </div>
+
 
         <!-- ===== LANGUAGE FLAGS ===== -->
         <div class="d-flex align-items-center gap-2 ms-2">

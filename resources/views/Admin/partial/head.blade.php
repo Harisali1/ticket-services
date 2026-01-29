@@ -92,5 +92,26 @@
         z-index: 9999;
     }
 
+    .notification-dropdown{
+        max-height: 200px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    /* Scrollbar styling (Chrome, Edge) */
+    .notification-dropdown::-webkit-scrollbar{
+        width: 6px;
+    }
+
+    .notification-dropdown::-webkit-scrollbar-thumb{
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+
+    .notification-dropdown::-webkit-scrollbar-track{
+        background: transparent;
+    }
+
+
 </style>
 </head>

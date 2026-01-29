@@ -220,28 +220,29 @@ class PnrController extends Controller
             /* ======================
             RETURN DURATION
             ====================== */
-            if ($request->pnr_type === 'return') {
+            // if ($request->pnr_type === 'return') {
 
-                $return_departure = $request->return_departure_date . ' ' . $request->return_departure_time_hour . ':' . $request->return_departure_time_minute;
-                $return_arrival   = $request->return_arrival_date . ' ' . $request->return_arrival_time_hour . ':' . $request->return_arrival_time_minute;
+            //     $return_departure = $request->return_departure_date . ' ' . $request->return_departure_time_hour . ':' . $request->return_departure_time_minute;
+            //     $return_arrival   = $request->return_arrival_date . ' ' . $request->return_arrival_time_hour . ':' . $request->return_arrival_time_minute;
 
-                $start = Carbon::createFromFormat('Y-m-d H:i', $return_departure);
-                $end   = Carbon::createFromFormat('Y-m-d H:i', $return_arrival);
-                $diff  = $start->diff($end);
+            //     $start = Carbon::createFromFormat('Y-m-d H:i', $return_departure);
+            //     $end   = Carbon::createFromFormat('Y-m-d H:i', $return_arrival);
+            //     $diff  = $start->diff($end);
 
-                $returnDuration = ($diff->d != 0)
-                    ? $diff->d . 'd ' . $diff->h . 'h ' . $diff->i . 'm'
-                    : $diff->h . 'h ' . $diff->i . 'm';
-            }
+            //     $returnDuration = ($diff->d != 0)
+            //         ? $diff->d . 'd ' . $diff->h . 'h ' . $diff->i . 'm'
+            //         : $diff->h . 'h ' . $diff->i . 'm';
+            // }
 
             /* ======================
             DATA ARRAY
             ====================== */
             $data = [
-                'pnr_type'              => $request->pnr_type,
                 'flight_no'             => $request->flight_no,
+                'middle_flight_no'      => $request->middle_flight_no,
                 'ref_no'                => $request->ref_no,
                 'air_craft'             => $request->air_craft,
+                'middle_air_craft'      => $request->middle_air_craft,
                 'class'                 => $request->class,
                 'baggage'               => $request->baggage,
                 'departure_id'          => $request->departure_id,
@@ -265,39 +266,40 @@ class PnrController extends Controller
             /* ======================
             RETURN DATA
             ====================== */
-            if ($request->pnr_type === 'return') {
-                $data += [
-                    'return_duration'               => $returnDuration,
-                    'return_departure_id'           => $request->return_departure_id,
-                    'return_arrival_id'             => $request->return_arrival_id,
-                    'return_arrival_id'             => (isset($request->return_arrival_id)) ? $request->return_arrival_id : null,
-                    'return_airline_id'             => $request->return_airline_id,
-                    'return_departure_date'         => $request->return_departure_date,
-                    'return_arrival_date'           => $request->return_arrival_date,
-                    'return_departure_time'         => $request->return_departure_time_hour . ':' . $request->return_departure_time_minute,
-                    'middle_return_arrival_time'    => (isset($request->middle_return_arrival_time_hour) && isset($request->middle_return_arrival_time_minute)) ? $request->middle_return_arrival_time_hour . ':' . $request->middle_return_arrival_time_minute : null,
-                    'return_rest_time'              => (isset($request->middle_return_departure_time_hour) && isset($request->middle_return_departure_time_minute)) ? $request->middle_return_departure_time_hour . ':' . $request->middle_return_departure_time_minute : null,
-                    'return_arrival_time'           => $request->return_arrival_time_hour . ':' . $request->return_arrival_time_minute,
-                    'return_base_price'             => $request->return_base_price,
-                    'return_tax'                    => $request->return_tax,
-                    'return_total'                  => $request->return_total,
-                ];
-            } else {
-                // Clear return data if changed to one-way
-                $data += [
-                    'return_duration' => null,
-                    'return_departure_id' => null,
-                    'return_arrival_id' => null,
-                    'return_airline_id' => null,
-                    'return_departure_date' => null,
-                    'return_arrival_date' => null,
-                    'return_departure_time' => null,
-                    'return_arrival_time' => null,
-                    'return_base_price' => null,
-                    'return_tax' => null,
-                    'return_total' => null,
-                ];
-            }
+            // if ($request->pnr_type === 'return') {
+            //     $data += [
+            //         'return_duration'               => $returnDuration,
+            //         'return_departure_id'           => $request->return_departure_id,
+            //         'return_arrival_id'             => $request->return_arrival_id,
+            //         'return_arrival_id'             => (isset($request->return_arrival_id)) ? $request->return_arrival_id : null,
+            //         'return_airline_id'             => $request->return_airline_id,
+            //         'return_departure_date'         => $request->return_departure_date,
+            //         'return_arrival_date'           => $request->return_arrival_date,
+            //         'return_departure_time'         => $request->return_departure_time_hour . ':' . $request->return_departure_time_minute,
+            //         'middle_return_arrival_time'    => (isset($request->middle_return_arrival_time_hour) && isset($request->middle_return_arrival_time_minute)) ? $request->middle_return_arrival_time_hour . ':' . $request->middle_return_arrival_time_minute : null,
+            //         'return_rest_time'              => (isset($request->middle_return_departure_time_hour) && isset($request->middle_return_departure_time_minute)) ? $request->middle_return_departure_time_hour . ':' . $request->middle_return_departure_time_minute : null,
+            //         'return_arrival_time'           => $request->return_arrival_time_hour . ':' . $request->return_arrival_time_minute,
+            //         'return_base_price'             => $request->return_base_price,
+            //         'return_tax'                    => $request->return_tax,
+            //         'return_total'                  => $request->return_total,
+            //     ];
+            // }
+            //  else {
+            //     // Clear return data if changed to one-way
+            //     $data += [
+            //         'return_duration' => null,
+            //         'return_departure_id' => null,
+            //         'return_arrival_id' => null,
+            //         'return_airline_id' => null,
+            //         'return_departure_date' => null,
+            //         'return_arrival_date' => null,
+            //         'return_departure_time' => null,
+            //         'return_arrival_time' => null,
+            //         'return_base_price' => null,
+            //         'return_tax' => null,
+            //         'return_total' => null,
+            //     ];
+            // }
 
             /* ======================
             UPDATE PNR
