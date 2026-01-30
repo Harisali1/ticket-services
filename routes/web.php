@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Notifications\DatabaseNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,14 @@ Route::get('search/baggage', [App\Http\Controllers\Admin\DataListController::cla
 
 Route::group(['middleware' => 'auth'], function () {
     Route::prefix('admin')->group(function () {
+        Route::get('/notification/{id}', function ($id) {
+            $notification = DatabaseNotification::findOrFail($id);
+            $notification->markAsRead();
+
+            return redirect($notification->data['url']);
+        })->middleware(['auth'])
+        ->name('admin.notification.open');
+
         Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
         
         Route::prefix('agency')->group(function () {
@@ -138,13 +147,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/approved/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'approvedPayment'])->name('admin.payment.approved');
         });
 
-        Route::prefix('notification')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('admin.notification.index');
-            Route::get('/add', [App\Http\Controllers\Admin\NotificationController::class, 'create'])->name('admin.notification.create');
-            Route::post('/store', [App\Http\Controllers\Admin\NotificationController::class, 'store'])->name('admin.notification.store');
-            Route::get('/edit/{notification}', [App\Http\Controllers\Admin\NotificationController::class, 'edit'])->name('admin.notification.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\NotificationController::class, 'update'])->name('admin.notification.update');
-            Route::get('/delete/{id}', [App\Http\Controllers\Admin\NotificationController::class, 'delete'])->name('admin.notification.delete');
+        Route::prefix('news')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\NewsController::class, 'index'])->name('admin.news.index');
+            Route::get('/add', [App\Http\Controllers\Admin\NewsController::class, 'create'])->name('admin.news.create');
+            Route::post('/store', [App\Http\Controllers\Admin\NewsController::class, 'store'])->name('admin.news.store');
+            Route::get('/edit/{news}', [App\Http\Controllers\Admin\NewsController::class, 'edit'])->name('admin.news.edit');
+            Route::post('/update', [App\Http\Controllers\Admin\NewsController::class, 'update'])->name('admin.news.update');
+            Route::get('/delete/{id}', [App\Http\Controllers\Admin\NewsController::class, 'delete'])->name('admin.news.delete');
         });
 
         Route::prefix('role')->group(function () {

@@ -7,13 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Admin\News;
 use Illuminate\Support\Facades\Storage;
 
-class NotificationController extends Controller
+class NewsController extends Controller
 {
     public function index(){
-        $notifications = DatabaseNotification::latest()->paginate(20);
-        // DatabaseNotification::whereJsonContains('data->type', 'booking')->get();
-
-        return view('admin.notifications.list', compact('notifications'));
+        return view('Admin.notification.list');
     }
 
     public function create(){

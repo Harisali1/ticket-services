@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand bg-white border-bottom px-4 py-2 shadow-sm">
+<nav class="navbar navbar-expand bg-white border-bottom px-4 py-3 shadow-sm">
 
     <!-- ===== BRAND ===== -->
 
@@ -13,6 +13,20 @@
     </div>
     @endif
 
+    @php
+    use Illuminate\Notifications\DatabaseNotification;
+
+    $isAdmin = auth()->check() && auth()->user()->user_type_id === 1;
+
+    $notifications = $isAdmin
+        ? DatabaseNotification::latest()->take(7)->get()
+        : auth()->user()->notifications->take(7);
+
+    $unreadCount = $isAdmin
+        ? DatabaseNotification::whereNull('read_at')->count()
+        : auth()->user()->unreadNotifications->count();
+    @endphp
+
     <!-- ===== RIGHT SIDE ===== -->
     <div class="d-flex align-items-center ms-auto gap-3">
 
@@ -20,21 +34,36 @@
         <div class="dropdown">
             <a href="#" class="icon-btn position-relative" data-bs-toggle="dropdown">
                 <i class="fa fa-bell"></i>
-
+                @if($unreadCount)
                 <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle blink-badge">
-                    3
+                    {{ $unreadCount }}
                 </span>
+            @endif
+                
             </a>
 
         <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 notification-dropdown">
             <li class="dropdown-header fw-semibold">Notifications</li>
+            @forelse($notifications as $notification)
+                <li>
+                    <a href="{{ route(
+                            $isAdmin ? 'admin.notification.open' : 'notification.open',
+                            $notification->id
+                        ) }}"
+                       class="dropdown-item small {{ $notification->read_at ? '' : 'fw-bold' }}">
 
-            <li><a class="dropdown-item small" href="#">✈ New booking received</a></li>
-            <li><a class="dropdown-item small" href="#">💳 Balance updated</a></li>
-            <li><a class="dropdown-item small" href="#">📄 PNR cancelled</a></li>
-            <li><a class="dropdown-item small" href="#">✈ New booking received</a></li>
-            <li><a class="dropdown-item small" href="#">💳 Balance updated</a></li>
-            <li><a class="dropdown-item small" href="#">📄 PNR cancelled</a></li>
+                        {{ $notification->data['title'] ?? 'Notification' }}
+
+                        <div class="text-muted small">
+                            {{ $notification->data['message'] ?? '' }}
+                        </div>
+                    </a>
+                </li>
+            @empty
+                <li class="dropdown-item text-muted small">
+                    No notifications
+                </li>
+            @endforelse
         </ul>
     </div>
 

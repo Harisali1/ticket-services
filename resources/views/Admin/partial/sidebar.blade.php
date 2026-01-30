@@ -71,7 +71,7 @@
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">{{ __('messages.payment') }}</span>
                 </a>
-                <a href="{{ route('admin.notification.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
+                <a href="{{ route('admin.news.index') }}" class="nav-link text-white rounded d-flex align-items-center hover-bg-secondary">
                     <i class="fa fa-money me-3"></i>
                     <span class="menu-text">{{ __('messages.notification') }}</span>
                 </a>

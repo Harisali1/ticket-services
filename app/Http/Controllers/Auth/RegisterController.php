@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Mail\SignupMail;
 use Illuminate\Support\Facades\Mail;
 use DB;
+use App\Notifications\PortalNotification;
 
 class RegisterController extends Controller
 {
@@ -104,9 +105,9 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
-        try {
+        // try {
             $user =  User::create([
                 'user_type_id' => 2,
                 'name' => $data['name'],
@@ -126,7 +127,16 @@ class RegisterController extends Controller
                 'status' => 1,
             ]);
 
+            $user->notify(new PortalNotification([
+                'type' => 'agency',
+                'title' => 'New Agency Created',
+                'message' => 'A new agency has been created successfully.',
+                'url' => route('admin.agency.show', $agency->id),
+                'icon' => 'building'
+            ]));
+
             Mail::to($user->email)->send(new SignupMail($user, $agency));
+            
 
             DB::commit();
 
@@ -135,16 +145,16 @@ class RegisterController extends Controller
                 'message' => 'you have successfully registered your agency registeration email send to your email address',
             ], 200);
 
-        } catch (\Exception $e) {
+        // } catch (\Exception $e) {
 
-            DB::rollBack();
+        //     DB::rollBack();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong',
-                'error'   => $e->getMessage()
-            ], 500);
-        }
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Something went wrong',
+        //         'error'   => $e->getMessage()
+        //     ], 500);
+        // }
     }
 
 }

@@ -112,6 +112,18 @@
         background: transparent;
     }
 
+    .blink-badge {
+        animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+        0%, 50%, 100% { opacity: 1; }
+        25%, 75% { opacity: 0; }
+    }
+    .dropdown.show .blink-badge {
+        animation: none;
+    }
+
 
 </style>
 </head>
