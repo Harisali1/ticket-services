@@ -13,7 +13,9 @@
     <div class="mb-4">
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
-                <tr>
+                <tr><th>
+                        <input type="checkbox" id="selectAll">
+                    </th>
                     <th>{{__('messages.booking_no')}}</th>
                     <th>{{__('messages.total_amount')}}</th>
                     <th>{{__('messages.partial_pay_amount')}}</th>
@@ -25,6 +27,12 @@
             <tbody>
                 @forelse($pendingPayment as $payment)
                     <tr>
+                        <td>
+                            <input type="checkbox"
+                                class="booking-checkbox"
+                                value="{{ $payment->id }}"
+                                data-payable="{{ $payment->total_amount - $payment->partial_pay_amount }}">
+                        </td>
                         <td>{{ $payment->booking_no }}</td>
                         <td>{{ $payment->total_amount }}</td>
                         <td>{{ $payment->partial_pay_amount }}</td>

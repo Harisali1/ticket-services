@@ -227,6 +227,7 @@
             confirmButtonText: "OK",
             timer: 9000,
         });
+        window.location.href = "{{ route('admin.agency.index') }}";
       },
       error: function (xhr) {
         Swal.close();

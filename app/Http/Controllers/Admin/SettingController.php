@@ -8,6 +8,7 @@ use DB;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Admin\Agency;
 
 class SettingController extends Controller
 {
@@ -18,7 +19,7 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-
+        $agency = Agency::where('user_id', 2)->first();
         $request->validate([
             'logo' => 'nullable|image|max:2048',
             'current_password' => 'nullable|required_with:password',
@@ -35,6 +36,11 @@ class SettingController extends Controller
             $user->logo = $path;
         }
 
+        if($agency){
+            $agency->update([
+                'admin_fee' => $request->admin_fee
+            ]);
+        }
         /* Update Password */
         if ($request->password) {
             if (!Hash::check($request->current_password, $user->password)) {

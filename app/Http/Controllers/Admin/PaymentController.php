@@ -40,7 +40,7 @@ class PaymentController extends Controller
 
         $totalRemain   = (int)auth()->user()->ticketed_amount;
         
-        if((int)$request->amount == 0){
+        if((int)$request->amount <= 0){
             return response()->json([
                 'code'    => 2,
                 'success' => true,
@@ -69,9 +69,22 @@ class PaymentController extends Controller
             $paidBookings = [];
 
             // 🔹 Get unpaid / partial bookings (FIFO)
-            $bookings = Booking::where('created_by', $user->id)
-                ->where('is_approved', 0)
-                ->whereIn('status', [2]) // ticketed / unpaid
+            // $bookings = Booking::where('created_by', $user->id)
+            //     ->where('is_approved', 0)
+            //     ->whereIn('status', [2]) // ticketed / unpaid
+            //     ->orderBy('id', 'asc')
+            //     ->get();
+            $bookingIds = json_decode($request->booking_ids, true);
+
+            if (empty($bookingIds)) {
+                return response()->json([
+                    'code' => 2,
+                    'message' => 'Please select at least one booking'
+                ]);
+            }
+
+            $bookings = Booking::whereIn('id', $bookingIds)
+                ->where('created_by', $user->id)
                 ->orderBy('id', 'asc')
                 ->get();
 

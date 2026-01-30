@@ -54,8 +54,8 @@ class AgencyController extends Controller
                 'piv'       => $validated['piv'],
                 'show_pass' => $request->password,
                 'address'   => $validated['agency_address'],
-                'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : null,
-                'limit'     => (isset($request->limit)) ? $request->limit : null,
+                'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : 0,
+                'limit'     => (isset($request->limit)) ? $request->limit : 0,
                 'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);

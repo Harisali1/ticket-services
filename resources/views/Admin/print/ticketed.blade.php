@@ -139,12 +139,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($customers as $customer)
                     <tr>
-                        <td>{{ $customers->map(fn ($c) => $c->name.' '.$c->surname)->implode(', ') }}</td>
+                        <td>{{ $customer->name.' '.$customer->surname }}</td>
                         <td>{{ $type == 'dept' ? $booking['dept_ticket_no'] : $booking['arr_ticket_no'] }}</td>
                         <td>{{ $booking['booking_no'] }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y') }}</td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
 
@@ -153,9 +155,9 @@
             <div class="title-bar">Agency Details</div>
             <div class="small">
                 <strong>{{ $agency->name ?? $booking['user']['name'] }}</strong><br>
-                Business Address: {{ $agency->address ?? '' }}<br>
-                Phone: {{ $agency->user->phone_no ?? $booking['user']['phone_no'] }}<br>
-                Email: {{ $agency->user->email ?? '' }}
+                {{ $agency->address ?? '' }}<br>
+                {{ $agency->user->phone_no ?? $booking['user']['phone_no'] }}<br>
+                {{ $agency->user->email ?? '' }}
             </div>
 
             <!-- FLIGHT -->
@@ -192,9 +194,14 @@
                             {{ $booking['pnr']['middle_arrival']['name'] }}<br>
                             <strong>{{ \Carbon\Carbon::parse($booking['pnr']['middle_arrival_time'])->format('H:i') }}</strong>
                         </td>
+                    @endif
+                    
+                </tr>
+            </table>
 
-                        <td width="10%" class="center">➜</td>
-
+            <table class="flight-table">
+                <tr>
+                    @if($booking['pnr']['middle_arrival_id'] != null && $booking['pnr']['middle_arrival_time'] != null && $booking['pnr']['rest_time'] != null)
                         <td width="45%">
                             <div class="label">Middle Departure</div>
                             {{ $booking['pnr']['middle_arrival']['name'] }}<br>
@@ -216,6 +223,7 @@
                     </td>
                 </tr>
             </table>
+
             <table class="flight-table" style="margin-top:8px;">
                 <tr>
                     <td width="40%">

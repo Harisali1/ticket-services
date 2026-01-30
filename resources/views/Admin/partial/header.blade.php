@@ -47,7 +47,7 @@
             @forelse($notifications as $notification)
                 <li>
                     <a href="{{ route(
-                            $isAdmin ? 'admin.notification.open' : 'notification.open',
+                            $isAdmin ? 'admin.notification.open' : 'admin.notification.open',
                             $notification->id
                         ) }}"
                        class="dropdown-item small {{ $notification->read_at ? '' : 'fw-bold' }}">

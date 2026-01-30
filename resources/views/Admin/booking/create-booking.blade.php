@@ -490,17 +490,24 @@
 
     <hr>
 
-    
-
-    <hr>
-
     <h3 class="fw-semibold mb-3 pnr-detail">Passenger Details:</h3>
+    @php
+        $passengerFareTypes = [];
+        $passengerTypesTitle = [];
+
+        foreach ($fareDetails as $fare) {
+            for ($i = 0; $i < $fare['seat']; $i++) {
+                $passengerFareTypes[] = $fare['type_id'];
+                $passengerTypesTitle[] = $fare['title'];
+            }
+        }
+    @endphp
 
     <div id="step-1">
       @foreach(range(1, $seatSum) as $key => $i )
-        <div class="card card-body mt-4">
+        <div class="card card-body mt-4 passenger-card"  data-fare-type="{{ $passengerFareTypes[$key] ?? '' }}">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-semibold mb-0">Passenger {{ $key+1; }}: Basic Details</h6>
+                <h6 class="fw-semibold mb-0">{{ $passengerTypesTitle[$key] }} Passenger Basic Details</h6>
             </div>
 
             <div class="row g-3">
@@ -689,7 +696,7 @@
                 x-data="{
                     fare: {{ $fareAmount }},
                     tax: {{ $taxAmount }},
-                    adminFee: 0,
+                    adminFee: {{ (auth()->user()->user_type_id != 1) ? auth()->user()->agency->admin_fee : 0 }},
                     showInput: false,
 
                     format(amount) {
@@ -774,7 +781,94 @@
 
 @section('scripts')
 <script>
-    
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        function syncAll(selector, value) {
+            document.querySelectorAll(selector).forEach(input => {
+                if (!input.dataset.edited) {
+                    input.value = value;
+                }
+            });
+        }
+
+        // EMAIL → sync all
+        document.querySelectorAll('input[name="customer_email[]"]').forEach(input => {
+            input.addEventListener('input', function () {
+                syncAll('input[name="customer_email[]"]', this.value);
+            });
+        });
+
+        // PHONE → sync all
+        document.querySelectorAll('input[name="customer_phone[]"]').forEach(input => {
+            input.addEventListener('input', function () {
+                syncAll('input[name="customer_phone[]"]', this.value);
+            });
+        });
+
+        // Manual edit detection (stop overwrite)
+        ['customer_email[]', 'customer_phone[]'].forEach(name => {
+            document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+                input.addEventListener('input', function () {
+                    this.dataset.edited = "true";
+                });
+            });
+        });
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const countryInputs = document.querySelectorAll('input[name="customer_country[]"]');
+        const passportCountryInputs = document.querySelectorAll('input[name="customer_passport_county[]"]');
+        const nationalityInputs = document.querySelectorAll('input[name="customer_nationality[]"]');
+
+        countryInputs.forEach((countryInput, index) => {
+
+            countryInput.addEventListener('input', function () {
+                const value = this.value;
+
+                // Same index ke passport country
+                if (passportCountryInputs[index] && !passportCountryInputs[index].dataset.edited) {
+                    passportCountryInputs[index].value = value;
+                }
+
+                // Same index ke nationality
+                if (nationalityInputs[index] && !nationalityInputs[index].dataset.edited) {
+                    nationalityInputs[index].value = value;
+                }
+            });
+
+        });
+        
+
+        document.querySelectorAll('.passenger-card').forEach(card => {
+
+            const fareType = card.dataset.fareType;
+            const dobInput = card.querySelector('input[name="customer_dob[]"]');
+
+            if (!dobInput || !fareType) return;
+
+            const today = new Date();
+
+            // CHILD (<= 10 years)
+            if (fareType == 2) {
+                const minDob = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate() + 1);
+                dobInput.min = minDob.toISOString().split('T')[0];
+                dobInput.max = today.toISOString().split('T')[0];
+            }
+
+            // INFANT (< 2 years, exact 2 not allowed)
+            if (fareType == 3) {
+                const minDob = new Date(today.getFullYear() - 2, today.getMonth(), today.getDate() + 1);
+                dobInput.min = minDob.toISOString().split('T')[0];
+                dobInput.max = today.toISOString().split('T')[0];
+            }
+        });
+
+    });
+
+
 
     function validatePassengerDetails() {
         const step1 = document.getElementById('step-1');

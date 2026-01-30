@@ -472,6 +472,58 @@
 
     <!-- Passenger -->
     @foreach($customers as $index => $customer)
+        @if($booking->status->label() === 'Ticketed' || $booking->status->label() === 'Paid')
+            <div class="container mt-4">
+                <!-- Row 1 -->
+                <div class="row align-items-center mb-2">
+                    <div class="col-md-6">
+                        <span class="me-2">{{__('messages.ticket_number')}}</span>
+                        <a href="{{ route('admin.booking.print.ticketed', [$booking->id, 'dept']) }}">
+                            <span class="badge ticket-badge">
+                                {{ $booking->dept_ticket_no }} <i class="bi bi-files copy-icon"></i>
+                            </span>
+                        </a>
+                    </div>
+
+                    
+                    <div class="col-md-6 text-end">
+                        <span class="me-2">{{__('messages.ticket_status')}}</span>
+                        <span class="badge status-badge">
+                            {{$booking->status->label()}} <i class="bi bi-caret-down-fill ms-1"></i>
+                        </span>
+                    </div>
+                    
+                </div>
+                
+                @if($booking->return_pnr_id != null)
+                    <!-- Row 2 -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-6">
+                            <span class="me-2">{{__('messages.ticket_number')}}</span>
+                            <a href="{{ route('admin.booking.print.ticketed', [$booking->id, 'arr']) }}">
+                                <span class="badge ticket-badge">
+                                    {{ $booking->arr_ticket_no }} <i class="bi bi-files copy-icon"></i>
+                                </span>
+                            </a>
+                        </div>
+
+                        <div class="col-md-6 text-end">
+                            <span class="me-2">{{__('messages.ticket_status')}}</span>
+                            <span class="badge status-badge">
+                                {{$booking->status->label()}} <i class="bi bi-caret-down-fill ms-1"></i>
+                            </span>
+                        </div>
+                    </div>
+                @endif
+                <!-- Button -->
+                <a href="{{ route('admin.booking.send.email.ticketed', [$booking->id, 'dept']) }}">
+                    <button class="btn btn-primary btn-sm">
+                        <i class="bi bi-send"></i> {{__('messages.send_ticket_by_email')}}
+                    </button>
+                </a>
+                
+            </div>
+        @endif
         <form class="passenger-form mb-4" data-id="{{ $customer->id }}">
             @csrf
             <div class="card mx-4">

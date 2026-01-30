@@ -162,6 +162,14 @@ class PnrController extends Controller
                 ]);
             }
 
+            NotificationHelper::notifyAllActiveUsers([
+                'type'    => 'pnr',
+                'title'   => 'New PNR Available',
+                'message' => "PNR {$pnr->pnr_no} has been created",
+                'url'     => route('agency.pnr.show', $pnr->id),
+                'icon'    => 'plane'
+            ]);
+
             DB::commit();
 
             return response()->json([

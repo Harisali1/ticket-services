@@ -203,7 +203,30 @@
             timer: 2500
         });
     }
+    
     $(document).ready(function () {
+
+        function syncReturnDateMin() {
+            const departureDate = $('#departure_date').val();
+
+            if (departureDate) {
+                $('#return_departure_date')
+                    .attr('min', departureDate);
+
+                // Agar return date already pichay ki hai, clear kar do
+                if ($('#return_departure_date').val() < departureDate) {
+                    $('#return_departure_date').val('');
+                }
+            }
+        }
+
+        // Jab departure date change ho
+        $('#departure_date').on('change', function () {
+            syncReturnDateMin();
+        });
+
+        // Page load pe bhi apply ho
+        syncReturnDateMin();
 
         function toggleReturnFields() {
             const tripType = $('input[name="trip_type"]:checked').val();

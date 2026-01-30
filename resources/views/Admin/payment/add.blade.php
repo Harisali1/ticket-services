@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<div class="container py-4">
+<div class="container py-5">
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -15,7 +15,8 @@
     @livewire('admin.payment.pending-payment-list')
 
     <!-- FORM -->
-    <form id="payment-form" enctype="multipart/form-data">
+    <form id="payment-form" enctype="multipart/form-data" class="py-5">
+        <input type="hidden" name="booking_ids" id="booking_ids">
 
         <div class="row g-3">
             <div class="col-md-4">
@@ -23,7 +24,6 @@
                 <input type="text"
                        name="amount"
                        id="totalAmount"
-                       value="{{ auth()->user()->remaining_amount }}"
                        class="form-control">
             </div>
 
@@ -49,6 +49,40 @@
 @section('scripts')
 <!-- JS -->
 <script>
+    let selectedBookings = [];
+    let autoAmount = 0;
+    let manualEdit = false;
+
+    $(document).on('change', '.booking-checkbox', function () {
+
+        const bookingId = $(this).val();
+        const payable   = parseFloat($(this).data('payable'));
+
+        if ($(this).is(':checked')) {
+            selectedBookings.push(bookingId);
+            autoAmount += payable;
+        } else {
+            selectedBookings = selectedBookings.filter(id => id != bookingId);
+            autoAmount -= payable;
+        }
+
+        $('#booking_ids').val(JSON.stringify(selectedBookings));
+
+        // auto fill only if user hasn't typed manually
+        if (!manualEdit) {
+            $('#totalAmount').val(autoAmount.toFixed(2));
+        }
+    });
+
+    // detect manual amount typing
+    $('#totalAmount').on('input', function () {
+        manualEdit = true;
+    });
+
+    // select all
+    $('#selectAll').on('change', function () {
+        $('.booking-checkbox').prop('checked', this.checked).trigger('change');
+    });
 
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("payment-form");

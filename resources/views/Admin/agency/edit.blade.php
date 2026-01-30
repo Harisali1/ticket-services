@@ -148,7 +148,7 @@
       { field: "name", message: "Name is required", test: v => v !== "" },
       { field: "email", message: "Email is required", test: v => v !== "" },
       { field: "email", message: "Invalid email format", test: v => /^\S+@\S+\.\S+$/.test(v) },
-      { field: "phone", message: "Phone must be at least 11 digits", test: v => v.length >= 11 },
+      { field: "phone", message: "Phone no required", test: v => v !== '' },
     ];
 
     for (const rule of validations) {

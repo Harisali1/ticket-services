@@ -15,6 +15,8 @@ use App\Models\Admin\FareRule;
 use App\Models\Admin\Agency;
 use App\Models\Admin\Payment;
 use App\Models\Admin\PaymentUpload;
+use App\Helpers\NotificationHelper;
+// use App\Notifications\PortalNotification;
 use App\Models\User;
 use DB;
 use PDF;
@@ -180,8 +182,8 @@ class BookingController extends Controller
 
     public function bookingSubmit(Request $request){
 
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             $bookingSeats = 0;
 
             foreach ($request->fareDetails as $type) {
@@ -272,7 +274,24 @@ class BookingController extends Controller
                 'total_amount' => $updatedTotalAmount
             ]);
             
-            DB::commit();
+
+            // $user->notify(new PortalNotification([
+            //     'type' => 'booking',
+            //     'title' => 'New Booking Created',
+            //     'message' => "Booking #{$booking->id} created by agency {$user->agency->name}",
+            //     'url' => route('admin.booking.index', ['status' => 1]),
+            //     'icon' => 'ticket'
+            // ]));
+            $name = ($user->agency) ? $user->agency->name : $user->name;
+            NotificationHelper::notifyAdmins([
+                'type' => 'booking',
+                'title' => 'New Booking Created',
+                'message' => "Booking #{$booking->id} created by agency {$name}",
+                'url' => route('admin.booking.index', ['status' => 1]),
+                'icon' => 'ticket'
+            ]);
+
+            // DB::commit();
 
             return redirect()->route('admin.booking.details',[
                 'booking' => $booking->id,
@@ -280,16 +299,16 @@ class BookingController extends Controller
                 'id' => $booking->return_pnr_id ?? 0
             ])->with('success', 'Booking created successfully.');
 
-        } catch (\Exception $e) {
+        // } catch (\Exception $e) {
 
-            DB::rollBack();
+        //     DB::rollBack();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong',
-                'error'   => $e->getMessage()
-            ], 500);
-        }
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Something went wrong',
+        //         'error'   => $e->getMessage()
+        //     ], 500);
+        // }
     }
 
     public function itineraryPrint($bookingId){
@@ -403,6 +422,14 @@ class BookingController extends Controller
                     'total_amount' => $updatedTotalAmount
                 ]);
             }
+
+            NotificationHelper::notifyAgency($booking->user, [
+                'type' => 'booking_status',
+                'title' => 'Booking Status Updated',
+                'message' => "Your booking #{$booking->id} status changed to {$booking->status->label()}",
+                'url' => route('admin.booking.index', ['status' => 5]),
+                'icon' => 'refresh'
+            ]);
 
             DB::commit();
 
