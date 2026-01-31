@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-    @livewire('admin.notification.notification-list')
+    @livewire('admin.news.news-list')
 @endsection
 
 @section('scripts')

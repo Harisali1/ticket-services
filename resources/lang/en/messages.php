@@ -225,4 +225,12 @@ return [
     'terms_condition' => 'Terms and Conditions',
     'business_name' => 'Business Name',
     'business_address' => 'Business Address',
+
+    'ticket_number' => 'Ticket Number',
+    'send_ticket_by_email' => 'Send Ticket By Email',
+    'ticket_status' => 'Ticket Status',
+
+    'return_departure_date_time' => 'Return Departure Date/Time',
+    'fare_limit_date' => 'Fare Limit Date',
+    'agency' => 'Agency',
 ];

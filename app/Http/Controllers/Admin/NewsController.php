@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Storage;
 class NewsController extends Controller
 {
     public function index(){
-        return view('Admin.notification.list');
+        return view('Admin.news.list');
     }
 
     public function create(){
-        return view('Admin.notification.add');
+        return view('Admin.news.add');
     }
 
     public function store(Request $request){
@@ -43,8 +43,8 @@ class NewsController extends Controller
             ], 201);
     }
 
-    public function edit(News $notification){
-        return view('Admin.notification.edit', compact('notification'));
+    public function edit(News $news){
+        return view('Admin.news.edit', compact('news'));
     }
 
     public function update(Request $request)
@@ -86,7 +86,7 @@ class NewsController extends Controller
             'is_deleted' => 1
        ]);
        return response()->json([
-            'message' => 'Notification updated successfully'
+            'message' => 'Notification deleted successfully'
         ]);
     }
 

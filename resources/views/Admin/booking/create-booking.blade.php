@@ -501,6 +501,7 @@
                 $passengerTypesTitle[] = $fare['title'];
             }
         }
+        $adminFee = (auth()->user()->user_type_id != 1) ? auth()->user()->agency->admin_fee : 0;
     @endphp
 
     <div id="step-1">
@@ -694,9 +695,9 @@
 
             <div 
                 x-data="{
-                    fare: {{ $fareAmount }},
-                    tax: {{ $taxAmount }},
-                    adminFee: {{ (auth()->user()->user_type_id != 1) ? auth()->user()->agency->admin_fee : 0 }},
+                    fare: {{ (float) $fareAmount }},
+                    tax: {{ (float) $taxAmount }},
+                    adminFee: {{ (float) $adminFee }},
                     showInput: false,
 
                     format(amount) {
@@ -724,19 +725,19 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-semibold">
                         Administrative Fee
-                        <button 
+                        <!-- <button 
                             type="button"
                             class="btn btn-sm btn-info ms-2"
                             @click="showInput = !showInput">
                             <i class="fa fa-pencil-square text-white"></i>
-                        </button>
+                        </button> -->
                     </span>
 
-                    <template x-if="!showInput">
+                    <template x-show="!showInput">
                         <span class="fw-bold text-success" x-text="format(adminFee)"></span>
                     </template>
 
-                    <template x-if="showInput">
+                    <template x-show="showInput">
                         <input 
                             type="number"
                             class="form-control form-control-sm w-25"

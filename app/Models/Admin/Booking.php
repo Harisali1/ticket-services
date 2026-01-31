@@ -48,7 +48,11 @@ class Booking extends Model
 
     public function getFareLimitDateAttribute()
     {
-        return \Carbon\Carbon::parse($this->created_at->addDay())->format('d-M-y H:i');
+        return \Carbon\Carbon::parse($this->created_at)
+            ->startOfDay()
+            ->addDay()
+            ->format('d-M-y H:i');
+
     }
 
     // public function 

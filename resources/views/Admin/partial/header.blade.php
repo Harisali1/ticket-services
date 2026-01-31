@@ -13,7 +13,7 @@
     </div>
     @endif
 
-    @php
+    <!-- @php
     use Illuminate\Notifications\DatabaseNotification;
 
     $isAdmin = auth()->check() && auth()->user()->user_type_id === 1;
@@ -25,6 +25,11 @@
     $unreadCount = $isAdmin
         ? DatabaseNotification::whereNull('read_at')->count()
         : auth()->user()->unreadNotifications->count();
+    @endphp -->
+
+    @php
+        $notifications = auth()->user()->notifications->take(7);
+        $unreadCount = auth()->user()->unreadNotifications->count();
     @endphp
 
     <!-- ===== RIGHT SIDE ===== -->
@@ -46,12 +51,9 @@
             <li class="dropdown-header fw-semibold">Notifications</li>
             @forelse($notifications as $notification)
                 <li>
-                    <a href="{{ route(
-                            $isAdmin ? 'admin.notification.open' : 'admin.notification.open',
-                            $notification->id
-                        ) }}"
+                    <a href="{{ route('admin.notification.open',$notification->id) }}"
                        class="dropdown-item small {{ $notification->read_at ? '' : 'fw-bold' }}">
-
+                        
                         {{ $notification->data['title'] ?? 'Notification' }}
 
                         <div class="text-muted small">

@@ -4,9 +4,9 @@
         <h1 class="h4">{{ __('messages.booking_list') }}</h1>
 
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('admin.booking.create') }}" class="btn btn-dark">
+            <!-- <a href="{{ route('admin.booking.create') }}" class="btn btn-dark">
                 + {{ __('messages.create_booking') }}
-            </a>
+            </a> -->
 
             <!-- Filter button triggers offcanvas -->
             <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
@@ -33,6 +33,16 @@
                 <label class="form-label">{{__('messages.booking_no')}}</label>
                 <input type="text" wire:model.defer="filters.booking_no" class="form-control" placeholder="Booking No #">
             </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ __('messages.agency') }}</label>
+                <select class="form-select select2 w-100" wire:model.defer="filters.created_by">
+                    @foreach($agencies as $agency)
+                        <option value="{{ $agency->user_id }}">{{ $agency->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
 
             <div class="mb-3">
                 <label class="form-label">{{__('messages.status')}}</label>
@@ -180,7 +190,8 @@
                         <th>{{ __('messages.booking_no') }} #</th>
                         <th>{{ __('messages.pnr') }} #</th>
                         <th>{{ __('messages.departure_date_time') }}</th>
-                        <th>{{ __('messages.arrival_date_time') }}</th>
+                        <th>{{ __('messages.return_departure_date_time') }}</th>
+                        <th>{{ __('messages.fare_limit_date') }}</th>
                         <th class="text-center">{{ __('messages.seats') }}</th>
                         <th>{{ __('messages.paid_by') }}</th>
                         <th>{{ __('messages.paid_at') }}</th>
@@ -206,8 +217,9 @@
                             {{ $booking->pnr?->ref_no }}
                         </td>
 
-                        <td>{{ $booking->pnr?->departure_date }}</td>
-                        <td>{{ $booking->pnr?->arrival_date }}</td>
+                        <td>{{ $booking->pnr?->departure_date .' '. $booking->pnr?->departure_time }}</td>
+                        <td>{{ $booking->return_pnr?->departure_date .' '. $booking->return_pnr?->departure_time}}</td>
+                        <td>{{ $booking->fare_limit_date }}</td>
 
                         <td class="text-center">
                             <span class="badge bg-secondary-subtle text-dark">
@@ -257,15 +269,17 @@
                                     </a>
 
                                 @elseif($booking->status->label() === 'Cancel')
-                                    <span class="badge bg-danger-subtle text-danger">
+                                    <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, $booking->return_pnr_id ?? 0]) }}"
+                                        class="btn btn-sm btn-outline-danger">
                                         Cancelled
-                                    </span>
+                                    </a>
                                 @endif
 
                                 @if($booking->status->label() === 'Void')
-                                    <span class="badge bg-warning-subtle text-warning">
+                                    <a href="{{ route('admin.booking.details', [$booking->id, $booking->pnr_id, $booking->return_pnr_id ?? 0]) }}"
+                                        class="btn btn-sm btn-outline-warning">
                                         Voided
-                                    </span>
+                                    </a>
                                 @endif
 
                             </div>

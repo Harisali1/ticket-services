@@ -12,11 +12,13 @@ use App\Models\Admin\Airport;
 use App\Models\Admin\Baggage;
 use App\Models\Admin\PassengerType;
 use App\Models\Admin\PnrPassenger;
+use App\Helpers\NotificationHelper;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class PnrController extends Controller
 {
@@ -46,19 +48,6 @@ class PnrController extends Controller
             $end   = Carbon::createFromFormat('Y-m-d H:i', $arrival);
             $diff = $start->diff($end);
 
-            // if($request->pnr_type == 'return'){
-            //     $return_departure = $request->return_departure_date .' '. $request->return_departure_time_hour.':'.$request->return_departure_time_minute;
-            //     $return_arrival = $request->return_arrival_date .' '. $request->return_arrival_time_hour.':'.$request->return_arrival_time_minute;
-            //     $start = Carbon::createFromFormat('Y-m-d H:i', $return_departure);
-            //     $end   = Carbon::createFromFormat('Y-m-d H:i', $return_arrival);
-            //     $returnDiff = $start->diff($end);
-            //     if($returnDiff->d != 0){
-            //         $returnDuration = $returnDiff->d.'d '.$returnDiff->h.'h '.$returnDiff->i.'m';
-            //     }else{
-            //         $returnDuration = $returnDiff->h.'h '.$returnDiff->i.'m';
-            //     }
-            // }
-
             if($diff->d != 0){
                 $duration = $diff->d.'d '.$diff->h.'h '.$diff->i.'m';
             }else{
@@ -66,7 +55,6 @@ class PnrController extends Controller
             }
 
             $data = [
-                // 'pnr_type' => $request->pnr_type,
                 'flight_no' => $request->flight_no,
                 'middle_flight_no' => (isset($request->middle_flight_no)) ? $request->middle_flight_no : NULL,
                 'ref_no' => $request->ref_no,
@@ -164,9 +152,9 @@ class PnrController extends Controller
 
             NotificationHelper::notifyAllActiveUsers([
                 'type'    => 'pnr',
-                'title'   => 'New PNR Available',
-                'message' => "PNR {$pnr->pnr_no} has been created",
-                'url'     => route('agency.pnr.show', $pnr->id),
+                'title'   => 'New Flight Available',
+                'message' => "Flight {$pnr->departure->code} To {$pnr->arrival->code} has been created",
+                'url'     => route('admin.booking.create'),
                 'icon'    => 'plane'
             ]);
 
@@ -388,6 +376,7 @@ class PnrController extends Controller
         return view('Admin.pnr.upload-pnr');
     }
 
+        
     public function uploadPnrSubmit(Request $request)
     {
         $request->validate([
@@ -397,87 +386,108 @@ class PnrController extends Controller
         try {
 
             $rows = array_map('str_getcsv', file($request->file('pnr_file')->getRealPath()));
-            array_shift($rows); // remove header
+            array_shift($rows); // header remove
 
             $created = 0;
             $skipped = 0;
+            $errors  = [];
 
-            foreach ($rows as $row) {
+            foreach ($rows as $index => $row) {
 
-                $departure = Airport::where('code', trim($row[5]))->first();
-                $middleArr = !empty($row[6]) ? Airport::where('code', trim($row[6]))->first() : null;
-                $arrival   = Airport::where('code', trim($row[7]))->first();
-                $airline   = AirLine::where('code', trim($row[8]))->first();
+                // -----------------------------
+                // BASIC CSV ROW VALIDATION
+                // -----------------------------
+                $validator = Validator::make([
+                    'departure_date' => $row[8] ?? null,
+                    'arrival_date'   => $row[12] ?? null,
+                    'baggage'        => $row[14] ?? null,
+                    'seats'          => $row[15] ?? null,
+                ], [
+                    'departure_date' => 'required|date|after_or_equal:today',
+                    'arrival_date'   => 'required|date|after_or_equal:departure_date',
+                    'baggage'        => 'required|in:1 PC,2 PC',
+                    'seats'          => 'required|integer|min:1',
+                ]);
 
-                if (!$departure || !$arrival || !$airline) {
+                if ($validator->fails()) {
                     $skipped++;
+                    $errors[] = [
+                        'row'   => $index + 2,
+                        'error' => $validator->errors()->first(),
+                    ];
                     continue;
                 }
 
+                $departureDate = Carbon::createFromFormat('m/d/Y', $row[8]);
+                $arrivalDate   = Carbon::createFromFormat('m/d/Y', $row[12]);
+
+                // Arrival date departure se choti na ho
+                if ($arrivalDate->lt($departureDate)) {
+                    $skipped++;
+                    $errors[] = [
+                        'row'   => $index + 2,
+                        'error' => 'Arrival date cannot be earlier than departure date',
+                    ];
+                    continue;
+                }
+
+                // -----------------------------
+                // CODE VALIDATION (Airport / Airline)
+                // -----------------------------
+                $departure = Airport::where('code', trim($row[4]))->first();
+                $middleArr = !empty($row[5]) ? Airport::where('code', trim($row[5]))->first() : null;
+                $arrival   = Airport::where('code', trim($row[6]))->first();
+                $airline   = AirLine::where('code', trim($row[7]))->first();
+
+                if (!$departure || !$arrival || !$airline || (!empty($row[5]) && !$middleArr)) {
+                    $skipped++;
+                    $errors[] = [
+                        'row'   => $index + 2,
+                        'error' => 'Invalid departure, arrival, middle airport or airline code',
+                    ];
+                    continue;
+                }
+
+                // -----------------------------
+                // DATA INSERT
+                // -----------------------------
                 $data = [
-                    'pnr_type'   => $row[0],
-                    'ref_no'     => $row[1],
-                    'flight_no'  => $row[2],
-                    'air_craft'  => $row[3],
-                    'class'      => $row[4] ?? 'Y',
+                    'ref_no'           => $row[0],
+                    'flight_no'        => $row[1],
+                    'middle_flight_no' => $row[2],
+                    'air_craft'        => $row[3],
+                    'class'            => 'Y',
 
                     'departure_id' => $departure->id,
                     'arrival_id'   => $arrival->id,
                     'airline_id'   => $airline->id,
 
-                    'departure_date' => Carbon::createFromFormat('m/d/Y', $row[13])->format('Y-m-d'),
-                    'departure_time' => $row[14],
-                    'arrival_date'   => Carbon::createFromFormat('m/d/Y', $row[17])->format('Y-m-d'),
-                    'arrival_time'   => $row[18],
+                    'departure_date' => $departureDate->format('Y-m-d'),
+                    'departure_time' => $row[9],
+                    'arrival_date'   => $arrivalDate->format('Y-m-d'),
+                    'arrival_time'   => $row[13],
 
-                    'baggage' => $row[25],
-                    'seats'   => (int) $row[26],
+                    'baggage' => $row[14],
+                    'seats'   => (int) $row[15],
 
-                    'base_price' => $row[28],
-                    'tax'        => $row[29],
-                    'total'      => $row[30],
+                    'base_price' => $row[17],
+                    'tax'        => $row[18],
+                    'total'      => $row[19],
                 ];
 
                 if ($middleArr) {
-                    $data['middle_arrival_id'] = $middleArr->id;
-                    $data['middle_arrival_time'] = $row[15] ?? null;
-                    $data['rest_time'] = $row[16] ?? null;
-                }
-
-                if ($row[0] === 'return') {
-
-                    $returnDeparture = Airport::where('code', trim($row[9]))->first();
-                    $returnMiddleArr = !empty($row[10]) ? Airport::where('code', trim($row[10]))->first() : null;
-                    $returnArrival   = Airport::where('code', trim($row[11]))->first();
-                    $returnAirline   = AirLine::where('code', trim($row[12]))->first();
-
-
-                    $data['return_departure_id'] = $returnDeparture?->id;
-                    $data['return_arrival_id']   = $returnArrival?->id;
-                    $data['return_airline_id']   = $returnAirline->id;
-
-                    $data['return_departure_date'] = Carbon::createFromFormat('m/d/Y', $row[19])->format('Y-m-d');
-                    $data['return_departure_time'] = $row[20];
-                    $data['return_arrival_date']   = Carbon::createFromFormat('m/d/Y', $row[23])->format('Y-m-d');
-                    $data['return_arrival_time']   = $row[24];
-
-                    $data['return_base_price'] = $row[31];
-                    $data['return_tax']        = $row[32];
-                    $data['return_total']      = $row[33];
-
-                    if ($returnMiddleArr) {
-                        $data['return_middle_arrival_id'] = $returnMiddleArr->id;
-                        $data['middle_return_arrival_time'] = $row[21] ?? null;
-                        $data['return_rest_time'] = $row[22] ?? null;
-                    }
+                    $data['middle_arrival_id']   = $middleArr->id;
+                    $data['middle_arrival_time'] = $row[10] ?? null;
+                    $data['rest_time']           = $row[11] ?? null;
                 }
 
                 $pnr = $this->createPnrFromArray($data);
 
+                // Passenger prices
                 $passengers = [
-                    1 => $row[34] ?? 0, // Adult
-                    2 => $row[35] ?? 0, // Child
-                    3 => $row[36] ?? 0, // Infant
+                    1 => $row[20] ?? 0,
+                    2 => $row[21] ?? 0,
+                    3 => $row[22] ?? 0,
                 ];
 
                 foreach ($passengers as $type => $price) {
@@ -490,7 +500,8 @@ class PnrController extends Controller
                     }
                 }
 
-                if (!empty($row[27]) && $row[27] == 1) {
+                // Seat auto sale
+                if (!empty($row[16]) && $row[16] == 1) {
                     Seat::where('pnr_id', $pnr->id)
                         ->where('is_available', 1)
                         ->where('is_sale', 0)
@@ -506,11 +517,19 @@ class PnrController extends Controller
                 $created++;
             }
 
+            if($errors){
+                return response()->json([
+                    'code' => 2,
+                    'success' => true,
+                    'errors'  => $errors,
+                ]);
+            }
             return response()->json([
                 'success' => true,
-                'message' => 'PNR CSV uploaded successfully',
+                'message' => 'PNR CSV uploaded',
                 'created' => $created,
                 'skipped' => $skipped,
+                'errors'  => $errors,
             ]);
 
         } catch (\Exception $e) {
@@ -521,6 +540,7 @@ class PnrController extends Controller
             ], 500);
         }
     }
+
 
     public function putOnSaleAndCancel(Request $request){
 

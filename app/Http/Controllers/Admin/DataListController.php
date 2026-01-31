@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Admin\Airport;
 use App\Models\Admin\AirLine;
 use App\Models\Admin\Baggage;
+use App\Models\Admin\Agency;
 
 class DataListController extends Controller
 {
@@ -59,5 +60,22 @@ class DataListController extends Controller
             }
         }
         return $baggage;
+    }
+
+    public function searchAgency(Request $request){
+        $Agency=[];
+        $selectAgency = Agency::where(function ($query) use($request){
+            $query->where('name','like',"%$request->term%");
+                // ->OrWhere('Agency_account_no','like',"%$request->term%");
+        })
+        ->where('status', 2);
+
+        $selectAgency = $selectAgency->orderby('id','desc')->limit(10)->get(['id','name']);
+        if ($selectAgency) {
+            foreach ($selectAgency as $val) {
+                $Agency[] = array('id' => $val->id, 'label' => $val->name);
+            }
+        }
+        return $Agency;
     }
 }

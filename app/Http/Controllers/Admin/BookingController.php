@@ -182,8 +182,8 @@ class BookingController extends Controller
 
     public function bookingSubmit(Request $request){
 
-        // DB::beginTransaction();
-        // try {
+        DB::beginTransaction();
+        try {
             $bookingSeats = 0;
 
             foreach ($request->fareDetails as $type) {
@@ -273,25 +273,21 @@ class BookingController extends Controller
             User::find($user->id)->update([
                 'total_amount' => $updatedTotalAmount
             ]);
-            
 
-            // $user->notify(new PortalNotification([
-            //     'type' => 'booking',
-            //     'title' => 'New Booking Created',
-            //     'message' => "Booking #{$booking->id} created by agency {$user->agency->name}",
-            //     'url' => route('admin.booking.index', ['status' => 1]),
-            //     'icon' => 'ticket'
-            // ]));
-            $name = ($user->agency) ? $user->agency->name : $user->name;
-            NotificationHelper::notifyAdmins([
-                'type' => 'booking',
-                'title' => 'New Booking Created',
-                'message' => "Booking #{$booking->id} created by agency {$name}",
-                'url' => route('admin.booking.index', ['status' => 1]),
-                'icon' => 'ticket'
-            ]);
+            if(auth()->user()->user_type_id != 1){
+                if(!Auth::user()->can('pnr_ticketed')){
+                    $name = ($user->agency) ? $user->agency->name : $user->name;
+                    NotificationHelper::notifyAdmins([
+                        'type' => 'booking',
+                        'title' => 'New Booking Created',
+                        'message' => "Booking #{$booking->id} created by agency {$name}",
+                        'url' => route('admin.booking.index', ['status' => 1]),
+                        'icon' => 'ticket'
+                    ]);
+                }
+            }
 
-            // DB::commit();
+            DB::commit();
 
             return redirect()->route('admin.booking.details',[
                 'booking' => $booking->id,
@@ -299,16 +295,16 @@ class BookingController extends Controller
                 'id' => $booking->return_pnr_id ?? 0
             ])->with('success', 'Booking created successfully.');
 
-        // } catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-        //     DB::rollBack();
+            DB::rollBack();
 
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Something went wrong',
-        //         'error'   => $e->getMessage()
-        //     ], 500);
-        // }
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function itineraryPrint($bookingId){
@@ -398,7 +394,7 @@ class BookingController extends Controller
                     if ($request->status === 'ticket') {
                         $updateData['arr_ticket_no'] = '055' . mt_rand(1000000000, 9999999999);
                     }
-                }
+                } 
             }
 
             Booking::where('id', $booking->id)->update($updateData);
@@ -412,6 +408,30 @@ class BookingController extends Controller
                     'ticketed_amount' => $updatedTicketedAmount,
                     'remaining_amount' => $updatedRemainingAmount
                 ]);
+                $customers = Customer::where('booking_id', $booking->id)->get();
+                foreach($customers as $key => $customer){
+                    $customer->update([
+                        'dept_ticket_no' => '055' . mt_rand(1000000000, 9999999999)+$key,
+                        'arr_ticket_no' => '055' . mt_rand(1000000000, 9999999999)+$key,
+                    ]);
+                }
+                if(auth()->user()->user_type_id != 1){
+                    NotificationHelper::notifyAdmins([
+                        'type' => 'booking_status',
+                        'title' => 'Booking Status Updated',
+                        'message' => "booking #{$booking->booking_no} has been {$booking->status->label()} by {$booking->user->agency->name}",
+                        'url' => route('admin.booking.index', ['status' => 2]),
+                        'icon' => 'refresh'
+                    ]);
+                }else{
+                    NotificationHelper::notifyAgency($booking->user, [
+                        'type' => 'booking_status',
+                        'title' => 'Booking Status Updated',
+                        'message' => "Your booking #{$booking->booking_no} status changed to {$booking->status->label()} by admin",
+                        'url' => route('admin.booking.index', ['status' => 5]),
+                        'icon' => 'refresh'
+                    ]);
+                }
             }
 
             if($request->status == 'cancel'){
@@ -421,15 +441,27 @@ class BookingController extends Controller
                 User::find($user->id)->update([
                     'total_amount' => $updatedTotalAmount
                 ]);
+                if(auth()->user()->user_type_id != 1){
+                    NotificationHelper::notifyAdmins([
+                        'type' => 'booking_status',
+                        'title' => 'Booking Status Updated',
+                        'message' => "booking #{$booking->booking_no} has been {$booking->status->label()} by {$booking->user->agency->name}",
+                        'url' => route('admin.booking.index', ['status' => 5]),
+                        'icon' => 'refresh'
+                    ]);
+                }else{
+                    NotificationHelper::notifyAgency($booking->user, [
+                        'type' => 'booking_status',
+                        'title' => 'Booking Status Updated',
+                        'message' => "Your booking #{$booking->booking_no} status changed to {$booking->status->label()} by admin",
+                        'url' => route('admin.booking.index', ['status' => 5]),
+                        'icon' => 'refresh'
+                    ]);
+                }
+                
             }
 
-            NotificationHelper::notifyAgency($booking->user, [
-                'type' => 'booking_status',
-                'title' => 'Booking Status Updated',
-                'message' => "Your booking #{$booking->id} status changed to {$booking->status->label()}",
-                'url' => route('admin.booking.index', ['status' => 5]),
-                'icon' => 'refresh'
-            ]);
+            
 
             DB::commit();
 
@@ -473,7 +505,7 @@ class BookingController extends Controller
         'return_pnr.departure', 'return_pnr.arrival', 'pnr.airline', 'return_pnr.airline', 'user')->find($bookingId);
         $response['booking'] = $bookingData->toArray();
         $response['customers'] = Customer::where('customers.booking_id', $bookingId)
-        ->get(['customers.name', 'customers.phone_no', 'customers.dob', 'customers.surname']);
+        ->get();
         $response['type'] = $type;
         $response['agency'] = Agency::with('user')->where('user_id', $bookingData->created_by)->first();
 
@@ -569,6 +601,26 @@ class BookingController extends Controller
             User::find($user->id)->update([
                 'remaining_amount' => $updatedRemainingAmount
             ]);
+
+            if(auth()->user()->user_type_id != 1){
+                $name = $user->agency->name;
+                NotificationHelper::notifyAdmins([
+                    'type' => 'Ticket',
+                    'title' => 'Ticket Void',
+                    'message' => "Booking no#{$booking->booking_no} has been Voided by {$name}",
+                    'url' => route('admin.booking.index', ['status' => 4]),
+                    'icon' => 'ticket'
+                ]);
+            }else{
+                $name = $user->agency->name;
+                NotificationHelper::notifyAgency($booking->user, [
+                    'type' => 'Ticket',
+                    'title' => 'Ticket Void',
+                    'message' => "Your ticket no#{$booking->booking_no} has been Voided by Admin",
+                    'url' => route('admin.booking.index', ['status' => 4]),
+                    'icon' => 'ticket'
+                ]);
+            }
         
         DB::commit();
 

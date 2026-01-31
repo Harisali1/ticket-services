@@ -1,4 +1,4 @@
-<div class="container py-4">
+<div class="container py-5">
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -16,7 +16,7 @@
             </button> -->
         </div>
     </div>
-<div class="row mb-4">
+    <div class="row mb-4">
         <div class="col-md-2">
             <div class="card text-center shadow-sm">
                 <div class="card-body">
@@ -73,7 +73,7 @@
         </div>
     </div>
     <!-- TABLE -->
-    <div class="table-responsive">
+    <div class="table-responsive py-4">
         <table class="table table-bordered align-middle">
             <thead class="table-light">
             <tr>
@@ -84,6 +84,7 @@
                 <th>{{__('messages.paid_at')}}</th>
                 <th>{{__('messages.approved_by')}}</th>
                 <th>{{__('messages.approved_at')}}</th>
+                <th>{{__('messages.action')}}</th>
             </tr>
             </thead>
 
@@ -104,6 +105,21 @@
                     <td>{{ $payment->paid_at }}</td>
                     <td>{{ (isset($payment->admin->name)) ? $payment->admin->name : '' }}</td>
                     <td>{{ $payment->approved_at }}</td>
+                    <td> 
+                        @if($payment->is_cancel == 0 && $payment->is_approved == 0)
+                            <button class="btn btn-sm btn-warning" type="button" onclick="paymenteclined({{ $payment->id }})">
+                                Payment Decline
+                            </button>
+                        @elseif($payment->is_approved == 1)
+                            <button class="btn btn-sm btn-success" type="button">
+                                Approved
+                            </button>
+                        @elseif($payment->is_cancel == 1)
+                            <button class="btn btn-sm btn-danger" type="button">
+                                Declined
+                            </button>
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>
@@ -114,9 +130,10 @@
             @endforelse
             </tbody>
         </table>
+        {{ $payments->links() }}
     </div>
 
-    {{ $payments->links() }}
+    
 
 </div>
 

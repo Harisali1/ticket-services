@@ -38,6 +38,7 @@ Livewire::setUpdateRoute(function ($handle) {
 Route::get('search/airport', [App\Http\Controllers\Admin\DataListController::class, 'searchAirport'])->name('search.airport');
 Route::get('search/airline', [App\Http\Controllers\Admin\DataListController::class, 'searchAirLine'])->name('search.airline');
 Route::get('search/baggage', [App\Http\Controllers\Admin\DataListController::class, 'searchBaggage'])->name('search.baggage');
+Route::get('search/agency', [App\Http\Controllers\Admin\DataListController::class, 'searchAgency'])->name('search.agency');
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -145,6 +146,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/edit/{payment}', [App\Http\Controllers\Admin\PaymentController::class, 'edit'])->name('admin.payment.edit');
             Route::post('/update', [App\Http\Controllers\Admin\PaymentController::class, 'update'])->name('admin.payment.update');
             Route::get('/approved/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'approvedPayment'])->name('admin.payment.approved');
+            Route::get('/declined/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'paymentDeclined'])->name('admin.payment.declined');
         });
 
         Route::prefix('news')->group(function () {

@@ -226,18 +226,34 @@
             },
             success: function (data) {
                 Swal.close(); 
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "success",
-                    title: data.message,
-                    showConfirmButton: true,
-                    confirmButtonText: "OK"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "{{ route('admin.pnr.index') }}";
-                    }
-                });
+
+                if(data.code == 2){
+                    let errorHtml = '<ul style="text-align:left;">';
+
+                    data.errors.forEach(err => {
+                        errorHtml += `<li><b>Row ${err.row}:</b> ${err.error}</li>`;
+                    });
+
+                    errorHtml += '</ul>';
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Errors',
+                        html: errorHtml,
+                        confirmButtonText: 'OK'
+                    });
+                }else{
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        icon: "success",
+                        title: data.message,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK"
+                    });
+                    window.location.href = "{{ route('admin.pnr.index') }}";
+                }
+                
             },
             error: function (xhr) {
                 Swal.close();

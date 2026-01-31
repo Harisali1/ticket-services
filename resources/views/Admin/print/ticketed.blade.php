@@ -141,8 +141,8 @@
                 <tbody>
                     @foreach($customers as $customer)
                     <tr>
-                        <td>{{ $customer->name.' '.$customer->surname }}</td>
-                        <td>{{ $type == 'dept' ? $booking['dept_ticket_no'] : $booking['arr_ticket_no'] }}</td>
+                        <td>{{ $customer->surname.' '.$customer->name }}</td>
+                        <td>{{ $type == 'dept' ? $customer->dept_ticket_no : $customer->arr_ticket_no }}</td>
                         <td>{{ $booking['booking_no'] }}</td>
                         <td>{{ \Carbon\Carbon::parse($booking['created_at'])->format('d F Y') }}</td>
                     </tr>
@@ -194,11 +194,18 @@
                             {{ $booking['pnr']['middle_arrival']['name'] }}<br>
                             <strong>{{ \Carbon\Carbon::parse($booking['pnr']['middle_arrival_time'])->format('H:i') }}</strong>
                         </td>
+                    @else
+                        <td width="45%">
+                            <div class="label">Arrival</div>
+                            {{ $booking['pnr']['arrival']['name'] }}<br>
+                            <strong>{{ \Carbon\Carbon::parse($booking['pnr']['arrival_time'])->format('H:i') }}</strong>
+                        </td>
                     @endif
                     
                 </tr>
             </table>
 
+            @if($booking['pnr']['middle_arrival_id'] != null && $booking['pnr']['middle_arrival_time'] != null && $booking['pnr']['rest_time'] != null)
             <table class="flight-table">
                 <tr>
                     @if($booking['pnr']['middle_arrival_id'] != null && $booking['pnr']['middle_arrival_time'] != null && $booking['pnr']['rest_time'] != null)
@@ -223,6 +230,7 @@
                     </td>
                 </tr>
             </table>
+            @endif
 
             <table class="flight-table" style="margin-top:8px;">
                 <tr>

@@ -30,16 +30,7 @@
         <form id="pnr-form" enctype="multipart/form-data">
             <h5 class="mb-3">PNR & Flight Info</h5>
             <div class="row g-3">
-                <!-- <div class="col-md-3">
-                    <label class="form-label text-muted">PNR Type *</label>
-                    <select class="form-select select2" id="pnr_type" name="pnr_type">
-                        <option value="">Please Select Type</option>
-                        <option value="one_way">One Way</option>
-                        <option value="return">Return</option>
-                        <option value="open_jaw">Open Jaw</option>
-                    </select>
-                </div> -->
-
+                
                 <div class="col-md-3">
                     <label class="form-label text-muted">Flight No *</label>
                     <input type="text" name="flight_no" id="flight_no" class="form-control">
@@ -50,11 +41,6 @@
                     <input type="text" name="middle_flight_no" id="middle_flight_no" class="form-control">
                 </div>
 
-                <!-- <div class="col-md-3 return-fields d-none">
-                    <label class="form-label text-muted">Return Flight No *</label>
-                    <input type="text" name="return_flight_no" id="return_flight_no" class="form-control">
-                </div> -->
-
                 <div class="col-md-3">
                     <label class="form-label text-muted">Reference PNR No #</label>
                     <input type="text" name="ref_no" id="ref_no" class="form-control">
@@ -62,7 +48,7 @@
 
                 <div class="col-md-3">
                     <label class="form-label text-muted">Aircraft</label>
-                    <input type="text" name="air_craft" id="air_craft" class="form-control">
+                    <input type="text" name="air_craft" id="air_craft" class="form-control" value="AIRBUS 319" readonly>
                 </div>
 
             </div>
@@ -91,28 +77,6 @@
                     <select class="form-select select2" id="airline_id" name="airline_id"></select>
                 </div>
             </div>
-
-            <!-- Return -->
-            <!-- <div class="row g-3 return-fields d-none mt-2">
-                <div class="col-md-3">
-                    <label for="return_departure_id" class="form-label text-muted">Return Departure</label>
-                    <select class="form-select select2 return-select" id="return_departure_id" name="return_departure_id"></select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Return Middle Arrival</label>
-                    <select class="form-select select2" id="return_middle_arrival_id" name="return_middle_arrival_id"></select>
-                </div>
-                <div class="col-md-3">
-                    <label for="return_arrival_id" class="form-label text-muted">Return Arrival</label>
-                    <select class="form-select select2 return-select" id="return_arrival_id" name="return_arrival_id"></select>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="return_airline_id" class="form-label text-muted">Return Airline</label>
-                    <select class="form-select select2 return-select" id="return_airline_id" name="return_airline_id"></select>
-                </div>
-            </div> -->
-
 
             <hr>
             <h5 class="mb-3">Dates & Times</h5>
@@ -235,120 +199,6 @@
                             if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
                     </div>
                 </div>
-
-                <!-- <div class="col-md-2 return-fields d-none">
-                    <label class="form-label text-muted">Return Departure Date</label>
-                    <input type="date" id="return_departure_date" name="return_departure_date" class="form-control">
-                </div>
-
-                <div class="col-md-2 return-fields d-none">
-                    <label class="form-label text-muted">Return Departure Time</label>
-                    <div class="d-flex align-items-center gap-2">
-                    <input
-                        type="number"
-                        min="0"
-                        max="23"
-                        id="return_departure_time_hour"
-                        name="return_departure_time_hour"
-                        class="form-control"
-                        placeholder="HH"
-                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
-                        if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
-                    <input
-                        type="number"
-                        min="0"
-                        max="59"
-                        id="return_departure_time_minute"
-                        name="return_departure_time_minute"
-                        class="form-control"
-                        placeholder="MM"
-                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
-                        if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
-                    </div>
-                </div>
-
-                <div class="col-md-2 return-fields d-none">
-                    <label class="form-label text-muted">Middle Arrival Time</label>
-                    <div class="d-flex align-items-center gap-2">
-                        <input
-                            type="number"
-                            min="0"
-                            max="23"
-                            id="middle_return_arrival_time_hour"
-                            name="middle_return_arrival_time_hour"
-                            class="form-control"
-                            placeholder="HH"
-                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
-                            if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
-                        <input
-                            type="number"
-                            min="0"
-                            max="59"
-                            id="middle_return_arrival_time_minute"
-                            name="middle_return_arrival_time_minute"
-                            class="form-control"
-                            placeholder="MM"
-                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
-                            if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
-                    </div>
-                </div>
-
-                <div class="col-md-2 return-fields d-none">
-                    <label class="form-label text-muted">Middle Dept Time*</label>
-                    <div class="d-flex align-items-center gap-2">
-                        <input
-                            type="number"
-                            min="0"
-                            max="23"
-                            id="return_rest_time_hour"
-                            name="return_rest_time_hour"
-                            class="form-control"
-                            placeholder="HH"
-                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
-                            if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
-                        <input
-                            type="number"
-                            min="0"
-                            max="59"
-                            id="return_rest_time_minute"
-                            name="return_rest_time_minute"
-                            class="form-control"
-                            placeholder="MM"
-                            oninput="this.value = this.value.replace(/[^0-9]/g,'');
-                            if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
-                    </div>
-                </div>
-
-                <div class="col-md-2 return-fields d-none">
-                    <label class="form-label text-muted">Return Arrival Date</label>
-                    <input type="date" id="return_arrival_date" name="return_arrival_date" class="form-control">
-                </div>
-
-                <div class="col-md-2 return-fields d-none">
-                    <label class="form-label text-muted">Return Arrival Time</label>
-                    <div class="d-flex align-items-center gap-2">
-                    <input
-                        type="number"
-                        min="0"
-                        max="23"
-                        id="return_arrival_time_hour"
-                        name="return_arrival_time_hour"
-                        class="form-control"
-                        placeholder="HH"
-                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
-                        if (this.value !== '' && (this.value < 0 || this.value > 24)) this.value = '';">
-                    <input
-                        type="number"
-                        min="0"
-                        max="59"
-                        id="return_arrival_time_minute"
-                        name="return_arrival_time_minute"
-                        class="form-control"
-                        placeholder="MM"
-                        oninput="this.value = this.value.replace(/[^0-9]/g,'');
-                        if (this.value !== '' && (this.value < 0 || this.value > 59)) this.value = '';">
-                    </div>
-                </div> -->
             </div> 
 
             <hr>
@@ -394,23 +244,6 @@
                 </div>
             </div>
 
-            <!-- <div class="row g-3 return-fields d-none mt-2">
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Return Base Fare</label>
-                    <input type="text" id="return_base_price" name="return_base_price" class="form-control" onkeyup="returnFunction()" placeholder="0">
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Return Tax</label>
-                    <input type="text" id="return_tax" name="return_tax" class="form-control" placeholder="0" onkeyup="returnFunction()">
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label text-muted">Return Total</label>
-                    <input type="text" id="return_total" name="return_total" class="form-control" placeholder="0" readonly>
-                </div>
-            </div> -->
-
             <hr>
             <h5 class="mb-3 mt-3">Passenger Types</h5>
 
@@ -450,18 +283,7 @@
 
 @section('scripts')
 <script>
-    $('#pnr_type').on('change', function () {
-        const show = ['return', 'open_jaw'].includes($(this).val());
-        $('.return-fields').toggleClass('d-none', !show);
-    });
-
-    // function returnFunction(){
-    //     const returnBasePriceInput = document.getElementById('return_base_price');
-    //     const returnTaxInput       = document.getElementById('return_tax');
-    //     const returnTotalInput     = document.getElementById('return_total');
-    //     returnTotalInput.value = parseFloat(returnBasePriceInput.value) + parseFloat(returnTaxInput.value);
-    // }
-
+    
     document.addEventListener('DOMContentLoaded', function () {
 
         const passengerPrices = document.querySelectorAll('.passenger-price');
@@ -470,8 +292,6 @@
         const taxInput       = document.getElementById('tax');
         const totalInput     = document.getElementById('total');
         
-        
-
         if (!passengerPrices.length) return;
 
         const firstPassenger = passengerPrices[0];
@@ -544,10 +364,6 @@
         initSelect2('#middle_arrival_id', "{{ route('search.airport') }}");
         initSelect2('#arrival_id', "{{ route('search.airport') }}");
         initSelect2('#airline_id', "{{ route('search.airline') }}");
-        // initSelect2('#return_departure_id', "{{ route('search.airport') }}");
-        // initSelect2('#return_middle_arrival_id', "{{ route('search.airport') }}");
-        // initSelect2('#return_arrival_id', "{{ route('search.airport') }}");
-        // initSelect2('#return_airline_id', "{{ route('search.airline') }}");
     });
 
     // Departure → Return Arrival
@@ -575,7 +391,6 @@
     document.getElementById("pnr-form").addEventListener("submit", function (e) {
         e.preventDefault();
 
-        // const isReturn = document.getElementById("pnr_type").value === 'return';
         const fields = {
             flight_no: {value: document.getElementById("flight_no").value, message: "Flight number is required"},
             departure_id: {value: document.getElementById("departure_id").value, message: "Please select departure"},
@@ -602,30 +417,6 @@
             }
         }
 
-        /* --------------------
-        RETURN PNR VALIDATION
-        -------------------- */
-        // if (isReturn) {
-        //     const returnFields = {
-        //         return_flight_no: {value: document.getElementById("return_flight_no").value,message: "Return flight no is required"},
-        //         return_departure_id: {value: document.getElementById("return_departure_id").value,message: "Return departure is required"},
-        //         return_arrival_id: {value: document.getElementById("return_arrival_id").value,message: "Return arrival is required"},
-        //         return_airline_id: {value: document.getElementById("return_airline_id").value,message: "Return airline is required"},
-        //         return_departure_date: {value: document.querySelector('[name="return_departure_date"]').value,message: "Return departure date is required"},
-        //         return_departure_time_hour: {value: document.querySelector('[name="return_departure_time_hour"]').value,message: "Return departure time is required"},
-        //         return_departure_time_minute: {value: document.querySelector('[name="return_departure_time_minute"]').value,message: "Return departure time is required"},
-        //         return_arrival_date: {value: document.querySelector('[name="return_arrival_date"]').value,message: "Return arrival date is required"},
-        //         return_arrival_time_hour: {value: document.querySelector('[name="return_arrival_time_hour"]').value,message: "Return arrival time is required"},
-        //         return_arrival_time_minute: {value: document.querySelector('[name="return_arrival_time_minute"]').value,message: "Return arrival time is required"}
-        //     };
-
-        //     for (const key in returnFields) {
-        //         if (!returnFields[key].value) {
-        //             showError(returnFields[key].message);
-        //             return;
-        //         }
-        //     }
-        // }
 
         const passengerPrices = document.querySelectorAll('.passenger-price');
 

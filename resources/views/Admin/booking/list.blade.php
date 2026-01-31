@@ -18,6 +18,17 @@
         transform: translateY(-3px);
         box-shadow: 0 0.5rem 1rem rgba(0,0,0,.08);
     }
+.offcanvas {
+    overflow: visible !important;
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-dropdown {
+    z-index: 2055 !important; /* bootstrap offcanvas z-index se zyada */
+}
 
 </style>
 @endsection
@@ -27,40 +38,6 @@
 @endsection
 
 @section('scripts')
-<script>
-function initSelect2(id, url) {
-        $(id).select2({
-            dropdownParent: $('#filterSidebar'), // ⭐ IMPORTANT
-            placeholder: 'Search Airline',
-            allowClear: true,
-            minimumInputLength: 2,
-            ajax: {
-                url: url,
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data.map(item => ({
-                            id: item.id,
-                            text: item.label
-                        }))
-                    };
-                }
-            }
-        });
-    }
-
-
-   $(document).ready(function () {
-        initSelect2('#airline_id', "{{ route('search.airline') }}");
-
-    });
-</script>
 
 @endsection
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire\Admin\Notification;
+namespace App\Livewire\Admin\News;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Admin\Notification;
+use App\Models\Admin\News;
 
-class NotificationList extends Component
+class NewsList extends Component
 {
     use WithPagination;
 
@@ -44,7 +44,7 @@ class NotificationList extends Component
 
     public function render()
     {
-        $notifications = Notification::where('is_deleted', 0)
+        $notifications = News::where('is_deleted', 0)
             ->when($this->filters['title'], fn ($q) =>
                 $q->where('title', 'like', '%' . $this->filters['title'] . '%')
             )
@@ -60,6 +60,6 @@ class NotificationList extends Component
             ->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.notification.notification-list', compact('notifications'));
+        return view('livewire.admin.news.news-list', compact('notifications'));
     }
 }

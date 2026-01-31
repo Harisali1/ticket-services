@@ -62,18 +62,9 @@ class PaymentController extends Controller
         try {
 
             $user = auth()->user();
-
             $postedAmount = (int) $request->amount;
             $remainingAmount = $postedAmount;
-
             $paidBookings = [];
-
-            // 🔹 Get unpaid / partial bookings (FIFO)
-            // $bookings = Booking::where('created_by', $user->id)
-            //     ->where('is_approved', 0)
-            //     ->whereIn('status', [2]) // ticketed / unpaid
-            //     ->orderBy('id', 'asc')
-            //     ->get();
             $bookingIds = json_decode($request->booking_ids, true);
 
             if (empty($bookingIds)) {
@@ -144,13 +135,22 @@ class PaymentController extends Controller
             ]);
 
             // 🔹 Save payment history
-            PaymentUpload::create([
+            $paymentUpload = PaymentUpload::create([
                 'slip_no'     => mt_rand(1000000000, 9999999999),
                 'booking_ids' => json_encode($paidBookings),
                 'amount'      => $usedAmount,
                 'image'       => $imagePath,
                 'created_by'  => $user->id,
                 'paid_at'     => now(),
+            ]);
+
+            $name = auth()->user()->agency->name;
+            NotificationHelper::notifyAdmins([
+                'type' => 'payment',
+                'title' => 'New Payment Created',
+                'message' => "Payment slip no#{$paymentUpload->slip_no} created by agency {$name}",
+                'url' => route('admin.agency.payment.approval', auth()->user()->id),
+                'icon' => 'ticket'
             ]);
 
             DB::commit();
@@ -172,8 +172,6 @@ class PaymentController extends Controller
                 'error'   => $e->getMessage(),
             ], 500);
         }
-
-
 
     }
 
@@ -214,6 +212,16 @@ class PaymentController extends Controller
                 'on_approval_amount'     => $user->on_approval_amount - $paymentUpload->amount,
                 'paid_amount' => $user->paid_amount + $paymentUpload->amount,
             ]);
+
+            $name = $user->agency->name;
+            NotificationHelper::notifyAgency($user, [
+                'type' => 'payment',
+                'title' => 'Payment Approved',
+                'message' => "Your payment slip no#{$paymentUpload->slip_no} approved by admin",
+                'url' => route('admin.agency.payment.approval', auth()->user()->id),
+                'icon' => 'ticket'
+            ]);
+
             Mail::to($user->email)->send(new PaymentApprovedMail($user, $paymentUpload->amount, $paymentUpload->amount, $user->remaining_amount));
 
             DB::commit();
@@ -233,5 +241,106 @@ class PaymentController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function paymentDeclined($id){
+
+        DB::beginTransaction();
+
+        try {
+            $user = auth()->user();
+
+            $paymentUploads = PaymentUpload::find($id);
+            $user = User::find($paymentUploads->created_by);
+            $paidAmount = $paymentUploads->amount;
+            $bookingIds = json_decode($paymentUploads->booking_ids, true);
+            $declinedAmount = 0;
+
+            $bookings = Booking::whereIn('id', $bookingIds)
+                ->where('created_by', $user->id)
+                ->orderBy('id', 'asc')
+                ->get();
+
+
+            foreach ($bookings as $booking) {
+
+                $bookingAmount = $booking->paid_amount != 0
+                    ? $booking->paid_amount
+                    : $booking->partial_pay_amount;
+
+                if ($paidAmount >= $bookingAmount) {
+                    // Full amount adjusted
+                    $paidAmount -= $bookingAmount;
+
+                    $booking->update([
+                        'paid_amount'        => 0,
+                        'partial_pay_amount' => 0,
+                        'payment_status'     => 2,
+                        'status'             => 2,
+                        'paid_by'            => null,
+                        'paid_at'            => null,
+                    ]);
+
+                } else {
+                    // 🔥 Last booking – partial amount goes here
+                    $booking->update([
+                        'paid_amount'        => 0,
+                        'partial_pay_amount' => $booking->paid_amount - $paidAmount,
+                        'payment_status'     => 3,
+                        'status'             => 2,
+                    ]);
+
+                    $paidAmount = 0;
+                    break; // VERY IMPORTANT
+                }
+            }
+
+
+            User::where('id', $user->id)->update([
+                'on_approval_amount'     => $user->on_approval_amount - $paymentUploads->amount,
+                'remaining_amount' => max(0, $user->remaining_amount + $paymentUploads->amount),
+            ]);
+
+            $paymentUploads->update([
+                'is_cancel' => 1
+            ]);
+            $name = $user->agency->name;
+            if(auth()->user()->user_type_id != 1){
+                NotificationHelper::notifyAdmins([
+                    'type' => 'payment',
+                    'title' => 'Payment Declined',
+                    'message' => "Payment slip no#{$paymentUpload->slip_no} has been Canceled by {$name}",
+                    'url' => route('admin.payment.index'),
+                    'icon' => 'money'
+                ]);
+            }else{
+                NotificationHelper::notifyAgency($user, [
+                    'type' => 'payment',
+                    'title' => 'Payment Canceled',
+                    'message' => "Your payment slip no#{$paymentUpload->slip_no} declined by admin",
+                    'url' => route('admin.payment.index'),
+                    'icon' => 'money'
+                ]);
+            }
+            
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment Declined Successfully',
+            ]);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+
     }
 }

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->integer('booking_id')->nullable();
+            $table->string('dept_ticket_no')->nullable();
+            $table->string('arr_ticket_no')->nullable();
             $table->string('country')->nullable();
             $table->string('city')->nullable();
             $table->string('name_prefix')->nullable();

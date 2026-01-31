@@ -20,12 +20,12 @@
             <h5 class="mb-3">Notification Details</h5>
 
             <div class="row g-3 mb-4">
-                <input type="hidden" id="id" name="id" value="{{ $notification->id }}">
+                <input type="hidden" id="id" name="id" value="{{ $news->id }}">
                 <!-- Title -->
                 <div class="col-md-6">
                     <label class="form-label">Title *</label>
                     <input type="text" name="title" id="title"
-                           value="{{ old('title', $notification->title) }}"
+                           value="{{ old('title', $news->title) }}"
                            class="form-control"
                            placeholder="Enter Notification Title">
                 </div>
@@ -34,8 +34,8 @@
                 <div class="col-md-6">
                     <label class="form-label">Status</label>
                     <select name="status" id="status" class="form-select">
-                        <option value="1" {{ $notification->status == 1 ? 'selected' : '' }}>Active</option>
-                        <option value="2" {{ $notification->status == 2 ? 'selected' : '' }}>DeActive</option>
+                        <option value="1" {{ $news->status == 1 ? 'selected' : '' }}>Active</option>
+                        <option value="2" {{ $news->status == 2 ? 'selected' : '' }}>DeActive</option>
                     </select>
                 </div>
 
@@ -47,7 +47,7 @@
                         <div class="border rounded bg-light d-flex align-items-center justify-content-center overflow-hidden"
                              style="width:96px; height:96px;">
                             <img id="logoPreview"
-                                 src="{{ $notification->image ? asset('storage/'.$notification->image) : asset('images/logo-placeholder.png') }}"
+                                 src="{{ $news->image ? asset('storage/'.$news->image) : asset('images/logo-placeholder.png') }}"
                                  class="img-fluid">
                         </div>
 
@@ -69,7 +69,7 @@
                     <textarea name="description" id="description"
                               class="form-control"
                               placeholder="Description"
-                              rows="5">{{ old('description', $notification->description) }}</textarea>
+                              rows="5">{{ old('description', $news->description) }}</textarea>
                 </div>
 
             </div>

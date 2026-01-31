@@ -16,6 +16,15 @@ class NotificationHelper
         }
     }
 
+    public static function notifyAllActiveUsers(array $data)
+    {
+        $users = User::where('status', 2)->get();
+
+        foreach ($users as $user) {
+            $user->notify(new PortalNotification($data));
+        }
+    }
+
     public static function notifyAgency(User $agency, array $data)
     {
         $agency->notify(new PortalNotification($data));

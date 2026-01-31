@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('approved_by')->nullable();
             $table->boolean('is_approved')->default(0);
             $table->datetime('approved_at')->nullable();
+            $table->boolean('is_cancel')->default(0);
             $table->timestamps();
         });
     }

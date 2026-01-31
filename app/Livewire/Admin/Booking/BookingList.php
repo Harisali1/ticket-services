@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Admin\Booking;
 use App\Exports\BookingsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Admin\Agency;
 use DB;
 
 class BookingList extends Component
@@ -27,6 +28,7 @@ class BookingList extends Component
     public $filters = [
         'pnr_no' => '',
         'booking_no' => '',
+        'created_by' => '',
         'status' => '',
         'from' => '',
         'to' => '',
@@ -125,7 +127,7 @@ class BookingList extends Component
 
     public function render()
     {
-        
+        // dd($this->filters['created_by']);
         $bookings = Booking::query();
 
         if(auth()->user()->user_type_id != 1){
@@ -147,6 +149,9 @@ class BookingList extends Component
             ->when($this->filters['booking_no'], fn ($q) =>
                 $q->where('booking_no', 'like', '%' . $this->filters['booking_no'] . '%')
             )
+            ->when($this->filters['created_by'], fn ($q) =>
+                $q->where('created_by', 'like', '%' . $this->filters['created_by'] . '%')
+            )
             ->when($this->filters['status'] !== '', fn ($q) =>
                 $q->where('status', $this->filters['status'])
             )
@@ -160,8 +165,8 @@ class BookingList extends Component
             ->paginate($this->perPage);
 
         
-        
+        $agencies = Agency::where('status', 2)->get();
         return view('livewire.admin.booking.booking-list', 
-        compact('bookings', 'allCounts','reservedCounts','ticketedCounts','paidCounts','cancelCounts','voidCounts'));
+        compact('agencies', 'bookings', 'allCounts','reservedCounts','ticketedCounts','paidCounts','cancelCounts','voidCounts'));
     }
 }

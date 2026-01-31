@@ -5,7 +5,7 @@
         <h1 class="h4 mb-0">Notification List</h1>
 
         <div class="d-flex gap-2">
-            <a href="{{ route('admin.notification.create') }}" class="btn btn-dark">
+            <a href="{{ route('admin.news.create') }}" class="btn btn-dark">
                 + Create Notification
             </a>
 
@@ -103,7 +103,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $notification->id }}">
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('admin.notification.edit', $notification->id) }}">Edit</a>
+                                        <a class="dropdown-item" href="{{ route('admin.news.edit', $notification->id) }}">Edit</a>
                                     </li>
                                     <a class="dropdown-item" href="javascript:void(0)" onclick="deleteNotification({{ $notification->id }})">Delete</a>
 
@@ -128,7 +128,7 @@
 
 <script>
     function deleteNotification(id){
-        let url = "{{ route('admin.notification.delete', ':id') }}";
+        let url = "{{ route('admin.news.delete', ':id') }}";
         url = url.replace(':id', id);   
 
         Swal.fire({
@@ -168,11 +168,8 @@
                             title: data.message,
                             showConfirmButton: true,
                             confirmButtonText: "OK"
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = "{{ route('admin.notification.index') }}";
-                            }
                         });
+                        window.location.href = "{{ route('admin.news.index') }}";
                     },
                     error: function (xhr) {
                         Swal.close();

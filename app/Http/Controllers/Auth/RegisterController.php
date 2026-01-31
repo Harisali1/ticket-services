@@ -16,6 +16,7 @@ use App\Mail\SignupMail;
 use Illuminate\Support\Facades\Mail;
 use DB;
 use App\Notifications\PortalNotification;
+use App\Helpers\NotificationHelper;
 
 class RegisterController extends Controller
 {
@@ -127,14 +128,14 @@ class RegisterController extends Controller
                 'status' => 1,
             ]);
 
-            $user->notify(new PortalNotification([
+            NotificationHelper::notifyAdmins([
                 'type' => 'agency',
                 'title' => 'New Agency Created',
                 'message' => 'A new agency has been created successfully.',
-                'url' => route('admin.agency.show', $agency->id),
+                'url' => route('admin.agency.edit', $agency->id),
                 'icon' => 'building'
-            ]));
-
+            ]);
+            
             Mail::to($user->email)->send(new SignupMail($user, $agency));
             
 

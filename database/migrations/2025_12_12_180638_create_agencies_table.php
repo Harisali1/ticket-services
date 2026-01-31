@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('show_pass')->nullable();
             $table->text('address');
             $table->string('mark_up')->default(0);
-            $table->string('limit')->nullable();
+            $table->string('limit')->default(0);
+            $table->string('admin_fee')->default(0);
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();
             $table->timestamps();
