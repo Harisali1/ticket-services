@@ -11,6 +11,7 @@ use App\Models\User;
 use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PaymentApprovedMail;
+use App\Helpers\NotificationHelper;
 
 class PaymentController extends Controller
 {
@@ -304,12 +305,13 @@ class PaymentController extends Controller
             $paymentUploads->update([
                 'is_cancel' => 1
             ]);
+           
             $name = $user->agency->name;
             if(auth()->user()->user_type_id != 1){
                 NotificationHelper::notifyAdmins([
                     'type' => 'payment',
                     'title' => 'Payment Declined',
-                    'message' => "Payment slip no#{$paymentUpload->slip_no} has been Canceled by {$name}",
+                    'message' => "Payment slip no#{$paymentUploads->slip_no} has been Canceled by {$name}",
                     'url' => route('admin.payment.index'),
                     'icon' => 'money'
                 ]);
@@ -317,12 +319,12 @@ class PaymentController extends Controller
                 NotificationHelper::notifyAgency($user, [
                     'type' => 'payment',
                     'title' => 'Payment Canceled',
-                    'message' => "Your payment slip no#{$paymentUpload->slip_no} declined by admin",
+                    'message' => "Your payment slip no#{$paymentUploads->slip_no} declined by admin",
                     'url' => route('admin.payment.index'),
                     'icon' => 'money'
                 ]);
             }
-            
+             
 
             DB::commit();
 

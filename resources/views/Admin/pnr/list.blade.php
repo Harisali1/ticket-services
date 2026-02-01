@@ -24,7 +24,9 @@
     .pnr-table td {
         text-align: center;
     }
-
+    .table-height{
+        height: 100vh;
+    }
 
 
 </style>

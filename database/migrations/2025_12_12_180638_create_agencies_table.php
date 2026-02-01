@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('piv');
             $table->string('show_pass')->nullable();
             $table->text('address');
+            $table->string('postal_code')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
             $table->string('mark_up')->default(0);
             $table->string('limit')->default(0);
             $table->string('admin_fee')->default(0);

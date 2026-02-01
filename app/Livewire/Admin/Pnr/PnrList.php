@@ -54,8 +54,16 @@ class PnrList extends Component
 
     public function render()
     {
-        $pnrs = Pnr::with('seats', 'airline')
-            ->when($this->filters['pnr_no'], fn ($q) =>
+        $pnrs = Pnr::with('seats', 'airline');
+
+        $all = (clone $pnrs)->count();
+        $created   = (clone $pnrs)->where('status', 1)->count();
+        $onSale  = (clone $pnrs)->where('status', 2)->count();
+        $cancelSale = (clone $pnrs)->where('status', 3)->count();
+        $soldOut = (clone $pnrs)->where('status', 4)->count();
+        $available = (clone $pnrs)->where('status', 5)->count();
+
+            $pnrs = $pnrs->when($this->filters['pnr_no'], fn ($q) =>
                 $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
             )
             ->when($this->filters['status'] !== '', fn ($q) =>
@@ -70,13 +78,6 @@ class PnrList extends Component
             ->latest()
             ->paginate($this->perPage);
 
-        $stats = [
-            'all'       => Pnr::count(),
-            'pending'   => Pnr::where('status', 1)->count(),
-            'approved'  => Pnr::where('status', 2)->count(),
-            'suspended' => Pnr::where('status', 3)->count(),
-        ];
-
-        return view('livewire.admin.pnr.pnr-list', compact('pnrs', 'stats'));
+        return view('livewire.admin.pnr.pnr-list', compact('pnrs', 'all', 'created', 'onSale', 'cancelSale', 'soldOut', 'available'));
     }
 }

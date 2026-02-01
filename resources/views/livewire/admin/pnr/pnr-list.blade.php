@@ -71,17 +71,90 @@
     </div>
 
     <!-- Stats -->
-    <div class="row mb-4">
-        @foreach($stats as $label => $count)
-            <div class="col-12 col-sm-6 col-lg-3 mb-3">
-                <div class="card border">
-                    <div class="card-body">
-                        <p class="text-muted mb-1">{{ ucfirst($label) }}</p>
-                        <h3 class="card-title">{{ $count }}</h3>
-                    </div>
+    <div class="row mb-4 g-3">
+
+        <!-- All -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card">
+                <div class="card-body text-center" wire:click="filterStatus(0)">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.all') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-dark">
+                        {{ $all }}
+                    </h2>
                 </div>
             </div>
-        @endforeach
+        </div>
+
+        <!-- Reserved -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-warning border-4">
+                <div class="card-body text-center" wire:click="filterStatus(1)">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.created') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-warning">
+                        {{ $created }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paid -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-primary border-4">
+                <div class="card-body text-center" wire:click="filterStatus(2)">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.on_sale') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-primary">
+                        {{ $onSale }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-danger border-4">
+                <div class="card-body text-center" wire:click="filterStatus(3)">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.cancel_sale') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-danger">
+                        {{ $cancelSale }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-success border-4">
+                <div class="card-body text-center" wire:click="filterStatus(3)">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.sold_out') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-success">
+                        {{ $soldOut }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-info border-4">
+                <div class="card-body text-center" wire:click="filterStatus(3)">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.available') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-info">
+                        {{ $available }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Per Page Selector -->
@@ -93,55 +166,63 @@
         </select>
     </div>
 
-    <!-- Table -->
-     <div class="container">
-        <div class="mb-4">
-            <div class="table-responsive pnrs pnr-scroll">
-                <table class="table table-bordered table-hover align-middle pnr-table">
-                    <thead class="table-light">
+    <div class="container py-5">
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive pnr-scroll table-height">
+                <table class="table table-hover align-middle mb-0 pnr-table">
+                    <thead class="bg-light text-muted small text-uppercase">
                         <tr>
-                            <th>Pnr No</th>
+                            <th class="ps-4">PNR</th>
                             <th>Airline</th>
+                            <th>Route</th>
                             <th>Departure</th>
                             <th>Arrival</th>
-                            <th>Departure Date</th>
-                            <th>Arrival Date</th>
                             <th>Seats</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th class="text-end pe-4">Action</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @forelse($pnrs as $pnr)
                             <tr>
-                                <td>{{ $pnr->ref_no }}</td>
+                                <td class="ps-4 fw-semibold">
+                                    {{ $pnr->ref_no }}
+                                </td>
 
-                                <td>{{ $pnr->airline->name }}</td>
+                                <td>
+                                    {{ $pnr->airline->name }}
+                                </td>
 
-                                <td>{{ $pnr->departure->code }}</td>
-
-                                <td>{{ $pnr->arrival->code }}</td>
+                                <td>
+                                    <span class="fw-semibold">{{ $pnr->departure->code }}</span>
+                                    →
+                                    <span class="fw-semibold">{{ $pnr->arrival->code }}</span>
+                                </td>
 
                                 <td>
                                     {{ \Carbon\Carbon::parse($pnr->departure_date_time)->format('d M Y') }}<br>
-                                    <small>{{ \Carbon\Carbon::parse($pnr->departure_date_time)->format('H:i') }}</small>
+                                    <small class="text-muted">
+                                        {{ \Carbon\Carbon::parse($pnr->departure_date_time)->format('H:i') }}
+                                    </small>
                                 </td>
 
                                 <td>
                                     {{ \Carbon\Carbon::parse($pnr->arrival_date_time)->format('d M Y') }}<br>
-                                    <small>{{ \Carbon\Carbon::parse($pnr->arrival_date_time)->format('H:i') }}</small>
+                                    <small class="text-muted">
+                                        {{ \Carbon\Carbon::parse($pnr->arrival_date_time)->format('H:i') }}
+                                    </small>
                                 </td>
 
                                 <td>
-                                    Total Seats = {{ $pnr->seats }}<br>
-                                    Available Seats = {{ $pnr->seat_available }}<br>
-                                    Sale Seats = {{ $pnr->seat_is_sale }}<br>
-                                    Reserve Seats = {{ $pnr->seat_is_reserved }}<br>
-                                    Sold Seats = {{ $pnr->seat_is_sold }}<br>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <span class="badge bg-primary">Total {{ $pnr->seats }}</span>
+                                        <span class="badge bg-success">Avail {{ $pnr->seat_available }}</span>
+                                        <span class="badge bg-warning text-dark">Sale {{ $pnr->seat_is_sale }}</span>
+                                        <span class="badge bg-info text-dark">Reserved {{ $pnr->seat_is_reserved }}</span>
+                                        <span class="badge bg-success">Sold {{ $pnr->seat_is_sold }}</span>
+                                    </div>
                                 </td>
-
-                            
 
                                 <td>
                                     <span class="{{ $pnr->status->color() }}">
@@ -149,32 +230,40 @@
                                     </span>
                                 </td>
 
-                                <td wire:key="pnr-row-{{ $pnr->id }}">
+                                <td class="text-end pe-4" wire:key="pnr-row-{{ $pnr->id }}">
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            ⋮
+                                        <button
+                                            class="btn btn-sm btn-light rounded-circle"
+                                            data-bs-toggle="dropdown"
+                                        >
+                                            <strong>⋮</strong>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
+
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('admin.pnr.edit', $pnr) }}">
-                                                    Edit
+                                                    ✏️ Edit
                                                 </a>
                                             </li>
 
                                             @if($pnr->seat_available > 0)
                                                 <li>
-                                                    <button class="dropdown-item"
-                                                        onclick="putOnSaleAndCancel({{ $pnr->id }}, 'sale', 'Do you want to put on sale this PNR?')">
-                                                        Put on Sale
+                                                    <button
+                                                        class="dropdown-item"
+                                                        onclick="putOnSaleAndCancel({{ $pnr->id }}, 'sale', 'Do you want to put on sale this PNR?')"
+                                                    >
+                                                        🟢 Put on Sale
                                                     </button>
                                                 </li>
                                             @endif
 
                                             @if($pnr->seat_is_sale > 0)
                                                 <li>
-                                                    <button class="dropdown-item"
-                                                        onclick="putOnSaleAndCancel({{ $pnr->id }}, 'cancel', 'Do you want to cancel this sale?')">
-                                                        Cancel Sale
+                                                    <button
+                                                        class="dropdown-item"
+                                                        onclick="putOnSaleAndCancel({{ $pnr->id }}, 'cancel', 'Do you want to cancel this sale?')"
+                                                    >
+                                                        🔴 Cancel Sale
                                                     </button>
                                                 </li>
                                             @endif
@@ -184,7 +273,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="12" class="text-center text-muted py-4">
+                                <td colspan="8" class="text-center text-muted py-5">
                                     No PNRs found
                                 </td>
                             </tr>
@@ -193,8 +282,8 @@
                 </table>
             </div>
         </div>
-     </div>
-    
+    </div>
+
     
     <!-- Pagination -->
     <div>

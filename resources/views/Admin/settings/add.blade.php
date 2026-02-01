@@ -54,13 +54,10 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{__('messages.admin_fee')}}</label>
-                        <input type="text" class="form-control" value="{{ auth()->user()->agency->admin_fee }}" disabled>                        
+                        <input type="text" class="form-control" value="{{ auth()->user()->agency->admin_fee }}">                        
                     </div>
                     @endif
-                    <div class="mb-3">
-                        <label class="form-label">{{__('messages.admin_fee')}}</label>
-                        <input type="text" class="form-control" name="admin_fee" id="admin_fee">                        
-                    </div>
+                    
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">{{__('messages.name')}}</label>
@@ -148,7 +145,7 @@ $('#setting-form').on('submit', function(e){
         headers:{'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')},
         success: res => {
             Swal.fire({toast:true,icon:'success',title:res.message,position:'top-end'});
-            window.location.href = "{{ route('admin.setting.store') }}";
+            window.location.href = "{{ route('admin.setting.index') }}";
         },
         error: xhr => {
             Swal.fire({icon:'error',title:xhr.responseJSON?.message || 'Error'});

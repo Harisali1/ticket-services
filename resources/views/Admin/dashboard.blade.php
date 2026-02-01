@@ -68,10 +68,23 @@
 }
 
 /* ====== IMAGE POPUP ====== */
-.image-popup img {
+/* .image-popup img {
     max-height: 80vh;
     object-fit: contain;
+} */
+
+.image-popup {
+    max-width: 90vw !important;
+    max-height: 90vh !important;
 }
+
+.swal-image-big {
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    object-fit: contain;
+}
+
+
 </style>
 @endsection
 
@@ -258,11 +271,25 @@
 function showImage(src) {
     Swal.fire({
         imageUrl: src,
+        imageAlt: 'Preview',
         showCloseButton: true,
         showConfirmButton: false,
+
+        // 🔥 popup size
+        width: '80vw',
+
+        // dark background
         background: '#000',
-        customClass: { popup: 'image-popup' }
+
+        // remove padding
+        padding: '0',
+
+        customClass: {
+            popup: 'image-popup',
+            image: 'swal-image-big'
+        }
     });
 }
+
 </script>
 @endsection

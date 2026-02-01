@@ -135,8 +135,6 @@ class SearchPnr extends Component
                 ->format('Y-m-d');
         }
 
-        
-
         if ($this->trip_type === 'return') {
             $outbounds = Pnr::withCount([
                 'seats as seat_available' => fn ($q) => $q->where('is_sale', 1)

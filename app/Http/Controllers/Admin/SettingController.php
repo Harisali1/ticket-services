@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Admin\Agency;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -42,7 +43,7 @@ class SettingController extends Controller
             ]);
         }
         /* Update Password */
-        if ($request->password) {
+        if ($request->filled('password')) {
             if (!Hash::check($request->current_password, $user->password)) {
                 return response()->json([
                     'success' => false,
@@ -51,6 +52,18 @@ class SettingController extends Controller
             }
 
             $user->password = Hash::make($request->password);
+            $user->save();
+
+            // 🔐 FORCE LOGOUT AFTER PASSWORD CHANGE
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return response()->json([
+                'success' => true,
+                'logout' => true,
+                'message' => 'Password changed successfully. Please login again.'
+            ]);
         }
 
         $user->save();

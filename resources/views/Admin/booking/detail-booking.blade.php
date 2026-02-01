@@ -25,6 +25,9 @@
             font-size: 16px;
             margin-bottom: 15px;
         }
+        .line{
+            text-decoration: line-through;
+        }
     </style>
 
 @endsection
@@ -65,7 +68,7 @@
 
 
     <!-- Booking Info -->
-    <div class="card mx-4 mb-4 mt-4">
+    <div class="card mx-4 mb-4 mt-4 {{ ($booking->status->label() === 'Void' || $booking->status->label() === 'Cancel') ? 'line' : '' }}">
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-4">
@@ -132,7 +135,7 @@
     </div>
 
     <!-- Flight Segments -->
-    <div class="card mx-4 mb-4">
+    <div class="card mx-4 mb-4 {{ ($booking->status->label() === 'Void' || $booking->status->label() === 'Cancel') ? 'line' : '' }}">
         <div class="p-4">
         <h6 class="text-primary fw-bold">{{__('messages.outbound')}}</h6>
         <div class="card border-0">

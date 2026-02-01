@@ -233,4 +233,5 @@ return [
     'return_departure_date_time' => 'Return Departure Date/Time',
     'fare_limit_date' => 'Fare Limit Date',
     'agency' => 'Agency',
+    'admin_fee' => 'Admin Fee',
 ];

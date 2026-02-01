@@ -13,6 +13,7 @@ class AgencyPaymentList extends Component
 
     public $filters = [
         'agency_name' => '',
+        'created_by' => '',
         'status' => '',
         'from' => '',
         'to' => '',
@@ -46,8 +47,9 @@ class AgencyPaymentList extends Component
     {
         $agencies = Agency::with('user');
         
-        $agencies = $agencies->when($this->filters['agency_name'], fn ($q) =>
-            $q->where('name', 'like', '%' . $this->filters['agency_name'] . '%')
+        $agencies = $agencies
+        ->when($this->filters['created_by'], fn ($q) =>
+            $q->where('user_id', $this->filters['created_by'])
         )
         ->when($this->filters['status'] !== '', fn ($q) =>
             $q->where('status', $this->filters['status'])
@@ -62,6 +64,7 @@ class AgencyPaymentList extends Component
         $agencies = $agencies->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.agency.agency-payment-list', compact('agencies'));
+        $agency = Agency::where('status', 2)->get();        
+        return view('livewire.admin.agency.agency-payment-list', compact('agencies','agency'));
     }
 }

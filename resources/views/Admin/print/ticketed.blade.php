@@ -48,24 +48,31 @@
                 border-collapse: collapse;
                 width: 100%;
                 margin-top: 10px;
+                page-break-inside: avoid;
             }
 
             .info-table th {
                 text-align: left;
                 font-weight: 700;
-                padding: 8px 4px;
-                font-size: 14px;
+                padding: 5px 4px;
+                font-size: 13px;
                 color: #000;
             }
 
             .info-table td {
-                padding: 6px 4px 12px 4px;
-                font-size: 14px;
-                color: #000;
+                padding: 4px 4px;   /* ✔ compact */
+                font-size: 13px;
+                line-height: 1.2;  /* ✔ tight rows */
             }
+
 
             .info-table thead tr {
                 border-bottom: 1px solid #000;
+                line-height: 1.15;
+            }
+
+            .info-table td:first-child {
+                padding-bottom: 2px;
             }
 
             .flight-header {

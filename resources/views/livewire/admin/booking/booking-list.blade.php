@@ -33,7 +33,7 @@
                 <label class="form-label">{{__('messages.booking_no')}}</label>
                 <input type="text" wire:model.defer="filters.booking_no" class="form-control" placeholder="Booking No #">
             </div>
-
+            @if(auth()->user()->user_type_id == 1)
             <div class="mb-3">
                 <label class="form-label">{{ __('messages.agency') }}</label>
                 <select class="form-select select2 w-100" wire:model.defer="filters.created_by">
@@ -42,7 +42,7 @@
                     @endforeach
                 </select>
             </div>
-
+            @endif
 
             <div class="mb-3">
                 <label class="form-label">{{__('messages.status')}}</label>

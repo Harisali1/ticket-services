@@ -41,12 +41,30 @@
           <label class="form-label">{{ __('messages.piva') }}*</label>
           <input type="text" name="piv" id="piv" placeholder="Enter Code" class="form-control" value="{{ old('piv') }}">
         </div>
+
+        <div class="mt-3 col-md-6">
+          <label class="form-label">{{ __('messages.agency_address') }}*</label>
+          <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" class="form-control" value="{{ old('agency_address') }}">
+        </div>
+
+        <div class="mt-3 col-md-6">
+          <label class="form-label">{{ __('messages.postal_code') }}</label>
+          <input type="text" name="postal_code" id="postal_code" placeholder="Enter Postal Code" class="form-control" value="{{ old('postal_code') }}">
+        </div>
+
+        <div class="mt-3 col-md-6">
+          <label class="form-label">{{ __('messages.city') }}</label>
+          <input type="text" name="city" id="city" placeholder="Enter City" class="form-control" value="{{ old('city') }}">
+        </div>
+
+        <div class="mt-3 col-md-6">
+          <label class="form-label">{{ __('messages.country') }}</label>
+          <input type="text" name="country" id="country" placeholder="Enter Country" class="form-control" value="{{ old('country') }}">
+        </div>
+      
       </div>
 
-      <div class="mt-3">
-        <label class="form-label">{{ __('messages.agency_address') }}*</label>
-        <input type="text" name="agency_address" id="agency_address" placeholder="Enter Address" class="form-control" value="{{ old('agency_address') }}">
-      </div>
+     
 
       <!-- User Details -->
       <h5 class="mt-4 mb-3">{{ __('messages.user_details') }}</h5>
@@ -94,6 +112,13 @@
           </button>
         </div>
 
+        @if(Auth::user()->user_type_id == '1')
+          <div class="col-md-6">
+            <label class="form-label">{{ __('messages.limit_amount_for_booking') }}</label>
+            <input type="text" name="limit" id="limit" placeholder="100 EUR" class="form-control">
+          </div>
+        @endif
+
         @if(Auth::user()->user_type_id == '2')
           <div class="col-md-6">
             <label class="form-label">{{ __('messages.mark_up') }}</label>
@@ -105,6 +130,7 @@
           <div class="col-md-6">
             <label class="form-label">{{ __('messages.status') }}</label>
             <select name="status" id="status" class="form-select">
+              <option value="">select </option>
               <option value="1">Pending</option>
               <option value="2">Approved</option>
               <option value="3">Suspended</option>
@@ -167,7 +193,8 @@
       phone: document.getElementById("phone_no").value.trim(),
       password: document.getElementById("password").value.trim(),
       confirm_password: document.getElementById("confirm_password").value.trim(),
-      // status: document.getElementById("status").value.trim(),
+      status: document.getElementById("status")?.value.trim() || "",
+      limit: document.getElementById("limit")?.value.trim() || "",
     };
 
     const validations = [
@@ -183,13 +210,20 @@
       // { field: "status", message: "Status is required", test: v => v !== "" },
     ];
 
-    if (USER_TYPE === "1" || USER_TYPE === "3") {
+    if (Number(USER_TYPE) === 1 || Number(USER_TYPE) === 3) {
       validations.push({
         field: "status",
         message: "Status is required",
         test: v => v !== ""
       });
+
+      validations.push({
+        field: "limit",
+        message: "Booking limit amount is required",
+        test: v => v !== ""
+      });
     }
+
 
 
     for (const rule of validations) {

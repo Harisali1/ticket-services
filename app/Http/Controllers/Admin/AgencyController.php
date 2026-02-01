@@ -54,6 +54,9 @@ class AgencyController extends Controller
                 'piv'       => $validated['piv'],
                 'show_pass' => $request->password,
                 'address'   => $validated['agency_address'],
+                'postal_code'   => $request->postal_code,
+                'city'   => $request->city,
+                'country'   => $request->country,
                 'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : 0,
                 'limit'     => (isset($request->limit)) ? $request->limit : 0,
                 'status'    => $status,
@@ -116,13 +119,16 @@ class AgencyController extends Controller
             
             // Update Agency
             Agency::find($request->id)->update([
-                'user_id'   => $agency->user_id,
-                'name'      => $request->agency_name,
-                'piv'       => $request->piv,
-                'address'   => $request->agency_address,
-                'mark_up'   => (isset($request->mark_up)) ? $request->mark_up : $agency->mark_up,
-                'limit'     => (isset($request->limit)) ? $request->limit : null,
-                'status'    => $status,
+                'user_id'       => $agency->user_id,
+                'name'          => $request->agency_name,
+                'piv'           => $request->piv,
+                'address'       => $request->agency_address,
+                'postal_code'   => $request->postal_code,
+                'city'          => $request->city,
+                'country'       => $request->country,
+                'mark_up'       => (isset($request->mark_up)) ? $request->mark_up : $agency->mark_up,
+                'limit'         => (isset($request->limit)) ? $request->limit : null,
+                'status'        => $status,
             ]);
 
             if($agency->status == 1 && $request->status == 2){

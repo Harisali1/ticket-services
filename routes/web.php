@@ -98,7 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/edit/{pnr}', [App\Http\Controllers\Admin\PnrController::class, 'edit'])->name('admin.pnr.edit');
             Route::post('/update/{pnr}', [App\Http\Controllers\Admin\PnrController::class, 'update'])->name('admin.pnr.update');
             Route::get('/upload', [App\Http\Controllers\Admin\PnrController::class, 'uploadPnr'])->name('admin.pnr.upload');
-            Route::post('/upload', [App\Http\Controllers\Admin\PnrController::class, 'uploadPnrSubmit'])->name('admin.pnr.upload.submit');
+            Route::post('/upload', [App\Http\Controllers\Admin\PnrController::class, 'updatedUploadPnrSubmit'])->name('admin.pnr.upload.submit');
             Route::post('/put_on_sale_and_cancel', [App\Http\Controllers\Admin\PnrController::class, 'putOnSaleAndCancel'])->name('admin.pnr.sale.cancel');
             Route::prefix('seats')->group(function () {
                 Route::post('/store', [App\Http\Controllers\Admin\PnrController::class, 'seatStore'])->name('admin.pnr.seats.store');

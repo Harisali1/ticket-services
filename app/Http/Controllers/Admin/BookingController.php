@@ -275,7 +275,7 @@ class BookingController extends Controller
             ]);
 
             if(auth()->user()->user_type_id != 1){
-                if(!Auth::user()->can('pnr_ticketed')){
+                if(!auth()->user()->can('pnr_ticketed')){
                     $name = ($user->agency) ? $user->agency->name : $user->name;
                     NotificationHelper::notifyAdmins([
                         'type' => 'booking',
@@ -612,7 +612,6 @@ class BookingController extends Controller
                     'icon' => 'ticket'
                 ]);
             }else{
-                $name = $user->agency->name;
                 NotificationHelper::notifyAgency($booking->user, [
                     'type' => 'Ticket',
                     'title' => 'Ticket Void',

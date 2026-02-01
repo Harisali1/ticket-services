@@ -36,15 +36,34 @@
                  value="{{ $agency->piv }}" 
                  class="form-control">
         </div>
+        <div class="mt-3 col-md-6">
+          <label class="form-label">{{ __('messages.agency_address') }}*</label>
+          <input type="text" name="agency_address" id="agency_address" 
+                value="{{ $agency->address }}" 
+                class="form-control">
+        </div>
+
+        <div class="mt-3 col-md-6">
+          <label class="form-label">{{ __('messages.postal_code') }}</label>
+          <input type="text" name="postal_code" id="postal_code" 
+            class="form-control" value="{{ $agency->postal_code }}">
+        </div>
+
+        <div class="mt-3 col-md-6">
+          <label class="form-label">{{ __('messages.city') }}</label>
+          <input type="text" name="city" id="city"
+              class="form-control" value="{{ $agency->city }}">
+        </div>
+
+        <div class="mt-3 col-md-6">
+          <label class="form-label">{{ __('messages.country') }}</label>
+          <input type="text" name="country" id="country"
+          class="form-control" value="{{ $agency->country }}">
+        </div>
       </div>
 
-      <div class="mt-3">
-        <label class="form-label">{{ __('messages.agency_address') }}*</label>
-        <input type="text" name="agency_address" id="agency_address" 
-               value="{{ $agency->address }}" 
-               class="form-control">
-      </div>
-
+      
+      
       <!-- User Details -->
       <h5 class="mt-4 mb-3">{{ __('messages.user_details') }}</h5>
       <div class="row g-3">

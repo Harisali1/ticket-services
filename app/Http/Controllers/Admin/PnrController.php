@@ -541,6 +541,147 @@ class PnrController extends Controller
         }
     }
 
+    public function updatedUploadPnrSubmit(Request $request)
+    {
+        $request->validate([
+            'pnr_file' => 'required|file|mimes:csv,txt|max:5120',
+        ]);
+
+        try {
+
+            $rows = array_map('str_getcsv', file($request->file('pnr_file')->getRealPath()));
+            array_shift($rows); // header remove
+
+            $created = 0;
+            $skipped = 0;
+            $errors  = [];
+
+            foreach ($rows as $index => $row) {
+
+                // -----------------------------
+                // BASIC CSV ROW VALIDATION
+                // -----------------------------
+                $validator = Validator::make([
+                    'departure_date' => $row[3] ?? null,
+                    'seats'          => $row[7] ?? null,
+                ], [
+                    'departure_date' => 'required|date|after_or_equal:today',
+                    'seats'          => 'required|integer|min:1',
+                ]);
+
+                if ($validator->fails()) {
+                    $skipped++;
+                    $errors[] = [
+                        'row'   => $index + 2,
+                        'error' => $validator->errors()->first(),
+                    ];
+                    continue;
+                }
+
+                $departureDate = Carbon::createFromFormat('m/d/Y', $row[3]);
+                $arrivalDate   = Carbon::createFromFormat('m/d/Y', $row[3]);
+
+                $departure = Airport::where('code', trim($row[1]))->first();
+                $arrival   = Airport::where('code', trim($row[2]))->first();
+
+                if (!$departure || !$arrival) {
+                    $skipped++;
+                    $errors[] = [
+                        'row'   => $index + 2,
+                        'error' => 'Invalid departure, arrival code',
+                    ];
+                    continue;
+                }
+
+                // -----------------------------
+                // DATA INSERT
+                // -----------------------------
+                $data = [
+                    'ref_no'           => $row[9],
+                    'flight_no'        => $row[4],
+                    'middle_flight_no' => null,
+                    'air_craft'        => 'AIRBUS 319',
+                    'class'            => 'Y',
+
+                    'departure_id' => $departure->id,
+                    'arrival_id'   => $arrival->id,
+                    'airline_id'   => 160,
+
+                    'departure_date' => $departureDate->format('Y-m-d'),
+                    'departure_time' => null,
+                    'arrival_date'   => $arrivalDate->format('Y-m-d'),
+                    'arrival_time'   => null,
+
+                    'baggage' => '2 PC',
+                    'seats'   => (int) $row[7],
+
+                    'base_price' => $row[10],
+                    'tax'        => 100,
+                    'total'      => $row[10] + 100,
+                ];
+
+                
+
+                $pnr = $this->createPnrFromArray($data);
+
+                // Passenger prices
+                $passengers = [
+                    1 => $row[10] ?? 0,
+                    2 => $row[10] - 10 ?? 0,
+                    3 => 50,
+                ];
+
+                foreach ($passengers as $type => $price) {
+                    if ($price > 0) {
+                        PnrPassenger::create([
+                            'pnr_id' => $pnr->id,
+                            'passenger_type_id' => $type,
+                            'price' => $price,
+                        ]);
+                    }
+                }
+
+                // Seat auto sale
+                if (!empty($row[7]) && $row[7] > 0) {
+                    Seat::where('pnr_id', $pnr->id)
+                        ->where('is_available', 1)
+                        ->where('is_sale', 0)
+                        ->where('is_sold', 0)
+                        ->where('is_cancel', 0)
+                        ->limit($data['seats'])
+                        ->update([
+                            'is_sale' => 1,
+                            'is_available' => 0,
+                        ]);
+                }
+
+                $created++;
+            }
+
+            if($errors){
+                return response()->json([
+                    'code' => 2,
+                    'success' => true,
+                    'errors'  => $errors,
+                ]);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'PNR CSV uploaded',
+                'created' => $created,
+                'skipped' => $skipped,
+                'errors'  => $errors,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'CSV upload failed',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
     public function putOnSaleAndCancel(Request $request){
 
@@ -578,17 +719,17 @@ class PnrController extends Controller
     {
         DB::beginTransaction();
         try {
-            $departureDT = $data['departure_date'].' '.$data['departure_time'];
-            $arrivalDT   = $data['arrival_date'].' '.$data['arrival_time'];
+            // $departureDT = $data['departure_date'].' '.$data['departure_time'];
+            // $arrivalDT   = $data['arrival_date'].' '.$data['arrival_time'];
 
-            $start = Carbon::createFromFormat('Y-m-d H:i', $departureDT);
-            $end   = Carbon::createFromFormat('Y-m-d H:i', $arrivalDT);
+            // $start = Carbon::createFromFormat('Y-m-d H:i', $departureDT);
+            // $end   = Carbon::createFromFormat('Y-m-d H:i', $arrivalDT);
 
-            $diff  = $start->diff($end);
+            // $diff  = $start->diff($end);
 
-            $data['duration'] = $diff->d > 0
-                ? $diff->d.'d '.$diff->h.'h '.$diff->i.'m'
-                : $diff->h.'h '.$diff->i.'m';
+            // $data['duration'] = $diff->d > 0
+            //     ? $diff->d.'d '.$diff->h.'h '.$diff->i.'m'
+            //     : $diff->h.'h '.$diff->i.'m';
 
             $airline   = AirLine::find($data['airline_id']);
             $departure = Airport::find($data['departure_id']);

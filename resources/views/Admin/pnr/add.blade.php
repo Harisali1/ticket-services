@@ -169,7 +169,7 @@
                 <!-- Arrival Date -->
                 <div class="col-md-2">
                     <label class="form-label text-muted">Arrival Date *</label>
-                    <input type="date" id="arrival_date" name="arrival_date" min="{{ date('Y-m-d') }}" class="form-control">
+                    <input type="date" id="arrival_date" name="arrival_date" class="form-control">
                 </div>
 
                 <!-- Arrival Time -->
@@ -364,6 +364,29 @@
         initSelect2('#middle_arrival_id', "{{ route('search.airport') }}");
         initSelect2('#arrival_id', "{{ route('search.airport') }}");
         initSelect2('#airline_id', "{{ route('search.airline') }}");
+
+        function syncReturnDateMin() {
+            const departureDate = $('#departure_date').val();
+
+            if (departureDate) {
+                $('#arrival_date')
+                    .attr('min', departureDate);
+
+                // Agar return date already pichay ki hai, clear kar do
+                if ($('#arrival_date').val() < departureDate) {
+                    $('#arrival_date').val('');
+                }
+            }
+        }
+
+        // Jab departure date change ho
+        $('#departure_date').on('change', function () {
+            syncReturnDateMin();
+        });
+
+        // Page load pe bhi apply ho
+        syncReturnDateMin();
+
     });
 
     // Departure → Return Arrival

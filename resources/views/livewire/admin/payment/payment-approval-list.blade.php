@@ -71,12 +71,19 @@
                 @forelse($payments as $payment)
                     <tr>
                         <td>
-                             <img src="{{ $payment->image 
-                                ? asset('storage/'.$payment->image) 
-                                : asset('images/logo-placeholder.png') }}"
-                                alt="image"
-                                class="rounded-circle border"
-                                style="width:45px;height:45px;object-fit:contain;">
+                            <a href="{{ $payment->image 
+                                    ? asset('storage/'.$payment->image) 
+                                    : asset('images/logo-placeholder.png') }}"
+                            target="_blank">
+                                <img
+                                    src="{{ $payment->image 
+                                        ? asset('storage/'.$payment->image) 
+                                        : asset('images/logo-placeholder.png') }}"
+                                    alt="image"
+                                    class="rounded-circle border"
+                                    style="width:45px;height:45px;object-fit:contain;"
+                                >
+                            </a>
                         </td>
                         <td>{{ $payment->amount }}</td>
                         <td>{{ $payment->user->name }}</td>

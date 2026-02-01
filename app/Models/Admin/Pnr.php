@@ -226,22 +226,22 @@ class Pnr extends Model
 
     public function getDepartureTimeHourAttribute(){
         $departureTime = explode(':', $this->departure_time);
-        return $departureTime[0];
+        return (isset($departureTime[0])) ? $departureTime[0] : 0;
     }
 
     public function getDepartureTimeMinuteAttribute(){
         $departureTime = explode(':', $this->departure_time);
-        return $departureTime[1];
+        return (isset($departureTime[1])) ? $departureTime[1] : 0;
     }
 
     public function getArrivalTimeHourAttribute(){
         $arrivalTime = explode(':', $this->arrival_time);
-        return $arrivalTime[0];
+        return (isset($arrivalTime[0])) ? $arrivalTime[0] : 0;
     }
 
     public function getArrivalTimeMinuteAttribute(){
         $arrivalTime = explode(':', $this->arrival_time);
-        return $arrivalTime[1];
+        return (isset($arrivalTime[1])) ? $arrivalTime[1] : 0;
     }
 
     public function getReturnDepartureTimeHourAttribute(){

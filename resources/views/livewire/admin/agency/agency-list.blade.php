@@ -9,11 +9,11 @@
             </a>
 
             <!-- Filter button triggers offcanvas -->
-            <!-- <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
+            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
                   <path d="M1.5 1.5a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .4.8L10 7.7v5.6a.5.5 0 0 1-.757.429L7 12.101l-2.243 1.628A.5.5 0 0 1 4 12.3V7.7L1.1 2.3a.5.5 0 0 1 .4-.8z"/>
                 </svg>
-            </button> -->
+            </button>
         </div>
     </div>
 
@@ -61,7 +61,7 @@
     <!-- Stats -->
     <div class="row mb-4 g-3">
 
-    <!-- All -->
+        <!-- All -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card shadow-sm border-0 h-100 stat-card">
                 <div class="card-body text-center" wire:click="filterStatus(0)">
@@ -129,66 +129,104 @@
     </div>
 
     <!-- Table -->
-    <div class="mb-4">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>{{__('messages.agency_name')}}</th>
-                    <th>{{__('messages.agency_email')}}</th>
-                    <th>{{__('messages.piva')}}</th>
-                    <th>{{__('messages.address')}}</th>
-                    <th>{{__('messages.created_on')}}</th>
-                    <th>{{__('messages.status')}}</th>
-                    <th>{{__('messages.action')}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($agencies as $agency)
+    <div class="mb-4 card shadow-sm border-0">
+        <div class="table-responsive table-height">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted text-uppercase small">
                     <tr>
-                        <td>{{ $agency->name }}</td>
-                        <td>{{ $agency->user->email }}</td>
-                        <td>{{ $agency->piv }}</td>
-                        <td>{{ $agency->address }}</td>
-                        <td>{{ $agency->created_date }}</td>
-                        <td>
-                            <span class="{{ $agency->status->color() }}">
-                                {{ $agency->status->label() }}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    ⋮
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{{ route('admin.agency.edit', $agency->id) }}">Edit</a></li>
-                                    @if(auth()->user()->user_type_id != 2)
+                        <th class="ps-4">{{__('messages.agency_name')}}</th>
+                        <th>{{__('messages.agency_email')}}</th>
+                        <th>{{__('messages.piva')}}</th>
+                        <th>{{__('messages.address')}}</th>
+                        <th>{{__('messages.created_on')}}</th>
+                        <th>{{__('messages.status')}}</th>
+                        <th class="text-end pe-4">{{__('messages.action')}}</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($agencies as $agency)
+                        <tr class="border-top">
+                            <td class="ps-4 fw-semibold">
+                                {{ $agency->name }}
+                            </td>
+
+                            <td class="text-muted">
+                                {{ $agency->user->email }}
+                            </td>
+
+                            <td>
+                                {{ $agency->piv }}
+                            </td>
+
+                            <td class="text-muted text-truncate" style="max-width: 200px;">
+                                {{ $agency->address }}
+                            </td>
+
+                            <td class="text-muted">
+                                {{ $agency->created_date }}
+                            </td>
+
+                            <td>
+                                <span class="{{ $agency->status->color() }}">
+                                    {{ $agency->status->label() }}
+                                </span>
+                            </td>
+
+                            <td class="text-end pe-4">
+                                <div class="dropdown">
+                                    <button
+                                        class="btn btn-sm btn-light rounded-circle"
+                                        data-bs-toggle="dropdown"
+                                    >
+                                        <strong>⋮</strong>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                                         <li>
-                                            <button class="dropdown-item" wire:click="openPasswordModal({{ $agency->id }})">
-                                                Show Pass
-                                            </button>
-                                        </li>
-                                         <li>
-                                            <a class="dropdown-item" href="{{ route('admin.role.permission.create', $agency->user_id) }}">
-                                                Assign Permission
+                                            <a class="dropdown-item" href="{{ route('admin.agency.edit', $agency->id) }}">
+                                                ✏️ Edit
                                             </a>
                                         </li>
-                                    @endif
-                                    <li><a class="dropdown-item" href="{{ route('admin.agency.show', $agency->id) }}">View Details</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            No agencies found
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+
+                                        @if(auth()->user()->user_type_id != 2)
+                                            <li>
+                                                <button
+                                                    class="dropdown-item"
+                                                    wire:click="openPasswordModal({{ $agency->id }})"
+                                                >
+                                                    🔐 Show Pass
+                                                </button>
+                                            </li>
+
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('admin.role.permission.create', $agency->user_id) }}">
+                                                    🛡 Assign Permission
+                                                </a>
+                                            </li>
+                                        @endif
+
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('admin.agency.show', $agency->id) }}">
+                                                👁 View Details
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                No agencies found
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
+
 
     <!-- Pagination -->
     <div>

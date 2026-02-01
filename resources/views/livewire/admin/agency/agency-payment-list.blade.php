@@ -3,17 +3,13 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h4">Agencies Payment List</h1>
 
-        <!-- <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('admin.agency.create') }}" class="btn btn-dark">
-                + Create Agency
-            </a>
-
+        <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterSidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
                   <path d="M1.5 1.5a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .4.8L10 7.7v5.6a.5.5 0 0 1-.757.429L7 12.101l-2.243 1.628A.5.5 0 0 1 4 12.3V7.7L1.1 2.3a.5.5 0 0 1 .4-.8z"/>
                 </svg>
             </button>
-        </div> -->
+        </div>
     </div>
 
     <!-- Filter Sidebar (Bootstrap Offcanvas) -->
@@ -23,10 +19,16 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
+            @if(auth()->user()->user_type_id == 1)
             <div class="mb-3">
-                <label class="form-label">Agency Name</label>
-                <input type="text" wire:model.defer="filters.agency_name" class="form-control" placeholder="Agency Name">
+                <label class="form-label">{{ __('messages.agency') }}</label>
+                <select class="form-select select2 w-100" wire:model.defer="filters.created_by">
+                    @foreach($agencies as $agency)
+                        <option value="{{ $agency->user_id }}">{{ $agency->name }}</option>
+                    @endforeach
+                </select>
             </div>
+            @endif
 
             <div class="mb-3">
                 <label class="form-label">Status</label>
@@ -84,7 +86,7 @@
             <tbody>
                 @forelse($agencies as $payment)
                     <tr>
-                        <td>{{ $payment->user->name }}</td>
+                        <td>{{ $payment->name }}</td>
                         <td>{{ $payment->user->email }}</td>
                         <td>{{ $payment->user->total_amount }}</td>
                         <td>{{ $payment->user->paid_amount }}</td>

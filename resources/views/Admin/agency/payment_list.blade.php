@@ -8,13 +8,6 @@
 @endsection
 
 @section('scripts')
-<!-- <script>
-    document.addEventListener('open-password-modal', () => {
-        const modal = new bootstrap.Modal(document.getElementById('passwordModal'));
-        modal.show();
-    });
-</script> -->
-
 @endsection
 
 

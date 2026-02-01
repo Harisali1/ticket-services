@@ -96,18 +96,18 @@ class AgencyList extends Component
         $approved  = (clone $agencies)->where('status', 2)->count();
         $suspended = (clone $agencies)->where('status', 3)->count();
 
-        // $agencies = $agencies->when($this->filters['agency_name'], fn ($q) =>
-        //     $q->where('name', 'like', '%' . $this->filters['agency_name'] . '%')
-        // )
-        $agencies = $agencies->when($this->filters['status'] !== '', fn ($q) =>
+        $agencies = $agencies->when($this->filters['agency_name'], fn ($q) =>
+            $q->where('name', 'like', '%' . $this->filters['agency_name'] . '%')
+        )
+        ->when($this->filters['status'] !== '', fn ($q) =>
             $q->where('status', $this->filters['status'])
+        )
+        ->when($this->filters['from'], fn ($q) =>
+            $q->whereDate('created_at', '>=', $this->filters['from'])
+        )
+        ->when($this->filters['to'], fn ($q) =>
+            $q->whereDate('created_at', '<=', $this->filters['to'])
         );
-        // ->when($this->filters['from'], fn ($q) =>
-        //     $q->whereDate('created_at', '>=', $this->filters['from'])
-        // )
-        // ->when($this->filters['to'], fn ($q) =>
-        //     $q->whereDate('created_at', '<=', $this->filters['to'])
-        // );
 
         $agencies = $agencies->latest()
             ->paginate($this->perPage);
