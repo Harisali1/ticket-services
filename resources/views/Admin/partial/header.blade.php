@@ -52,11 +52,11 @@
             @forelse($notifications as $notification)
                 <li>
                     <a href="{{ route('admin.notification.open',$notification->id) }}"
-                       class="dropdown-item small {{ $notification->read_at ? '' : 'fw-bold' }}">
-                        
+                       class="dropdown-item small {{ $notification->read_at ? '' : 'noti-text' }}">
+
                         {{ $notification->data['title'] ?? 'Notification' }}
 
-                        <div class="text-muted small">
+                        <div class="small">
                             {{ $notification->data['message'] ?? '' }}
                         </div>
                     </a>

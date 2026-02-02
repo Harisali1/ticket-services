@@ -173,6 +173,21 @@
                         </div>
                     </div>
 
+                    <div class="row g-2 mt-1">
+                        <div class="col-md-6">
+                            <input type="text" name="postal_code" id="postal_code" class="form-control" placeholder="{{__('messages.postal_code')}}">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="city" id="city" class="form-control" placeholder="{{__('messages.city')}}">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mt-1">
+                        <div class="col-md-6">
+                            <input type="text" name="country" id="country" class="form-control" placeholder="{{__('messages.country')}}">
+                        </div>
+                    </div>
+
                     <!-- ROW 4 -->
                     <div class="row g-2 mt-1">
                         <div class="col-md-6">

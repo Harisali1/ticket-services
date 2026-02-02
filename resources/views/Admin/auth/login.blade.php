@@ -42,10 +42,10 @@
         <!-- Heading -->
         <div class="text-center mb-6">
             <h2 class="text-xl font-semibold text-gray-800">
-                Welcome back
+                {{__('messages.welcome_back')}}
             </h2>
             <p class="text-sm text-gray-500 mt-1">
-                Sign in to your account
+                {{__('messages.sign_in_to_your_account')}}
             </p>
         </div>
 
@@ -58,7 +58,7 @@
                     type="email" 
                     id="email" 
                     name="email" 
-                    placeholder="Email address"
+                    placeholder="{{__('messages.email_address')}}"
                     class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                 >
             </div>
@@ -69,7 +69,7 @@
                     type="password" 
                     id="password" 
                     name="password" 
-                    placeholder="Password"
+                    placeholder="{{__('messages.password')}}"
                     class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                 >
 
@@ -92,25 +92,25 @@
             <!-- Links -->
             <div class="flex justify-between items-center mb-6 text-sm text-gray-600">
                 <a href="{{ route('register') }}" class="hover:underline">
-                    Become an Agent
+                    {{__('messages.become_an_agent')}}
                 </a>
                 <a href="{{ route('password.request') }}" class="hover:underline">
-                    Forgot Password?
+                    {{__('messages.forgot_password')}}?
                 </a>
             </div>
 
             <!-- Button -->
             <button 
                 class="w-full bg-gray-900 text-white py-2.5 rounded-md text-sm font-medium hover:bg-gray-700 transition">
-                Sign In
+                {{__('messages.sign_in')}}
             </button>
         </form>
 
         <!-- Footer -->
         <p class="text-center text-sm text-gray-500 mt-6">
-            Need help?
+            {{__('messages.need_help')}}?
             <a href="#" class="underline hover:text-gray-700">
-                Contact admin
+                {{__('messages.contact_admin')}}
             </a>
         </p>
     </div>

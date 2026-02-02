@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('paid_amount')->default(0);
             $table->string('remaining_amount')->default(0);
             $table->string('on_approval_amount')->default(0);
+            $table->string('admin_fee')->default(0);
             $table->rememberToken();
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();

@@ -234,4 +234,18 @@ return [
     'fare_limit_date' => 'Fare Limit Date',
     'agency' => 'Agency',
     'admin_fee' => 'Admin Fee',
+
+    'on_sale' => 'On Sale',
+    'cancel_sale' => 'Cancel Sale',
+    'sold_out' => 'Sold Out',
+    'available' => 'Available',
+
+    'welcome_back' => 'Welcome back',
+    'sign_in_to_your_account' => 'Sign In To Your Account',
+    'email_address' => 'Email Address',
+    'become_an_agent' => 'Become An Agent',
+    'forgot_password' => 'Forgot Password',
+    'sign_in' => 'Sign In',
+    'need_help' => 'Need Help',
+    'contact_admin' => 'Contact Admin',
 ];

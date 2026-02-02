@@ -14,7 +14,7 @@ class PnrList extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-    public $perPage = 10;
+    public $perPage = 50;
     // Modal data
     public $selectedPnr;
     public $selectedPnrId;
@@ -24,11 +24,21 @@ class PnrList extends Component
 
     public $filters = [
         'pnr_no' => '',
-        'airline' => '',
+        'departure' => '',
+        'arrival' => '',
         'status' => '',
-        'from' => '',
-        'to' => '',
     ];
+
+    protected $queryString = [
+        'filters.status' => ['except' => '']
+    ];
+
+    public function mount()
+    {
+        if (request()->has('status')) {
+            $this->filters['status'] = request('status');
+        }
+    }
 
     public function updatedPerPage()
     {
@@ -52,8 +62,14 @@ class PnrList extends Component
         $this->resetPage();
     }
 
+    public function filterStatus($status)
+    {
+        $this->filters['status'] = ($status == 0) ? '' : $status;
+    }
+
     public function render()
     {
+        // dd($this->filters);
         $pnrs = Pnr::with('seats', 'airline');
 
         $all = (clone $pnrs)->count();
@@ -64,17 +80,18 @@ class PnrList extends Component
         $available = (clone $pnrs)->where('status', 5)->count();
 
             $pnrs = $pnrs->when($this->filters['pnr_no'], fn ($q) =>
-                $q->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
+                $q->where('ref_no', 'like', '%' . $this->filters['pnr_no'] . '%')
             )
             ->when($this->filters['status'] !== '', fn ($q) =>
                 $q->where('status', $this->filters['status'])
             )
-            ->when($this->filters['from'], fn ($q) =>
-                $q->whereDate('created_at', '>=', $this->filters['from'])
+            ->when($this->filters['departure'], fn ($q) =>
+                $q->whereBetween('departure_date', [$this->filters['departure'], $this->filters['departure']])
             )
-            ->when($this->filters['to'], fn ($q) =>
-                $q->whereDate('created_at', '<=', $this->filters['to'])
+            ->when($this->filters['arrival'], fn ($q) =>
+                $q->whereBetween('arrival_date', [$this->filters['arrival'], $this->filters['arrival']])
             )
+            ->orderBy('departure_date', 'ASC')
             ->latest()
             ->paginate($this->perPage);
 

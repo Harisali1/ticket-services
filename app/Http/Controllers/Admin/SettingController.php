@@ -20,7 +20,7 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        $agency = Agency::where('user_id', 2)->first();
+        $agency = Agency::where('user_id', auth()->user()->id)->first();
         $request->validate([
             'logo' => 'nullable|image|max:2048',
             'current_password' => 'nullable|required_with:password',
@@ -37,10 +37,15 @@ class SettingController extends Controller
             $user->logo = $path;
         }
 
-        if($agency){
-            $agency->update([
-                'admin_fee' => $request->admin_fee
-            ]);
+        if($user){
+            if($agency){
+                $agency->update([
+                    'admin_fee' => $request->admin_fee
+                ]);
+            }else{
+                $user['admin_fee'] = $request->admin_fee;
+            }
+           
         }
         /* Update Password */
         if ($request->filled('password')) {

@@ -226,6 +226,27 @@ return [
     'business_name' => 'Nome dell’azienda',
     'business_address' => 'Indirizzo dell’azienda',
 
+    'ticket_number' => 'Numero del biglietto',
+    'send_ticket_by_email' => 'Invia biglietto via email',
+    'ticket_status' => 'Stato del biglietto',
 
+    'return_departure_date_time' => 'Data/Ora di partenza del ritorno',
+    'fare_limit_date' => 'Data limite tariffa',
+    'agency' => 'Agenzia',
+    'admin_fee' => 'Commissione amministrativa',
+
+    'on_sale' => 'In vendita',
+    'cancel_sale' => 'Annulla vendita',
+    'sold_out' => 'Esaurito',
+    'available' => 'Disponibile',
+
+    'welcome_back' => 'Bentornato',
+    'sign_in_to_your_account' => 'Accedi al tuo account',
+    'email_address' => 'Indirizzo email',
+    'become_an_agent' => 'Diventa un agente',
+    'forgot_password' => 'Password dimenticata',
+    'sign_in' => 'Accedi',
+    'need_help' => 'Hai bisogno di aiuto',
+    'contact_admin' => 'Contatta l’amministratore',
 ];
 

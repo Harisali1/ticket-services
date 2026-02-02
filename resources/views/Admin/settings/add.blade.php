@@ -52,12 +52,12 @@
                         <label class="form-label">{{__('messages.address')}}</label>
                         <textarea class="form-control" rows="2" disabled>{{ auth()->user()->agency->address }}</textarea>
                     </div>
+                    
+                    @endif
                     <div class="mb-3">
                         <label class="form-label">{{__('messages.admin_fee')}}</label>
-                        <input type="text" class="form-control" value="{{ auth()->user()->agency->admin_fee }}">                        
+                        <input type="text" class="form-control" name="admin_fee" id="admin_fee" value="{{ (auth()->user()->user_type_id != 1) ? auth()->user()->agency->admin_fee : auth()->user()->admin_fee }}">                        
                     </div>
-                    @endif
-                    
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">{{__('messages.name')}}</label>

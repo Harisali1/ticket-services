@@ -107,8 +107,11 @@
             if(auth()->user()->user_type_id != 1){
                 $markup = auth()->user()->agency->mark_up;
             }
+            $adminFee = (auth()->user()->user_type_id != 1) ? auth()->user()->agency->admin_fee : auth()->user()->admin_fee;
+
         @endphp
-        <span id="totalPrice">EUR {{ number_format($data['totalAmount']+$markup,0) }}/-</span>
+        <span id="totalPrice">EUR {{ number_format($data['totalAmount']+$markup+$adminFee,0) }}/-</span>
+        
     </h5>
   </div>
 
@@ -501,7 +504,6 @@
                 $passengerTypesTitle[] = $fare['title'];
             }
         }
-        $adminFee = (auth()->user()->user_type_id != 1) ? auth()->user()->agency->admin_fee : 0;
     @endphp
 
     <div id="step-1">
@@ -686,7 +688,7 @@
     <input type="hidden" id="pnr_id" name="pnr_id" value="{{ $data['pnr_id'] }}">
     <input type="hidden" id="return_pnr_id" name="return_pnr_id" value="{{ $data['return_pnr_id'] }}">
     <input type="hidden" id="booking_seats" name="booking_seats" value="{{ $seatSum }}">
-    <input type="hidden" id="total_fare" name="total_fare" value="{{ $data['totalBaseFareAmount']+$markup }}">
+    <input type="hidden" id="total_fare" name="total_fare" value="{{ $data['totalBaseFareAmount']+$markup+$adminFee }}">
     <input type="hidden" id="total_tax" name="total_tax" value="{{ $data['totalTax'] }}">
     <h3 class="fw-semibold mb-3 pnr-detail mt-2">Reservation Recap:</h3>
     <div class="container mt-4">
@@ -725,19 +727,19 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-semibold">
                         Administrative Fee
-                        <!-- <button 
+                        <button 
                             type="button"
                             class="btn btn-sm btn-info ms-2"
                             @click="showInput = !showInput">
                             <i class="fa fa-pencil-square text-white"></i>
-                        </button> -->
+                        </button>
                     </span>
 
-                    <template x-show="!showInput">
+                    <template x-if="!showInput">
                         <span class="fw-bold text-success" x-text="format(adminFee)"></span>
                     </template>
 
-                    <template x-show="showInput">
+                    <template x-if="showInput">
                         <input 
                             type="number"
                             class="form-control form-control-sm w-25"
@@ -760,6 +762,7 @@
 
                 <input type="hidden" name="admin_fee" :value="adminFee.toFixed(2)">
                 <input type="hidden" name="total_amount" :value="(fare + tax + adminFee).toFixed(2)">
+                       
             </div>
 
         </div>

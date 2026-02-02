@@ -30,38 +30,20 @@
                 <label class="form-label">Pnr No</label>
                 <input type="text" wire:model.defer="filters.pnr_no" class="form-control" placeholder="Pnr No #">
             </div>
-
             <div class="mb-3">
-                <label class="form-label">AirLine</label>
-                <select wire:model.defer="filters.airline_id" class="form-select">
-                    <option value="">Select AirLine</option>
-                    <option value="1">Pending</option>
-                    <option value="2">Approved</option>
-                    <option value="3">Suspended</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Status</label>
-                <select wire:model.defer="filters.status" class="form-select">
-                    <option value="">Select</option>
-                    <option value="1">Pending</option>
-                    <option value="2">Approved</option>
-                    <option value="3">Suspended</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Created Date</label>
+                
                 <div class="row g-2">
                     <div class="col">
-                        <input type="date" wire:model.defer="filters.from" class="form-control">
+                        <label class="form-label">Departure Date</label>
+                        <input type="date" wire:model.defer="filters.departure" class="form-control">
                     </div>
-                    <div class="col">
-                        <input type="date" wire:model.defer="filters.to" class="form-control">
-                    </div>
+                    <!-- <div class="col">
+                        <label class="form-label">Arrival Date</label>
+                        <input type="date" wire:model.defer="filters.arrival" class="form-control">
+                    </div> -->
                 </div>
             </div>
+
 
             <div class="d-flex gap-2">
                 <button wire:click="applyFilters" data-bs-dismiss="offcanvas" class="btn btn-dark flex-fill">Search</button>
@@ -160,9 +142,9 @@
     <!-- Per Page Selector -->
     <div class="mb-3">
         <select wire:model.live="perPage" class="form-select w-auto">
-            <option value="25">25</option>
             <option value="50">50</option>
             <option value="100">100</option>
+            <option value="200">200</option>
         </select>
     </div>
 
@@ -177,8 +159,11 @@
                             <th>Route</th>
                             <th>Departure</th>
                             <th>Arrival</th>
-                            <th>Seats</th>
-                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Available</th>
+                            <th>Reserved</th>
+                            <th>Sale</th>
+                            <th>Sold</th>
                             <th class="text-end pe-4">Action</th>
                         </tr>
                     </thead>
@@ -215,20 +200,21 @@
                                 </td>
 
                                 <td>
-                                    <div class="d-flex flex-wrap gap-1">
-                                        <span class="badge bg-primary">Total {{ $pnr->seats }}</span>
-                                        <span class="badge bg-success">Avail {{ $pnr->seat_available }}</span>
-                                        <span class="badge bg-warning text-dark">Sale {{ $pnr->seat_is_sale }}</span>
-                                        <span class="badge bg-info text-dark">Reserved {{ $pnr->seat_is_reserved }}</span>
-                                        <span class="badge bg-success">Sold {{ $pnr->seat_is_sold }}</span>
-                                    </div>
+                                    <span class="badge bg-secondary">{{ $pnr->seats }}</span>
                                 </td>
-
                                 <td>
-                                    <span class="{{ $pnr->status->color() }}">
-                                        {{ $pnr->status->label() }}
-                                    </span>
+                                    <span class="badge bg-primary">{{ $pnr->seat_available }}</span>
                                 </td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">{{ $pnr->seat_is_sale }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info text-dark">{{ $pnr->seat_is_reserved }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">{{ $pnr->seat_is_sold }}</span>
+                                </td>
+                                
 
                                 <td class="text-end pe-4" wire:key="pnr-row-{{ $pnr->id }}">
                                     <div class="dropdown">

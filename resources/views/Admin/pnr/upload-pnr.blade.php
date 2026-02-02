@@ -244,13 +244,32 @@
                     });
                 }else{
                     Swal.fire({
-                        toast: true,
-                        position: "top-end",
-                        icon: "success",
-                        title: data.message,
-                        showConfirmButton: true,
-                        confirmButtonText: "OK"
-                    });
+                    icon: "success",
+                    title: data.message,
+                    html: `
+                        <div style="text-align:left">
+                            <p><b>Created:</b> ${data.created}</p>
+                            <p><b>Skipped:</b> ${data.skipped}</p>
+
+                            ${
+                                data.errors && data.errors.length > 0
+                                ? `
+                                    <hr>
+                                    <b>Errors:</b>
+                                    <ul>
+                                        ${data.errors.map(e =>
+                                            `<li>Row ${e.row}: ${e.error}</li>`
+                                        ).join('')}
+                                    </ul>
+                                `
+                                : `<p><b>No errors 🎉</b></p>`
+                            }
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK"
+                });
+
                     window.location.href = "{{ route('admin.pnr.index') }}";
                 }
                 

@@ -112,6 +112,17 @@
         background: transparent;
     }
 
+    .noti-text{
+        background: #0d6efd;
+        color: white;
+        margin-bottom: 2px;
+    }
+
+    .noti-text dev{
+        color: white;
+        margin-bottom: 2px;
+    }
+
     .blink-badge {
         animation: blink 2s infinite;
     }

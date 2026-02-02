@@ -125,6 +125,9 @@ class RegisterController extends Controller
                 'piv' => $data['piv'],
                 'show_pass' => $data['password'],
                 'address' => $data['business_address'],
+                'postal_code' => $data['postal_code'],
+                'city' => $data['city'],
+                'country' => $data['country'],
                 'status' => 1,
             ]);
 
