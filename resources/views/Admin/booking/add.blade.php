@@ -88,7 +88,6 @@
                 <div class="col-md-3">
                     <label class="form-label text-muted">{{ __('messages.arrival') }}</label>
                     <select class="form-select" name="arrival_id" id="arrival_id" required>
-                        <option value="">Select Arrival</option>
                     </select>
                 </div>
 
@@ -286,6 +285,38 @@
             initSelect2('#arrival_id', "{{ route('search.airport') }}");
             initSelect2('#return_departure_id', "{{ route('search.airport') }}");
             initSelect2('#return_arrival_id', "{{ route('search.airport') }}");
+
+            @if(isset($departureAirport))
+                setSelect2AjaxValue(
+                    $('#departure_id'),
+                    "{{ $departureAirport->id }}",
+                    "{{ $departureAirport->name }} ({{ $departureAirport->code }})"
+                );
+            @endif
+
+            @if(isset($arrivalAirport))
+                setSelect2AjaxValue(
+                    $('#arrival_id'),
+                    "{{ $arrivalAirport->id }}",
+                    "{{ $arrivalAirport->name }} ({{ $arrivalAirport->code }})"
+                );
+            @endif
+
+            @if(isset($returnDepartureAirport))
+                setSelect2AjaxValue(
+                    $('#return_departure_id'),
+                    "{{ $returnDepartureAirport->id }}",
+                    "{{ $returnDepartureAirport->name }} ({{ $returnDepartureAirport->code }})"
+                );
+            @endif
+
+            @if(isset($returnArrivalAirport))
+                setSelect2AjaxValue(
+                    $('#return_arrival_id'),
+                    "{{ $returnArrivalAirport->id }}",
+                    "{{ $returnArrivalAirport->name }} ({{ $returnArrivalAirport->code }})"
+                );
+            @endif
         });
 
         // Departure → Return Arrival
@@ -314,8 +345,6 @@
     });
 
     function selectPNRBooking(id, returnId= null){
-        // alert(id);
-        // alert(returnId)
         let modal = new bootstrap.Modal(document.getElementById('searchPnrSeatModal'));
         document.getElementById('pnr_id').value = id;
         document.getElementById('return_pnr_id').value = returnId;

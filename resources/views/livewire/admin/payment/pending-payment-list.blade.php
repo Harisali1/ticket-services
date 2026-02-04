@@ -31,12 +31,12 @@
                             <input type="checkbox"
                                 class="booking-checkbox"
                                 value="{{ $payment->id }}"
-                                data-payable="{{ $payment->total_amount - $payment->partial_pay_amount }}">
+                                data-payable="{{ $payment->total_amount - $payment->partial_pay_amount - $payment->admin_fee }}">
                         </td>
                         <td>{{ $payment->booking_no }}</td>
                         <td>{{ $payment->total_amount }}</td>
                         <td>{{ $payment->partial_pay_amount }}</td>
-                        <td>{{ $payment->total_amount - $payment->partial_pay_amount }}</td>
+                        <td>{{ $payment->total_amount - $payment->partial_pay_amount - $payment->admin_fee }}</td>
                         <td>{{ $payment->paid_at }}</td>
                         <td>{{ $payment->created_at }}</td>
                     </tr>

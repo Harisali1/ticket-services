@@ -436,6 +436,7 @@
                 $taxAmount = 0;
             @endphp
             @foreach($fareDetails as $index => $fare)
+            
                 @php 
                     $fareAmount += $fare['total_fare_amount'];
                     $taxAmount += $fare['tax'];

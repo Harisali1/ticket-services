@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AgencyStoreRequest;
 use App\Http\Requests\AgencyUpdateRequest;
 use App\Models\Admin\Agency;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Models\User;
 use DB;
 use Illuminate\Support\Facades\Mail;
@@ -62,6 +64,11 @@ class AgencyController extends Controller
                 'status'    => $status,
                 'created_by'=> auth()->user()->id,
             ]);
+
+            $agent = Role::firstOrCreate(['name' => 'agency']);
+            $agent->givePermissionTo(['search_flight', 'manage_booking', 'payment','edit_special_request','pnr_ticketed','requote','cancel']);
+            $user = User::find($user->id);
+            $user->assignRole('agency');
 
             Mail::to($user->email)->send(new AgencyCreationMail($user, $agency));
 

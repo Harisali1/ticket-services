@@ -228,49 +228,118 @@
                 Swal.close(); 
 
                 if(data.code == 2){
-                    let errorHtml = '<ul style="text-align:left;">';
-
-                    data.errors.forEach(err => {
-                        errorHtml += `<li><b>Row ${err.row}:</b> ${err.error}</li>`;
-                    });
-
-                    errorHtml += '</ul>';
-
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Validation Errors',
-                        html: errorHtml,
-                        confirmButtonText: 'OK'
+                        icon: data.errors?.length ? "warning" : "success",
+                        title: data.message,
+                        html: `
+                            <div style="text-align:left; font-size:14px">
+
+                                <!-- Summary -->
+                                <div style="display:flex; gap:15px; margin-bottom:12px">
+                                    <span style="background:#e8f5e9; padding:6px 10px; border-radius:6px">
+                                        ✅ <b>Created:</b> ${data.created}
+                                    </span>
+
+                                    <span style="background:#fff3e0; padding:6px 10px; border-radius:6px">
+                                        ⚠️ <b>Skipped:</b> ${data.skipped}
+                                    </span>
+                                </div>
+
+                                ${
+                                    data.errors && data.errors.length
+                                    ? `
+                                        <hr style="margin:12px 0">
+
+                                        <div style="max-height:220px; overflow:auto">
+                                            <b style="display:block; margin-bottom:6px">Errors</b>
+
+                                            <ul style="padding-left:18px; margin:0">
+                                                ${data.errors.map(e => `
+                                                    <li style="margin-bottom:6px">
+                                                        <span style="
+                                                            background:#fdecea;
+                                                            color:#b71c1c;
+                                                            padding:2px 6px;
+                                                            border-radius:4px;
+                                                            font-size:12px;
+                                                            margin-right:6px;
+                                                        ">
+                                                            Row ${e.row}
+                                                        </span>
+
+                                                        <span style="
+                                                            background:#e3f2fd;
+                                                            color:#0d47a1;
+                                                            padding:2px 6px;
+                                                            border-radius:4px;
+                                                            font-size:12px;
+                                                            margin-right:6px;
+                                                        ">
+                                                            PNR: ${e.PNR}
+                                                        </span>
+
+                                                        ${e.error}
+                                                    </li>
+                                                `).join('')}
+                                            </ul>
+                                        </div>
+                                    `
+                                    : `
+                                        <div style="
+                                            margin-top:10px;
+                                            background:#e8f5e9;
+                                            padding:10px;
+                                            border-radius:6px;
+                                            text-align:center;
+                                            font-weight:600;
+                                        ">
+                                            🎉 No errors found
+                                        </div>
+                                    `
+                                }
+
+                            </div>
+                        `,
+                        confirmButtonText: "OK",
+                        width: 600
+                    }).then(result => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ route('admin.pnr.index') }}";
+                        }
                     });
+
+
                 }else{
                     Swal.fire({
-                    icon: "success",
-                    title: data.message,
-                    html: `
-                        <div style="text-align:left">
-                            <p><b>Created:</b> ${data.created}</p>
-                            <p><b>Skipped:</b> ${data.skipped}</p>
+                        icon: "success",
+                        title: data.message,
+                        html: `
+                            <div style="text-align:left">
+                                <p><b>Created:</b> ${data.created}</p>
+                                <p><b>Skipped:</b> ${data.skipped}</p>
 
-                            ${
-                                data.errors && data.errors.length > 0
-                                ? `
-                                    <hr>
-                                    <b>Errors:</b>
-                                    <ul>
-                                        ${data.errors.map(e =>
-                                            `<li>Row ${e.row}: ${e.error}</li>`
-                                        ).join('')}
-                                    </ul>
-                                `
-                                : `<p><b>No errors 🎉</b></p>`
-                            }
-                        </div>
-                    `,
-                    showConfirmButton: true,
-                    confirmButtonText: "OK"
-                });
-
-                    window.location.href = "{{ route('admin.pnr.index') }}";
+                                ${
+                                    data.errors && data.errors.length > 0
+                                    ? `
+                                        <hr>
+                                        <b>Errors:</b>
+                                        <ul>
+                                            ${data.errors.map(e =>
+                                                `<li>Row ${e.row}: ${e.error}</li>`
+                                            ).join('')}
+                                        </ul>
+                                    `
+                                    : `<p><b>No errors 🎉</b></p>`
+                                }
+                            </div>
+                        `,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ route('admin.pnr.index') }}";
+                        }
+                    });
                 }
                 
             },

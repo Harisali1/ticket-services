@@ -33,8 +33,18 @@ class BookingController extends Controller
         $passengerTypes = PassengerType::all();
 
         if ($request->isMethod('post')) {
+            $departureAirport = Airport::find(request('departure_id'));
+            $arrivalAirport   = Airport::find(request('arrival_id'));
+
+            $returnDepartureAirport = Airport::find(request('return_departure_id'));
+            $returnArrivalAirport   = Airport::find(request('return_arrival_id'));
+
             return view('Admin.booking.add', [
                 'airports' => $airports,
+                'departureAirport' => $departureAirport,
+                'arrivalAirport' => $arrivalAirport,
+                'returnDepartureAirport' => $returnDepartureAirport,
+                'returnArrivalAirport' => $returnArrivalAirport,
                 'showPnrSearch' => $request->all([
                     'trip_type',
                     'departure_id',
@@ -64,6 +74,7 @@ class BookingController extends Controller
             ]);
         }
 
+        
 
         return view('Admin.booking.add', [
             'airports' => $airports,
@@ -107,6 +118,14 @@ class BookingController extends Controller
 
             $baseFare = ($passenger->passenger_type_id == 1) ? $pnrBookings->base_price : $passenger->price;
             $taxes = ($request->return_pnr_id != null) ? $seatCount*200 : $seatCount*100;
+
+            if ($passenger->passenger_type_id == 3) {
+                $taxes = 0;
+            } else {
+                $taxes = ($request->return_pnr_id != null)
+                    ? $seatCount * 200
+                    : $seatCount * 100;
+            }
 
             if($request->return_pnr_id != null){
                 $returnBaseFare = ($returnPassenger->passenger_type_id == 1) ? $returnPnrBookings->base_price : $returnPassenger->price;
@@ -275,16 +294,14 @@ class BookingController extends Controller
             ]);
 
             if(auth()->user()->user_type_id != 1){
-                if(!auth()->user()->can('pnr_ticketed')){
-                    $name = ($user->agency) ? $user->agency->name : $user->name;
-                    NotificationHelper::notifyAdmins([
-                        'type' => 'booking',
-                        'title' => 'New Booking Created',
-                        'message' => "Booking #{$booking->id} created by agency {$name}",
-                        'url' => route('admin.booking.index', ['status' => 1]),
-                        'icon' => 'ticket'
-                    ]);
-                }
+                $name = ($user->agency) ? 'agency ' . $user->agency->name : $user->name;
+                NotificationHelper::notifyAdmins([
+                    'type' => 'booking',
+                    'title' => 'New Booking Created',
+                    'message' => "Booking #{$booking->id} created by {$name}",
+                    'url' => route('admin.booking.index', ['status' => 1]),
+                    'icon' => 'ticket'
+                ]);
             }
 
             DB::commit();

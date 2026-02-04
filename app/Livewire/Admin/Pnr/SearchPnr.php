@@ -8,6 +8,7 @@ use App\Models\Admin\Pnr;
 use App\Models\Admin\Seat;
 use Illuminate\Http\Request;
 use App\Models\Admin\PassengerType;
+use App\Models\Admin\Airport;
 use DB;
 use Carbon\Carbon;
 

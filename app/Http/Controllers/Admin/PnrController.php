@@ -565,21 +565,27 @@ class PnrController extends Controller
                         ? mb_convert_encoding($value, 'UTF-8', 'UTF-8,ISO-8859-1,Windows-1252')
                         : $value;
                 }, $row);
+                $refNo = $row[5] ?? null;
                 // -----------------------------
                 // BASIC CSV ROW VALIDATION
                 // -----------------------------
                 $validator = Validator::make([
                     'departure_date' => $row[2] ?? null,
                     'seats'          => $row[4] ?? null,
+                    'pnr'            => $row[5] ?? null,
+                    'base_fare'      => $row[6] ?? null,
                 ], [
-                    'departure_date' => 'required|date|after_or_equal:today',
-                    'seats'          => 'required|integer|min:1',
+                    'departure_date'    => 'required|date|after_or_equal:today',
+                    'pnr'               => 'required|unique:pnrs,ref_no',
+                    'base_fare'         => 'required|integer|min:20',
+                    'seats'             => 'required|integer|min:1',
                 ]);
 
                 if ($validator->fails()) {
                     $skipped++;
                     $errors[] = [
-                        'row'   => $index + 2,
+                        'row'   => $index + 1,
+                        'PNR'   => $refNo,
                         'error' => $validator->errors()->first(),
                     ];
                     continue;
@@ -594,7 +600,8 @@ class PnrController extends Controller
                 if (!$departure || !$arrival) {
                     $skipped++;
                     $errors[] = [
-                        'row'   => $index + 2,
+                        'row'   => $index + 1,
+                        'PNR'   => $refNo,
                         'error' => 'Invalid departure, arrival code',
                     ];
                     continue;
@@ -669,6 +676,8 @@ class PnrController extends Controller
                 return response()->json([
                     'code' => 2,
                     'success' => true,
+                    'created' => $created,
+                    'skipped' => $skipped,
                     'errors'  => $errors,
                 ]);
             }

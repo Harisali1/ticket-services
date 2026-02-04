@@ -28,7 +28,11 @@
     @endphp -->
 
     @php
-        $notifications = auth()->user()->notifications->take(7);
+        $notifications = auth()->user()
+        ->notifications()
+        ->latest()
+        ->take(7)
+        ->get();
         $unreadCount = auth()->user()->unreadNotifications->count();
     @endphp
 

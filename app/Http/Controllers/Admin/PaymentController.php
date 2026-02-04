@@ -94,12 +94,12 @@ class PaymentController extends Controller
 
                 // Remaining amount for this booking
                 $bookingRemaining = $booking->total_amount - $booking->partial_pay_amount;
-
+                $bookingRemaining = $bookingRemaining - $booking->admin_fee;
                 // 🔹 FULL PAYMENT
                 if ($remainingAmount >= $bookingRemaining) {
 
                     $booking->update([
-                        'paid_amount'        => $booking->total_amount,
+                        'paid_amount'        => $booking->total_amount-$booking->admin_fee,
                         'partial_pay_amount' => 0,
                         'payment_status'     => 3, // paid
                         'status'             => 3, // fully paid
