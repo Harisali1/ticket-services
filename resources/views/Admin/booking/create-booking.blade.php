@@ -527,14 +527,16 @@
                 </div>
 
                 <div class="col-md-3">
-                <label class="form-label small">Name*</label>
-                <input type="text" class="form-control" id="customer_name[]" name="customer_name[]" required>
-                <div class="invalid-feedback">This field is required</div>
+                    <label class="form-label small">Name*</label>
+                    <input type="text" class="form-control" id="customer_name[]" name="customer_name[]" 
+                        oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')" required>
+                    <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label small">Surname*</label>
-                    <input type="text" class="form-control" id="customer_surname[]" name="customer_surname[]">
+                    <input type="text" class="form-control" id="customer_surname[]" name="customer_surname[]"
+                    oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
@@ -550,16 +552,26 @@
 
                 <div class="col-md-3">
                     <label class="form-label small">Email*</label>
-                    <input type="email" class="form-control" id="customer_email[]" name="customer_email[]" required>
+                    <input type="email" class="form-control" id="customer_email[]" name="customer_email[]"
+                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label small">Phone*</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="customer_phone[]" name="customer_phone[]" required>
-                        <div class="invalid-feedback">This field is required</div>
+                        <input 
+                            type="text"
+                            class="form-control"
+                            name="customer_phone[]"
+                            required
+                            inputmode="numeric"
+                            pattern="[0-9]+"
+                            oninput="this.value = this.value.replace(/[^0-9]/g,'')"
+                        >
+                        <div class="invalid-feedback">Only numbers are allowed</div>
                     </div>
+
                 </div>
 
                 <div class="col-md-3">
@@ -572,21 +584,24 @@
 
                 <div class="col-md-3">
                     <label class="form-label small">Country</label>
-                    <input type="text" class="form-control" id="customer_country[]" name="customer_country[]">
+                    <input type="text" class="form-control" id="customer_country[]" name="customer_country[]" 
+                        oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label small">Address</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="customer_address[]" name="customer_address[]">
+                        <input type="text" class="form-control" id="customer_address[]" name="customer_address[]"
+                            oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                         <div class="invalid-feedback">This field is required</div>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label small">City</label>
-                    <input type="text" class="form-control" id="customer_city[]" name="customer_city[]">
+                    <input type="text" class="form-control" id="customer_city[]" name="customer_city[]"
+                        oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
@@ -604,7 +619,8 @@
 
                 <div class="col-md-3">
                     <label class="form-label small">Passport Country</label>
-                    <input type="text" class="form-control" id="customer_passport_county[]" name="customer_passport_county[]">
+                    <input type="text" class="form-control" id="customer_passport_county[]" name="customer_passport_county[]"
+                        oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
@@ -616,26 +632,20 @@
                     </div>
                 </div>
 
-                <!-- <div class="col-md-3">
-                    <label class="form-label small">Residence Country</label>
-                    <select class="form-select" id="customer_residence_country[]" name="customer_residence_country[]" required>
-                        <option value="">Select</option>
-                        <option value="pak">Pakistan</option>
-                        <option value="sau">Saudi Arabia</option>
-                    </select>
-                    <div class="invalid-feedback">This field is required</div>
-                </div> -->
-
                 <div class="col-md-3">
                     <label class="form-label small">Nationality</label>
-                    <input type="text" class="form-control" id="customer_nationality[]" name="customer_nationality[]" required>
+                    <input type="text" class="form-control" id="customer_nationality[]" name="customer_nationality[]"
+                    oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
                 
                 <div class="col-md-3">
                     <label class="form-label small">Expiry Date</label>
                     <div class="input-group">
-                        <input type="date" class="form-control" id="customer_expiry_date[]" name="customer_expiry_date[]" required>
+                        <input type="date" class="form-control" id="customer_expiry_date[]" 
+                            name="customer_expiry_date[]" 
+                            min="{{ date('Y-m-d') }}"
+                            required>
                         <div class="invalid-feedback">This field is required</div>
                     </div>
                 </div>

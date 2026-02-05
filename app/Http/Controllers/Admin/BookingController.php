@@ -419,9 +419,9 @@ class BookingController extends Controller
             if($request->status == 'ticket'){
                 $booking = Booking::find($booking->id);
                 $user = auth()->user();
-                $updatedTicketedAmount = $user->ticketed_amount+$booking->total_amount;
-                $updatedRemainingAmount = $user->remaining_amount+$booking->total_amount;
-                User::find($user->id)->update([
+                $updatedTicketedAmount = $booking->user->ticketed_amount+$booking->total_amount;
+                $updatedRemainingAmount = $booking->user->remaining_amount+$booking->total_amount;
+                User::find($booking->user->id)->update([
                     'ticketed_amount' => $updatedTicketedAmount,
                     'remaining_amount' => $updatedRemainingAmount
                 ]);
@@ -454,8 +454,8 @@ class BookingController extends Controller
             if($request->status == 'cancel'){
                 $booking = Booking::find($booking->id);
                 $user = auth()->user();
-                $updatedTotalAmount = $user->total_amount-$booking->total_amount;
-                User::find($user->id)->update([
+                $updatedTotalAmount = $booking->user->total_amount-$booking->total_amount;
+                User::find($booking->user->id)->update([
                     'total_amount' => $updatedTotalAmount
                 ]);
                 if(auth()->user()->user_type_id != 1){
@@ -614,8 +614,8 @@ class BookingController extends Controller
             ]);
 
             $user = auth()->user();
-            $updatedRemainingAmount = $user->remaining_amount-$booking->total_amount;
-            User::find($user->id)->update([
+            $updatedRemainingAmount = $booking->user->remaining_amount-$booking->total_amount;
+            User::find($booking->user->id)->update([
                 'remaining_amount' => $updatedRemainingAmount
             ]);
 

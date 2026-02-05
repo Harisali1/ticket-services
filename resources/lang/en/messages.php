@@ -166,7 +166,7 @@ return [
     'postal_code' => 'Postal Code',
 
     'document_details' => 'Document Details',
-    'passport_country' => 'Passport Issuing Country',
+    'passport_country' => 'Passport Country',
     'passport_number' => 'Passport Number',
     'nationality' => 'Nationality',
     'expiry_date' => 'Expiry Date',

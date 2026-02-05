@@ -101,12 +101,16 @@ class UserController extends Controller
         $passenger = Customer::findOrFail($id);
 
         $passenger->update([
-            'name'     => $request->name,
-            'surname'  => $request->surname,
-            'dob'      => $request->dob,
-            'gender'   => $request->gender,
-            'email'    => $request->email,
-            'phone_no' => $request->phone_no,
+            'name'              => $request->name,
+            'surname'           => $request->surname,
+            'dob'               => $request->dob,
+            'gender'            => $request->gender,
+            'email'             => $request->email,
+            'phone_no'          => $request->phone_no,
+            'passport_country'  => $request->passport_country,
+            'passport_number'   => $request->passport_number,
+            'nationality'       => $request->nationality,
+            'expiry_date'       => $request->expiry_date,
         ]);
 
         // dd($passenger);

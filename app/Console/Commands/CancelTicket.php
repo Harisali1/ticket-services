@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Admin\Booking;
+use App\Models\User;
 
 class CancelTicket extends Command
 {
@@ -32,15 +33,14 @@ class CancelTicket extends Command
         $todayBookings = Booking::whereBetween('created_at',[$startDate,$endDate])->where('status', 1)->get();
 
         foreach($todayBookings as $booking){
-
+            $updatedTotalAmount = $booking->user->total_amount-$booking->total_amount;
+            User::find($booking->user->id)->update([
+                'total_amount' => $updatedTotalAmount
+            ]);
+            
+            $booking->update([
+                'status' => 5
+            ]);
         }
-
-        $booking = Booking::find($booking->id);
-                $user = auth()->user();
-                $updatedTotalAmount = $user->total_amount-$booking->total_amount;
-                User::find($user->id)->update([
-                    'total_amount' => $updatedTotalAmount
-                ]);
-        dd($todayBookings);
     }
 }

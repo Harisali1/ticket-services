@@ -503,11 +503,10 @@
                             title: data.message,
                             showConfirmButton: true,
                             confirmButtonText: "OK"
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = "{{ route('admin.booking.index') }}";
-                            }
                         });
+
+                        window.location.href = "{{ route('admin.booking.index') }}";
+
                     },
                     error: function (xhr) {
                         Swal.close();

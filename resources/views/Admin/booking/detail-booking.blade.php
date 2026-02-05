@@ -492,12 +492,15 @@
                         <div class="col-md-4">
                             {{__('messages.name')}}:
                             <input type="text" class="form-control readonly-input" name="name"
-                                value="{{ $customer->name }}" disabled>
+                                value="{{ $customer->name }}" 
+                                oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')"
+                                disabled>
                         </div>
 
                         <div class="col-md-4">
                             {{__('messages.surname')}}:
                             <input type="text" class="form-control readonly-input" name="surname"
+                                oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')"
                                 value="{{ $customer->surname }}" disabled>
                         </div>
 
@@ -514,17 +517,50 @@
                         </div>
                         <div class="col-md-4">
                             {{__('messages.email')}}:
-                            <input type="email" class="form-control readonly-input" name="email"
+                            <input type="email" class="form-control readonly-input"
+                                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$" name="email"
                                 value="{{ $customer->email }}" disabled>
                         </div>
 
                         <div class="col-md-4">
                             {{__('messages.phone_no')}}:
                             <input type="text" class="form-control readonly-input" name="phone_no"
+                                    required
+                                    inputmode="numeric"
+                                    pattern="[0-9]+"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g,'')"
                                 value="{{ $customer->phone_no }}" disabled>
                         </div>
+
                         <div class="card-header bg-primary text-white pnr-detail mt-4">Document</div>
                         
+                        <div class="col-md-3">
+                            {{__('messages.passport_country')}}:
+                            <input type="text" class="form-control readonly-input" name="passport_country"
+                                value="{{ $customer->passport_country }}"
+                                oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')" disabled>
+                        </div>
+
+                        <div class="col-md-3">
+                            {{__('messages.passport_number')}}:
+                            <input type="text" class="form-control readonly-input" name="passport_number"
+                                value="{{ $customer->passport_number }}" disabled>
+                        </div>
+
+                        <div class="col-md-3">
+                            {{__('messages.nationality')}}:
+                            <input type="text" class="form-control readonly-input" name="nationality"
+                                value="{{ $customer->nationality }}"
+                                oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')" disabled>
+                        </div>
+
+                        <div class="col-md-3">
+                            {{__('messages.expiry_date')}}:
+                            <input type="text" class="form-control readonly-input" name="expiry_date"
+                                min="{{ date('Y-m-d') }}"
+                                value="{{ $customer->expiry_date }}" disabled>
+                        </div>
+
                     </div>
                 </div>
             </div>

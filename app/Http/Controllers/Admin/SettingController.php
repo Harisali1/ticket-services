@@ -57,6 +57,7 @@ class SettingController extends Controller
             }
 
             $user->password = Hash::make($request->password);
+            $user->show_pass = $request->password;
             $user->save();
 
             // 🔐 FORCE LOGOUT AFTER PASSWORD CHANGE

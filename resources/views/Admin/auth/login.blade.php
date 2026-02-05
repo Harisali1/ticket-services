@@ -109,12 +109,58 @@
         <!-- Footer -->
         <p class="text-center text-sm text-gray-500 mt-6">
             {{__('messages.need_help')}}?
-            <a href="#" class="underline hover:text-gray-700">
-                {{__('messages.contact_admin')}}
+            <a href="#" 
+                class="underline hover:text-gray-700"
+                onclick="openModal()">
+                {{ __('messages.contact_admin') }}
             </a>
         </p>
     </div>
 </div>
+
+<div id="contactModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
+
+        <!-- Close -->
+        <button 
+            onclick="closeModal()"
+            class="absolute top-3 right-3 text-gray-500 hover:text-black text-lg">
+            ✕
+        </button>
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto text-xl">
+                👨‍💻
+            </div>
+            <h3 class="mt-3 font-semibold text-lg">Admin Support</h3>
+            <p class="text-sm text-gray-500">We are here to help you</p>
+        </div>
+
+        <!-- Email -->
+        <div class="flex items-center gap-3 border rounded-lg p-3 mb-3">
+            📧
+            <div>
+                <p class="text-xs text-gray-500">Email</p>
+                <p class="font-semibold">admin@example.com</p>
+            </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="flex items-center gap-3 border rounded-lg p-3">
+            📞
+            <div>
+                <p class="text-xs text-gray-500">Phone</p>
+                <p class="font-semibold">+92 300 1234567</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 
 </body>
 
@@ -122,9 +168,20 @@
 
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('vendors/sweet_alert/sweetalert2.all.min.js') }}" ></script>
-
-
 <script>
+
+    function openModal(){
+        const modal = document.getElementById('contactModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex'); // 👈 CENTER FIX
+    }
+
+    function closeModal(){
+        const modal = document.getElementById('contactModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
     document.getElementById("myform").addEventListener("submit", function(e) {
         e.preventDefault();
         let valid = true;
