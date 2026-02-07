@@ -248,5 +248,7 @@ return [
     'sign_in' => 'Accedi',
     'need_help' => 'Hai bisogno di aiuto',
     'contact_admin' => 'Contatta l’amministratore',
+    'duration' => 'Durata',
+
 ];
 

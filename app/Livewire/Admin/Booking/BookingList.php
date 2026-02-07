@@ -35,15 +35,22 @@ class BookingList extends Component
     ];
 
     protected $queryString = [
-        'filters.status' => ['except' => '']
+        'filters.status' => ['except' => ''],
+        'filters.pnr_no' => ['except' => ''],
     ];
+
 
     public function mount()
     {
         if (request()->has('status')) {
             $this->filters['status'] = request('status');
         }
+
+        if (request()->has('pnr_no')) {
+            $this->filters['pnr_no'] = request('pnr_no');
+        }
     }
+
 
     public function openPutOnSale($pnrId)
     {
@@ -143,7 +150,7 @@ class BookingList extends Component
 
         $bookings = $bookings->when($this->filters['pnr_no'], fn ($q) =>
                 $q->whereHas('pnr', fn ($pnr) =>
-                    $pnr->where('pnr_no', 'like', '%' . $this->filters['pnr_no'] . '%')
+                    $pnr->where('ref_no', 'like', '%' . $this->filters['pnr_no'] . '%')
                 )
             )
             ->when($this->filters['booking_no'], fn ($q) =>

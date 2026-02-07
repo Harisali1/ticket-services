@@ -254,7 +254,7 @@
                                     </a>
 
                                     @can('void')
-                                        @if($bookingDate == $today && $now->hour >= 0)
+                                        @if($bookingDate < $booking->fare_limit_date)
                                             <button class="btn btn-sm btn-outline-warning"
                                                     onclick="voidBooking({{ $booking->id }})">
                                                 Void

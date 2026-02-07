@@ -161,8 +161,8 @@
                             <th>Arrival</th>
                             <th>Total</th>
                             <th>Available</th>
-                            <th>Reserved</th>
                             <th>Sale</th>
+                            <th>Reserved</th>
                             <th>Sold</th>
                             <th class="text-end pe-4">Action</th>
                         </tr>
@@ -209,10 +209,10 @@
                                     <span class="badge bg-warning text-dark">{{ $pnr->seat_is_sale }}</span>
                                 </td>
                                 <td>
-                                    <span class="badge bg-info text-dark">{{ $pnr->seat_is_reserved }}</span>
+                                    <a href="{{ route('admin.booking.index', ['status' => 1, 'pnr_no' => $pnr->ref_no]) }}"><span class="badge bg-info text-dark">{{ $pnr->seat_is_reserved }}</span></a>
                                 </td>
                                 <td>
-                                    <span class="badge bg-success">{{ $pnr->seat_is_sold }}</span>
+                                    <a href="{{ route('admin.booking.index', ['status' => 2, 'pnr_no' => $pnr->ref_no]) }}"><span class="badge bg-success">{{ $pnr->seat_is_sold }}</span></a>
                                 </td>
                                 
 

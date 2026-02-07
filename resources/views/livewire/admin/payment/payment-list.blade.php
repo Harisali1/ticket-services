@@ -17,27 +17,6 @@
         </div>
     </div>
     <div class="row mb-4">
-        <div class="col-md-2">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <div class="text-muted small">{{__('messages.reserved_amount')}}</div>
-                    <div class="fw-bold fs-5 text-primary">
-                        {{ number_format(auth()->user()->total_amount) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-2">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <div class="text-muted small">{{__('messages.ticketed_amount')}}</div>
-                    <div class="fw-bold fs-5 text-secondary">
-                        {{ number_format(auth()->user()->ticketed_amount) }}
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="col-md-2">
             <div class="card text-center shadow-sm">

@@ -21,6 +21,10 @@ Route::get('language/{lang}', function ($lang) {
 })->name('language.switch');
 
 
+Route::get('/welcome', function () {
+    return view('welcome');
+});
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -110,7 +114,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('admin.booking.index');
             Route::get('/add', [App\Http\Controllers\Admin\BookingController::class, 'create'])->name('admin.booking.create');
             Route::post('/add', [App\Http\Controllers\Admin\BookingController::class, 'create'])->name('admin.booking.create');
-            Route::post('/create', [App\Http\Controllers\Admin\BookingController::class, 'getPnrInfo'])->name('admin.booking.pnr.info');
+            Route::get('/create', [App\Http\Controllers\Admin\BookingController::class, 'getPnrInfo'])->name('admin.booking.pnr.info');
             Route::post('/check_seats_availablity', [App\Http\Controllers\Admin\BookingController::class, 'checkSeatsAvailability'])->name('admin.booking.seats.availability');
             Route::post('/booking_submit', [App\Http\Controllers\Admin\BookingController::class, 'bookingSubmit'])->name('admin.booking.submit');
             Route::get('/details/{booking}/pnr/{pnr}/return_pnr/{id}',[App\Http\Controllers\Admin\BookingController::class, 'bookingDetails'])->name('admin.booking.details');

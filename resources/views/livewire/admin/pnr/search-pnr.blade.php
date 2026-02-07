@@ -219,7 +219,7 @@
                     </div>
 
                     <!-- Body -->
-                    <form id="pnr-select-seat" method="POST" action="{{ route('admin.booking.pnr.info') }}">
+                    <form id="pnr-select-seat" method="GET" action="{{ route('admin.booking.pnr.info') }}">
                         @csrf
                         <div class="modal-body pt-0">
 

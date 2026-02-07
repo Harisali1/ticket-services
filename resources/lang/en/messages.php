@@ -248,4 +248,5 @@ return [
     'sign_in' => 'Sign In',
     'need_help' => 'Need Help',
     'contact_admin' => 'Contact Admin',
+    'duration' => 'Duration',
 ];

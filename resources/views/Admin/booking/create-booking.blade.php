@@ -97,11 +97,11 @@
   <div class="d-flex justify-content-between align-items-center mb-3">
     <div class="d-flex align-items-center gap-2">
         <i class="bi bi-arrow-left fs-5"></i>
-        <h4 class="mb-0 fw-semibold">Create Booking</h4>
+        <h4 class="mb-0 fw-semibold">{{ __('messages.create_booking') }}</h4>
     </div>
 
     <h5 class="fw-semibold">
-        Total Tickets Price :
+        {{__('messages.total_ticket_price')}} :
         @php
             $markup = 0;
             if(auth()->user()->user_type_id != 1){
@@ -120,10 +120,10 @@
   <form id="bookingForm" method="POST" action="{{ route('admin.booking.submit') }}" class="py-5">
     <!-- PNR Details -->
      @csrf()
-    <h3 class="fw-semibold mb-3 pnr-detail">PNR Details:</h3>
+    <h3 class="fw-semibold mb-3 pnr-detail">{{__('messages.pnr_detail')}}:</h3>
 
     <div class="mb-4">
-        <h6 class="fw-bold mb-3 text-success">OUTBOUND</h6>
+        <h6 class="fw-bold mb-3 text-success">{{__('messages.outbound')}}</h6>
         <div class="card flight-card mb-3">
 
             <div class="card-body">
@@ -141,11 +141,11 @@
                     <!-- From / To -->
                     <div class="col-md-3">
                         <p class="mb-1">
-                            <small class="text-muted">From:</small><br>
+                            <small class="text-muted">{{__('messages.from')}}:</small><br>
                             <strong>{{ $pnrBookings->departure_date_time }}</strong>
                         </p>
                         <p class="mb-0">
-                            <small class="text-muted">To:</small><br>
+                            <small class="text-muted">{{__('messages.to')}}:</small><br>
                             <strong>{{ ($pnrBookings->middle_arrival_date_time) ? $pnrBookings->middle_arrival_date_time :  $pnrBookings->arrival_date_time }}</strong>
                         </p>
                     </div>
@@ -159,7 +159,7 @@
                     </div>
 
                     <div class="col-md-2 text-center">
-                        <small class="text-muted">Duration</small><br>
+                        <small class="text-muted">{{__('messages.duration')}}</small><br>
                         <strong>{{ ($pnrBookings->middle_arrival_date_time) ? $pnrBookings->first_duration : $pnrBookings->duration }}</strong>
                     </div>
 
@@ -167,7 +167,7 @@
 
                     <!-- Aircraft -->
                     <div class="col-md-2 text-center">
-                        <small class="text-muted">Airplane</small><br>
+                        <small class="text-muted">{{__('messages.airplane')}}</small><br>
                         <strong>{{ $pnrBookings->air_craft }}</strong>
                     </div>
 
@@ -178,7 +178,7 @@
                             <strong>{{ $pnrBookings->flight_no }}</strong>
                         </p>
                         <p class="mb-0">
-                            <small class="text-muted">Class:</small>
+                            <small class="text-muted">{{__('messages.class')}}:</small>
                             <strong>{{ $pnrBookings->class }}</strong>
                         </p>
                     </div>
@@ -205,11 +205,11 @@
                     <!-- From / To -->
                     <div class="col-md-3">
                         <p class="mb-1">
-                            <small class="text-muted">From:</small><br>
+                            <small class="text-muted">{{__('messages.from')}}:</small><br>
                             <strong>{{ $pnrBookings->middle_departure_date_time }}</strong>
                         </p>
                         <p class="mb-0">
-                            <small class="text-muted">To:</small><br>
+                            <small class="text-muted">{{__('messages.to')}}:</small><br>
                             <strong>{{ $pnrBookings->arrival_date_time }}</strong>
                         </p>
                     </div>
@@ -223,7 +223,7 @@
                     </div>
 
                     <div class="col-md-2 text-center">
-                        <small class="text-muted">Duration</small><br>
+                        <small class="text-muted">{{__('messages.duration')}}</small><br>
                         <strong>{{ $pnrBookings->second_duration }}</strong>
                     </div>
 
@@ -231,7 +231,7 @@
 
                     <!-- Aircraft -->
                     <div class="col-md-2 text-center">
-                        <small class="text-muted">Airplane</small><br>
+                        <small class="text-muted">{{__('messages.airplane')}}</small><br>
                         <strong>{{ ($pnrBookings->middle_air_craft == null) ? $pnrBookings->air_craft : $pnrBookings->middle_air_craft }}</strong>
                     </div>
 
@@ -242,7 +242,7 @@
                             <strong>{{ ($pnrBookings->middle_flight_no == null) ? $pnrBookings->flight_no : $pnrBookings->middle_flight_no }}</strong>
                         </p>
                         <p class="mb-0">
-                            <small class="text-muted">Class:</small>
+                            <small class="text-muted">{{__('messages.class')}}:</small>
                             <strong>{{ $pnrBookings->class }}</strong>
                         </p>
                     </div>
@@ -258,7 +258,7 @@
     @if($returnPnrBookings != null)
         <!-- INBOUND -->
         <div>
-            <h6 class="text-danger fw-bold mb-3">INBOUND</h6>
+            <h6 class="text-danger fw-bold mb-3">{{__('messages.inbound')}}</h6>
 
             <div class="card flight-card mb-3">
 
@@ -279,11 +279,11 @@
                         <!-- From / To -->
                         <div class="col-md-3">
                             <p class="mb-1">
-                                <small class="text-muted">From:</small><br>
+                                <small class="text-muted">{{__('messages.from')}}:</small><br>
                                 <strong>{{ $returnPnrBookings->departure_date_time }}</strong>
                             </p>
                             <p class="mb-0">
-                                <small class="text-muted">To:</small><br>
+                                <small class="text-muted">{{__('messages.to')}}:</small><br>
                             <strong>{{ ($returnPnrBookings->middle_arrival_date_time) ? $returnPnrBookings->middle_arrival_date_time :  $returnPnrBookings->arrival_date_time }}</strong>
                             </p>
                         </div>
@@ -297,7 +297,7 @@
                         </div>
 
                         <div class="col-md-2 text-center">
-                            <small class="text-muted">Duration</small><br>
+                            <small class="text-muted">{{__('messages.duration')}}</small><br>
                             <strong>{{ ($returnPnrBookings->middle_arrival_date_time) ? $returnPnrBookings->first_duration : $returnPnrBookings->duration }}</strong>
                         </div>
 
@@ -305,7 +305,7 @@
 
                         <!-- Aircraft -->
                         <div class="col-md-2 text-center">
-                            <small class="text-muted">Airplane</small><br>
+                            <small class="text-muted">{{__('messages.airplane')}}</small><br>
                             <strong>{{ $returnPnrBookings->air_craft }}</strong>
                         </div>
 
@@ -316,7 +316,7 @@
                                 <strong>{{ $returnPnrBookings->flight_no }}</strong>
                             </p>
                             <p class="mb-0">
-                                <small class="text-muted">Class:</small>
+                                <small class="text-muted">{{__('messages.class')}}:</small>
                                 <strong>{{ $returnPnrBookings->class }}</strong>
                             </p>
                         </div>
@@ -342,11 +342,11 @@
                             <!-- From / To -->
                             <div class="col-md-3">
                                 <p class="mb-1">
-                                    <small class="text-muted">From:</small><br>
+                                    <small class="text-muted">{{__('messages.from')}}:</small><br>
                                     <strong>{{ $returnPnrBookings->middle_departure_date_time }}</strong>
                                 </p>
                                 <p class="mb-0">
-                                    <small class="text-muted">To:</small><br>
+                                    <small class="text-muted">{{__('messages.to')}}:</small><br>
                                     <strong>{{ $returnPnrBookings->arrival_date_time }}</strong>
                                 </p>
                             </div>
@@ -360,7 +360,7 @@
                             </div>
 
                             <div class="col-md-2 text-center">
-                                <small class="text-muted">Duration</small><br>
+                                <small class="text-muted">{{__('messages.duration')}}</small><br>
                                 <strong>{{ $returnPnrBookings->second_duration }}</strong>
                             </div>
 
@@ -368,7 +368,7 @@
 
                             <!-- Aircraft -->
                             <div class="col-md-2 text-center">
-                                <small class="text-muted">Airplane</small><br>
+                                <small class="text-muted">{{__('messages.airplane')}}</small><br>
                                 <strong>{{ ($returnPnrBookings->middle_air_craft == null) ? $returnPnrBookings->air_craft : $returnPnrBookings->middle_air_craft }}</strong>
                             </div>
 
@@ -379,7 +379,7 @@
                                     <strong>{{ ($returnPnrBookings->middle_flight_no == null) ? $returnPnrBookings->flight_no : $returnPnrBookings->middle_flight_no }}</strong>
                                 </p>
                                 <p class="mb-0">
-                                    <small class="text-muted">Class:</small>
+                                    <small class="text-muted">{{__('messages.class')}}:</small>
                                     <strong>{{ $returnPnrBookings->class }}</strong>
                                 </p>
                             </div>
@@ -392,21 +392,21 @@
 
     
 
-    <h3 class="fw-semibold mb-3 pnr-detail">Agency Details:</h3>
+    <h3 class="fw-semibold mb-3 pnr-detail">{{__('messages.agency_detail')}}:</h3>
 
     <div class="row">
         <div class="col-md-4">
-            <label class="form-label small">Agency Name</label>
+            <label class="form-label small">{{__('messages.agency_name')}}</label>
             <input type="text" class="form-control" id="agency_name" name="agency_name" readonly value="{{ (isset($agency->name)) ? $agency->name : auth()->user()->name }}">
         </div>
         
         <div class="col-md-4">
-            <label class="form-label small">Email</label>
+            <label class="form-label small">{{__('messages.email')}}</label>
             <input type="text" class="form-control" id="agency_email" name="agency_email" readonly value="{{ auth()->user()->email }}">
         </div>
 
         <div class="col-md-4">
-            <label class="form-label small">Phone No</label>
+            <label class="form-label small">{{__('messages.phone_no')}}</label>
             <input type="text" class="form-control" id="phone_no" name="phone_no" readonly value="{{ auth()->user()->phone_no }}">
         </div>
     </div>
@@ -414,20 +414,20 @@
     @if(auth()->user()->user_type_id != 4)
     <hr>
 
-    <h3 class="fw-semibold mb-3 pnr-detail">Fare Details:</h3>
+    <h3 class="fw-semibold mb-3 pnr-detail">{{__('messages.fare_details')}}:</h3>
 
     <table class="table table-bordered align-middle" id="mytable">
         <thead class="table-light">
             <tr>
-                <th>Passenger Type</th>
-                <th>Seat</th>
-                <th>Fare Amount</th>
+                <th>{{__('messages.passenger_type')}}</th>
+                <th>{{__('messages.seat')}}</th>
+                <th>{{__('messages.fare_amount')}}</th>
                 <!-- @if($pnrBookings->pnr_type == 'return' || $pnrBookings->pnr_type == 'open_jaw')
                     <th>Return Base Fare</th>
                 @endif -->
                 <!-- <th>Total Fare Amount</th> -->
-                <th>Tax</th>
-                <th>Grand Total</th>
+                <th>{{__('messages.tax')}}</th>
+                <th>{{__('messages.grand_total')}}</th>
             </tr>
         </thead>
         <tbody>
@@ -494,7 +494,7 @@
 
     <hr>
 
-    <h3 class="fw-semibold mb-3 pnr-detail">Passenger Details:</h3>
+    <h3 class="fw-semibold mb-3 pnr-detail">{{__('messages.passenger_details')}}:</h3>
     @php
         $passengerFareTypes = [];
         $passengerTypesTitle = [];
@@ -516,7 +516,7 @@
 
             <div class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label small">Name Prefix</label>
+                    <label class="form-label small">{{__('messages.name_prefix')}}</label>
                     <select class="form-select" id="customer_prefix[]" name="customer_prefix[]">
                         <option value="">Select</option>
                         <option value="Mr">Mr</option>
@@ -527,21 +527,21 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Name*</label>
+                    <label class="form-label small">{{__('messages.name')}}*</label>
                     <input type="text" class="form-control" id="customer_name[]" name="customer_name[]" 
                         oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Surname*</label>
+                    <label class="form-label small">{{__('messages.surname')}}*</label>
                     <input type="text" class="form-control" id="customer_surname[]" name="customer_surname[]"
                     oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Gender*</label>
+                    <label class="form-label small">{{__('messages.gender')}}*</label>
                     <select class="form-select" id="customer_gender[]" name="customer_gender[]">
                         <option value="">Select</option>
                         <option value="male">Male</option>
@@ -551,14 +551,14 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Email*</label>
+                    <label class="form-label small">{{__('messages.email')}}*</label>
                     <input type="email" class="form-control" id="customer_email[]" name="customer_email[]"
                         pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Phone*</label>
+                    <label class="form-label small">{{__('messages.phone_no')}}*</label>
                     <div class="input-group">
                         <input 
                             type="text"
@@ -575,7 +575,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">D.O.B*</label>
+                    <label class="form-label small">{{__('messages.dob')}}*</label>
                     <div class="input-group">
                         <input type="date" class="form-control" id="customer_dob[]" name="customer_dob[]" required>
                         <div class="invalid-feedback">This field is required</div>
@@ -583,14 +583,14 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Country</label>
+                    <label class="form-label small">{{__('messages.country')}}</label>
                     <input type="text" class="form-control" id="customer_country[]" name="customer_country[]" 
                         oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label small">Address</label>
+                    <label class="form-label small">{{__('messages.address')}}</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="customer_address[]" name="customer_address[]"
                             oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
@@ -599,14 +599,14 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">City</label>
+                    <label class="form-label small">{{__('messages.city')}}</label>
                     <input type="text" class="form-control" id="customer_city[]" name="customer_city[]"
                         oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Postal Code</label>
+                    <label class="form-label small">{{__('messages.postal_code')}}</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="customer_postal_code[]" name="customer_postal_code[]">
                         <div class="invalid-feedback">This field is required</div>
@@ -614,18 +614,18 @@
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
-                <h6 class="fw-semibold mb-0">Document Details</h6>
+                <h6 class="fw-semibold mb-0">{{__('messages.document_detail')}}</h6>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Passport Country</label>
+                    <label class="form-label small">{{__('messages.passport_country')}}</label>
                     <input type="text" class="form-control" id="customer_passport_county[]" name="customer_passport_county[]"
                         oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
                     <div class="invalid-feedback">This field is required</div>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Passport Number</label>
+                    <label class="form-label small">{{__('messages.passport_number')}}</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="customer_passport_number[]" name="customer_passport_number[]" required>
                         <div class="invalid-feedback">This field is required</div>
@@ -633,14 +633,14 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Nationality</label>
+                    <label class="form-label small">{{__('messages.nationality')}}</label>
                     <input type="text" class="form-control" id="customer_nationality[]" name="customer_nationality[]"
                     oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')" required>
                     <div class="invalid-feedback">This field is required</div>
                 </div>
                 
                 <div class="col-md-3">
-                    <label class="form-label small">Expiry Date</label>
+                    <label class="form-label small">{{__('messages.expiry_date')}}</label>
                     <div class="input-group">
                         <input type="date" class="form-control" id="customer_expiry_date[]" 
                             name="customer_expiry_date[]" 
@@ -655,7 +655,7 @@
     </div>
 
     <hr>
-    <h3 class="fw-semibold mb-3 pnr-detail">Special Request:</h3>
+    <h3 class="fw-semibold mb-3 pnr-detail">{{__('messages.special_request')}}:</h3>
 
     <div class="row g-3">
         <div class="col-md-3">
@@ -686,7 +686,7 @@
             </select>
         </div>
         <div class="col-md-3">
-            <label class="form-label small">Wheel Chair</label>
+            <label class="form-label small">{{__('messages.wheel_chair')}}</label>
             <select class="form-select" id="wheel_chair" name="wheel_chair" required>
                 <option value="">Select</option>
                 <option value="WHEELCHAIR (CAN CLIMB STAIRS)">WHEELCHAIR (CAN CLIMB STAIRS)</option>
@@ -701,7 +701,7 @@
     <input type="hidden" id="booking_seats" name="booking_seats" value="{{ $seatSum }}">
     <input type="hidden" id="total_fare" name="total_fare" value="{{ $data['totalBaseFareAmount']+$markup+$adminFee }}">
     <input type="hidden" id="total_tax" name="total_tax" value="{{ $data['totalTax'] }}">
-    <h3 class="fw-semibold mb-3 pnr-detail mt-2">Reservation Recap:</h3>
+    <h3 class="fw-semibold mb-3 pnr-detail mt-2">{{__('messages.reservation_recap')}}:</h3>
     <div class="container mt-4">
     <div class="row">
         <div class="col-md-5 ms-auto"> <!-- RIGHT ALIGN -->
@@ -724,20 +724,20 @@
 
                 <!-- Fare -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="fw-semibold">Fare Amount</span>
+                    <span class="fw-semibold">{{__('messages.fare_amount')}}</span>
                     <span class="fw-bold text-success" x-text="format(fare)"></span>
                 </div>
 
                 <!-- Tax -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="fw-semibold">Tax</span>
+                    <span class="fw-semibold">{{__('messages.tax')}}</span>
                     <span class="fw-bold text-success" x-text="format(tax)"></span>
                 </div>
 
                 <!-- Admin Fee -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="fw-semibold">
-                        Administrative Fee
+                        {{__('messages.administrative_fee')}}
                         <button 
                             type="button"
                             class="btn btn-sm btn-info ms-2"
@@ -765,7 +765,7 @@
 
                 <!-- Total -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-bold fs-5">Total</span>
+                    <span class="fw-bold fs-5">{{__('messages.total')}}</span>
                     <span class="fw-bold fs-5 text-primary"
                         x-text="format(fare + tax + adminFee)">
                     </span>
@@ -785,7 +785,7 @@
     <!-- ================= BUTTONS ================= -->
     <div class="d-flex justify-content-end mt-4">
         <button type="button" onclick="validatePassengerDetails()" class="btn btn-success">
-            Submit
+            {{__('messages.submit')}}
         </button>
     </div>
 

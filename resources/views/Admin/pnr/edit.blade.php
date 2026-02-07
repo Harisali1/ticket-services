@@ -48,6 +48,11 @@
                 </div>
 
                 <div class="col-md-3">
+                    <label class="form-label text-muted">Middle Flight No *</label>
+                    <input type="text" name="middle_flight_no" id="middle_flight_no" class="form-control" value="{{ old('middle_flight_no', $pnr->middle_flight_no ?? '') }}">
+                </div>
+
+                <div class="col-md-3">
                     <label class="form-label text-muted">Reference PNR No #</label>
                     <input type="text" name="ref_no" id="ref_no" class="form-control" value="{{ old('ref_no', $pnr->ref_no ?? '') }}">
                 </div>

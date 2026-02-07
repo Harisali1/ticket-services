@@ -88,7 +88,7 @@
                     <tr>
                         <td>{{ $payment->name }}</td>
                         <td>{{ $payment->user->email }}</td>
-                        <td>{{ $payment->user->total_amount }}</td>
+                        <td>{{ $payment->user->remaining_amount+$payment->user->on_approval_amount }}</td>
                         <td>{{ $payment->user->paid_amount }}</td>
                         <td>{{ $payment->user->on_approval_amount }}</td>
                         <td>{{ $payment->user->remaining_amount }}</td>
