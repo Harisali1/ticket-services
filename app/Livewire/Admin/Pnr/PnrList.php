@@ -70,7 +70,24 @@ class PnrList extends Component
     public function render()
     {
         // dd($this->filters);
-        $pnrs = Pnr::with('seats', 'airline');
+        // $pnrs = Pnr::with('seats', 'airline');
+        $pnrs = Pnr::query()
+            ->with('airline')
+            ->withCount([
+                'seats as total_seats',
+                'seats as available_seats' => function ($q) {
+                    $q->where('is_available', 1);
+                },
+                'seats as reserved_seats' => function ($q) {
+                    $q->where('is_reserved', 1);
+                },
+                'seats as sold_seats' => function ($q) {
+                    $q->where('is_sold', 1);
+                },
+                'seats as on_sale_seats' => function ($q) {
+                    $q->where('is_sale', 1);
+                },
+            ]);
 
         $all = (clone $pnrs)->count();
         $created   = (clone $pnrs)->where('status', 1)->count();
@@ -95,6 +112,7 @@ class PnrList extends Component
             ->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.pnr.pnr-list', compact('pnrs', 'all', 'created', 'onSale', 'cancelSale', 'soldOut', 'available'));
+        return view('livewire.admin.pnr.pnr-list', compact('pnrs', 'all', 'created', 'onSale', 
+        'cancelSale', 'soldOut', 'available'));
     }
 }

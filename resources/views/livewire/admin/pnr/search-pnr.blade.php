@@ -115,15 +115,15 @@
                                                             style="width:25px;height:25px;object-fit:contain;">
                                                     </td>
 
-                                                    <td>{{ $pnr->flight_no }}</td>
-                                                    <td>{{ $pnr->air_craft }}</td>
-                                                    <td>{{ $pnr->class }}</td>
-                                                    <td>{{ $pnr->baggage }}</td>
-                                                    <td>{{ $pnr->departure->code }}</td>
-                                                    <td>{{ $pnr->arrival->code }}</td>
-                                                    <td>{{ $pnr->departure_date_time }}</td>
-                                                    <td>{{ $pnr->arrival_date_time }}</td>
-                                                    <td>{{ $pnr->duration }}</td>
+                                                    <td data-label="Flight">{{ $pnr->flight_no }}</td>
+                                                    <td data-label="Aircraft">{{ $pnr->air_craft }}</td>
+                                                    <td data-label="Class">{{ $pnr->class }}</td>
+                                                    <td data-label="From">{{ $pnr->departure->code }}</td>
+                                                    <td data-label="To">{{ $pnr->arrival->code }}</td>
+                                                    <td data-label="Departure">{{ $pnr->departure_date_time }}</td>
+                                                    <td data-label="Arrival">{{ $pnr->arrival_date_time }}</td>
+                                                    <td data-label="Duration">{{ $pnr->duration }}</td>
+
 
                                                     <td>
                                                         <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
@@ -214,7 +214,7 @@
 
                     <!-- Header -->
                     <div class="modal-header border-0">
-                        <h5 class="modal-title fw-semibold">Select Number Of Seat</h5>
+                        <h5 class="modal-title fw-semibold">{{__('messages.select_number_of_seat')}}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
@@ -224,7 +224,6 @@
                         <div class="modal-body pt-0">
 
                             <p class="text-muted mb-4">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                                 <input type="hidden" readonly id="pnr_id" name="pnr_id">
                                 <input type="hidden" readonly id="return_pnr_id" name="return_pnr_id">
 
@@ -235,9 +234,9 @@
                                 <table class="table table-bordered align-middle" id="mytable">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Seat *</th>
-                                            <th>Passenger Type</th>
-                                            <th width="120">Action</th>
+                                            <th>{{__('messages.seat')}} *</th>
+                                            <th>{{__('messages.passenger_type')}}</th>
+                                            <th width="120">{{__('messages.action')}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -279,9 +278,9 @@
                         </div>
                     <!-- Footer -->
                     <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >{{__('messages.cancel')}}</button>
                          <button type="submit" class="btn btn-dark">
-                            Confirm Seat
+                            {{__('messages.confirm_seat')}}
                         </button>
                     </div>
                     </form>

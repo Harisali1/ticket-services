@@ -161,6 +161,16 @@ class AgencyController extends Controller
         }
     }
 
+    public function destroy(Agency $agency){
+        $agency->update([
+            'is_deleted' => 1
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Agency deleted successfully',
+        ], 201);
+    }
+
     public function PaymentList(){
         return view('Admin.agency.payment_list');
     }

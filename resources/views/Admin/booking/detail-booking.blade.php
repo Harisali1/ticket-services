@@ -50,7 +50,7 @@
                     <button class="btn btn-success btn-sm" onclick="ticketedBooking({{ $booking->id }}, 'ticket', 'Do you want to Ticketed this Booking?')">{{__('messages.ticket')}}</button>
                 @endif
             @endif
-            <a href="{{ route('admin.booking.print.itinerary', $booking->id) }}"><button class="btn btn-secondary btn-sm">Print Itinerary</button></a>
+            <a href="{{ route('admin.booking.print.itinerary', $booking->id) }}" target="_blank"><button class="btn btn-secondary btn-sm">Print Itinerary</button></a>
         </div>
     </div>
 

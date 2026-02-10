@@ -22,6 +22,11 @@ class UserList extends Component
 
     public $perPage = 10;
 
+    public function filterStatus($status)
+    {
+        $this->filters['status'] = ($status == 0) ? '' : $status;
+    }
+
     public function updatedPerPage()
     {
         $this->resetPage();
@@ -46,18 +51,16 @@ class UserList extends Component
 
     public function render()
     {
-        $users = User::query()->where('user_type_id', '!=', 1);
+        $users = User::query()->where('user_type_id', '!=', 1)->where('is_deleted', 0);
 
         if(auth()->user()->user_type_id != 1){
             $users = $users->where('created_by', auth()->user()->id);
         }
 
-        $stats = [
-            'all'       => (clone $users)->count(),
-            'pending'   => (clone $users)->where('status', 0)->count(),
-            'approved'  => (clone $users)->where('status', 1)->count(),
-            'suspended' => (clone $users)->where('status', 2)->count(),
-        ];
+        $all = (clone $users)->count();
+        $pending   = (clone $users)->where('status', 1)->count();
+        $approved  = (clone $users)->where('status', 2)->count();
+        $suspended = (clone $users)->where('status', 3)->count();
 
         $users = $users->when($this->filters['name'], function ($q) {
             $q->where('name', 'like', '%' . $this->filters['name'] . '%');
@@ -78,6 +81,6 @@ class UserList extends Component
         $users = $users->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.user.user-list', compact('users', 'stats'));
+        return view('livewire.admin.user.user-list', compact('users', 'all', 'pending', 'approved', 'suspended'));
     }
 }

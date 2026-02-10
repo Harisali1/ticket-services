@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('admin_fee')->default(0);
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
     }

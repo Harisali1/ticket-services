@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'check.activity' => \App\Http\Middleware\CheckUserActivity::class,
     ];
 
 }

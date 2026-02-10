@@ -122,9 +122,9 @@
     <!-- Per Page Selector -->
     <div class="mb-3">
         <select wire:model.live="perPage" class="form-select w-auto">
-            <option value="2">2</option>
-            <option value="25">25</option>
             <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
         </select>
     </div>
 
@@ -204,6 +204,11 @@
                                                     🛡 Assign Permission
                                                 </a>
                                             </li>
+                                            <li>
+                                                <a class="dropdown-item delete-button" onclick="deleteAgency({{ $agency->id }})">
+                                                    🗑 Delete
+                                                </a>
+                                            </li>
                                         @endif
 
                                         <li>
@@ -211,6 +216,9 @@
                                                 👁 View Details
                                             </a>
                                         </li>
+
+                                        
+
                                     </ul>
                                 </div>
                             </td>

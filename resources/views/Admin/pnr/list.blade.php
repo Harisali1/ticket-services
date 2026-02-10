@@ -64,6 +64,16 @@
             };
         }
 
+        if (type === 'sale') {
+            swalOptions.input = 'number';
+            swalOptions.inputPlaceholder = 'Enter Seat';
+            swalOptions.inputValidator = (value) => {
+                if (!value) {
+                    return 'Seat is required';
+                }
+            };
+        }
+
         Swal.fire(swalOptions).then((result) => {
 
             if (result.isConfirmed) {
@@ -85,13 +95,21 @@
                     data: {
                         id: id,
                         type: type,
-                        reason: type === 'cancel' ? result.value : null
+                        reason: result.value,
                     },
                     success: function (res) {
-                        Swal.fire("Success", res.message, "success")
+                        if(res.code == 2){
+                            Swal.fire(
+                                "Error",
+                                res.message,
+                                "error"
+                            );
+                        }else{
+                            Swal.fire("Success", res.message, "success")
                             .then(() => {
                                 window.location.href = "{{ route('admin.pnr.index') }}";
                             });
+                        }
                     },
                     error: function (xhr) {
                         Swal.fire(

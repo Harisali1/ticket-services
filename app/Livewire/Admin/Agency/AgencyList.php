@@ -85,7 +85,7 @@ class AgencyList extends Component
 
     public function render()
     {
-        $agencies = Agency::query();
+        $agencies = Agency::where('is_deleted', 0);
         
         if(auth()->user()->user_type_id != 1){
             $agencies = $agencies->where('created_by', auth()->user()->id);

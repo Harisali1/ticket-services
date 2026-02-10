@@ -45,7 +45,7 @@ Route::get('search/baggage', [App\Http\Controllers\Admin\DataListController::cla
 Route::get('search/agency', [App\Http\Controllers\Admin\DataListController::class, 'searchAgency'])->name('search.agency');
 
 
-Route::group(['middleware' => 'auth'], function () {
+Route::middleware(['auth','check.activity'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/notification/{id}', function ($id) {
             $notification = DatabaseNotification::findOrFail($id);
@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/edit/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'edit'])->name('admin.agency.edit');
             Route::get('/show/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'show'])->name('admin.agency.show');
             Route::post('/update', [App\Http\Controllers\Admin\AgencyController::class, 'update'])->name('admin.agency.update');
+            Route::get('/delete/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'destroy'])->name('admin.agency.destroy');
             Route::prefix('payment')->group(function () {
                 Route::get('/list', [App\Http\Controllers\Admin\AgencyController::class, 'PaymentList'])->name('admin.agency.payment.list');
                 Route::get('/approval/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'agencyPaymentApproval'])->name('admin.agency.payment.approval');
@@ -185,4 +186,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 });
+
+
+// Route::group(['middleware' => 'auth'], function () {
+    
+// });
 

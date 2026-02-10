@@ -702,12 +702,20 @@ class PnrController extends Controller
 
     public function putOnSaleAndCancel(Request $request){
 
+        $pnrData = Pnr::find($request->id);
+        if($pnrData->seat_available < $request->reason){
+            return response()->json([
+                'code' => 2,
+                'message' => 'Please enter seats less than or equal to the available seats.',
+            ]);
+        }
         if($request->type == 'sale'){
             Seat::where('pnr_id', $request->id)
                 ->where('is_available', 1)
                 ->where('is_sale', 0)
                 ->where('is_sold', 0)
                 ->where('is_cancel', 0)
+                ->limit($request->reason)
                 ->update([
                     'is_sale' => 1,
                     'is_available' => 0,

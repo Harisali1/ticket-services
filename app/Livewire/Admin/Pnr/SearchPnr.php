@@ -176,8 +176,15 @@ class SearchPnr extends Component
             $pnrs = Pnr::withCount([
                 'seats as seat_available' => fn ($q) => $q->where('is_sale', 1)
             ])
-            ->where('departure_id', $this->departure_id)
-            ->where('arrival_id', $this->arrival_id)
+            ->where(function ($q) {
+                $q->where('departure_id', $this->departure_id)
+                ->orWhere('middle_arrival_id', $this->departure_id);
+            })
+            ->where(function ($q) {
+                $q->where('arrival_id', $this->arrival_id)
+                ->orWhere('middle_arrival_id', $this->arrival_id);
+            })
+            
             ->whereBetween('departure_date', [$startDepartureDate, $endDepartureDate])
             ->with('airline', 'seats')
             ->paginate($this->perPage);

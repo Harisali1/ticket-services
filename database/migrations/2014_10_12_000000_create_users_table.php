@@ -31,6 +31,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->boolean('status')->default(1);
             $table->integer('created_by')->nullable();
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
 

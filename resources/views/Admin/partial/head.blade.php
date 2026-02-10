@@ -135,6 +135,79 @@
         animation: none;
     }
 
+    /* responsive start here */
+
+    /* Sidebar mobile responsive */
+    .sidebar-mobile{
+        width:260px;
+        min-height:100vh;
+    }
+
+    @media (max-width:768px){
+        .fixed-footer{
+            position: relative;
+        }
+        .sidebar-mobile{
+            position:fixed;
+            top:0;
+            left:-260px;
+            height:100%;
+            z-index:1050;
+            transition:0.3s ease;
+        }
+
+        .sidebar-mobile.active{
+            left:0;
+        }
+
+        .sidebar-overlay{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.5);
+            z-index:1040;
+            display:none;
+        }
+
+        .sidebar-overlay.active{
+            display:block;
+        }
+        .navbar{
+            min-height:60px;
+        }
+
+        .profile-avatar{
+            width:32px;
+            height:32px;
+            font-size:14px;
+        }
+
+        .icon-btn{
+            font-size:16px;
+        }
+
+        .language-flag img{
+            width:18px;
+        }
+
+        .notification-dropdown{
+            width:280px;
+            max-width:90vw;
+        }
+        .table-responsive{
+            overflow-x:auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-scroll{
+            min-width:1100px; /* adjust according to columns */
+        }
+
+        .pnr-shadow-box img{
+            width:25px !important;
+            height:25px !important;
+        }
+    }
+    
 
 </style>
 </head>

@@ -74,7 +74,7 @@
                 >
 
                 <!-- Eye Icon -->
-                <div class="absolute right-3 top-2.5 text-gray-500 cursor-pointer">
+                <div class="absolute right-3 top-2.5 text-gray-500 cursor-pointer" onclick="togglePassword('password', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
                         class="w-5 h-5">
@@ -169,7 +169,19 @@
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('vendors/sweet_alert/sweetalert2.all.min.js') }}" ></script>
 <script>
-
+    function togglePassword(fieldId, btn) {
+        const input = document.getElementById(fieldId);
+        const icon = btn.querySelector('i');
+        if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+        } else {
+        input.type = "password";
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+        }
+    }
     function openModal(){
         const modal = document.getElementById('contactModal');
         modal.classList.remove('hidden');

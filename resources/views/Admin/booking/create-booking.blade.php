@@ -92,7 +92,9 @@
 
 @section('content')
 
-<div class="container px-4 py-5">
+<!-- <div class="container px-4 py-5"> -->
+<div class="container-fluid container-lg px-3 px-md-4 py-4 py-md-5">
+
   <!-- ================= HEADER ================= -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <div class="d-flex align-items-center gap-2">

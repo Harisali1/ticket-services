@@ -58,7 +58,7 @@
         <!-- All -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card shadow-sm border-0 h-100 stat-card">
-                <div class="card-body text-center" wire:click="filterStatus(0)">
+                <div class="card-body text-center">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.all') }}
                     </p>
@@ -72,7 +72,7 @@
         <!-- Reserved -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card shadow-sm border-0 h-100 stat-card border-start border-warning border-4">
-                <div class="card-body text-center" wire:click="filterStatus(1)">
+                <div class="card-body text-center">
                     <p class="text-muted text-uppercase small mb-1">
                         {{ __('messages.created') }}
                     </p>
@@ -85,13 +85,26 @@
 
         <!-- Paid -->
         <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card shadow-sm border-0 h-100 stat-card border-start border-primary border-4">
-                <div class="card-body text-center" wire:click="filterStatus(2)">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-secondary border-4">
+                <div class="card-body text-center">
                     <p class="text-muted text-uppercase small mb-1">
-                        {{ __('messages.on_sale') }}
+                        {{ __('messages.total') }} {{ __('messages.seats') }}
+                    </p>
+                    <h2 class="fw-bold mb-0 text-secondary">
+                        {{ $pnrs->sum('total_seats') }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-primary border-4">
+                <div class="card-body text-center">
+                    <p class="text-muted text-uppercase small mb-1">
+                        {{ __('messages.available') }} {{ __('messages.seats') }}
                     </p>
                     <h2 class="fw-bold mb-0 text-primary">
-                        {{ $onSale }}
+                        {{ $pnrs->sum('available_seats') }}
                     </h2>
                 </div>
             </div>
@@ -99,43 +112,50 @@
 
         <!-- Cancel -->
         <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card shadow-sm border-0 h-100 stat-card border-start border-danger border-4">
-                <div class="card-body text-center" wire:click="filterStatus(3)">
+            <div class="card shadow-sm border-0 h-100 stat-card border-start border-warning border-4">
+                <div class="card-body text-center">
                     <p class="text-muted text-uppercase small mb-1">
-                        {{ __('messages.cancel_sale') }}
+                        {{ __('messages.on_sale') }} {{ __('messages.seats') }}
                     </p>
-                    <h2 class="fw-bold mb-0 text-danger">
-                        {{ $cancelSale }}
+                    <h2 class="fw-bold mb-0 text-warning">
+                        {{ $pnrs->sum('on_sale_seats') }}
                     </h2>
                 </div>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card shadow-sm border-0 h-100 stat-card border-start border-success border-4">
-                <div class="card-body text-center" wire:click="filterStatus(3)">
-                    <p class="text-muted text-uppercase small mb-1">
-                        {{ __('messages.sold_out') }}
-                    </p>
-                    <h2 class="fw-bold mb-0 text-success">
-                        {{ $soldOut }}
-                    </h2>
-                </div>
+        
+            <div class="col-12 col-sm-6 col-lg-3">
+                <a href="{{ route('admin.booking.index', ['status' => 1]) }}">
+                    <div class="card shadow-sm border-0 h-100 stat-card border-start border-info border-4">
+                        <div class="card-body text-center">
+                            <p class="text-muted text-uppercase small mb-1">
+                                {{ __('messages.reserved') }} {{ __('messages.seats') }}
+                            </p>
+                            <h2 class="fw-bold mb-0 text-info">
+                                {{ $pnrs->sum('reserved_seats') }}
+                            </h2>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
 
         <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card shadow-sm border-0 h-100 stat-card border-start border-info border-4">
-                <div class="card-body text-center" wire:click="filterStatus(3)">
-                    <p class="text-muted text-uppercase small mb-1">
-                        {{ __('messages.available') }}
-                    </p>
-                    <h2 class="fw-bold mb-0 text-info">
-                        {{ $available }}
-                    </h2>
+            <a href="{{ route('admin.booking.index', ['status' => 2]) }}">
+                <div class="card shadow-sm border-0 h-100 stat-card border-start border-success border-4">
+                    <div class="card-body text-center">
+                        <p class="text-muted text-uppercase small mb-1">
+                            {{ __('messages.sold_out') }} {{ __('messages.seats') }}
+                        </p>
+                        <h2 class="fw-bold mb-0 text-success">
+                            {{ $pnrs->sum('sold_seats') }}
+                        </h2>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
+
+        
 
     </div>
 

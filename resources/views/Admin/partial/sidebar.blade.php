@@ -1,7 +1,7 @@
 <div class="d-flex sidebar-position">
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="bg-dark text-white expanded d-flex flex-column p-3">
+<aside id="sidebar" class="bg-dark text-white d-flex flex-column p-3 sidebar-mobile">
         
        <!-- Title with Logo -->
 <div class="mb-4 d-flex align-items-center gap-3">
@@ -112,5 +112,8 @@
             </nav>
         @endif
     </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 </div>
 

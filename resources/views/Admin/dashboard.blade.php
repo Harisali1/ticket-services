@@ -80,7 +80,7 @@
 
 .swal-image-big {
     max-width: 100% !important;
-    max-height: 90vh !important;
+    max-height: 70vh !important;
     object-fit: contain;
 }
 
@@ -276,7 +276,7 @@ function showImage(src) {
         showConfirmButton: false,
 
         // 🔥 popup size
-        width: '80vw',
+        width: '60vw',
 
         // dark background
         background: '#000',

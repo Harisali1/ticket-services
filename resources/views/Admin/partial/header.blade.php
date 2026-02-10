@@ -1,10 +1,17 @@
-<nav class="navbar navbar-expand bg-white border-bottom px-4 py-3 shadow-sm">
+<!-- <nav class="navbar navbar-expand bg-white border-bottom px-4 py-3 shadow-sm"> -->
+<nav class="navbar navbar-expand-lg bg-white border-bottom px-3 px-md-4 py-2 py-md-3 shadow-sm">
+
 
     <!-- ===== BRAND ===== -->
+<button class="btn btn-dark d-md-none m-2" id="mobileSidebarToggle">
+    <i class="fa fa-bars"></i>
+</button>
 
     <!-- ===== REMAINING BALANCE ===== -->
     @if(Auth::user()->user_type_id == '2' || Auth::user()->user_type_id == '4')
-    <div class="ms-3 d-none d-lg-block">
+    <!-- <div class="ms-3 d-none d-lg-block"> -->
+    <div class="ms-md-3 d-none d-md-block">
+
         <span class="badge bg-success-subtle text-success fw-semibold px-4 py-2 rounded-pill">
             <i class="fas fa-wallet me-1"></i>
             <span class="text-muted me-1">{{ __('messages.remaining_balance') }}</span>
@@ -37,7 +44,8 @@
     @endphp
 
     <!-- ===== RIGHT SIDE ===== -->
-    <div class="d-flex align-items-center ms-auto gap-3">
+    <!-- <div class="d-flex align-items-center ms-auto gap-3"> -->
+    <div class="d-flex align-items-center ms-auto gap-2 gap-md-3 flex-nowrap">
 
         <!-- ===== NOTIFICATIONS ===== -->
         <div class="dropdown">
@@ -75,7 +83,9 @@
 
 
         <!-- ===== LANGUAGE FLAGS ===== -->
-        <div class="d-flex align-items-center gap-2 ms-2">
+        <!-- <div class="d-flex align-items-center gap-2 ms-2"> -->
+        <div class="d-flex align-items-center gap-1 gap-md-2 ms-1 ms-md-2">
+
 
             <a href="{{ route('language.switch', 'en') }}"
                class="language-flag"
