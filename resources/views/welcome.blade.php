@@ -22,27 +22,56 @@ color:#fff;
 
 /* HEADER */
 .header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 50px;
-background:#06111a;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 30px;
+    background:#9b7e43;
 }
 
 .logo{
-font-size:24px;
-font-weight:bold;
-color:var(--gold);
+    font-size:24px;
+    font-weight:bold;
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo-heading{
+    color:white;
+}
+
+.nav{
+    display:flex;
+    align-items:center;
+    gap:20px;
 }
 
 .nav a{
-margin-left:25px;
-text-decoration:none;
-color:#fff;
+    text-decoration:none;
+    color:#fff;
+    font-weight:500;
 }
 
-.nav a:hover{
-color:var(--gold);
+
+.btn{
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:14px;
+    font-weight:600;
+    transition:0.3s;
+    background:var(--gold);
+}
+
+/* Sign In */
+.btn-outline{
+    border:2px solid #ffffffff;
+    color:#6c63ff;
+}
+
+.btn-outline:hover{
+    color:#000000;
 }
 
 /* HERO */
@@ -69,14 +98,7 @@ text-align:center;
 padding:20px;
 }
 
-.btn{
-background:var(--gold);
-color:#000;
-padding:14px 28px;
-border-radius:30px;
-margin-top:20px;
-font-weight:bold;
-}
+
 
 /* SECTION */
 .section{
@@ -110,12 +132,16 @@ margin-bottom:15px;
 
 /* WHY */
 .why{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:40px;
-align-items:center;
+    background-color: #c9a55c;
 }
 
+.why-choose-grid{
+    padding:5%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:center;
+}
 .stats{
 display:grid;
 grid-template-columns:repeat(2,1fr);
@@ -163,11 +189,50 @@ color:#fff;
 
 /* FOOTER */
 .footer{
-background:#06111a;
-text-align:center;
-padding:40px;
-margin-top:60px;
+    background:#0f172a;
+    color:#fff;
+    padding:25px 20px 15px;
+    font-size:14px;
 }
+
+.footer-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.footer-left,
+.footer-center,
+.footer-right{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.footer-center{
+    text-align:center;
+}
+
+.footer-bottom{
+    text-align:center;
+    margin-top:15px;
+    padding-top:10px;
+    border-top:1px solid #334155;
+    color:#94a3b8;
+}
+
+/* mobile responsive */
+@media(max-width:768px){
+    .footer-top{
+        flex-direction:column;
+        text-align:center;
+        align-items:center;
+    }
+}
+
+
 
 /* RESPONSIVE */
 @media(max-width:900px){
@@ -197,20 +262,29 @@ gap:10px;
 <body>
 
 <header class="header">
-<div class="logo">Divine Travel</div>
+<div class="logo">
+    <img src="{{ asset('images/logo.jpg') }}" height="80" width="80">
+    <span class="logo-heading">Divine Travel</span>
+</div>
 <nav class="nav">
-<a href="#">Home</a>
-<a href="#">Flights</a>
-<a href="#">Contact</a>
+    <a href="#">Home</a>
+    <a href="#">Flights</a>
+    <a href="#">Contact</a>
+
+    <div class="auth-buttons">
+        <a href="{{ route('login') }}" class="btn btn-outline">Sign In</a>
+        <a href="{{ route('register') }}" class="btn btn-outline">Sign Up</a>
+    </div>
 </nav>
+
 </header>
 
 <section class="hero">
-<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e">
+<img src="{{ asset('images/home/slider.jpg') }}">
 <div class="hero-overlay">
 <h1 class="text-5xl font-bold">Professional <span style="color:#c9a55c">B2B Airline Solutions</span></h1>
 <p class="mt-5 max-w-2xl">Instant ticketing, negotiated fares and powerful travel agency tools.</p>
-<div class="btn">Start Booking</div>
+<div class="btn mt-4">Start Booking</div>
 </div>
 </section>
 
@@ -220,19 +294,19 @@ gap:10px;
 <div class="cards">
 
 <div class="card">
-<img src="https://via.placeholder.com/400x200">
+<img src="{{ asset('images/home/italy-rome.jpg') }}">
 <h3>Italy → Senegal</h3>
 <p class="text-gray-400">Special B2B Fare</p>
 </div>
 
 <div class="card">
-<img src="https://via.placeholder.com/400x200">
+<img src="{{ asset('images/home/makkah.jpg') }}">
 <h3>Dakar → Makkah</h3>
 <p class="text-gray-400">Group Booking Available</p>
 </div>
 
 <div class="card">
-<img src="https://via.placeholder.com/400x200">
+<img src="{{ asset('images/home/image.jpg') }}">
 <h3>Business Class Deals</h3>
 <p class="text-gray-400">Exclusive Contracts</p>
 </div>
@@ -240,23 +314,23 @@ gap:10px;
 </div>
 </section>
 
-<section class="section why">
+<section class="why">
+    <div class="why-choose-grid">
+        <div>
+            <h2 class="text-3xl mb-4">Why Choose Divine Travel</h2>
+            <p class="text-gray-300">
+            Advanced B2B airline booking platform designed for travel agencies,
+            offering negotiated fares, real-time ticketing and dedicated support.
+            </p>
+        </div>
 
-<div>
-<h2 class="text-3xl mb-4">Why Choose Divine Travel</h2>
-<p class="text-gray-300">
-Advanced B2B airline booking platform designed for travel agencies,
-offering negotiated fares, real-time ticketing and dedicated support.
-</p>
-</div>
-
-<div class="stats">
-<div class="stat"><h2 class="text-2xl text-yellow-400">100+</h2><p>Agents</p></div>
-<div class="stat"><h2 class="text-2xl text-yellow-400">30+</h2><p>Years Experience</p></div>
-<div class="stat"><h2 class="text-2xl text-yellow-400">60K+</h2><p>Bookings</p></div>
-<div class="stat"><h2 class="text-2xl text-yellow-400">24/7</h2><p>Support</p></div>
-</div>
-
+        <div class="stats">
+            <div class="stat"><h2 class="text-2xl text-yellow-400">100+</h2><p>Agents</p></div>
+            <div class="stat"><h2 class="text-2xl text-yellow-400">7+</h2><p>Years Experience</p></div>
+            <div class="stat"><h2 class="text-2xl text-yellow-400">10K+</h2><p>Bookings</p></div>
+            <div class="stat"><h2 class="text-2xl text-yellow-400">24/7</h2><p>Support</p></div>
+        </div>
+    </div>
 </section>
 
 <section class="section">
@@ -264,7 +338,7 @@ offering negotiated fares, real-time ticketing and dedicated support.
 
 <div class="contact">
 
-<img src="https://pngimg.com/uploads/traveler/traveler_PNG10.png">
+<img src="{{ asset('images/home/get-in-touch.jpg') }}">
 
 <div class="contact-form">
 <input placeholder="Full Name">
@@ -278,8 +352,35 @@ offering negotiated fares, real-time ticketing and dedicated support.
 </section>
 
 <footer class="footer">
-<p>© 2026 Divine Travel — Professional B2B Airline Portal</p>
+    <div class="footer-top">
+
+        <!-- LEFT -->
+        <div class="footer-left">
+            <p>📞 0039 3533713515</p>
+            <p>☎️ 0039 0571522542</p>
+        </div>
+
+        <!-- CENTER ADDRESS -->
+        <div class="footer-center">
+            <p>📍 Corso Giuseppe Mazzini, 71</p>
+            <p>56029 Santa Croce sull'Arno PI, Italy</p>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="footer-right">
+            <p>📧 booking@divinetravel.it</p>
+            <p>👤 Khan Atta Muhammad</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 Divine Travel — Professional B2B Airline Portal
+    </div>
 </footer>
+
+
+
 
 </body>
 </html>

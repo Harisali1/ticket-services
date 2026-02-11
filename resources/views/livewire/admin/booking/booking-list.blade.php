@@ -191,7 +191,7 @@
                         <th>{{ __('messages.pnr') }} #</th>
                         <th>{{ __('messages.departure_date_time') }}</th>
                         <th>{{ __('messages.return_departure_date_time') }}</th>
-                        <th>{{ __('messages.fare_limit_date') }}</th>
+                        <th>{{ __('messages.fare') }}</th>
                         <th class="text-center">{{ __('messages.seats') }}</th>
                         <th>{{ __('messages.paid_by') }}</th>
                         <th>{{ __('messages.paid_at') }}</th>
@@ -217,9 +217,9 @@
                             {{ $booking->pnr?->ref_no }}
                         </td>
 
-                        <td>{{ $booking->pnr?->departure_date .' '. $booking->pnr?->departure_time }}</td>
-                        <td>{{ $booking->return_pnr?->departure_date .' '. $booking->return_pnr?->departure_time}}</td>
-                        <td>{{ $booking->fare_limit_date }}</td>
+                        <td>{{ $booking->pnr?->departure_date }}</td>
+                        <td>{{ $booking->return_pnr?->departure_date}}</td>
+                        <td>{{ $booking->total_amount }}</td>
 
                         <td class="text-center">
                             <span class="badge bg-secondary-subtle text-dark">

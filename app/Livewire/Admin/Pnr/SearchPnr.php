@@ -193,10 +193,15 @@ class SearchPnr extends Component
         $passengerTypes = PassengerType::all();
         $type = $this->trip_type;
 
+        $departureId = $this->departure_id;
+        $arrivalId = $this->arrival_id;
+
         return view('livewire.admin.pnr.search-pnr', compact(
             'pnrs',
             'passengerTypes',
-            'type'
+            'type',
+            'departureId',
+            'arrivalId'
         ));
 
     }

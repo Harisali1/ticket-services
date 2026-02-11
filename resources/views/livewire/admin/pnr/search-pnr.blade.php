@@ -42,7 +42,7 @@
                     @endphp
                     @if($type != 'return')
                         @foreach($pnrs as $pnr)
-                            @if($pnr->middle_arrival_id != null && $pnr->rest_time != null && $pnr->middle_arrival_time != null)
+                            @if($pnr->middle_arrival_id != null && $pnr->middle_arrival_id != $departureId && $pnr->middle_arrival_id != $arrivalId)
                                 <tr>
                                     <td colspan="11" class="p-2 shoadow-master">
                                         <div class="pnr-shadow-box">
@@ -115,15 +115,40 @@
                                                             style="width:25px;height:25px;object-fit:contain;">
                                                     </td>
 
-                                                    <td data-label="Flight">{{ $pnr->flight_no }}</td>
+                                                    <td data-label="Flight">{{ ( $pnr->middle_arrival_id != $departureId && $pnr->middle_arrival_id != $arrivalId) ?  $pnr->flight_no :  $pnr->middle_flight_no}}</td>
                                                     <td data-label="Aircraft">{{ $pnr->air_craft }}</td>
                                                     <td data-label="Class">{{ $pnr->class }}</td>
-                                                    <td data-label="From">{{ $pnr->departure->code }}</td>
-                                                    <td data-label="To">{{ $pnr->arrival->code }}</td>
-                                                    <td data-label="Departure">{{ $pnr->departure_date_time }}</td>
-                                                    <td data-label="Arrival">{{ $pnr->arrival_date_time }}</td>
-                                                    <td data-label="Duration">{{ $pnr->duration }}</td>
+                                                    @if($pnr->middle_arrival_id != $departureId)
+                                                        <td data-label="From">{{ $pnr->departure->code }}</td>
+                                                    @else
+                                                        <td data-label="From">{{ $pnr->middle_arrival->code }}</td>
+                                                    @endif
 
+                                                    @if($pnr->middle_arrival_id != $arrivalId)
+                                                        <td data-label="To">{{ $pnr->arrival->code }}</td>
+                                                    @else
+                                                        <td data-label="To">{{ $pnr->middle_arrival->code }}</td>
+                                                    @endif
+
+                                                    @if($pnr->middle_arrival_id != $departureId)
+                                                        <td data-label="Departure">{{ $pnr->departure_date_time }}</td>
+                                                    @else
+                                                        <td data-label="Departure">{{ $pnr->middle_departure_date_time }}</td>
+                                                    @endif
+
+                                                    @if($pnr->middle_arrival_id != $arrivalId)
+                                                        <td data-label="From">{{ $pnr->arrival_date_time }}</td>
+                                                    @else
+                                                        <td data-label="To">{{ $pnr->middle_arrival_date_time }}</td>
+                                                    @endif
+
+                                                    @if($pnr->middle_arrival_id != $departureId && $pnr->middle_arrival_id != $arrivalId)
+                                                        <td data-label="Duration">{{ $pnr->duration }}</td>
+                                                    @elseif($pnr->middle_arrival_id == $departureId)
+                                                        <td data-label="Duration">{{ $pnr->second_duration }}</td>
+                                                    @elseif($pnr->middle_arrival_id == $arrivalId)
+                                                        <td data-label="Duration">{{ $pnr->first_duration }}</td>
+                                                    @endif
 
                                                     <td>
                                                         <p class="mb-1">{{ $pnr->seat_is_sale }} seat available</p>
