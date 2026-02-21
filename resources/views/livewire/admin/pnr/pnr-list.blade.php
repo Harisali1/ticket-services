@@ -141,7 +141,7 @@
             </div>
 
         <div class="col-12 col-sm-6 col-lg-3">
-            <a href="{{ route('admin.booking.index', ['status' => 2]) }}">
+            <a href="{{ route('admin.booking.index', ['status' => [2,3]]) }}">
                 <div class="card shadow-sm border-0 h-100 stat-card border-start border-success border-4">
                     <div class="card-body text-center">
                         <p class="text-muted text-uppercase small mb-1">

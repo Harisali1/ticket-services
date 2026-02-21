@@ -129,17 +129,20 @@ class Pnr extends Model
         //  $middleDeparture = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleArrivalDateTimeAttribute())
         // ->setTimeFromTimeString($this->rest_time)->format('d-M-y H:i');
         // return $middleDeparture;
+        if($this->getMiddleArrivalDateTimeAttribute() != null){
+            $departure = \Carbon\Carbon::createFromFormat('d-M-y H:i',$this->getMiddleArrivalDateTimeAttribute());
 
-        $departure = \Carbon\Carbon::createFromFormat('d-M-y H:i',$this->getMiddleArrivalDateTimeAttribute());
 
-        $arrival = $departure->copy()->setTimeFromTimeString($this->rest_time);
+            $arrival = $departure->copy()->setTimeFromTimeString($this->rest_time);
 
         // agar arrival time chhota hai departure se → next day
-        if ($arrival->lt($departure)) {
-            $arrival->addDay();
-        }
+            if ($arrival->lt($departure)) {
+                $arrival->addDay();
+            }
 
-        return $arrival->format('d-M-y H:i');
+            return $arrival->format('d-M-y H:i');
+        }
+        
 
         // $datetime = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleArrivalDateTimeAttribute());
         // $duration = $this->rest_time;
@@ -184,12 +187,15 @@ class Pnr extends Model
     }
 
     public function getSecondDurationAttribute(){
-        $start = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleDepartureDateTimeAttribute());
-        $end   = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getArrivalDateTimeAttribute());
+        if($this->getMiddleDepartureDateTimeAttribute() != null){
+            $start = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getMiddleDepartureDateTimeAttribute());
+            $end   = \Carbon\Carbon::createFromFormat('d-M-y H:i', $this->getArrivalDateTimeAttribute());
 
-        $diff = $start->diff($end);
+            $diff = $start->diff($end);
 
-        return $diff->format('%H'.'h %I'.'m');
+            return $diff->format('%H'.'h %I'.'m');
+        }
+       
     }
 
     public function getBreakTimeAttribute(){

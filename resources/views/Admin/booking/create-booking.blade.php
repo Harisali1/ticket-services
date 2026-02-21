@@ -123,6 +123,45 @@
     <!-- PNR Details -->
      @csrf()
     <h3 class="fw-semibold mb-3 pnr-detail">{{__('messages.pnr_detail')}}:</h3>
+    <input type="text" name="pnr_ref_no" id="pnr_ref_no" value="{{ $pnrBookings->ref_no }}">
+    <input type="text" name="pnr_flight_no" id="pnr_flight_no" value="{{ $pnrBookings->flight_no }}">
+    <input type="text" name="pnr_air_craft" id="pnr_air_craft" value="{{ $pnrBookings->air_craft }}">
+    <input type="text" name="pnr_middle_flight_no" id="pnr_middle_flight_no" value="{{ $pnrBookings->middle_flight_no }}">
+    <input type="text" name="pnr_middle_air_craft" id="pnr_middle_air_craft" value="{{ $pnrBookings->middle_air_craft }}">
+    <input type="text" name="pnr_baggage" id="pnr_baggage" value="{{ $pnrBookings->baggage }}">
+    <input type="text" name="pnr_airline" id="pnr_airline" value="{{ $pnrBookings->airline->code }}">
+    <input type="text" name="pnr_departure" id="pnr_departure" value="{{ $pnrBookings->departure->code }}">
+    <input type="text" name="pnr_middle_arrival" id="pnr_middle_arrival" value="{{ ($pnrBookings->middle_arrival) ? $pnrBookings->middle_arrival->code : '' }}">
+    <input type="text" name="pnr_arrival" id="pnr_arrival" value="{{ $pnrBookings->arrival->code }}">
+    <input type="text" name="pnr_departure_date_time" id="pnr_departure_date_time" value="{{ $pnrBookings->departure_date_time }}">
+    <input type="text" name="pnr_middle_arrival_time" id="pnr_middle_arrival_time" value="{{ $pnrBookings->middle_arrival_date_time }}">
+    <input type="text" name="pnr_middle_departure_time" id="pnr_middle_departure_time" value="{{ $pnrBookings->middle_departure_date_time }}">
+    <input type="text" name="pnr_arrival_date_time" id="pnr_arrival_date_time" value="{{ $pnrBookings->arrival_date_time }}">
+    <input type="text" name="pnr_duration" id="pnr_duration" value="{{ $pnrBookings->duration }}">
+    <input type="text" name="pnr_first_duration" id="pnr_first_duration" value="{{ ($pnrBookings->middle_arrival_id != null) ? $pnrBookings->first_duration : null }}">
+    <input type="text" name="pnr_break_time" id="pnr_break_time" value="{{ ($pnrBookings->middle_arrival_id != null) ? $pnrBookings->break_time : null }}">
+    <input type="text" name="pnr_second_duration" id="pnr_second_duration" value="{{ ($pnrBookings->middle_arrival_id != null) ? $pnrBookings->second_duration : null }}">
+<hr>
+ @if($returnPnrBookings != null)
+    <input type="text" name="return_ref_no" id="return_ref_no" value="{{ $returnPnrBookings->ref_no }}">
+    <input type="text" name="return_flight_no" id="return_flight_no" value="{{ $returnPnrBookings->flight_no }}">
+    <input type="text" name="return_air_craft" id="return_air_craft" value="{{ $returnPnrBookings->air_craft }}">
+    <input type="text" name="return_middle_flight_no" id="return_middle_flight_no" value="{{ $returnPnrBookings->middle_flight_no }}">
+    <input type="text" name="return_middle_air_craft" id="return_middle_air_craft" value="{{ $returnPnrBookings->middle_air_craft }}">
+    <input type="text" name="return_baggage" id="return_baggage" value="{{ $returnPnrBookings->baggage }}">
+    <input type="text" name="return_airline" id="return_airline" value="{{ $returnPnrBookings->airline->code }}">
+    <input type="text" name="return_departure" id="return_departure" value="{{ $returnPnrBookings->departure->code }}">
+    <input type="text" name="return_middle_arrival" id="return_middle_arrival" value="{{ ($returnPnrBookings->middle_arrival) ? $returnPnrBookings->middle_arrival->code : '' }}">
+    <input type="text" name="return_arrival" id="return_arrival" value="{{ $returnPnrBookings->arrival->code }}">
+    <input type="text" name="return_departure_date_time" id="return_departure_date_time" value="{{ $returnPnrBookings->departure_date_time }}">
+    <input type="text" name="return_middle_arrival_time" id="return_middle_arrival_time" value="{{ $returnPnrBookings->middle_arrival_date_time }}">
+    <input type="text" name="return_middle_departure_time" id="return_middle_departure_time" value="{{ $returnPnrBookings->rest_time }}">
+    <input type="text" name="return_arrival_date_time" id="return_arrival_date_time" value="{{ $returnPnrBookings->arrival_date_time }}">
+    <input type="text" name="return_duration" id="return_duration" value="{{ $returnPnrBookings->duration }}">
+    <input type="text" name="return_first_duration" id="return_first_duration" value="{{ ($returnPnrBookings->middle_arrival_id != null) ? $returnPnrBookings->first_duration : null }}">
+    <input type="text" name="return_break_time" id="return_break_time" value="{{ ($returnPnrBookings->middle_arrival_id != null) ? $returnPnrBookings->break_time : null }}">
+    <input type="text" name="return_second_duration" id="return_second_duration" value="{{ ($returnPnrBookings->middle_arrival_id != null) ? $returnPnrBookings->second_duration : null }}">
+    @endif
 
     <div class="mb-4">
         <h6 class="fw-bold mb-3 text-success">{{__('messages.outbound')}}</h6>

@@ -254,9 +254,8 @@
 
                             </p>
                             <div class="table-responsive">
-                                
-
                                 <table class="table table-bordered align-middle" id="mytable">
+
                                     <thead class="table-light">
                                         <tr>
                                             <th>{{__('messages.seat')}} *</th>
@@ -296,10 +295,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
                             </div>
-
-
                         </div>
                     <!-- Footer -->
                     <div class="modal-footer border-0">

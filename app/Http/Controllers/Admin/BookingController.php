@@ -52,6 +52,8 @@ class BookingController extends Controller
                     'departure_date',
                     'day_minus',
                     'day_plus',
+                    'price_to',
+                    'price_from',
                     'return_departure_id',
                     'return_arrival_id',
                     'return_departure_date',
@@ -65,6 +67,8 @@ class BookingController extends Controller
                     'departure_date',
                     'day_minus',
                     'day_plus',
+                    'price_to',
+                    'price_from',
                     'return_departure_id',
                     'return_arrival_id',
                     'return_departure_date',
@@ -89,9 +93,10 @@ class BookingController extends Controller
         // dd($request->all());
         $seatSum = array_sum($request->seat);
         $fareDetails = [];
-        $pnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->pnr_id);
-        $returnPnrBookings = Pnr::with('departure','arrival','airline','seats','user')->find($request->return_pnr_id);
+        $pnrBookings = Pnr::with('departure','arrival','middle_arrival','airline','seats','user')->find($request->pnr_id);
+        $returnPnrBookings = Pnr::with('departure','arrival','middle_arrival','airline','seats','user')->find($request->return_pnr_id);
        
+        // dd($pnrBookings);
         $baseFare=0;
         $returnBaseFare=0;
         $taxes=0;
@@ -249,7 +254,25 @@ class BookingController extends Controller
                 'meal' => $request->meal,
                 'wheel_chair' => $request->wheel_chair,
                 'status' => 1,
-                'created_by' => auth()->user()->id
+                'created_by' => auth()->user()->id,
+                'pnr_ref_no' => $request->pnr_ref_no,
+                'pnr_flight_no' => $request->pnr_flight_no,
+                'pnr_air_craft' => $request->pnr_air_craft,
+                'pnr_middle_flight_no' => $request->pnr_middle_flight_no,
+                'pnr_middle_air_craft' => $request->pnr_middle_air_craft,
+                'pnr_baggage' => $request->pnr_baggage,
+                'pnr_airline' => $request->pnr_airline,
+                'pnr_departure' => $request->pnr_departure,
+                'pnr_middle_arrival' => $request->pnr_middle_arrival,
+                'pnr_arrival' => $request->pnr_arrival,
+                'pnr_departure_date_time' => $request->pnr_departure_date_time,
+                'pnr_middle_arrival_time' => $request->pnr_middle_arrival_time,
+                'pnr_middle_departure_time' => $request->pnr_middle_departure_time,
+                'pnr_arrival_date_time' => $request->pnr_arrival_date_time,
+                'pnr_duration' => $request->pnr_duration,
+                'pnr_first_duration' => $request->pnr_first_duration,
+                'pnr_break_time' => $request->pnr_break_time,
+                'pnr_second_duration' => $request->pnr_second_duration,
             ];
 
             $booking = Booking::create($bookingData);

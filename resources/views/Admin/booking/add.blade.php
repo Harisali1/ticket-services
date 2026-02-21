@@ -37,6 +37,107 @@
     .shoadow-master{
         background: lightgray!important;
     }
+    /*price range slider  */
+.price-box{
+    width: 300px;
+    background:#fff;
+    border-radius:12px;
+}
+
+.slider-container{
+    position:relative;
+    height:40px;
+}
+
+input[type=range]{
+    position:absolute;
+    width:100%;
+    pointer-events:none;
+    background:none;
+    -webkit-appearance:none;
+}
+
+input[type=range]::-webkit-slider-thumb{
+    pointer-events:auto;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#000;
+    cursor:pointer;
+    -webkit-appearance:none;
+}
+
+.track{
+    position:absolute;
+    height:6px;
+    background:#ddd;
+    width:100%;
+    top:17px;
+    border-radius:5px;
+}
+
+.range{
+    position:absolute;
+    height:6px;
+    background:#000;
+    top:17px;
+    border-radius:5px;
+}
+
+.values{
+    display:flex;
+    justify-content:space-between;
+    font-weight:bold;
+}
+
+/* Make modal full width on small screens */
+@media (max-width: 768px) {
+
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    #mytable thead {
+        display: none;
+    }
+
+    #mytable,
+    #mytable tbody,
+    #mytable tr,
+    #mytable td {
+        display: block;
+        width: 100%;
+    }
+
+    #mytable tr {
+        margin-bottom: 15px;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    #mytable td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border: none;
+    }
+
+    #mytable td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    #mytable td:last-child {
+        text-align: left;
+        padding-left: 0;
+    }
+
+}
+
 </style>
 @endsection
 
@@ -53,7 +154,7 @@
             <hr>
 
             <!-- Trip Type -->
-            <div class="col-md-5 mb-3">
+            <!-- <div class="col-md-5 mb-3">
                 <label class="me-3">
                     <input type="radio" name="trip_type" value="one_way"
                         {{ request('trip_type', 'one_way') === 'one_way' ? 'checked' : '' }}>
@@ -71,6 +172,63 @@
                         {{ request('trip_type') === 'return' ? 'checked' : '' }}>
                     {{ __('messages.open_jaw') }}
                 </label>
+                <div class="price-box">
+                    <label class="form-label text-muted">Price</label>
+                    <div class="slider-container">
+
+                        <div class="track"></div>
+                        <div class="range" id="range"></div>
+
+                        <input type="range" id="min" min="0" max="5000" value="500">
+                        <input type="range" id="max" min="0" max="5000" value="3500">
+                    </div>
+
+                    <div class="values">
+                        <span>$<span id="minVal">500</span></span>
+                        <span>$<span id="maxVal">3500</span></span>
+                    </div>
+                </div>
+            </div> -->
+            <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+
+                <!-- LEFT : Trip Type -->
+                <div>
+                    <label class="me-3">
+                    <input type="radio" name="trip_type" value="one_way"
+                        {{ request('trip_type', 'one_way') === 'one_way' ? 'checked' : '' }}>
+                        {{ __('messages.one_way') }}
+                    </label>
+
+                    <label class="type-style">
+                    <input type="radio" name="trip_type" value="return"
+                        {{ request('trip_type') === 'return' ? 'checked' : '' }}>
+                    {{ __('messages.return') }}
+                    </label>
+
+                    <label class="type-style">
+                        <input type="radio" name="trip_type" value="return"
+                            {{ request('trip_type') === 'return' ? 'checked' : '' }}>
+                        {{ __('messages.open_jaw') }}
+                    </label>
+                </div>
+
+                <!-- RIGHT : Price Slider -->
+                <!-- <div class="price-box">
+
+                    <div class="slider-container">
+                        <div class="track"></div>
+                        <div class="range" id="range"></div>
+
+                        <input type="range" id="min" name="min" min="0" max="5000" value="500">
+                        <input type="range" id="max" name="max" min="0" max="5000" value="3500">
+                    </div>
+
+                    <div class="values">
+                        <span>$<span id="minVal">500</span></span>
+                        <span>$<span id="maxVal">3500</span></span>
+                    </div>
+                </div> -->
+
             </div>
 
 
@@ -120,6 +278,22 @@
                     </select>
                 </div>
 
+                <div class="col-md-2">
+                    <label class="form-label text-muted">{{ __('messages.price_to') }}</label>
+                    <input type="number"
+                           class="form-control"
+                           name="price_to"
+                           id="price_to"
+                           value="{{ old('price_to', request('price_to')) }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label text-muted">{{ __('messages.price_from') }}</label>
+                    <input type="number"
+                           class="form-control"
+                           name="price_from"
+                           id="price_from"
+                           value="{{ old('price_from', request('price_from')) }}">
+                </div>
                 
 
             </div>
@@ -192,6 +366,44 @@
 
 @section('scripts')
 <script>
+
+    // const minSlider = document.getElementById("min");
+    // const maxSlider = document.getElementById("max");
+    // const minVal = document.getElementById("minVal");
+    // const maxVal = document.getElementById("maxVal");
+    // const range = document.getElementById("range");
+
+    // function updateSlider(){
+    //     let min = parseInt(minSlider.value);
+    //     let max = parseInt(maxSlider.value);
+
+    //     if(min > max - 100){
+    //         minSlider.value = max - 100;
+    //         min = max - 100;
+    //     }
+
+    //     if(max < min + 100){
+    //         maxSlider.value = min + 100;
+    //         max = min + 100;
+    //     }
+
+    //     minVal.innerText = min;
+    //     maxVal.innerText = max;
+
+    //     let percentMin = (min / 5000) * 100;
+    //     let percentMax = (max / 5000) * 100;
+
+    //     range.style.left = percentMin + "%";
+    //     range.style.width = (percentMax - percentMin) + "%";
+    //     minSlider.value = min;
+    //     maxSlider.value = max;
+    // }
+
+    // minSlider.addEventListener("input", updateSlider);
+    // maxSlider.addEventListener("input", updateSlider);
+
+    // updateSlider();
+
     function showError(message) {
         Swal.fire({
             toast: true,

@@ -52,6 +52,7 @@ class BookingList extends Component
     }
 
 
+
     public function openPutOnSale($pnrId)
     {
 
@@ -159,9 +160,13 @@ class BookingList extends Component
             ->when($this->filters['created_by'], fn ($q) =>
                 $q->where('created_by', 'like', '%' . $this->filters['created_by'] . '%')
             )
-            ->when($this->filters['status'] !== '', fn ($q) =>
-                $q->where('status', $this->filters['status'])
-            )
+            ->when(!empty($this->filters['status']), function ($q) {
+                if(is_array($this->filters['status'])){
+                    $q->whereIn('status', $this->filters['status']);
+                }else{
+                    $q->where('status', $this->filters['status']);
+                }
+            })
             ->when($this->filters['from'], fn ($q) =>
                 $q->whereDate('created_at', '>=', $this->filters['from'])
             )

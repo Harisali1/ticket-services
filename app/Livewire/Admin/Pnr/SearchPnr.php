@@ -24,6 +24,8 @@ class SearchPnr extends Component
     public $departure_date;
     public $day_minus;
     public $day_plus;
+    public $price_to;
+    public $price_from;
     public $return_departure_id;
     public $return_arrival_id;
     public $return_departure_date;
@@ -64,6 +66,9 @@ class SearchPnr extends Component
         $this->departure_date = $initialFilters['departure_date'] ?? null;
         $this->day_minus = $initialFilters['day_minus'] ?? null;
         $this->day_plus = $initialFilters['day_plus'] ?? null;
+
+        $this->price_to = $initialFilters['price_to'] ?? null;
+        $this->price_from = $initialFilters['price_from'] ?? null;
         
         $this->return_departure_id = $initialFilters['return_departure_id'] ?? null;
         $this->return_arrival_id = $initialFilters['return_arrival_id'] ?? null;
@@ -156,7 +161,6 @@ class SearchPnr extends Component
             ->get();
 
             $pnrs = [];
-
             foreach ($outbounds as $outbound) {
                 foreach ($returns as $return) {
                     if (
@@ -176,6 +180,12 @@ class SearchPnr extends Component
             $pnrs = Pnr::withCount([
                 'seats as seat_available' => fn ($q) => $q->where('is_sale', 1)
             ])
+            ->when($this->price_to, fn ($q) =>
+                $q->where('total', '>=', $this->price_to)
+            )
+            ->when($this->price_from, fn ($q) =>
+                $q->where('total', '<=', $this->price_from)
+            )
             ->where(function ($q) {
                 $q->where('departure_id', $this->departure_id)
                 ->orWhere('middle_arrival_id', $this->departure_id);
@@ -196,6 +206,7 @@ class SearchPnr extends Component
         $departureId = $this->departure_id;
         $arrivalId = $this->arrival_id;
 
+        
         return view('livewire.admin.pnr.search-pnr', compact(
             'pnrs',
             'passengerTypes',

@@ -249,4 +249,7 @@ return [
     'need_help' => 'Need Help',
     'contact_admin' => 'Contact Admin',
     'duration' => 'Duration',
+
+    'price_to' => 'Price To',
+    'price_from' => 'Price From'
 ];

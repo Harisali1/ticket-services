@@ -45,147 +45,149 @@ Route::get('search/baggage', [App\Http\Controllers\Admin\DataListController::cla
 Route::get('search/agency', [App\Http\Controllers\Admin\DataListController::class, 'searchAgency'])->name('search.agency');
 
 
-Route::middleware(['auth','check.activity'])->group(function () {
-    Route::prefix('admin')->group(function () {
-        Route::get('/notification/{id}', function ($id) {
-            $notification = DatabaseNotification::findOrFail($id);
-            $notification->markAsRead();
+// Route::middleware(['auth','check.activity'])->group(function () {
+    Route::group(['middleware' => 'auth'], function () {
+        Route::prefix('admin')->group(function () {
+            Route::get('/notification/{id}', function ($id) {
+                $notification = DatabaseNotification::findOrFail($id);
+                $notification->markAsRead();
 
-            return redirect($notification->data['url']);
-        })->middleware(['auth'])
-        ->name('admin.notification.open');
+                return redirect($notification->data['url']);
+            })->middleware(['auth'])
+            ->name('admin.notification.open');
 
-        Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
-        
-        Route::prefix('agency')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\AgencyController::class, 'index'])->name('admin.agency.index');
-            Route::get('/add', [App\Http\Controllers\Admin\AgencyController::class, 'create'])->name('admin.agency.create');
-            Route::post('/store', [App\Http\Controllers\Admin\AgencyController::class, 'store'])->name('admin.agency.store');
-            Route::get('/edit/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'edit'])->name('admin.agency.edit');
-            Route::get('/show/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'show'])->name('admin.agency.show');
-            Route::post('/update', [App\Http\Controllers\Admin\AgencyController::class, 'update'])->name('admin.agency.update');
-            Route::get('/delete/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'destroy'])->name('admin.agency.destroy');
+            Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
+            
+            Route::prefix('agency')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\AgencyController::class, 'index'])->name('admin.agency.index');
+                Route::get('/add', [App\Http\Controllers\Admin\AgencyController::class, 'create'])->name('admin.agency.create');
+                Route::post('/store', [App\Http\Controllers\Admin\AgencyController::class, 'store'])->name('admin.agency.store');
+                Route::get('/edit/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'edit'])->name('admin.agency.edit');
+                Route::get('/show/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'show'])->name('admin.agency.show');
+                Route::post('/update', [App\Http\Controllers\Admin\AgencyController::class, 'update'])->name('admin.agency.update');
+                Route::get('/delete/{agency}', [App\Http\Controllers\Admin\AgencyController::class, 'destroy'])->name('admin.agency.destroy');
+                Route::prefix('payment')->group(function () {
+                    Route::get('/list', [App\Http\Controllers\Admin\AgencyController::class, 'PaymentList'])->name('admin.agency.payment.list');
+                    Route::get('/approval/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'agencyPaymentApproval'])->name('admin.agency.payment.approval');
+
+                });
+            });
+
+            Route::prefix('airline')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\AirLineController::class, 'index'])->name('admin.airline.index');
+                Route::get('/add', [App\Http\Controllers\Admin\AirLineController::class, 'create'])->name('admin.airline.create');
+                Route::post('/store', [App\Http\Controllers\Admin\AirLineController::class, 'store'])->name('admin.airline.store');
+                Route::get('/edit/{airline}', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
+                Route::post('/update', [App\Http\Controllers\Admin\AirLineController::class, 'update'])->name('admin.airline.update');
+            });
+
+            Route::prefix('airport')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\AirportController::class, 'index'])->name('admin.airport.index');
+                Route::get('/add', [App\Http\Controllers\Admin\AirportController::class, 'create'])->name('admin.airport.create');
+                Route::post('/store', [App\Http\Controllers\Admin\AirportController::class, 'store'])->name('admin.airport.store');
+                Route::get('/edit/{airport}', [App\Http\Controllers\Admin\AirportController::class, 'edit'])->name('admin.airport.edit');
+                Route::post('/update', [App\Http\Controllers\Admin\AirportController::class, 'update'])->name('admin.airport.update');
+            });
+
+            Route::prefix('user')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.user.index');
+                Route::get('/add', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('admin.user.create');
+                Route::post('/store', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.user.store');
+                Route::get('/edit/{user}', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('admin.user.edit');
+                Route::post('/update', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.user.update');
+            });
+
+            Route::prefix('pnr')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\PnrController::class, 'index'])->name('admin.pnr.index');
+                Route::get('/add', [App\Http\Controllers\Admin\PnrController::class, 'create'])->name('admin.pnr.create');
+                Route::post('/store', [App\Http\Controllers\Admin\PnrController::class, 'store'])->name('admin.pnr.store');
+                Route::get('/edit/{pnr}', [App\Http\Controllers\Admin\PnrController::class, 'edit'])->name('admin.pnr.edit');
+                Route::post('/update/{pnr}', [App\Http\Controllers\Admin\PnrController::class, 'update'])->name('admin.pnr.update');
+                Route::get('/upload', [App\Http\Controllers\Admin\PnrController::class, 'uploadPnr'])->name('admin.pnr.upload');
+                Route::post('/upload', [App\Http\Controllers\Admin\PnrController::class, 'updatedUploadPnrSubmit'])->name('admin.pnr.upload.submit');
+                Route::post('/put_on_sale_and_cancel', [App\Http\Controllers\Admin\PnrController::class, 'putOnSaleAndCancel'])->name('admin.pnr.sale.cancel');
+                Route::prefix('seats')->group(function () {
+                    Route::post('/store', [App\Http\Controllers\Admin\PnrController::class, 'seatStore'])->name('admin.pnr.seats.store');
+                    Route::post('/cancel', [App\Http\Controllers\Admin\PnrController::class, 'seatCancel'])->name('admin.pnr.seats.cancel');
+                });
+            });
+
+            Route::prefix('booking')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('admin.booking.index');
+                Route::get('/add', [App\Http\Controllers\Admin\BookingController::class, 'create'])->name('admin.booking.create');
+                Route::post('/add', [App\Http\Controllers\Admin\BookingController::class, 'create'])->name('admin.booking.create');
+                Route::get('/create', [App\Http\Controllers\Admin\BookingController::class, 'getPnrInfo'])->name('admin.booking.pnr.info');
+                Route::post('/check_seats_availablity', [App\Http\Controllers\Admin\BookingController::class, 'checkSeatsAvailability'])->name('admin.booking.seats.availability');
+                Route::post('/booking_submit', [App\Http\Controllers\Admin\BookingController::class, 'bookingSubmit'])->name('admin.booking.submit');
+                Route::get('/details/{booking}/pnr/{pnr}/return_pnr/{id}',[App\Http\Controllers\Admin\BookingController::class, 'bookingDetails'])->name('admin.booking.details');
+                Route::get('/print/itinerary/booking/{booking}/', [App\Http\Controllers\Admin\BookingController::class, 'itineraryPrint'])->name('admin.booking.print.itinerary');
+                Route::get('/ticketed', [App\Http\Controllers\Admin\BookingController::class, 'ticketedBooking'])->name('admin.booking.ticketed');
+                Route::get('/print/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'printTicketed'])->name('admin.booking.print.ticketed');
+                Route::get('/sendemail/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'sendEmailTicketed'])->name('admin.booking.send.email.ticketed');
+                Route::get('/check/payment', [App\Http\Controllers\Admin\BookingController::class, 'checkPayment'])->name('admin.booking.check.payment');
+                Route::get('/void/{id}', [App\Http\Controllers\Admin\BookingController::class, 'voidBooking'])->name('admin.booking.void');
+                Route::get('/requote/{id}', [App\Http\Controllers\Admin\BookingController::class, 'reQuoteBooking'])->name('admin.booking.requote');
+            });
+
+            Route::prefix('bank')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\BankController::class, 'index'])->name('admin.bank.index');
+                Route::get('/add', [App\Http\Controllers\Admin\BankController::class, 'create'])->name('admin.bank.create');
+                Route::post('/store', [App\Http\Controllers\Admin\BankController::class, 'store'])->name('admin.bank.store');
+                Route::get('/edit/{bank}', [App\Http\Controllers\Admin\BankController::class, 'edit'])->name('admin.bank.edit');
+                Route::post('/update', [App\Http\Controllers\Admin\BankController::class, 'update'])->name('admin.bank.update');
+            });
+
+            Route::prefix('baggage')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\BaggageController::class, 'index'])->name('admin.baggage.index');
+                Route::get('/add', [App\Http\Controllers\Admin\BaggageController::class, 'create'])->name('admin.baggage.create');
+                Route::post('/store', [App\Http\Controllers\Admin\BaggageController::class, 'store'])->name('admin.baggage.store');
+                Route::get('/edit/{baggage}', [App\Http\Controllers\Admin\BaggageController::class, 'edit'])->name('admin.baggage.edit');
+                Route::post('/update', [App\Http\Controllers\Admin\BaggageController::class, 'update'])->name('admin.baggage.update');
+            });
+
             Route::prefix('payment')->group(function () {
-                Route::get('/list', [App\Http\Controllers\Admin\AgencyController::class, 'PaymentList'])->name('admin.agency.payment.list');
-                Route::get('/approval/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'agencyPaymentApproval'])->name('admin.agency.payment.approval');
+                Route::get('/', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('admin.payment.index');
+                Route::get('/add', [App\Http\Controllers\Admin\PaymentController::class, 'create'])->name('admin.payment.create');
+                Route::post('/store', [App\Http\Controllers\Admin\PaymentController::class, 'store'])->name('admin.payment.store');
+                Route::get('/edit/{payment}', [App\Http\Controllers\Admin\PaymentController::class, 'edit'])->name('admin.payment.edit');
+                Route::post('/update', [App\Http\Controllers\Admin\PaymentController::class, 'update'])->name('admin.payment.update');
+                Route::get('/approved/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'approvedPayment'])->name('admin.payment.approved');
+                Route::get('/declined/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'paymentDeclined'])->name('admin.payment.declined');
+            });
+
+            Route::prefix('news')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\NewsController::class, 'index'])->name('admin.news.index');
+                Route::get('/add', [App\Http\Controllers\Admin\NewsController::class, 'create'])->name('admin.news.create');
+                Route::post('/store', [App\Http\Controllers\Admin\NewsController::class, 'store'])->name('admin.news.store');
+                Route::get('/edit/{news}', [App\Http\Controllers\Admin\NewsController::class, 'edit'])->name('admin.news.edit');
+                Route::post('/update', [App\Http\Controllers\Admin\NewsController::class, 'update'])->name('admin.news.update');
+                Route::get('/delete/{id}', [App\Http\Controllers\Admin\NewsController::class, 'delete'])->name('admin.news.delete');
+            });
+
+            Route::prefix('role')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\RoleController::class, 'index'])->name('admin.role.index');
+                Route::get('/add', [App\Http\Controllers\Admin\RoleController::class, 'create'])->name('admin.role.create');
+                Route::post('/store', [App\Http\Controllers\Admin\RoleController::class, 'store'])->name('admin.role.store');
+                Route::get('/edit/{role}', [App\Http\Controllers\Admin\RoleController::class, 'edit'])->name('admin.role.edit');
+                Route::post('/update', [App\Http\Controllers\Admin\RoleController::class, 'update'])->name('admin.role.update');
+                Route::prefix('permission')->group(function () {
+                    Route::get('/{id}', [App\Http\Controllers\Admin\RoleController::class, 'rolePermission'])->name('admin.role.permission.create');
+                    Route::post('/store', [App\Http\Controllers\Admin\RoleController::class, 'rolePermissionStore'])->name('admin.role.permission.store');
+                });
+            });
+
+            Route::prefix('setting')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.setting.index');
+                Route::post('/store', [App\Http\Controllers\Admin\SettingController::class, 'store'])->name('admin.setting.store');
 
             });
-        });
 
-        Route::prefix('airline')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\AirLineController::class, 'index'])->name('admin.airline.index');
-            Route::get('/add', [App\Http\Controllers\Admin\AirLineController::class, 'create'])->name('admin.airline.create');
-            Route::post('/store', [App\Http\Controllers\Admin\AirLineController::class, 'store'])->name('admin.airline.store');
-            Route::get('/edit/{airline}', [App\Http\Controllers\Admin\AirLineController::class, 'edit'])->name('admin.airline.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\AirLineController::class, 'update'])->name('admin.airline.update');
-        });
-
-        Route::prefix('airport')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\AirportController::class, 'index'])->name('admin.airport.index');
-            Route::get('/add', [App\Http\Controllers\Admin\AirportController::class, 'create'])->name('admin.airport.create');
-            Route::post('/store', [App\Http\Controllers\Admin\AirportController::class, 'store'])->name('admin.airport.store');
-            Route::get('/edit/{airport}', [App\Http\Controllers\Admin\AirportController::class, 'edit'])->name('admin.airport.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\AirportController::class, 'update'])->name('admin.airport.update');
-        });
-
-        Route::prefix('user')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.user.index');
-            Route::get('/add', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('admin.user.create');
-            Route::post('/store', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.user.store');
-            Route::get('/edit/{user}', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('admin.user.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.user.update');
-        });
-
-        Route::prefix('pnr')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\PnrController::class, 'index'])->name('admin.pnr.index');
-            Route::get('/add', [App\Http\Controllers\Admin\PnrController::class, 'create'])->name('admin.pnr.create');
-            Route::post('/store', [App\Http\Controllers\Admin\PnrController::class, 'store'])->name('admin.pnr.store');
-            Route::get('/edit/{pnr}', [App\Http\Controllers\Admin\PnrController::class, 'edit'])->name('admin.pnr.edit');
-            Route::post('/update/{pnr}', [App\Http\Controllers\Admin\PnrController::class, 'update'])->name('admin.pnr.update');
-            Route::get('/upload', [App\Http\Controllers\Admin\PnrController::class, 'uploadPnr'])->name('admin.pnr.upload');
-            Route::post('/upload', [App\Http\Controllers\Admin\PnrController::class, 'updatedUploadPnrSubmit'])->name('admin.pnr.upload.submit');
-            Route::post('/put_on_sale_and_cancel', [App\Http\Controllers\Admin\PnrController::class, 'putOnSaleAndCancel'])->name('admin.pnr.sale.cancel');
-            Route::prefix('seats')->group(function () {
-                Route::post('/store', [App\Http\Controllers\Admin\PnrController::class, 'seatStore'])->name('admin.pnr.seats.store');
-                Route::post('/cancel', [App\Http\Controllers\Admin\PnrController::class, 'seatCancel'])->name('admin.pnr.seats.cancel');
-            });
-        });
-
-        Route::prefix('booking')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('admin.booking.index');
-            Route::get('/add', [App\Http\Controllers\Admin\BookingController::class, 'create'])->name('admin.booking.create');
-            Route::post('/add', [App\Http\Controllers\Admin\BookingController::class, 'create'])->name('admin.booking.create');
-            Route::get('/create', [App\Http\Controllers\Admin\BookingController::class, 'getPnrInfo'])->name('admin.booking.pnr.info');
-            Route::post('/check_seats_availablity', [App\Http\Controllers\Admin\BookingController::class, 'checkSeatsAvailability'])->name('admin.booking.seats.availability');
-            Route::post('/booking_submit', [App\Http\Controllers\Admin\BookingController::class, 'bookingSubmit'])->name('admin.booking.submit');
-            Route::get('/details/{booking}/pnr/{pnr}/return_pnr/{id}',[App\Http\Controllers\Admin\BookingController::class, 'bookingDetails'])->name('admin.booking.details');
-            Route::get('/print/itinerary/booking/{booking}/', [App\Http\Controllers\Admin\BookingController::class, 'itineraryPrint'])->name('admin.booking.print.itinerary');
-            Route::get('/ticketed', [App\Http\Controllers\Admin\BookingController::class, 'ticketedBooking'])->name('admin.booking.ticketed');
-            Route::get('/print/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'printTicketed'])->name('admin.booking.print.ticketed');
-            Route::get('/sendemail/ticketed/{id}/{type}', [App\Http\Controllers\Admin\BookingController::class, 'sendEmailTicketed'])->name('admin.booking.send.email.ticketed');
-            Route::get('/check/payment', [App\Http\Controllers\Admin\BookingController::class, 'checkPayment'])->name('admin.booking.check.payment');
-            Route::get('/void/{id}', [App\Http\Controllers\Admin\BookingController::class, 'voidBooking'])->name('admin.booking.void');
-            Route::get('/requote/{id}', [App\Http\Controllers\Admin\BookingController::class, 'reQuoteBooking'])->name('admin.booking.requote');
-        });
-
-        Route::prefix('bank')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\BankController::class, 'index'])->name('admin.bank.index');
-            Route::get('/add', [App\Http\Controllers\Admin\BankController::class, 'create'])->name('admin.bank.create');
-            Route::post('/store', [App\Http\Controllers\Admin\BankController::class, 'store'])->name('admin.bank.store');
-            Route::get('/edit/{bank}', [App\Http\Controllers\Admin\BankController::class, 'edit'])->name('admin.bank.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\BankController::class, 'update'])->name('admin.bank.update');
-        });
-
-        Route::prefix('baggage')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\BaggageController::class, 'index'])->name('admin.baggage.index');
-            Route::get('/add', [App\Http\Controllers\Admin\BaggageController::class, 'create'])->name('admin.baggage.create');
-            Route::post('/store', [App\Http\Controllers\Admin\BaggageController::class, 'store'])->name('admin.baggage.store');
-            Route::get('/edit/{baggage}', [App\Http\Controllers\Admin\BaggageController::class, 'edit'])->name('admin.baggage.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\BaggageController::class, 'update'])->name('admin.baggage.update');
-        });
-
-        Route::prefix('payment')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('admin.payment.index');
-            Route::get('/add', [App\Http\Controllers\Admin\PaymentController::class, 'create'])->name('admin.payment.create');
-            Route::post('/store', [App\Http\Controllers\Admin\PaymentController::class, 'store'])->name('admin.payment.store');
-            Route::get('/edit/{payment}', [App\Http\Controllers\Admin\PaymentController::class, 'edit'])->name('admin.payment.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\PaymentController::class, 'update'])->name('admin.payment.update');
-            Route::get('/approved/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'approvedPayment'])->name('admin.payment.approved');
-            Route::get('/declined/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'paymentDeclined'])->name('admin.payment.declined');
-        });
-
-        Route::prefix('news')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\NewsController::class, 'index'])->name('admin.news.index');
-            Route::get('/add', [App\Http\Controllers\Admin\NewsController::class, 'create'])->name('admin.news.create');
-            Route::post('/store', [App\Http\Controllers\Admin\NewsController::class, 'store'])->name('admin.news.store');
-            Route::get('/edit/{news}', [App\Http\Controllers\Admin\NewsController::class, 'edit'])->name('admin.news.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\NewsController::class, 'update'])->name('admin.news.update');
-            Route::get('/delete/{id}', [App\Http\Controllers\Admin\NewsController::class, 'delete'])->name('admin.news.delete');
-        });
-
-        Route::prefix('role')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\RoleController::class, 'index'])->name('admin.role.index');
-            Route::get('/add', [App\Http\Controllers\Admin\RoleController::class, 'create'])->name('admin.role.create');
-            Route::post('/store', [App\Http\Controllers\Admin\RoleController::class, 'store'])->name('admin.role.store');
-            Route::get('/edit/{role}', [App\Http\Controllers\Admin\RoleController::class, 'edit'])->name('admin.role.edit');
-            Route::post('/update', [App\Http\Controllers\Admin\RoleController::class, 'update'])->name('admin.role.update');
-            Route::prefix('permission')->group(function () {
-                Route::get('/{id}', [App\Http\Controllers\Admin\RoleController::class, 'rolePermission'])->name('admin.role.permission.create');
-                Route::post('/store', [App\Http\Controllers\Admin\RoleController::class, 'rolePermissionStore'])->name('admin.role.permission.store');
-            });
-        });
-
-        Route::prefix('setting')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.setting.index');
-            Route::post('/store', [App\Http\Controllers\Admin\SettingController::class, 'store'])->name('admin.setting.store');
+            Route::post('/passengers/{id}', [App\Http\Controllers\Admin\UserController::class, 'customerUpdate']);
+            Route::post('/bookings/{id}/special-request', [App\Http\Controllers\Admin\BookingController::class, 'updateSpecialRequest']);
 
         });
-
-        Route::post('/passengers/{id}', [App\Http\Controllers\Admin\UserController::class, 'customerUpdate']);
-        Route::post('/bookings/{id}/special-request', [App\Http\Controllers\Admin\BookingController::class, 'updateSpecialRequest']);
-
     });
-});
+// });
 
 
 // Route::group(['middleware' => 'auth'], function () {

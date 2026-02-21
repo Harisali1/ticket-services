@@ -55,5 +55,14 @@ class Booking extends Model
 
     }
 
+    public function getLimitDateAttribute()
+    {
+        return \Carbon\Carbon::parse($this->created_at)
+            ->startOfDay()
+            ->addDay()
+            ->format('Y-m-d');
+
+    }
+
     // public function 
 }
